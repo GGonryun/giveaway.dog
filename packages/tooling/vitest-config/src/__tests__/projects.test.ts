@@ -30,16 +30,21 @@ describe('packageTestConfig', () => {
 });
 
 describe('testProjects', () => {
-  it('always isolates the server tests', () => {
-    const [server] = testProjects();
+  const project = (name: string) => {
+    const found = testProjects().find((entry) => entry.test.name === name);
+    if (!found) {
+      throw new Error(`No ${name} project`);
+    }
+    return found;
+  };
 
-    expect(server.test.isolate).toBe(true);
+  it('always isolates the server and property tests', () => {
+    expect(project('server').test.isolate).toBe(true);
+    expect(project('property').test.isolate).toBe(true);
   });
 
   it('gives the frontend and snapshot projects the isolation of the package', () => {
-    const [, frontend, snapshot] = testProjects();
-
-    expect(frontend.test).not.toHaveProperty('isolate');
-    expect(snapshot.test).not.toHaveProperty('isolate');
+    expect(project('frontend').test).not.toHaveProperty('isolate');
+    expect(project('snapshot').test).not.toHaveProperty('isolate');
   });
 });

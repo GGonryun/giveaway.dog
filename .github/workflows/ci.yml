@@ -21,7 +21,7 @@ concurrency:
 
 env:
   NX_NO_CLOUD: true
-  NX_RUN: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && 'affected' || 'run-many' }}
+  NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
   NX_SKIP_NX_CACHE: ${{ inputs.skip-cache && 'true' || 'false' }}
 
 jobs:
@@ -160,7 +160,19 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:server --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
+        run: pnpm nx run-many -t test:server --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json --reporter=json --outputFile.json=.vitest-results/server.json
+
+      - name: Count the tests
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        run: node .github/scripts/count-tests.mjs server ${{ matrix.shard }}
+
+      - name: Upload the test counts
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-server-${{ matrix.shard }}
+          path: test-results/
+          retention-days: 1
 
       - name: Collect the test reports
         if: steps.projects.outputs.projects
@@ -174,6 +186,84 @@ jobs:
           path: .vitest-reports/
           include-hidden-files: true
           retention-days: 1
+
+      - name: Save the Nx cache
+        if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
+
+  property:
+    name: Property tests ${{ matrix.shard }}/${{ strategy.job-total }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1]
+    outputs:
+      coverage: ${{ steps.coverage.outputs.lines }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: env.NX_RUN == 'affected'
+        uses: nrwl/nx-set-shas@v5
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Set up the Nx cache
+        id: nx-cache
+        uses: ./.github/actions/nx-cache
+        with:
+          id: property-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:property ${{ matrix.shard }} ${{ strategy.job-total }}
+
+      - name: Vitest property tests with coverage
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:property --projects="$PROJECTS" --output-style=static -- --coverage --coverage.reportsDirectory=coverage/property --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/property.json --reporter=json --outputFile.json=.vitest-results/property.json
+
+      - name: Count the tests
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        run: node .github/scripts/count-tests.mjs property ${{ matrix.shard }}
+
+      - name: Upload the test counts
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-property-${{ matrix.shard }}
+          path: test-results/
+          retention-days: 1
+
+      - name: Collect the test reports
+        if: steps.projects.outputs.projects
+        run: node .github/scripts/collect-vitest-reports.mjs property
+
+      - name: Upload the test reports
+        if: steps.projects.outputs.projects
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-report-property-${{ matrix.shard }}
+          path: .vitest-reports/
+          include-hidden-files: true
+          retention-days: 1
+
+      - name: Report the property coverage
+        if: steps.projects.outputs.projects
+        id: coverage
+        continue-on-error: true
+        run: node .github/scripts/property-coverage.mjs
 
       - name: Save the Nx cache
         if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
@@ -218,7 +308,19 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:frontend --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
+        run: pnpm nx run-many -t test:frontend --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json --reporter=json --outputFile.json=.vitest-results/frontend.json
+
+      - name: Count the tests
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        run: node .github/scripts/count-tests.mjs frontend ${{ matrix.shard }}
+
+      - name: Upload the test counts
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-frontend-${{ matrix.shard }}
+          path: test-results/
+          retention-days: 1
 
       - name: Collect the test reports
         if: steps.projects.outputs.projects
@@ -242,11 +344,14 @@ jobs:
 
   coverage:
     name: Coverage
-    needs: [server, frontend]
+    needs: [server, property, frontend]
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
+    continue-on-error: true
     outputs:
-      coverage: ${{ steps.coverage.outputs.lines }}
+      coverage: ${{ steps.coverage.outputs.all }}
+      server: ${{ steps.coverage.outputs.server }}
+      frontend: ${{ steps.coverage.outputs.frontend }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -257,13 +362,27 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: vitest-report-*
-          path: .vitest-reports
+          path: .vitest-reports/all
+          merge-multiple: true
+
+      - name: Download the server test reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vitest-report-server-*
+          path: .vitest-reports/server
+          merge-multiple: true
+
+      - name: Download the frontend test reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vitest-report-frontend-*
+          path: .vitest-reports/frontend
           merge-multiple: true
 
       - name: Check for test reports
         id: reports
         run: |
-          if [ -n "$(ls -A .vitest-reports 2>/dev/null)" ]; then
+          if [ -n "$(ls -A .vitest-reports/all 2>/dev/null)" ]; then
             echo "found=true" >> "$GITHUB_OUTPUT"
           else
             echo "No project with tests is affected, so there is no coverage to merge." | tee -a "$GITHUB_STEP_SUMMARY"
@@ -291,15 +410,29 @@ jobs:
 
       - name: Merge the coverage
         if: steps.reports.outputs.found == 'true'
-        run: node node_modules/vitest/vitest.mjs run --config vitest.coverage.config.ts --merge-reports=.vitest-reports --coverage --passWithNoTests
+        run: |
+          for kind in all server frontend; do
+            if [ -n "$(ls -A ".vitest-reports/$kind" 2>/dev/null)" ]; then
+              node node_modules/vitest/vitest.mjs run --config vitest.coverage.config.ts --merge-reports=".vitest-reports/$kind" --coverage --coverage.reportsDirectory="coverage/$kind" --passWithNoTests
+            fi
+          done
 
       - name: Report the line coverage
         if: steps.reports.outputs.found == 'true'
         id: coverage
         run: |
-          lines=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
-          echo "lines=$lines" >> "$GITHUB_OUTPUT"
-          echo "Line coverage: ${lines}%" >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "| Tests | Line coverage |"
+            echo "| --- | --- |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          for kind in all server frontend; do
+            summary="coverage/$kind/coverage-summary.json"
+            if [ -f "$summary" ]; then
+              lines=$(node -p "require('./$summary').total.lines.pct")
+              echo "$kind=$lines" >> "$GITHUB_OUTPUT"
+              echo "| $kind | ${lines}% |" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
 
   snapshot:
     name: Snapshot tests ${{ matrix.shard }}/${{ strategy.job-total }}
@@ -337,7 +470,19 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:snapshot --projects="$PROJECTS" --output-style=static
+        run: pnpm nx run-many -t test:snapshot --projects="$PROJECTS" --output-style=static -- --reporter=default --reporter=json --outputFile.json=.vitest-results/snapshot.json
+
+      - name: Count the tests
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        run: node .github/scripts/count-tests.mjs snapshot ${{ matrix.shard }}
+
+      - name: Upload the test counts
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-snapshot-${{ matrix.shard }}
+          path: test-results/
+          retention-days: 1
 
       - name: Save the Nx cache
         if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
@@ -376,7 +521,19 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:visual:docker --projects="$PROJECTS" --output-style=static
+        run: pnpm nx run-many -t test:visual:docker --projects="$PROJECTS" --output-style=static -- --reporter=default --reporter=json --outputFile.json=.vitest-results/visual.json
+
+      - name: Count the tests
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        run: node .github/scripts/count-tests.mjs visual ${{ matrix.shard }}
+
+      - name: Upload the test counts
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-visual-${{ matrix.shard }}
+          path: test-results/
+          retention-days: 1
 
       - name: Upload the screenshots that changed
         if: failure()
@@ -438,12 +595,28 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:integration --projects="$PROJECTS" --output-style=static
+        run: pnpm nx run-many -t test:integration --projects="$PROJECTS" --output-style=static -- --reporter=default --reporter=json --outputFile.json=.vitest-results/integration.json
+
+      - name: Count the tests
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        run: node .github/scripts/count-tests.mjs integration ${{ matrix.shard }}
+
+      - name: Upload the test counts
+        if: ${{ !cancelled() && steps.projects.outputs.projects }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-integration-${{ matrix.shard }}
+          path: test-results/
+          retention-days: 1
 
   mutation:
     name: Mutation tests
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    outputs:
+      checked: ${{ steps.gate.outputs.checked }}
+      killed: ${{ steps.gate.outputs.killed }}
+      failed: ${{ steps.gate.outputs.failed }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -451,14 +624,15 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Set the base and head commits for nx affected
-        if: env.NX_RUN == 'affected'
+      - name: Set the base and head commits of the changed lines
+        if: github.event_name != 'workflow_dispatch'
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
         uses: ./.github/actions/setup
 
       - name: Stryker on the changed lines
+        id: gate
         run: pnpm run test:mutation:changed
 
       - name: Upload the mutation reports
@@ -476,12 +650,12 @@ jobs:
       - lint
       - type-check
       - server
+      - property
       - frontend
       - snapshot
       - visual
       - integration
       - mutation
-      - coverage
     if: ${{ always() }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
@@ -501,32 +675,76 @@ jobs:
             exit 1
           fi
 
-  badge:
-    name: Coverage badge
-    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
-    needs: coverage
-    runs-on: ubuntu-slim
-    timeout-minutes: 5
+  badges:
+    name: Badges
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+    needs:
+      - server
+      - property
+      - frontend
+      - snapshot
+      - visual
+      - integration
+      - mutation
+      - coverage
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+    continue-on-error: true
     permissions:
       contents: write
+      pull-requests: read
+      statuses: read
     steps:
-      - name: Publish the badge to the badges branch
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Download the test counts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-*
+          path: test-results
+          merge-multiple: true
+
+      - name: Read the E2E result of the merged pull request
+        id: e2e
+        continue-on-error: true
         env:
-          COVERAGE: ${{ needs.coverage.outputs.coverage }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          color=red
-          if awk "BEGIN { exit !($COVERAGE >= 50) }"; then color=yellow; fi
-          if awk "BEGIN { exit !($COVERAGE >= 80) }"; then color=brightgreen; fi
-          mkdir badges
-          cd badges
-          curl --fail --silent --show-error --location --retry 3 \
-            --output coverage.svg \
-            "https://img.shields.io/badge/coverage-${COVERAGE}%25-${color}"
+          head=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '[.[] | select(.merged_at != null)][0].head.sha // empty')
+          state=
+          if [ -n "$head" ]; then
+            state=$(gh api "repos/$GITHUB_REPOSITORY/commits/$head/status" --jq '[.statuses[] | select(.context == "E2E tests")][0].state // empty')
+          fi
+          echo "E2E tests of ${head:-no merged pull request}: ${state:-no result}"
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+
+      - name: Publish the badges and the history to the badges branch
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          COVERAGE: ${{ needs.coverage.outputs.coverage }}
+          SERVER_COVERAGE: ${{ needs.coverage.outputs.server }}
+          FRONTEND_COVERAGE: ${{ needs.coverage.outputs.frontend }}
+          PROPERTY_COVERAGE: ${{ needs.property.outputs.coverage }}
+          E2E: ${{ steps.e2e.outputs.state }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init --quiet --initial-branch badges "$RUNNER_TEMP/badges"
+          cd "$RUNNER_TEMP/badges"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin badges > /dev/null; then
+            git fetch --quiet origin badges
+            git checkout --quiet -B badges FETCH_HEAD
+          fi
+          cd "$GITHUB_WORKSPACE"
+          node .github/scripts/badges.mjs "$RUNNER_TEMP/badges" test-results
+          cd "$RUNNER_TEMP/badges"
+          rm -f coverage.svg property-coverage.svg
           echo '{ "git": { "deploymentEnabled": false } }' > vercel.json
-          git init --quiet --initial-branch badges
-          git add coverage.svg vercel.json
+          git add --all
           git -c user.name='github-actions[bot]' \
             -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-            commit --quiet --message 'update coverage badge'
-          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" badges
+            commit --quiet --message "Badges of ${GITHUB_SHA::7}"
+          git push --quiet origin badges

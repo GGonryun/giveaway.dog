@@ -40,6 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .vitest-reports
+.vitest-results
 .vitest-attachments
 
 # mutation testing

@@ -5,6 +5,7 @@ import {
   formatGateSummary,
   formatMutant,
   gatePasses,
+  gateTotals,
   inlineCode,
   type GateReport,
   type MutantOutcome
@@ -137,6 +138,28 @@ describe('gatePasses', () => {
         report({ failures: [mutant({ status: 'Survived' })] })
       ])
     ).toBe(false);
+  });
+});
+
+describe('gateTotals', () => {
+  it('adds up the checked, killed and failed mutants of every report', () => {
+    expect(
+      gateTotals([
+        report({ checked: 3, killed: 3 }),
+        report({
+          checked: 4,
+          killed: 2,
+          failures: [
+            mutant({ status: 'Survived' }),
+            mutant({ status: 'NoCoverage' })
+          ]
+        })
+      ])
+    ).toEqual({ checked: 7, killed: 5, failed: 2 });
+  });
+
+  it('is zero when there are no reports', () => {
+    expect(gateTotals([])).toEqual({ checked: 0, killed: 0, failed: 0 });
   });
 });
 

@@ -3,7 +3,9 @@ import path from 'node:path';
 
 const [kind] = process.argv.slice(2);
 if (!kind) {
-  console.error('Usage: node collect-vitest-reports.mjs <server|frontend>');
+  console.error(
+    'Usage: node collect-vitest-reports.mjs <server|property|frontend>'
+  );
   process.exit(1);
 }
 
