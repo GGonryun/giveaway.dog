@@ -15,7 +15,6 @@ export const TWITTER_TEAM_APP_CLIENT_ID =
   process.env.TWITTER_TEAM_APP_CLIENT_ID;
 export const TWITTER_TEAM_APP_CLIENT_SECRET =
   process.env.TWITTER_TEAM_APP_CLIENT_SECRET;
-export const TWITTER_REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/auth/twitter-callback`;
 
 export const integrationSchema = z.object({
   id: z.string(),

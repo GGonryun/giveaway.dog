@@ -1,8 +1,9 @@
 import { expect, test as setup } from '@playwright/test';
 import { BASE_URL, BYPASS_STATE } from './env';
 
+const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+
 setup('open the deployment', async ({ request }) => {
-  const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
   const headers = secret
     ? {
         'x-vercel-protection-bypass': secret,
@@ -20,3 +21,19 @@ setup('open the deployment', async ({ request }) => {
 
   await request.storageState({ path: BYPASS_STATE });
 });
+
+setup(
+  'build absolute URLs on the origin of the deployment',
+  async ({ request }) => {
+    const response = await request.get('/api/bluesky/client-metadata.json', {
+      headers: secret ? { 'x-vercel-protection-bypass': secret } : undefined
+    });
+
+    expect(
+      response.ok(),
+      `GET /api/bluesky/client-metadata.json returned ${response.status()}`
+    ).toBe(true);
+    const { client_id } = await response.json();
+    expect(new URL(client_id).origin).toBe(new URL(BASE_URL).origin);
+  }
+);

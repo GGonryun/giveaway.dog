@@ -7,9 +7,9 @@ import { IntegrationProvider } from '@giveaway/db-model';
 import {
   TWITTER_TEAM_APP_CLIENT_ID,
   TWITTER_TEAM_APP_CLIENT_SECRET,
-  TWITTER_REDIRECT_URI,
   twitterStateSchema
 } from '@giveaway/integration-model/schemas';
+import { environment } from '@giveaway/app-config/environment';
 
 export const twitterOAuthCallback = procedure()
   .authorization({
@@ -22,11 +22,7 @@ export const twitterOAuthCallback = procedure()
     })
   )
   .handler(async ({ input, db, user }) => {
-    if (
-      !TWITTER_TEAM_APP_CLIENT_ID ||
-      !TWITTER_TEAM_APP_CLIENT_SECRET ||
-      !TWITTER_REDIRECT_URI
-    ) {
+    if (!TWITTER_TEAM_APP_CLIENT_ID || !TWITTER_TEAM_APP_CLIENT_SECRET) {
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Twitter OAuth not configured'
@@ -44,7 +40,7 @@ export const twitterOAuthCallback = procedure()
       body: new URLSearchParams({
         code: input.code,
         grant_type: 'authorization_code',
-        redirect_uri: TWITTER_REDIRECT_URI,
+        redirect_uri: `${environment.appUrl()}/api/auth/twitter-callback`,
         code_verifier: codeVerifier
       })
     });

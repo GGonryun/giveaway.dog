@@ -28,6 +28,7 @@ import {
 import { UserSource } from '@giveaway/db-model';
 import prisma from '@giveaway/db-client/prisma';
 import { redeemBlueskyLoginToken } from './bluesky-login-token';
+import { environment } from '@giveaway/app-config/environment';
 
 const authConfig = createAuthConfig(() => auth());
 
@@ -78,7 +79,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
     }),
     SteamProvider({
       request,
-      callbackUrl: `${process.env.NEXTAUTH_URL}/api/auth/steam-callback`,
+      callbackUrl: `${environment.appUrl()}/api/auth/steam-callback`,
       clientSecret: process.env.STEAM_SECRET!
     }),
     TwitterProvider({

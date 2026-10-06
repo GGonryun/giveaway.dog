@@ -58,11 +58,13 @@ describe('toSweepstakesUrl', () => {
     ).toBe('https://giveaway.dog/browse/promo');
   });
 
-  it('renders "undefined" as the base when NEXT_PUBLIC_APP_URL is not set', () => {
+  it('uses the deployment URL as the base when NEXT_PUBLIC_APP_URL is not set', () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+    vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+    vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
 
     expect(toSweepstakesUrl({ sweepstakes: sweepstakes('promo') })).toBe(
-      'undefined/browse/promo'
+      'https://giveaway-abc123-team.vercel.app/browse/promo'
     );
   });
 });

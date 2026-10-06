@@ -1,7 +1,7 @@
 import 'server-only';
 
-import { ApplicationError } from '@giveaway/util-errors';
 import { DiscordButtonInteractionSchema } from '@giveaway/discord-model/schema';
+import { environment } from '@giveaway/app-config/environment';
 
 // TODO: when we add support for redirecting back to th recent team use this short-cut to send user's to the accounts page of that team
 export const INTEGRATIONS_SETUP_URL = ({
@@ -9,13 +9,7 @@ export const INTEGRATIONS_SETUP_URL = ({
 }: {
   slug: string | undefined;
 }) => {
-  const base = process.env.NEXT_PUBLIC_APP_URL;
-  if (!base) {
-    throw new ApplicationError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'Missing NEXT_PUBLIC_APP_URL environment variable'
-    });
-  }
+  const base = environment.appUrl();
   return !slug ? `${base}/app` : `${base}/app/${slug}/settings/integrations`;
 };
 

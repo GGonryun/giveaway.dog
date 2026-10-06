@@ -14,6 +14,7 @@ import {
 } from '@giveaway/integration-model/scopes';
 import prisma from '@giveaway/db-client/prisma';
 import { EventSubSubscription } from '@giveaway/db-model';
+import { environment } from '@giveaway/app-config/environment';
 
 export const createEventSubSubscriptionsForFeatures = async ({
   integrationId,
@@ -152,7 +153,7 @@ const createSubscription = async ({
         condition,
         transport: {
           method: 'webhook',
-          callback: `${process.env.TWITCH_EVENTSUB_URL ?? process.env.NEXT_PUBLIC_APP_URL}/api/twitch/webhooks`,
+          callback: `${process.env.TWITCH_EVENTSUB_URL ?? environment.appUrl()}/api/twitch/webhooks`,
           secret: TWITCH_EVENTSUB_SECRET
         }
       })

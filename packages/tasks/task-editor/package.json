@@ -36,6 +36,7 @@
     "@dnd-kit/core": "catalog:",
     "@dnd-kit/sortable": "catalog:",
     "@dnd-kit/utilities": "catalog:",
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/bluesky-task-editor": "workspace:*",
     "@giveaway/discord-task-editor": "workspace:*",
     "@giveaway/kick-task-editor": "workspace:*",

@@ -235,11 +235,13 @@ describe('toReferralLink', () => {
     );
   });
 
-  it('interpolates undefined when the app url is not configured', () => {
+  it('uses the deployment URL when the app url is not configured', () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+    vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+    vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
 
     expect(toReferralLink({ sweepstakesId: 'sweep-1', code: 'abc123' })).toBe(
-      'undefined/browse/sweep-1?ref=abc123'
+      'https://giveaway-abc123-team.vercel.app/browse/sweep-1?ref=abc123'
     );
   });
 });

@@ -66,7 +66,7 @@ const ENV = {
   TIKTOK_CLIENT_ID: 'tiktok-id',
   TIKTOK_CLIENT_SECRET: 'tiktok-secret',
   STEAM_SECRET: 'steam-secret',
-  NEXTAUTH_URL: 'https://giveaway.dog',
+  NEXT_PUBLIC_APP_URL: 'https://giveaway.dog',
   TWITTER_LOGIN_APP_CLIENT_ID: 'twitter-id',
   TWITTER_LOGIN_APP_CLIENT_SECRET: 'twitter-secret',
   GOOGLE_ID: 'google-id',
@@ -201,10 +201,18 @@ describe('auth config', () => {
       expect(() => buildConfig()).toThrow('Missing `clientSecret` parameter');
     });
 
-    it('throws when NEXTAUTH_URL is missing', () => {
-      vi.stubEnv('NEXTAUTH_URL', undefined);
+    it('builds the steam callback on the deployment URL when NEXT_PUBLIC_APP_URL is missing', () => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
 
-      expect(() => buildConfig()).toThrow(TypeError);
+      expect(findProvider('steam').authorization).toMatchObject({
+        params: {
+          'openid.return_to':
+            'https://giveaway-abc123-team.vercel.app/api/auth/steam-callback',
+          'openid.realm': 'https://giveaway-abc123-team.vercel.app'
+        }
+      });
     });
   });
 

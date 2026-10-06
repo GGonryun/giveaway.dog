@@ -68,7 +68,7 @@ describe('getTeamBlueskyClient', () => {
     m.fromImportable.mockReset();
     m.fromImportable.mockResolvedValue(IMPORTED_KEY);
     vi.stubEnv('BLUESKY_PRIVATE_KEY', JSON.stringify(JWK));
-    vi.stubEnv('NEXTAUTH_URL', BASE_URL);
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', BASE_URL);
   });
 
   afterEach(() => {
@@ -97,16 +97,6 @@ describe('getTeamBlueskyClient', () => {
       );
     });
 
-    it('throws when NEXTAUTH_URL is not set', async () => {
-      vi.stubEnv('NEXTAUTH_URL', undefined);
-      const getTeamBlueskyClient = await loadFreshClient();
-
-      await expect(getTeamBlueskyClient()).rejects.toThrow(
-        'NEXTAUTH_URL environment variable is required'
-      );
-      expect(m.fromImportable).not.toHaveBeenCalled();
-    });
-
     it('throws a SyntaxError when BLUESKY_PRIVATE_KEY is not valid JSON', async () => {
       vi.stubEnv('BLUESKY_PRIVATE_KEY', 'not-json');
       const getTeamBlueskyClient = await loadFreshClient();
@@ -124,11 +114,11 @@ describe('getTeamBlueskyClient', () => {
     });
 
     it('does not cache a failed attempt', async () => {
-      vi.stubEnv('NEXTAUTH_URL', undefined);
+      vi.stubEnv('BLUESKY_PRIVATE_KEY', undefined);
       const getTeamBlueskyClient = await loadFreshClient();
       await expect(getTeamBlueskyClient()).rejects.toThrow();
 
-      vi.stubEnv('NEXTAUTH_URL', BASE_URL);
+      vi.stubEnv('BLUESKY_PRIVATE_KEY', JSON.stringify(JWK));
       const client = await getTeamBlueskyClient();
 
       expect(client).toBeDefined();
@@ -163,7 +153,7 @@ describe('getTeamBlueskyClient', () => {
       );
     });
 
-    it('builds the client metadata from NEXTAUTH_URL with the team callback', async () => {
+    it('builds the client metadata from NEXT_PUBLIC_APP_URL with the team callback', async () => {
       const options = await createFreshClientOptions();
 
       expect(options.clientMetadata).toEqual({
@@ -180,6 +170,22 @@ describe('getTeamBlueskyClient', () => {
         token_endpoint_auth_signing_alg: 'ES256',
         dpop_bound_access_tokens: true,
         jwks_uri: `${BASE_URL}/api/bluesky/jwks.json`
+      });
+    });
+
+    it('builds the client metadata from the deployment URL when NEXT_PUBLIC_APP_URL is not set', async () => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
+
+      const options = await createFreshClientOptions();
+
+      expect(options.clientMetadata).toMatchObject({
+        client_id:
+          'https://giveaway-abc123-team.vercel.app/api/bluesky/client-metadata.json',
+        redirect_uris: [
+          'https://giveaway-abc123-team.vercel.app/api/bluesky/team/callback'
+        ]
       });
     });
 

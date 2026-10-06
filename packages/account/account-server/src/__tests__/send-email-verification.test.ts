@@ -54,7 +54,8 @@ describe('sendEmailVerification', () => {
     inbound.send.mockResolvedValue({ id: 'email-1' });
     prismaMock.verificationToken.create.mockResolvedValue({});
     vi.stubEnv('INBOUND_SECRET', 'inbound-secret');
-    vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.test');
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.test');
+    vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
     vi.stubEnv('VERCEL_URL', 'giveaway-preview.vercel.app');
     consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -126,7 +127,7 @@ describe('sendEmailVerification', () => {
       });
     });
 
-    it('builds the portal url on NEXTAUTH_URL with the token and email', async () => {
+    it('builds the portal url on NEXT_PUBLIC_APP_URL with the token and email', async () => {
       await sendEmailVerification({ email: EMAIL });
 
       const token = sentParams().get('token') ?? '';
@@ -155,18 +156,18 @@ describe('sendEmailVerification', () => {
       expect(sentParams().has('redirectTo')).toBe(false);
     });
 
-    it('falls back to VERCEL_URL without adding a scheme when NEXTAUTH_URL is empty', async () => {
-      vi.stubEnv('NEXTAUTH_URL', '');
+    it('falls back to the https deployment URL when NEXT_PUBLIC_APP_URL is empty', async () => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', '');
 
       await sendEmailVerification({ email: EMAIL });
 
-      expect(sentUrl().startsWith('giveaway-preview.vercel.app/portal?')).toBe(
-        true
-      );
+      expect(
+        sentUrl().startsWith('https://giveaway-preview.vercel.app/portal?')
+      ).toBe(true);
     });
 
-    it('falls back to localhost when neither NEXTAUTH_URL nor VERCEL_URL is set', async () => {
-      vi.stubEnv('NEXTAUTH_URL', '');
+    it('falls back to localhost when neither NEXT_PUBLIC_APP_URL nor VERCEL_URL is set', async () => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', '');
       vi.stubEnv('VERCEL_URL', '');
 
       await sendEmailVerification({ email: EMAIL });

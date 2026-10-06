@@ -66,7 +66,8 @@ describe('bluesky team callback GET', () => {
   beforeEach(() => {
     consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.stubEnv('NEXT_PUBLIC_APP_URL', APP_URL);
-    vi.stubEnv('NEXTAUTH_URL', 'https://auth.giveaway.dog');
+    vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+    vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
     m.auth.mockReset();
     m.auth.mockResolvedValue(createSession());
     m.callback.mockReset();
@@ -477,21 +478,25 @@ describe('bluesky team callback GET', () => {
       });
     });
 
-    it('falls back to NEXTAUTH_URL for the redirect base', async () => {
+    it('falls back to the deployment URL for the redirect base', async () => {
       vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
 
       const res = await GET(request());
 
       expect(res.headers.get('location')).toBe(
-        'https://auth.giveaway.dog/app/acme/settings/integrations?success=bluesky_connected&handle=acme.bsky.social'
+        'https://giveaway-abc123-team.vercel.app/app/acme/settings/integrations?success=bluesky_connected&handle=acme.bsky.social'
       );
     });
 
-    it('throws when no base URL is configured', async () => {
+    it('falls back to localhost when no URL is configured', async () => {
       vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
-      vi.stubEnv('NEXTAUTH_URL', undefined);
+      vi.stubEnv('VERCEL_URL', undefined);
 
-      await expect(GET(request())).rejects.toThrow('Invalid URL');
+      const res = await GET(request());
+
+      expect(res.headers.get('location')).toBe(
+        'http://localhost:3000/app/acme/settings/integrations?success=bluesky_connected&handle=acme.bsky.social'
+      );
     });
   });
 
@@ -567,14 +572,14 @@ describe('bluesky team callback GET', () => {
     expect(res.headers.getSetCookie()).toEqual([]);
   });
 
-  it('falls back to NEXTAUTH_URL for the error redirect base', async () => {
+  it('falls back to the deployment URL for the error redirect base', async () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
     prismaMock.team.findUnique.mockResolvedValue(null);
 
     const res = await GET(request());
 
     expect(res.headers.get('location')).toBe(
-      `https://auth.giveaway.dog/app/acme/settings/integrations?error=${encodeURIComponent('Team not found')}`
+      `https://giveaway-abc123-team.vercel.app/app/acme/settings/integrations?error=${encodeURIComponent('Team not found')}`
     );
   });
 });

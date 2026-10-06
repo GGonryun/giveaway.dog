@@ -1,14 +1,8 @@
 import { NextResponse } from 'next/server';
+import { environment } from '@giveaway/app-config/environment';
 
 export async function GET() {
-  const baseUrl = process.env.NEXTAUTH_URL;
-
-  if (!baseUrl) {
-    return NextResponse.json(
-      { error: 'NEXTAUTH_URL not configured' },
-      { status: 500 }
-    );
-  }
+  const baseUrl = environment.appUrl();
 
   const metadata = {
     client_id: `${baseUrl}/api/bluesky/client-metadata.json`,

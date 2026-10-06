@@ -1,4 +1,5 @@
 import { Prisma } from '@giveaway/db-model';
+import { environment } from '@giveaway/app-config/environment';
 
 export const toSweepstakesSlug = (
   sweepstakes: Prisma.SweepstakesGetPayload<{
@@ -18,8 +19,6 @@ export const toSweepstakesUrl = ({
   forcePath?: boolean;
 }) => {
   const slug = toSweepstakesSlug(sweepstakes);
-  const base = forcePath
-    ? 'https://giveaway.dog'
-    : process.env.NEXT_PUBLIC_APP_URL;
+  const base = forcePath ? 'https://giveaway.dog' : environment.appUrl();
   return `${base}/browse/${slug}`;
 };

@@ -193,13 +193,20 @@ describe('processConnect', () => {
       expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
 
-    it('returns the generic error when the key does not exist and the app url is not configured', async () => {
+    it('points to the setup page on the deployment URL when the app url is not configured', async () => {
       vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
       prismaMock.state.findFirst.mockResolvedValue(null);
 
       const result = await processConnect({ body: commandInteraction() });
 
-      expect(result).toEqual(GENERIC_ERROR);
+      expect(result).toEqual({
+        content:
+          'No pending integration found for this server. Visit https://giveaway-abc123-team.vercel.app/app to start the setup process.',
+        flags: 64,
+        success: false
+      });
     });
 
     it('asks to regenerate the key when the state has no integration', async () => {

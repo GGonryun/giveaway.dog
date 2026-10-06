@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { ApplicationError } from '@giveaway/util-errors';
 import { INTEGRATIONS_SETUP_URL, toSplitActionId } from '../util';
 import { buttonInteraction } from '@giveaway/discord-model/testing/fixtures-discord-model';
 
@@ -35,21 +34,14 @@ describe('INTEGRATIONS_SETUP_URL', () => {
   });
 
   describe('when the app url is missing', () => {
-    it.each([undefined, ''])('throws INTERNAL_SERVER_ERROR for %j', (value) => {
+    it.each([undefined, ''])('points to the deployment URL for %j', (value) => {
       vi.stubEnv('NEXT_PUBLIC_APP_URL', value);
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
 
-      let caught: unknown;
-      try {
-        INTEGRATIONS_SETUP_URL({ slug: 'good-dogs' });
-      } catch (error) {
-        caught = error;
-      }
-
-      expect(caught).toBeInstanceOf(ApplicationError);
-      expect(caught).toMatchObject({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Missing NEXT_PUBLIC_APP_URL environment variable'
-      });
+      expect(INTEGRATIONS_SETUP_URL({ slug: 'good-dogs' })).toBe(
+        'https://giveaway-abc123-team.vercel.app/app/good-dogs/settings/integrations'
+      );
     });
   });
 });

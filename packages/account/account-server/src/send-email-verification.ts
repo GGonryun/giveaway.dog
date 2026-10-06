@@ -7,6 +7,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { createHash, randomBytes } from 'crypto';
 import { addMinutes } from 'date-fns/addMinutes';
 import z from 'zod';
+import { environment } from '@giveaway/app-config/environment';
 
 const emailVerificationSchema = z.object({
   email: z.string().email(),
@@ -41,10 +42,7 @@ export const sendEmailVerification = procedure()
       });
 
       // Create verification URL using portal
-      const baseUrl =
-        process.env.NEXTAUTH_URL ||
-        process.env.VERCEL_URL ||
-        'http://localhost:3000';
+      const baseUrl = environment.appUrl();
       const params = new URLSearchParams({
         token,
         email,

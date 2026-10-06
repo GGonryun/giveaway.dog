@@ -8,6 +8,7 @@ import {
   UserReferralSchema
 } from '@giveaway/referrals-model/schemas';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
+import { environment } from '@giveaway/app-config/environment';
 
 export const REFERRED_USER_INCLUDE = {
   user: true
@@ -80,7 +81,7 @@ export const toReferralLink = ({
   sweepstakesId: string;
   code: string;
 }) => {
-  return `${process.env.NEXT_PUBLIC_APP_URL}/browse/${sweepstakesId}?ref=${code}`;
+  return `${environment.appUrl()}/browse/${sweepstakesId}?ref=${code}`;
 };
 
 export const toUserReferral = ({

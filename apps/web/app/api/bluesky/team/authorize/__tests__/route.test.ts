@@ -44,7 +44,8 @@ describe('bluesky team authorize GET', () => {
     consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     consoleInfo = vi.spyOn(console, 'info').mockImplementation(() => {});
     vi.stubEnv('NEXT_PUBLIC_APP_URL', APP_URL);
-    vi.stubEnv('NEXTAUTH_URL', 'https://auth.giveaway.dog');
+    vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+    vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
     vi.stubEnv('NODE_ENV', 'test');
     m.authorize.mockReset();
     m.authorize.mockResolvedValue(new URL(AUTH_URL));
@@ -268,13 +269,13 @@ describe('bluesky team authorize GET', () => {
       );
     });
 
-    it('falls back to NEXTAUTH_URL when NEXT_PUBLIC_APP_URL is unset', async () => {
+    it('falls back to the deployment URL when NEXT_PUBLIC_APP_URL is unset', async () => {
       vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
 
       const res = await GET(request(validParams));
 
       expect(res.headers.get('location')).toBe(
-        'https://auth.giveaway.dog/app/acme/settings/integrations?error=bluesky_auth_failed'
+        'https://giveaway-abc123-team.vercel.app/app/acme/settings/integrations?error=bluesky_auth_failed'
       );
     });
 
@@ -314,11 +315,15 @@ describe('bluesky team authorize GET', () => {
       );
     });
 
-    it('throws when no base URL is configured', async () => {
+    it('falls back to localhost when no URL is configured', async () => {
       vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
-      vi.stubEnv('NEXTAUTH_URL', undefined);
+      vi.stubEnv('VERCEL_URL', undefined);
 
-      await expect(GET(request(validParams))).rejects.toThrow('Invalid URL');
+      const res = await GET(request(validParams));
+
+      expect(res.headers.get('location')).toBe(
+        'http://localhost:3000/app/acme/settings/integrations?error=bluesky_auth_failed'
+      );
     });
   });
 });
