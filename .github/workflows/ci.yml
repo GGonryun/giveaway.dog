@@ -26,9 +26,13 @@ env:
 
 jobs:
   lint:
-    name: Lint
+    name: Lint ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -46,16 +50,25 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: lint-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs lint ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: ESLint
-        run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t lint --projects="$PROJECTS" --output-style=static --quiet
 
       - name: ESLint (files outside the projects)
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
         run: pnpm run lint:root --quiet
 
       - name: Prettier
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
         run: pnpm run format:check
 
   type-check:
@@ -96,9 +109,13 @@ jobs:
         run: pnpm nx run-many -t type-check --projects="$PROJECTS" --output-style=static
 
   server:
-    name: Server tests
+    name: Server tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -115,17 +132,28 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: server-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:server ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest server tests with coverage
-        run: pnpm nx $NX_RUN -t test:server --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:server --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
 
       - name: Collect the test reports
+        if: steps.projects.outputs.projects
         run: node .github/scripts/collect-vitest-reports.mjs server
 
       - name: Upload the test reports
+        if: steps.projects.outputs.projects
         uses: actions/upload-artifact@v4
         with:
-          name: vitest-report-server
+          name: vitest-report-server-${{ matrix.shard }}
           path: .vitest-reports/
           include-hidden-files: true
           retention-days: 1
