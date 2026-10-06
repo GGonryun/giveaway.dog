@@ -1,25 +1,13 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vitest/config';
 import { workspaceProjects } from '@giveaway/vitest-config/workspace';
+import coverageConfig from './vitest.coverage.config';
 
-export default defineConfig({
-  test: {
-    silent: 'passed-only',
-    projects: workspaceProjects(__dirname, ['apps/web', 'packages', 'tools']),
-    coverage: {
-      provider: 'v8',
-      reporter: ['text-summary', 'json-summary'],
-      include: [
-        'apps/web/app/**/*.{ts,tsx}',
-        'packages/**/src/**/*.{ts,tsx}',
-        'tools/**/src/**/*.{ts,tsx}'
-      ],
-      exclude: [
-        '**/__tests__/**',
-        '**/src/testing/**',
-        '**/*.d.ts',
-        'apps/web/app/.well-known/**',
-        'packages/tooling/**'
-      ]
+export default mergeConfig(
+  coverageConfig,
+  defineConfig({
+    test: {
+      silent: 'passed-only',
+      projects: workspaceProjects(__dirname, ['apps/web', 'packages', 'tools'])
     }
-  }
-});
+  })
+);
