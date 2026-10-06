@@ -31,7 +31,7 @@ const DEV_FILES = [
   '**/__tests__/**',
   '**/src/testing/**',
   '**/*.test.{ts,tsx}',
-  '**/{vitest,vitest.visual}.config.ts',
+  '**/{vitest,vitest.visual,vitest.integration}.config.ts',
   '**/eslint.config.mjs'
 ];
 
@@ -78,6 +78,7 @@ const boundaries = [
             '{projectRoot}/**/*.test.{ts,tsx}',
             '{projectRoot}/vitest.config.ts',
             '{projectRoot}/vitest.visual.config.ts',
+            '{projectRoot}/vitest.integration.config.ts',
             '{projectRoot}/eslint.config.mjs'
           ]
         }

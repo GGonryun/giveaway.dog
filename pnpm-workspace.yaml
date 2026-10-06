@@ -44,6 +44,7 @@ catalog:
   '@radix-ui/react-toggle-group': ^1.1.2
   '@radix-ui/react-tooltip': ^1.1.6
   '@tailwindcss/postcss': ^4.1.11
+  '@testcontainers/postgresql': ^12.2.0
   '@testing-library/dom': ^10.4.2
   '@testing-library/jest-dom': ^7.0.1
   '@testing-library/react': ^16.3.3
@@ -164,11 +165,13 @@ allowBuilds:
   '@swc/core': true
   '@tailwindcss/oxide': true
   core-js: true
+  cpu-features: false
   esbuild: true
   nx: false
   prisma: true
   protobufjs: true
   sharp: false
+  ssh2: false
   unrs-resolver: false
 
 onlyBuiltDependencies:
@@ -182,6 +185,8 @@ onlyBuiltDependencies:
   - protobufjs
 
 ignoredBuiltDependencies:
+  - cpu-features
   - nx
   - sharp
+  - ssh2
   - unrs-resolver
