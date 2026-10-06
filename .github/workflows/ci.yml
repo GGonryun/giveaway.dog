@@ -59,9 +59,13 @@ jobs:
         run: pnpm run format:check
 
   type-check:
-    name: Type check
+    name: Type check ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -78,9 +82,18 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: type-check-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs type-check ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: TypeScript
-        run: pnpm nx $NX_RUN -t type-check --output-style=static
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t type-check --projects="$PROJECTS" --output-style=static
 
   server:
     name: Server tests
@@ -118,9 +131,13 @@ jobs:
           retention-days: 1
 
   frontend:
-    name: Frontend tests
+    name: Frontend tests ${{ matrix.shard }}/${{ strategy.job-total }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -137,17 +154,28 @@ jobs:
 
       - name: Set up the Nx cache
         uses: ./.github/actions/nx-cache
+        with:
+          id: frontend-${{ matrix.shard }}-of-${{ strategy.job-total }}
+
+      - name: Select the projects of this shard
+        id: projects
+        run: node .github/scripts/select-shard-projects.mjs test:frontend ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest frontend tests with coverage
-        run: pnpm nx $NX_RUN -t test:frontend --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
+        if: steps.projects.outputs.projects
+        env:
+          PROJECTS: ${{ steps.projects.outputs.projects }}
+        run: pnpm nx run-many -t test:frontend --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
 
       - name: Collect the test reports
+        if: steps.projects.outputs.projects
         run: node .github/scripts/collect-vitest-reports.mjs frontend
 
       - name: Upload the test reports
+        if: steps.projects.outputs.projects
         uses: actions/upload-artifact@v4
         with:
-          name: vitest-report-frontend
+          name: vitest-report-frontend-${{ matrix.shard }}
           path: .vitest-reports/
           include-hidden-files: true
           retention-days: 1
