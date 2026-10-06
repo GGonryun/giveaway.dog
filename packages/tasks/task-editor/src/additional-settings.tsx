@@ -58,6 +58,7 @@ import Link from 'next/link';
 import { TaskType } from '@giveaway/task-model/schemas';
 import { TwitchImportingAccountField } from '@giveaway/twitch-task-editor/twitch-importing-account';
 import { TwitchRateLimitField } from '@giveaway/twitch-task-editor/twitch-rate-limit';
+import { environment } from '@giveaway/app-config/environment';
 
 export const AdditionalSettings: React.FC<{
   type: TaskType;
@@ -189,7 +190,7 @@ export const AdditionalSettings: React.FC<{
               manually.
               <Link
                 // TODO: create a knowledge base article about this
-                href={`${process.env.NEXT_PUBLIC_APP_URL}/contact`}
+                href={`${environment.appUrl()}/contact`}
                 target="_blank"
                 className="underline mt-1"
               >

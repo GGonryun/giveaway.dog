@@ -38,6 +38,7 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/auth-server": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/email": "workspace:*",

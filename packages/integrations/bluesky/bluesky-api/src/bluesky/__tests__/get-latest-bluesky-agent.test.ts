@@ -63,7 +63,7 @@ describe('getLatestBlueskyCredentials', () => {
     });
     m.fromImportable.mockResolvedValue({ kid: 'key1' });
     vi.stubEnv('BLUESKY_PRIVATE_KEY', JSON.stringify({ kty: 'EC' }));
-    vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.test');
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.test');
   });
 
   afterEach(() => {

@@ -39,6 +39,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/browse-list": "workspace:*",
     "@giveaway/integration-icons": "workspace:*",
     "@giveaway/marketing-ui": "workspace:*",

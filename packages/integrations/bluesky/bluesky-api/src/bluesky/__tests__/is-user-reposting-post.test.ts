@@ -78,7 +78,7 @@ describe('isUserRepostingPost', () => {
       return m.agent;
     });
     vi.stubEnv('BLUESKY_PRIVATE_KEY', JSON.stringify({ kty: 'EC' }));
-    vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.test');
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.test');
     prismaMock.account.findFirst.mockResolvedValue({
       providerAccountId: 'did:plc:viewer',
       session_state: '{}',

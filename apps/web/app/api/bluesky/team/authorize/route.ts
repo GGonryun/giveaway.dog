@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTeamBlueskyClient } from '@giveaway/bluesky-api/bluesky/team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
+import { environment } from '@giveaway/app-config/environment';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -73,10 +74,7 @@ export async function GET(req: NextRequest) {
     return response;
   } catch (error) {
     console.error('Bluesky team authorization failed:', error);
-    const url = new URL(
-      returnTo,
-      process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXTAUTH_URL
-    );
+    const url = new URL(returnTo, environment.appUrl());
     url.searchParams.set('error', 'bluesky_auth_failed');
     return NextResponse.redirect(url.toString());
   }

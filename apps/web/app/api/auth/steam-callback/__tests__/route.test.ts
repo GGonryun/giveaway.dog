@@ -12,7 +12,7 @@ describe('steam-callback route', () => {
 
   describe('GET', () => {
     it('redirects to the NextAuth steam callback with a fake code appended', async () => {
-      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.dog');
 
       const res = await GET(request('?openid.mode=id_res'));
 
@@ -23,7 +23,7 @@ describe('steam-callback route', () => {
     });
 
     it('overwrites an existing code parameter with the fake code in place', async () => {
-      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.dog');
 
       const res = await GET(request('?code=real&openid.mode=id_res'));
 
@@ -33,7 +33,7 @@ describe('steam-callback route', () => {
     });
 
     it('re-encodes the forwarded OpenID parameters', async () => {
-      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.dog');
 
       const res = await GET(
         request(
@@ -47,7 +47,7 @@ describe('steam-callback route', () => {
     });
 
     it('redirects with only the fake code when no parameters are given', async () => {
-      vi.stubEnv('NEXTAUTH_URL', 'http://localhost:3000');
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'http://localhost:3000');
 
       const res = await GET(request(''));
 
@@ -56,11 +56,15 @@ describe('steam-callback route', () => {
       );
     });
 
-    it('throws a malformed URL error when NEXTAUTH_URL is not configured', async () => {
-      vi.stubEnv('NEXTAUTH_URL', undefined);
+    it('redirects on the deployment URL when NEXT_PUBLIC_APP_URL is not configured', async () => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
 
-      await expect(GET(request('?openid.mode=id_res'))).rejects.toThrow(
-        'URL is malformed "undefined/api/auth/callback/steam?openid.mode=id_res&code=123"'
+      const res = await GET(request('?openid.mode=id_res'));
+
+      expect(res.headers.get('location')).toBe(
+        'https://giveaway-abc123-team.vercel.app/api/auth/callback/steam?openid.mode=id_res&code=123'
       );
     });
   });

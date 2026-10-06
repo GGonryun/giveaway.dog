@@ -64,7 +64,7 @@ describe('getLatestTeamBlueskyCredentials', () => {
     });
     m.fromImportable.mockResolvedValue({ kid: 'key1' });
     vi.stubEnv('BLUESKY_PRIVATE_KEY', JSON.stringify({ kty: 'EC' }));
-    vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.test');
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.test');
   });
 
   afterEach(() => {
@@ -315,7 +315,7 @@ describe('getLatestTeamBlueskyCredentials', () => {
       vi.resetModules();
       const { getLatestTeamBlueskyCredentials: freshGetCredentials } =
         await import('../get-latest-team-bluesky-agent');
-      vi.stubEnv('NEXTAUTH_URL', undefined);
+      vi.stubEnv('BLUESKY_PRIVATE_KEY', undefined);
       prismaMock.integration.findFirst.mockResolvedValue(integration());
 
       const error = await captureError(
@@ -323,7 +323,7 @@ describe('getLatestTeamBlueskyCredentials', () => {
       );
 
       expect(error.message).toBe(
-        'NEXTAUTH_URL environment variable is required'
+        'BLUESKY_PRIVATE_KEY environment variable is required'
       );
       expect(error.name).toBe('Error');
       expect(prismaMock.integration.update).not.toHaveBeenCalled();

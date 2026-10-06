@@ -6,41 +6,43 @@ describe('bluesky client-metadata.json GET', () => {
     vi.unstubAllEnvs();
   });
 
-  describe('when NEXTAUTH_URL is not configured', () => {
-    it('returns a 500 error when the variable is unset', async () => {
-      vi.stubEnv('NEXTAUTH_URL', undefined);
+  describe('when NEXT_PUBLIC_APP_URL is not configured', () => {
+    it('builds the metadata from the deployment URL', async () => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
 
       const res = await GET();
+      const body = await res.json();
 
-      expect(res.status).toBe(500);
-      expect(await res.json()).toEqual({
-        error: 'NEXTAUTH_URL not configured'
-      });
+      expect(res.status).toBe(200);
+      expect(body.client_id).toBe(
+        'https://giveaway-abc123-team.vercel.app/api/bluesky/client-metadata.json'
+      );
+      expect(body.redirect_uris).toEqual([
+        'https://giveaway-abc123-team.vercel.app/api/bluesky/user/callback',
+        'https://giveaway-abc123-team.vercel.app/api/bluesky/team/callback'
+      ]);
     });
 
-    it('returns a 500 error when the variable is empty', async () => {
-      vi.stubEnv('NEXTAUTH_URL', '');
+    it('builds the metadata from localhost when no deployment URL is set', async () => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', '');
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+      vi.stubEnv('VERCEL_URL', undefined);
 
       const res = await GET();
+      const body = await res.json();
 
-      expect(res.status).toBe(500);
-      expect(await res.json()).toEqual({
-        error: 'NEXTAUTH_URL not configured'
-      });
-    });
-
-    it('does not set the cache header on the error response', async () => {
-      vi.stubEnv('NEXTAUTH_URL', undefined);
-
-      const res = await GET();
-
-      expect(res.headers.get('cache-control')).toBeNull();
+      expect(res.status).toBe(200);
+      expect(body.client_id).toBe(
+        'http://localhost:3000/api/bluesky/client-metadata.json'
+      );
     });
   });
 
-  describe('when NEXTAUTH_URL is configured', () => {
+  describe('when NEXT_PUBLIC_APP_URL is configured', () => {
     it('returns the OAuth client metadata built from the base URL', async () => {
-      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.dog');
 
       const res = await GET();
 
@@ -66,7 +68,7 @@ describe('bluesky client-metadata.json GET', () => {
     });
 
     it('serves the metadata as JSON cacheable for one hour', async () => {
-      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.dog');
 
       const res = await GET();
 
@@ -75,7 +77,7 @@ describe('bluesky client-metadata.json GET', () => {
     });
 
     it('concatenates a trailing slash in the base URL verbatim', async () => {
-      vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog/');
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.dog/');
 
       const res = await GET();
       const body = await res.json();

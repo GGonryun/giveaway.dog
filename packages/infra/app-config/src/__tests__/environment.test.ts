@@ -44,20 +44,64 @@ describe('environment', () => {
   });
 
   describe('appUrl', () => {
+    const stubUrls = (urls: {
+      app?: string;
+      publicDeployment?: string;
+      deployment?: string;
+    }) => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', urls.app);
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', urls.publicDeployment);
+      vi.stubEnv('VERCEL_URL', urls.deployment);
+    };
+
     it('returns NEXT_PUBLIC_APP_URL when it is set', () => {
-      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.dog');
+      stubUrls({ app: 'https://giveaway.dog' });
 
       expect(environment.appUrl()).toBe('https://giveaway.dog');
     });
 
-    it('falls back to localhost when NEXT_PUBLIC_APP_URL is unset', () => {
-      vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+    it('prefers NEXT_PUBLIC_APP_URL over the deployment URL', () => {
+      stubUrls({
+        app: 'https://www.giveaway.dog',
+        publicDeployment: 'giveaway-abc123-team.vercel.app',
+        deployment: 'giveaway-abc123-team.vercel.app'
+      });
+
+      expect(environment.appUrl()).toBe('https://www.giveaway.dog');
+    });
+
+    it('falls back to the deployment URL when NEXT_PUBLIC_APP_URL is unset', () => {
+      stubUrls({ deployment: 'giveaway-abc123-team.vercel.app' });
+
+      expect(environment.appUrl()).toBe(
+        'https://giveaway-abc123-team.vercel.app'
+      );
+    });
+
+    it('falls back to the deployment URL when NEXT_PUBLIC_APP_URL is empty', () => {
+      stubUrls({ app: '', deployment: 'giveaway-abc123-team.vercel.app' });
+
+      expect(environment.appUrl()).toBe(
+        'https://giveaway-abc123-team.vercel.app'
+      );
+    });
+
+    it('reads NEXT_PUBLIC_VERCEL_URL, which client code can read', () => {
+      stubUrls({ publicDeployment: 'giveaway-abc123-team.vercel.app' });
+
+      expect(environment.appUrl()).toBe(
+        'https://giveaway-abc123-team.vercel.app'
+      );
+    });
+
+    it('falls back to localhost when no URL is set', () => {
+      stubUrls({});
 
       expect(environment.appUrl()).toBe('http://localhost:3000');
     });
 
-    it('falls back to localhost when NEXT_PUBLIC_APP_URL is empty', () => {
-      vi.stubEnv('NEXT_PUBLIC_APP_URL', '');
+    it('falls back to localhost when every URL is empty', () => {
+      stubUrls({ app: '', publicDeployment: '', deployment: '' });
 
       expect(environment.appUrl()).toBe('http://localhost:3000');
     });

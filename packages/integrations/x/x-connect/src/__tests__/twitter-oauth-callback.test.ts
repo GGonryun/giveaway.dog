@@ -8,7 +8,6 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 vi.hoisted(() => {
   vi.stubEnv('TWITTER_TEAM_APP_CLIENT_ID', 'client-id');
   vi.stubEnv('TWITTER_TEAM_APP_CLIENT_SECRET', 'client-secret');
-  vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.test');
 });
 
 const NOW = new Date('2026-01-01T00:00:00.000Z');
@@ -56,6 +55,7 @@ describe('twitterOAuthCallback', () => {
   beforeEach(() => {
     fetchMock.mockReset();
     vi.stubGlobal('fetch', fetchMock);
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.test');
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
   });

@@ -15,6 +15,7 @@ import {
 import { ExternalLink, Share2, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { environment } from '@giveaway/app-config/environment';
 
 interface Winner {
   id: string;
@@ -49,7 +50,7 @@ export const WinnersResultModal: React.FC<WinnersResultModalProps> = ({
   onReRoll,
   isReRolling = false
 }) => {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://giveaway.dog';
+  const baseUrl = environment.appUrl();
   const drawUrl = `${baseUrl}/pickers/x/${drawId}`;
 
   const winnersText = winners.map((w) => `@${w.username}`).join(' ');

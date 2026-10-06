@@ -29,6 +29,7 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/auth-core": "workspace:*",
     "@giveaway/auth-provider-e2e": "workspace:*",
     "@giveaway/auth-provider-inbound": "workspace:*",

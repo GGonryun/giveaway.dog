@@ -5,6 +5,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import { Agent } from '@atproto/api';
 import { auth } from '@giveaway/auth-server/config';
+import { environment } from '@giveaway/app-config/environment';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -129,7 +130,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXTAUTH_URL;
+    const baseUrl = environment.appUrl();
     const response = NextResponse.redirect(
       new URL(
         `/app/${team.slug}/settings/integrations?success=bluesky_connected&handle=${handle}`,
@@ -149,7 +150,7 @@ export async function GET(request: NextRequest) {
         ? error.message
         : 'Failed to connect Bluesky';
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXTAUTH_URL;
+    const baseUrl = environment.appUrl();
     return NextResponse.redirect(
       new URL(
         `/app/${slug}/settings/integrations?error=${encodeURIComponent(errorMessage)}`,

@@ -42,6 +42,7 @@
     "@atproto/api": "catalog:",
     "@atproto/jwk-jose": "catalog:",
     "@atproto/oauth-client-node": "catalog:",
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",

@@ -263,14 +263,18 @@ describe('publishTwitterV2Picker', () => {
         });
       });
 
-      it('builds the url and token from unset environment variables as "undefined"', async () => {
+      it('builds the url on the deployment URL and the token from an unset secret as "undefined"', async () => {
         vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+        vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+        vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
         vi.stubEnv('CRON_SECRET', undefined);
 
         await publishTwitterV2Picker(input());
 
         const [url, init] = fetchMock.mock.calls[0];
-        expect(url).toBe('undefined/api/workflows/twitter/scrape/start');
+        expect(url).toBe(
+          'https://giveaway-abc123-team.vercel.app/api/workflows/twitter/scrape/start'
+        );
         expect(init?.headers).toEqual({
           'Content-Type': 'application/json',
           Authorization: 'Bearer undefined'

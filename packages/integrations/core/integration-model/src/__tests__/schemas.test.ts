@@ -64,41 +64,35 @@ describe('environment derived constants', () => {
     vi.resetModules();
   });
 
-  it('reads the twitter team app credentials and redirect uri from the environment', async () => {
+  it('reads the twitter team app credentials from the environment', async () => {
     vi.stubEnv('TWITTER_TEAM_APP_CLIENT_ID', 'client-id');
     vi.stubEnv('TWITTER_TEAM_APP_CLIENT_SECRET', 'client-secret');
-    vi.stubEnv('NEXTAUTH_URL', 'https://giveaway.dog');
     vi.resetModules();
 
     const mod = await import('../schemas');
 
     expect({
       id: mod.TWITTER_TEAM_APP_CLIENT_ID,
-      secret: mod.TWITTER_TEAM_APP_CLIENT_SECRET,
-      redirect: mod.TWITTER_REDIRECT_URI
+      secret: mod.TWITTER_TEAM_APP_CLIENT_SECRET
     }).toEqual({
       id: 'client-id',
-      secret: 'client-secret',
-      redirect: 'https://giveaway.dog/api/auth/twitter-callback'
+      secret: 'client-secret'
     });
   });
 
-  it('interpolates undefined into the redirect uri when NEXTAUTH_URL is unset', async () => {
+  it('leaves the twitter team app credentials undefined when they are unset', async () => {
     vi.stubEnv('TWITTER_TEAM_APP_CLIENT_ID', undefined);
     vi.stubEnv('TWITTER_TEAM_APP_CLIENT_SECRET', undefined);
-    vi.stubEnv('NEXTAUTH_URL', undefined);
     vi.resetModules();
 
     const mod = await import('../schemas');
 
     expect({
       id: mod.TWITTER_TEAM_APP_CLIENT_ID,
-      secret: mod.TWITTER_TEAM_APP_CLIENT_SECRET,
-      redirect: mod.TWITTER_REDIRECT_URI
+      secret: mod.TWITTER_TEAM_APP_CLIENT_SECRET
     }).toEqual({
       id: undefined,
-      secret: undefined,
-      redirect: 'undefined/api/auth/twitter-callback'
+      secret: undefined
     });
   });
 });

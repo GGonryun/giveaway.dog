@@ -4,6 +4,7 @@ import { NodeOAuthClient, requestLocalLock } from '@atproto/oauth-client-node';
 import { JoseKey } from '@atproto/jwk-jose';
 import prisma from '@giveaway/db-client/prisma';
 import { REQUIRED_BLUESKY_SCOPES } from '@giveaway/integration-model/scopes';
+import { environment } from '@giveaway/app-config/environment';
 
 let teamBlueskyClient: NodeOAuthClient | null = null;
 
@@ -18,10 +19,6 @@ export async function getTeamBlueskyClient() {
     throw new Error('BLUESKY_PRIVATE_KEY environment variable is required');
   }
 
-  if (!process.env.NEXTAUTH_URL) {
-    throw new Error('NEXTAUTH_URL environment variable is required');
-  }
-
   const privateKeyJwk = JSON.parse(process.env.BLUESKY_PRIVATE_KEY);
   const kid = privateKeyJwk.kid || 'key1';
 
@@ -29,13 +26,15 @@ export async function getTeamBlueskyClient() {
     JoseKey.fromImportable(privateKeyJwk, kid)
   ]);
 
+  const baseUrl = environment.appUrl();
+
   teamBlueskyClient = new NodeOAuthClient({
     clientMetadata: {
-      client_id: `${process.env.NEXTAUTH_URL}/api/bluesky/client-metadata.json`,
+      client_id: `${baseUrl}/api/bluesky/client-metadata.json`,
       client_name: 'Giveaway.dog',
-      client_uri: process.env.NEXTAUTH_URL,
-      logo_uri: `${process.env.NEXTAUTH_URL}/logo.png`,
-      redirect_uris: [`${process.env.NEXTAUTH_URL}/api/bluesky/team/callback`],
+      client_uri: baseUrl,
+      logo_uri: `${baseUrl}/logo.png`,
+      redirect_uris: [`${baseUrl}/api/bluesky/team/callback`],
       grant_types: ['authorization_code', 'refresh_token'],
       scope: REQUIRED_BLUESKY_SCOPES.join(' '),
       response_types: ['code'],
@@ -43,7 +42,7 @@ export async function getTeamBlueskyClient() {
       token_endpoint_auth_method: 'private_key_jwt',
       token_endpoint_auth_signing_alg: 'ES256',
       dpop_bound_access_tokens: true,
-      jwks_uri: `${process.env.NEXTAUTH_URL}/api/bluesky/jwks.json`
+      jwks_uri: `${baseUrl}/api/bluesky/jwks.json`
     },
     keyset,
     requestLock: requestLocalLock,

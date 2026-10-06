@@ -1,4 +1,5 @@
 import 'server-only';
+import { environment } from '@giveaway/app-config/environment';
 
 export const TWITCH_INTEGRATION_SCOPES = [
   'openid',
@@ -17,4 +18,4 @@ export const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID!;
 export const TWITCH_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET!;
 export const TWITCH_EVENTSUB_SECRET = process.env.TWITCH_EVENTSUB_SECRET!;
 export const TWITCH_BOT_USER_ID = process.env.TWITCH_BOT_USER_ID!;
-export const TWITCH_REDIRECT_URI = `${process.env.NEXT_PUBLIC_APP_URL}/api/twitch/callback`;
+export const TWITCH_REDIRECT_URI = `${environment.appUrl()}/api/twitch/callback`;

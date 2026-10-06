@@ -1928,6 +1928,9 @@ importers:
 
   packages/account/account-server:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/auth-server':
         specifier: workspace:*
         version: link:../../auth/auth-server
@@ -2772,6 +2775,9 @@ importers:
 
   packages/auth/auth-server:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/auth-core':
         specifier: workspace:*
         version: link:../auth-core
@@ -3957,6 +3963,9 @@ importers:
       '@atproto/oauth-client-node':
         specifier: 'catalog:'
         version: 0.3.16
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../../infra/app-config
       '@giveaway/db-client':
         specifier: workspace:*
         version: link:../../../infra/db-client
@@ -4668,6 +4677,9 @@ importers:
 
   packages/integrations/discord/discord-bot:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../../infra/app-config
       '@giveaway/automation-model':
         specifier: workspace:*
         version: link:../../../automation/automation-model
@@ -5698,6 +5710,9 @@ importers:
 
   packages/integrations/twitch/twitch-api:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../../infra/app-config
       '@giveaway/cache':
         specifier: workspace:*
         version: link:../../../infra/cache
@@ -6384,6 +6399,9 @@ importers:
 
   packages/integrations/x/x-connect:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../../infra/app-config
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../../infra/db-model
@@ -8431,6 +8449,9 @@ importers:
 
   packages/pickers/x-picker-public:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/browse-list':
         specifier: workspace:*
         version: link:../../browse/browse-list
@@ -8583,6 +8604,9 @@ importers:
 
   packages/pickers/x-picker-server:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
@@ -11689,6 +11713,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: 'catalog:'
         version: 3.2.2(react@19.2.4)
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/bluesky-task-editor':
         specifier: workspace:*
         version: link:../../integrations/bluesky/bluesky-task-editor

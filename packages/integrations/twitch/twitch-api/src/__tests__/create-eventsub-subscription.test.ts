@@ -421,9 +421,11 @@ describe('createEventSubSubscriptionsForFeatures', () => {
       });
     });
 
-    it('uses the string undefined in the callback when no url is configured', async () => {
+    it('uses the deployment URL in the callback when no url is configured', async () => {
       vi.stubEnv('TWITCH_EVENTSUB_URL', undefined);
       vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
+      vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
       routeFetch();
 
       await createEventSubSubscriptionsForFeatures({
@@ -433,7 +435,10 @@ describe('createEventSubSubscriptionsForFeatures', () => {
 
       const [[, init]] = createCalls();
       expect(jsonBody(init)).toMatchObject({
-        transport: { callback: 'undefined/api/twitch/webhooks' }
+        transport: {
+          callback:
+            'https://giveaway-abc123-team.vercel.app/api/twitch/webhooks'
+        }
       });
     });
 

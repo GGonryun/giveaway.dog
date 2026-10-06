@@ -17,6 +17,7 @@ import {
   CreateReferralSchema,
   UserReferralSchema
 } from '@giveaway/referrals-model/schemas';
+import { environment } from '@giveaway/app-config/environment';
 
 export const mockHost: GiveawayHostSchema = {
   id: 'giveaway-dog-id',
@@ -163,7 +164,7 @@ export const mockUserHostRelationship: UserHostRelationshipSchema = {
 export const mockUserReferral: UserReferralSchema = {
   id: 'preview-referral',
   code: 'PREVIEW123',
-  link: `${process.env.NEXT_PUBLIC_APP_URL}/referral/PREVIEW123`,
+  link: `${environment.appUrl()}/referral/PREVIEW123`,
   referrals: [
     {
       user: {

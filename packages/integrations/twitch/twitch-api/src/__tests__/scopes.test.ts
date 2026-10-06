@@ -5,7 +5,9 @@ const ENV_KEYS = [
   'TWITCH_CLIENT_SECRET',
   'TWITCH_EVENTSUB_SECRET',
   'TWITCH_BOT_USER_ID',
-  'NEXT_PUBLIC_APP_URL'
+  'NEXT_PUBLIC_APP_URL',
+  'NEXT_PUBLIC_VERCEL_URL',
+  'VERCEL_URL'
 ] as const;
 
 type ScopesEnv = Partial<Record<(typeof ENV_KEYS)[number], string>>;
@@ -120,10 +122,22 @@ describe('twitch scopes', () => {
       });
     });
 
-    it('builds a redirect uri prefixed with the string undefined', async () => {
+    it('builds the redirect uri on the deployment URL', async () => {
+      const scopes = await loadScopes({
+        VERCEL_URL: 'giveaway-abc123-team.vercel.app'
+      });
+
+      expect(scopes.TWITCH_REDIRECT_URI).toBe(
+        'https://giveaway-abc123-team.vercel.app/api/twitch/callback'
+      );
+    });
+
+    it('builds the redirect uri on localhost when no URL is set', async () => {
       const scopes = await loadScopes({});
 
-      expect(scopes.TWITCH_REDIRECT_URI).toBe('undefined/api/twitch/callback');
+      expect(scopes.TWITCH_REDIRECT_URI).toBe(
+        'http://localhost:3000/api/twitch/callback'
+      );
     });
   });
 });
