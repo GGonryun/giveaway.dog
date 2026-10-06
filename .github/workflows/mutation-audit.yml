@@ -1,0 +1,119 @@
+name: Mutation audit
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: Package names or folders to audit, separated by spaces. Leave empty to pick packages at random
+        required: false
+        default: ''
+      count:
+        description: How many packages to pick at random
+        required: false
+        default: '3'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mutation-audit
+  cancel-in-progress: false
+
+env:
+  NX_NO_CLOUD: true
+
+jobs:
+  audit:
+    name: Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Restore the Stryker incremental files
+        uses: actions/cache@v4
+        with:
+          path: reports/mutation/*/stryker-incremental.json
+          key: mutation-incremental-${{ github.run_id }}
+          restore-keys: mutation-incremental-
+
+      - name: Stryker on the whole of each package
+        id: audit
+        env:
+          INPUT_PACKAGES: ${{ inputs.packages }}
+          INPUT_COUNT: ${{ inputs.count || '3' }}
+        run: |
+          if [ -n "$INPUT_PACKAGES" ]; then
+            packages="$INPUT_PACKAGES"
+          else
+            packages=$(node packages/tooling/mutation-testing/src/cli.ts pick --count "$INPUT_COUNT" --seed "$(date -u +%F)" \
+              | node -e 'console.log(JSON.parse(require("fs").readFileSync(0, "utf8")).join(" "))')
+          fi
+          echo "Packages to audit: $packages" | tee -a "$GITHUB_STEP_SUMMARY"
+
+          failed=""
+          for package in $packages; do
+            echo "::group::$package"
+            if ! pnpm run test:mutation "$package" --incremental; then
+              failed="$failed $package"
+            fi
+            echo "::endgroup::"
+          done
+
+          if [ -n "$failed" ]; then
+            echo "Stryker failed for:$failed" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+      - name: Upload the mutation reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-audit
+          path: reports/mutation/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Open, update or close the audit issues
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          shopt -s nullglob
+          for result in reports/mutation/*/result.json; do
+            report="$(dirname "$result")/report.md"
+            package_name=$(jq -r .packageName "$result")
+            survivors=$(jq -r .survivors "$result")
+            title="Mutation audit: $package_name"
+
+            existing=$(gh issue list --state open --label test:mutation --limit 200 --json number,title \
+              --jq ".[] | select(.title == \"$title\") | .number" | head -n 1)
+
+            if [ "$survivors" -gt 0 ]; then
+              if [ -n "$existing" ]; then
+                gh issue edit "$existing" --body-file "$report"
+                echo "Updated issue #$existing for $package_name" | tee -a "$GITHUB_STEP_SUMMARY"
+              else
+                label=$(jq -r '.[] | select(.name == "test:mutation")' .github/labels.json)
+                gh label create test:mutation --color "$(jq -r .color <<< "$label")" \
+                  --description "$(jq -r .description <<< "$label")" 2> /dev/null || true
+                url=$(gh issue create --title "$title" --label test:mutation --body-file "$report")
+                echo "Opened $url for $package_name" | tee -a "$GITHUB_STEP_SUMMARY"
+              fi
+            elif [ -n "$existing" ]; then
+              gh issue close "$existing" --comment "The mutation audit in $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID found no survivors."
+              echo "Closed issue #$existing for $package_name" | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+          done

@@ -29,7 +29,7 @@ apps/
   web/                    Next.js routes only: page, layout, route and loading files
   web-e2e/                Playwright tests
 packages/
-  tooling/                tsconfig, eslint-config, vitest-config, testing-mocks, testing-server, testing-dom, testing-visual, testing-postgres, testing-integration
+  tooling/                tsconfig, eslint-config, vitest-config, testing-mocks, testing-server, testing-dom, testing-visual, testing-postgres, testing-integration, mutation-testing
   shared/                 util-*: helpers with no React and no server dependencies
   infra/                  db-*, cache, ratelimit, rpc-*, email, jobs, request-context-*, turnstile-*
   ui/                     ui-*: the design system, theme-*

@@ -42,5 +42,9 @@ next-env.d.ts
 .vitest-reports
 .vitest-attachments
 
+# mutation testing
+/reports/
+.stryker-tmp
+
 # nx
 /.nx/
