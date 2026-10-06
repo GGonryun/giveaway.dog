@@ -13,7 +13,12 @@
     "source": ["default", "!{projectRoot}/eslint-suppressions.json"],
     "runtime": ["production"],
     "lintable": ["production"],
-    "sharedGlobals": ["{workspaceRoot}/.nvmrc", "{workspaceRoot}/package.json"],
+    "sharedGlobals": [
+      "{workspaceRoot}/.nvmrc",
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/.github/workflows/ci.yml",
+      "{workspaceRoot}/.github/actions/**/*"
+    ],
     "eslint": [
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/eslint-suppressions.json",

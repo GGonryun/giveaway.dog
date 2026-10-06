@@ -28,7 +28,7 @@ const base = [
         {
           selector: 'CallExpression[callee.property.name=/Snapshot$/]',
           message:
-            'Put snapshot assertions in a .snapshot.test.tsx file. Those files run in the Snapshot tests job.'
+            'Put snapshot assertions in a .snapshot.test.tsx file. Those files run in the snapshot Vitest project (test:snapshot).'
         }
       ]
     }

@@ -17,7 +17,7 @@ runs:
 
     - name: Restore node_modules
       id: node-modules
-      uses: actions/cache@v4
+      uses: actions/cache/restore@v4
       with:
         path: |
           node_modules
@@ -31,3 +31,15 @@ runs:
       if: steps.node-modules.outputs.cache-hit != 'true'
       shell: bash
       run: pnpm install --frozen-lockfile
+
+    - name: Save node_modules
+      if: steps.node-modules.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: |
+          node_modules
+          apps/*/node_modules
+          packages/*/*/node_modules
+          packages/*/*/*/node_modules
+          tools/*/node_modules
+        key: ${{ steps.node-modules.outputs.cache-primary-key }}

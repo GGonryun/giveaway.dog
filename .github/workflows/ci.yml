@@ -2,8 +2,8 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches: [main]
+  schedule:
+    - cron: '17 9 * * *'
   workflow_dispatch:
     inputs:
       skip-cache:
@@ -21,59 +21,115 @@ concurrency:
 
 env:
   NX_NO_CLOUD: true
-  NX_RUN: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && 'affected' || 'run-many' }}
+  NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
   NX_SKIP_NX_CACHE: ${{ inputs.skip-cache && 'true' || 'false' }}
 
 jobs:
-  checks:
-    name: Checks
+  ci:
+    name: CI
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
     outputs:
       coverage: ${{ steps.coverage.outputs.lines }}
     steps:
+      - name: Stop when the last nightly run tested this commit
+        id: unchanged
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! tested=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --event schedule --status success --limit 1 --json headSha --jq '.[0].headSha // ""'); then
+            echo "::warning::Could not read the earlier nightly runs, so this run checks everything."
+            tested=
+          fi
+          if [ "$tested" = "$GITHUB_SHA" ]; then
+            echo "The last successful nightly run already tested $GITHUB_SHA, the current commit of main. Nothing to check." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Check out the code
+        if: steps.unchanged.outputs.skip != 'true'
         uses: actions/checkout@v7
         with:
           persist-credentials: false
-          fetch-depth: 0
+          fetch-depth: ${{ github.event_name != 'pull_request' && 1 || 0 }}
 
       - name: Set the base and head commits for nx affected
-        if: env.NX_RUN == 'affected'
+        if: github.event_name == 'pull_request'
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
         id: setup
+        if: steps.unchanged.outputs.skip != 'true'
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
+        id: nx-cache
+        if: steps.unchanged.outputs.skip != 'true'
         uses: ./.github/actions/nx-cache
+
+      - name: List the files that the pull request changes
+        id: changes
+        if: github.event_name == 'pull_request'
+        run: |
+          git diff -z --name-only --diff-filter=d "$NX_BASE" "$NX_HEAD" > "$RUNNER_TEMP/changed-files"
+          if git diff --quiet "$NX_BASE" "$NX_HEAD" -- . ':!apps' ':!packages' ':!tools' &&
+            git diff --quiet "$NX_BASE" "$NX_HEAD" -- packages/tooling/eslint-config; then
+            echo "lint-root=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "lint-root=true" >> "$GITHUB_OUTPUT"
+          fi
+          if git diff --quiet "$NX_BASE" "$NX_HEAD" -- .prettierignore '.prettierrc*' 'prettier.config.*' .editorconfig &&
+            [ "$(git show "$NX_BASE:package.json" | jq -c .prettier)" = "$(jq -c .prettier package.json)" ] &&
+            [ "$(git show "$NX_BASE:pnpm-lock.yaml" | grep '^  prettier@')" = "$(grep '^  prettier@' pnpm-lock.yaml)" ]; then
+            echo "prettier=changed" >> "$GITHUB_OUTPUT"
+          else
+            echo "prettier=all" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: ESLint
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm nx $NX_RUN -t lint --output-style=static --quiet
 
       - name: ESLint (files outside the projects)
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.changes.outputs.lint-root != 'false' }}
         run: pnpm run lint:root --quiet
 
       - name: Prettier
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm run format:check
+        env:
+          SCOPE: ${{ steps.changes.outputs.prettier || 'all' }}
+        run: |
+          if [ "$SCOPE" = changed ]; then
+            echo "Prettier checks the files that the pull request changes."
+            xargs -0 -r pnpm exec prettier --check --ignore-unknown < "$RUNNER_TEMP/changed-files"
+          else
+            pnpm run format:check
+          fi
 
       - name: TypeScript
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm nx $NX_RUN -t type-check --output-style=static
 
-      - name: Vitest server tests with coverage
+      - name: Vitest server tests
         id: server
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t test:server --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json
+        run: |
+          coverage=()
+          if [ "$GITHUB_EVENT_NAME" != pull_request ]; then
+            coverage=(-- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json)
+          fi
+          pnpm nx $NX_RUN -t test:server --output-style=static "${coverage[@]}"
 
-      - name: Vitest frontend tests with coverage
+      - name: Vitest frontend tests
         id: frontend
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
-        run: pnpm nx $NX_RUN -t test:frontend --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json
+        run: |
+          coverage=()
+          if [ "$GITHUB_EVENT_NAME" != pull_request ]; then
+            coverage=(-- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json)
+          fi
+          pnpm nx $NX_RUN -t test:frontend --output-style=static "${coverage[@]}"
 
       - name: Vitest snapshots
         if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
@@ -90,14 +146,10 @@ jobs:
 
       - name: Merge the coverage
         id: coverage
-        if: ${{ !cancelled() && steps.server.outcome == 'success' && steps.frontend.outcome == 'success' }}
+        if: ${{ !cancelled() && github.event_name != 'pull_request' && steps.server.outcome == 'success' && steps.frontend.outcome == 'success' }}
         run: |
           node .github/scripts/collect-vitest-reports.mjs server
           node .github/scripts/collect-vitest-reports.mjs frontend
-          if [ -z "$(ls -A .vitest-reports)" ]; then
-            echo "No project with tests is affected, so there is no coverage to merge." | tee -a "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
           pnpm exec vitest run --merge-reports=.vitest-reports --coverage --passWithNoTests
           lines=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
           echo "lines=$lines" >> "$GITHUB_OUTPUT"
@@ -131,10 +183,17 @@ jobs:
             echo "- If the change is not intended, fix the code."
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
+      - name: Save the Nx cache
+        if: always() && steps.nx-cache.outputs.key != ''
+        uses: actions/cache/save@v4
+        with:
+          path: .nx/ci-cache
+          key: ${{ steps.nx-cache.outputs.key }}
+
   badge:
     name: Coverage badge
-    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
-    needs: checks
+    if: github.ref == 'refs/heads/main' && needs.ci.outputs.coverage != ''
+    needs: ci
     runs-on: ubuntu-slim
     timeout-minutes: 5
     permissions:
@@ -142,7 +201,7 @@ jobs:
     steps:
       - name: Publish the badge to the badges branch
         env:
-          COVERAGE: ${{ needs.checks.outputs.coverage }}
+          COVERAGE: ${{ needs.ci.outputs.coverage }}
           GH_TOKEN: ${{ github.token }}
         run: |
           color=red

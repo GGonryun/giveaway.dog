@@ -1,14 +1,20 @@
 name: Nx cache
-description: Keep the Nx cache between CI runs. A local server gives the cache to Nx through the Nx remote cache API, and actions/cache keeps the files of the server
+description: Keep the Nx cache between CI runs. A local server gives the cache to Nx through the Nx remote cache API, and actions/cache keeps the files of the server. Save them at the end of the job with actions/cache/save, the path .nx/ci-cache and the key output, also when the job fails
+
+outputs:
+  key:
+    description: The key to save the cache with. Each run attempt has its own key, so a re-run saves its results too
+    value: ${{ steps.restore.outputs.cache-primary-key }}
 
 runs:
   using: composite
   steps:
     - name: Restore the Nx cache
-      uses: actions/cache@v4
+      id: restore
+      uses: actions/cache/restore@v4
       with:
         path: .nx/ci-cache
-        key: nx-${{ runner.os }}-${{ github.job }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}
+        key: nx-${{ runner.os }}-${{ github.job }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}-${{ github.run_attempt }}
         restore-keys: |
           nx-${{ runner.os }}-${{ github.job }}-${{ github.head_ref || github.ref_name }}-
           nx-${{ runner.os }}-${{ github.job }}-main-
