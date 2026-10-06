@@ -1,0 +1,297 @@
+[
+  {
+    "name": "bug",
+    "color": "d73a4a",
+    "description": "Something isn't working"
+  },
+  {
+    "name": "feature",
+    "color": "0e8a16",
+    "description": "A new capability that the product does not have yet"
+  },
+  {
+    "name": "enhancement",
+    "color": "a2eeef",
+    "description": "An improvement to something that already exists"
+  },
+  {
+    "name": "tech-debt",
+    "color": "fef2c0",
+    "description": "Dead code, cleanup or a refactor with no change in behaviour"
+  },
+  {
+    "name": "security",
+    "color": "b60205",
+    "description": "A vulnerability, a data leak or a hardening measure"
+  },
+  {
+    "name": "accessibility",
+    "color": "5319e7",
+    "description": "Keyboard, screen reader or WCAG problem"
+  },
+  {
+    "name": "performance",
+    "color": "f9d0c4",
+    "description": "Speed or cost of the app, the type check, the tests or CI"
+  },
+  {
+    "name": "reliability",
+    "color": "e99695",
+    "description": "Races, retries, timeouts and data that can end up wrong"
+  },
+  {
+    "name": "copy",
+    "color": "d4c5f9",
+    "description": "User-facing text that is wrong or unclear"
+  },
+  {
+    "name": "documentation",
+    "color": "0075ca",
+    "description": "Improvements or additions to documentation"
+  },
+  {
+    "name": "tracking",
+    "color": "3e4b9e",
+    "description": "Tracking issue that groups sub-issues"
+  },
+  {
+    "name": "investigation",
+    "color": "c2e0c6",
+    "description": "Measure or research before deciding on a change"
+  },
+  {
+    "name": "blocker",
+    "color": "b60205",
+    "description": "Blocks other issues: do this first"
+  },
+  {
+    "name": "severity:high",
+    "color": "b60205",
+    "description": "A security problem, wrong data or a blocked core flow"
+  },
+  {
+    "name": "severity:medium",
+    "color": "d93f0b",
+    "description": "A visible bug, or an accessibility blocker with a workaround"
+  },
+  {
+    "name": "severity:low",
+    "color": "fbca04",
+    "description": "Cosmetic, copy, dead code or a latent edge case"
+  },
+  {
+    "name": "devops",
+    "color": "1d76db",
+    "description": "Developer tooling and infrastructure"
+  },
+  {
+    "name": "ci",
+    "color": "1d76db",
+    "description": "GitHub Actions CI: checks, caching and runners"
+  },
+  {
+    "name": "cd",
+    "color": "1d76db",
+    "description": "Deployments: Vercel, preview environments and releases"
+  },
+  {
+    "name": "monorepo",
+    "color": "1d76db",
+    "description": "Nx workspace, packages and package boundaries"
+  },
+  {
+    "name": "background-jobs",
+    "color": "0052cc",
+    "description": "Crons, durable workflows, job queues and scheduled posts"
+  },
+  {
+    "name": "testing",
+    "color": "006b75",
+    "description": "Tests or test infrastructure (see the test: labels)"
+  },
+  {
+    "name": "test:unit",
+    "color": "bfdadc",
+    "description": "Vitest server and model tests (the server projects)"
+  },
+  {
+    "name": "test:component",
+    "color": "bfdadc",
+    "description": "Vitest component and hook tests in jsdom (the frontend projects)"
+  },
+  {
+    "name": "test:snapshot",
+    "color": "bfdadc",
+    "description": "Vitest snapshot tests (the snapshot projects)"
+  },
+  {
+    "name": "test:visual",
+    "color": "bfdadc",
+    "description": "Screenshot tests in Chromium (test:visual)"
+  },
+  {
+    "name": "test:e2e",
+    "color": "bfdadc",
+    "description": "Playwright end-to-end tests against a deployment (apps/web-e2e)"
+  },
+  {
+    "name": "test:property",
+    "color": "bfdadc",
+    "description": "Property-based tests with fast-check"
+  },
+  {
+    "name": "test:integration",
+    "color": "bfdadc",
+    "description": "Tests against real services, such as a real Postgres database"
+  },
+  {
+    "name": "test:contract",
+    "color": "bfdadc",
+    "description": "Checks of our integrations against the third-party API contracts"
+  },
+  {
+    "name": "test:mutation",
+    "color": "bfdadc",
+    "description": "Mutation testing (Stryker)"
+  },
+  {
+    "name": "test:fuzz",
+    "color": "bfdadc",
+    "description": "Fuzz tests of parsers and handlers"
+  },
+  {
+    "name": "test:fault-injection",
+    "color": "bfdadc",
+    "description": "Tests that inject failures: timeouts, outages and crashes"
+  },
+  {
+    "name": "test:flaky",
+    "color": "bfdadc",
+    "description": "A test that passes and fails on the same code"
+  },
+  {
+    "name": "scope:account",
+    "color": "ededed",
+    "description": "packages/account: profile, settings, onboarding and history"
+  },
+  {
+    "name": "scope:audience",
+    "color": "ededed",
+    "description": "packages/audience: the team Users area"
+  },
+  {
+    "name": "scope:auth",
+    "color": "ededed",
+    "description": "packages/auth: sign-in, sessions and providers"
+  },
+  {
+    "name": "scope:automation",
+    "color": "ededed",
+    "description": "packages/automation: automated posts"
+  },
+  {
+    "name": "scope:browse",
+    "color": "ededed",
+    "description": "packages/browse: the public giveaway list"
+  },
+  {
+    "name": "scope:infra",
+    "color": "ededed",
+    "description": "packages/infra: database, cache, jobs, RPC and email"
+  },
+  {
+    "name": "scope:integrations",
+    "color": "ededed",
+    "description": "packages/integrations: X, Bluesky, Discord, Twitch and other platforms"
+  },
+  {
+    "name": "scope:marketing",
+    "color": "ededed",
+    "description": "packages/marketing: the home page and marketing pages"
+  },
+  {
+    "name": "scope:participants",
+    "color": "ededed",
+    "description": "packages/participants: entries, scoring, custom fields and referrals"
+  },
+  {
+    "name": "scope:pickers",
+    "color": "ededed",
+    "description": "packages/pickers: the X pickers"
+  },
+  {
+    "name": "scope:shared",
+    "color": "ededed",
+    "description": "packages/shared: util packages"
+  },
+  {
+    "name": "scope:shell",
+    "color": "ededed",
+    "description": "packages/shell: navigation, sidebar and footer"
+  },
+  {
+    "name": "scope:sweepstakes",
+    "color": "ededed",
+    "description": "packages/sweepstakes: the editor, details pages and participation"
+  },
+  {
+    "name": "scope:tasks",
+    "color": "ededed",
+    "description": "packages/tasks: entry tasks, task jobs and validation"
+  },
+  {
+    "name": "scope:team",
+    "color": "ededed",
+    "description": "packages/team: teams, members, invites and team settings"
+  },
+  {
+    "name": "scope:templates",
+    "color": "ededed",
+    "description": "packages/templates: giveaway templates"
+  },
+  {
+    "name": "scope:tooling",
+    "color": "ededed",
+    "description": "packages/tooling: tsconfig, ESLint, Vitest and test setup"
+  },
+  {
+    "name": "scope:ui",
+    "color": "ededed",
+    "description": "packages/ui: design system components and hooks"
+  },
+  {
+    "name": "scope:winners",
+    "color": "ededed",
+    "description": "packages/winners: draws, winners and the leaderboard"
+  },
+  {
+    "name": "duplicate",
+    "color": "cfd3d7",
+    "description": "This issue or pull request already exists"
+  },
+  {
+    "name": "good first issue",
+    "color": "7057ff",
+    "description": "Good for newcomers"
+  },
+  {
+    "name": "help wanted",
+    "color": "008672",
+    "description": "Extra attention is needed"
+  },
+  {
+    "name": "invalid",
+    "color": "e4e669",
+    "description": "This doesn't seem right"
+  },
+  {
+    "name": "question",
+    "color": "d876e3",
+    "description": "Further information is requested"
+  },
+  {
+    "name": "wontfix",
+    "color": "ffffff",
+    "description": "This will not be worked on"
+  }
+]
