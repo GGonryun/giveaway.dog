@@ -19,6 +19,7 @@
     }
   },
   "exports": {
+    "./audit": "./src/audit.ts",
     "./changed-lines": "./src/changed-lines.ts",
     "./gate": "./src/gate.ts",
     "./ignore-console": "./src/ignore-console.ts",

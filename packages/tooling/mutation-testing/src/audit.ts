@@ -51,6 +51,21 @@ const formatScore = (score: number | null): string =>
 export const auditIssueTitle = (packageName: string): string =>
   `Mutation audit: ${packageName}`;
 
+export const reportFolderName = (packageName: string): string =>
+  packageName.replace(/^@giveaway\//, '');
+
+const howToFix = (packageName: string): string[] => {
+  const folder = reportFolderName(packageName);
+  return [
+    '',
+    '### How to fix',
+    '',
+    `1. Reproduce: \`pnpm run test:mutation ${packageName}\` prints this report and writes the HTML report, which shows each mutant in the source, to \`reports/mutation/${folder}/mutation.html\`. The \`mutation-audit-${folder}\` artifact of the run has the same report.`,
+    '2. For each survivor, add or change a test so that it fails with the mutant in place. If no test can kill it because the mutant cannot change behavior, change the code so that the mutant cannot exist. Only when neither works, add `// Stryker disable next-line <Mutator>: <reason>` above the line. See "Mutation Tests" in `CLAUDE.md`.',
+    '3. Run the command again until no mutant survives, and open a pull request that closes this issue.'
+  ];
+};
+
 export const formatAuditReport = ({
   packageName,
   packageDir,
@@ -74,7 +89,7 @@ export const formatAuditReport = ({
     `## ${auditIssueTitle(packageName)}`,
     '',
     `Package: \`${packageDir}\`. Mutation score: **${formatScore(scoreOf(total))}** (${total.killed} killed, ${total.survived} survived, ${total.noCoverage} not covered).`,
-    ...(runUrl ? ['', `Run and HTML report: ${runUrl}`] : []),
+    ...(runUrl ? ['', `Run: ${runUrl}`] : []),
     '',
     '| File | Score | Killed | Survived | Not covered |',
     '| --- | --- | --- | --- | --- |',
@@ -91,8 +106,6 @@ export const formatAuditReport = ({
       '',
       '### Survivors',
       '',
-      'For each one, add or strengthen a test that kills it, or change the code so the mutant cannot exist. See "Mutation tests" in `CLAUDE.md`.',
-      '',
       '| Location | Mutator | Replacement | Status |',
       '| --- | --- | --- | --- |',
       ...survivors.slice(0, MAX_LISTED_SURVIVORS).map(formatMutant)
@@ -103,6 +116,7 @@ export const formatAuditReport = ({
         `${survivors.length - MAX_LISTED_SURVIVORS} more are in the HTML report.`
       );
     }
+    lines.push(...howToFix(packageName));
   }
 
   return `${lines.join('\n')}\n`;

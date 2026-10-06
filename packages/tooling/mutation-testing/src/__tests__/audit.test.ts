@@ -4,6 +4,7 @@ import {
   fileScores,
   formatAuditReport,
   MAX_LISTED_SURVIVORS,
+  reportFolderName,
   scoreOf,
   totalScore
 } from '../audit.ts';
@@ -63,6 +64,20 @@ describe('totalScore', () => {
   });
 });
 
+describe('reportFolderName', () => {
+  it('drops the @giveaway scope', () => {
+    expect(reportFolderName('@giveaway/x-server')).toBe('x-server');
+  });
+
+  it('keeps a name without the scope', () => {
+    expect(reportFolderName('x-server')).toBe('x-server');
+  });
+
+  it('drops the scope only at the start', () => {
+    expect(reportFolderName('a@giveaway/x')).toBe('a@giveaway/x');
+  });
+});
+
 describe('auditIssueTitle', () => {
   it('names the package', () => {
     expect(auditIssueTitle('@giveaway/x-server')).toBe(
@@ -91,7 +106,7 @@ describe('formatAuditReport', () => {
         '',
         'Package: `packages/x/x-server`. Mutation score: **50.0%** (2 killed, 1 survived, 1 not covered).',
         '',
-        'Run and HTML report: https://github.com/o/r/actions/runs/1',
+        'Run: https://github.com/o/r/actions/runs/1',
         '',
         '| File | Score | Killed | Survived | Not covered |',
         '| --- | --- | --- | --- | --- |',
@@ -100,12 +115,16 @@ describe('formatAuditReport', () => {
         '',
         '### Survivors',
         '',
-        'For each one, add or strengthen a test that kills it, or change the code so the mutant cannot exist. See "Mutation tests" in `CLAUDE.md`.',
-        '',
         '| Location | Mutator | Replacement | Status |',
         '| --- | --- | --- | --- |',
         '| `src/a.ts:7` | BooleanLiteral | `false` | Survived |',
         '| `src/b.ts:9` | BooleanLiteral | `false` | NoCoverage |',
+        '',
+        '### How to fix',
+        '',
+        '1. Reproduce: `pnpm run test:mutation @giveaway/x-server` prints this report and writes the HTML report, which shows each mutant in the source, to `reports/mutation/x-server/mutation.html`. The `mutation-audit-x-server` artifact of the run has the same report.',
+        '2. For each survivor, add or change a test so that it fails with the mutant in place. If no test can kill it because the mutant cannot change behavior, change the code so that the mutant cannot exist. Only when neither works, add `// Stryker disable next-line <Mutator>: <reason>` above the line. See "Mutation Tests" in `CLAUDE.md`.',
+        '3. Run the command again until no mutant survives, and open a pull request that closes this issue.',
         ''
       ].join('\n')
     );
@@ -157,11 +176,9 @@ describe('formatAuditReport', () => {
     expect(report).not.toContain(
       `| \`src/a.ts:${MAX_LISTED_SURVIVORS + 1}\` |`
     );
-    expect(
-      report.endsWith(
-        `| \`src/a.ts:${MAX_LISTED_SURVIVORS}\` | BooleanLiteral | \`false\` | Survived |\n\n2 more are in the HTML report.\n`
-      )
-    ).toBe(true);
+    expect(report).toContain(
+      `| \`src/a.ts:${MAX_LISTED_SURVIVORS}\` | BooleanLiteral | \`false\` | Survived |\n\n2 more are in the HTML report.\n\n### How to fix\n`
+    );
   });
 
   it(`lists exactly ${MAX_LISTED_SURVIVORS} survivors without a remainder line`, () => {
@@ -173,10 +190,8 @@ describe('formatAuditReport', () => {
       )
     });
 
-    expect(
-      report.endsWith(
-        `| \`src/a.ts:${MAX_LISTED_SURVIVORS}\` | BooleanLiteral | \`false\` | Survived |\n`
-      )
-    ).toBe(true);
+    expect(report).toContain(
+      `| \`src/a.ts:${MAX_LISTED_SURVIVORS}\` | BooleanLiteral | \`false\` | Survived |\n\n### How to fix\n`
+    );
   });
 });

@@ -61,8 +61,18 @@ export const gatePasses = (reports: GateReport[]): boolean =>
 const escapeCell = (text: string): string =>
   text.replace(/\|/g, '\\|').replace(/\s+/g, ' ').trim();
 
+export const inlineCode = (text: string): string => {
+  const cell = escapeCell(text);
+  const runs = cell.match(/`+/g);
+  if (!runs) {
+    return `\`${cell}\``;
+  }
+  const fence = '`'.repeat(Math.max(...runs.map((run) => run.length)) + 1);
+  return `${fence} ${cell} ${fence}`;
+};
+
 export const formatMutant = (mutant: MutantOutcome): string =>
-  `| \`${mutant.fileName}:${mutant.line}\` | ${mutant.mutatorName} | \`${escapeCell(mutant.replacement ?? '')}\` | ${mutant.status} |`;
+  `| \`${mutant.fileName}:${mutant.line}\` | ${mutant.mutatorName} | ${inlineCode(mutant.replacement ?? '')} | ${mutant.status} |`;
 
 const MUTANT_TABLE_HEADER = [
   '| Location | Mutator | Replacement | Status |',
@@ -82,7 +92,7 @@ const formatDisableComments = (comments: AddedLine[]): string[] =>
         '| --- | --- |',
         ...comments.map(
           (comment) =>
-            `| \`${comment.file}:${comment.line}\` | \`${escapeCell(comment.text)}\` |`
+            `| \`${comment.file}:${comment.line}\` | ${inlineCode(comment.text)} |`
         )
       ];
 

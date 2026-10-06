@@ -5,6 +5,7 @@ import {
   formatGateSummary,
   formatMutant,
   gatePasses,
+  inlineCode,
   type GateReport,
   type MutantOutcome
 } from '../gate.ts';
@@ -158,10 +159,35 @@ describe('formatMutant', () => {
     );
   });
 
+  it('fences a replacement that contains backticks', () => {
+    expect(formatMutant(mutant({ replacement: '``' }))).toBe(
+      '| `src/a.ts:5` | EqualityOperator | ``` `` ``` | Killed |'
+    );
+  });
+
   it('writes an empty replacement when there is none', () => {
     expect(formatMutant(mutant({ replacement: undefined }))).toBe(
       '| `src/a.ts:5` | EqualityOperator | `` | Killed |'
     );
+  });
+});
+
+describe('inlineCode', () => {
+  it('wraps text without backticks in single backticks', () => {
+    expect(inlineCode('a !== b')).toBe('`a !== b`');
+  });
+
+  it('writes two backticks for empty text', () => {
+    expect(inlineCode('')).toBe('``');
+  });
+
+  it('fences text with backticks in one more backtick than its longest run, with spaces', () => {
+    expect(inlineCode('``')).toBe('``` `` ```');
+    expect(inlineCode('a `b` ``c``')).toBe('``` a `b` ``c`` ```');
+  });
+
+  it('escapes pipes and collapses whitespace before fencing', () => {
+    expect(inlineCode('  `a`\n|| b ')).toBe('`` `a` \\|\\| b ``');
   });
 });
 

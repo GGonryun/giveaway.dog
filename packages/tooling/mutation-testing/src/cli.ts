@@ -13,7 +13,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { formatAuditReport } from './audit.ts';
+import { formatAuditReport, reportFolderName } from './audit.ts';
 import {
   findAddedLines,
   parseChangedLines,
@@ -68,7 +68,7 @@ const readPackageName = (packageDir: string): string =>
   ).name;
 
 const reportDirOf = (packageName: string): string =>
-  join(REPORTS_DIR, packageName.replace(/^@giveaway\//, ''));
+  join(REPORTS_DIR, reportFolderName(packageName));
 
 const runStryker = (
   packageDir: string,
