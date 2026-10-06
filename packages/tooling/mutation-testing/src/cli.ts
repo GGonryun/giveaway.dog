@@ -25,6 +25,7 @@ import {
   evaluateGate,
   formatGateSummary,
   gatePasses,
+  gateTotals,
   type MutantOutcome
 } from './gate.ts';
 import { pickPackages } from './pick-packages.ts';
@@ -55,6 +56,18 @@ const writeStepSummary = (markdown: string): void => {
   const file = process.env.GITHUB_STEP_SUMMARY;
   if (file) {
     appendFileSync(file, `${markdown}\n`);
+  }
+};
+
+const writeOutputs = (outputs: Record<string, number>): void => {
+  const file = process.env.GITHUB_OUTPUT;
+  if (file) {
+    appendFileSync(
+      file,
+      Object.entries(outputs)
+        .map(([name, value]) => `${name}=${value}\n`)
+        .join('')
+    );
   }
 };
 
@@ -163,6 +176,7 @@ const runChanged = (base: string): number => {
   const summary = formatGateSummary(reports, disableComments);
   console.log(`\n${summary}`);
   writeStepSummary(summary);
+  writeOutputs(gateTotals(reports));
   return gatePasses(reports) ? 0 : 1;
 };
 

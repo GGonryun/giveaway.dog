@@ -58,6 +58,14 @@ export const evaluateGate = (
 export const gatePasses = (reports: GateReport[]): boolean =>
   reports.every((report) => report.failures.length === 0);
 
+export const gateTotals = (
+  reports: GateReport[]
+): { checked: number; killed: number; failed: number } => ({
+  checked: reports.reduce((sum, report) => sum + report.checked, 0),
+  killed: reports.reduce((sum, report) => sum + report.killed, 0),
+  failed: reports.reduce((sum, report) => sum + report.failures.length, 0)
+});
+
 const escapeCell = (text: string): string =>
   text.replace(/\|/g, '\\|').replace(/\s+/g, ' ').trim();
 

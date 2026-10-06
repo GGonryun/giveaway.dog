@@ -51,25 +51,32 @@
     "test:server": {
       "cache": true,
       "inputs": ["source", "^runtime"],
-      "outputs": ["{projectRoot}/.vitest-reports/server.json"]
+      "outputs": [
+        "{projectRoot}/.vitest-reports/server.json",
+        "{projectRoot}/.vitest-results/server.json"
+      ]
     },
     "test:property": {
       "cache": true,
       "inputs": ["source", "^runtime"],
       "outputs": [
         "{projectRoot}/.vitest-reports/property.json",
+        "{projectRoot}/.vitest-results/property.json",
         "{projectRoot}/coverage/property"
       ]
     },
     "test:frontend": {
       "cache": true,
       "inputs": ["source", "^runtime"],
-      "outputs": ["{projectRoot}/.vitest-reports/frontend.json"]
+      "outputs": [
+        "{projectRoot}/.vitest-reports/frontend.json",
+        "{projectRoot}/.vitest-results/frontend.json"
+      ]
     },
     "test:snapshot": {
       "cache": true,
       "inputs": ["source", "^runtime"],
-      "outputs": []
+      "outputs": ["{projectRoot}/.vitest-results/snapshot.json"]
     },
     "test:integration": {
       "inputs": ["source", "^runtime"]
