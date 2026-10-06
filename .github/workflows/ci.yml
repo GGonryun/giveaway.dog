@@ -4,9 +4,17 @@ on:
   pull_request:
   push:
     branches: [main]
+  schedule:
+    - cron: '47 9 * * *'
   workflow_dispatch:
+    inputs:
+      skip-cache:
+        description: Run every task again instead of reading its result from the Nx cache
+        type: boolean
+        default: false
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -15,7 +23,8 @@ concurrency:
 
 env:
   NX_NO_CLOUD: true
-  NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
+  NX_RUN: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && 'affected' || 'run-many' }}
+  NX_SKIP_NX_CACHE: ${{ inputs.skip-cache && 'true' || 'false' }}
 
 jobs:
   lint:
@@ -30,7 +39,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set the base and head commits for nx affected
-        if: github.event_name == 'pull_request'
+        if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
@@ -62,7 +71,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set the base and head commits for nx affected
-        if: github.event_name == 'pull_request'
+        if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
@@ -86,7 +95,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set the base and head commits for nx affected
-        if: github.event_name == 'pull_request'
+        if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
@@ -121,7 +130,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set the base and head commits for nx affected
-        if: github.event_name == 'pull_request'
+        if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
@@ -200,7 +209,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set the base and head commits for nx affected
-        if: github.event_name == 'pull_request'
+        if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
@@ -251,7 +260,7 @@ jobs:
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Set the base and head commits for nx affected
-        if: github.event_name == 'pull_request'
+        if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
       - name: Set up the project
@@ -290,7 +299,7 @@ jobs:
 
   badge:
     name: Coverage badge
-    if: github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     needs: coverage
     runs-on: ubuntu-slim
     timeout-minutes: 5

@@ -13,11 +13,7 @@
     "source": ["default", "!{projectRoot}/eslint-suppressions.json"],
     "runtime": ["production"],
     "lintable": ["production"],
-    "sharedGlobals": [
-      "{workspaceRoot}/.nvmrc",
-      "{workspaceRoot}/package.json",
-      "{workspaceRoot}/.github/actions/setup/**/*"
-    ],
+    "sharedGlobals": ["{workspaceRoot}/.nvmrc", "{workspaceRoot}/package.json"],
     "eslint": [
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/eslint-suppressions.json",
@@ -25,11 +21,6 @@
       "{workspaceRoot}/packages/tooling/eslint-config/package.json",
       "{workspaceRoot}/packages/tooling/eslint-config/src/**/*",
       "!{workspaceRoot}/packages/tooling/eslint-config/src/**/__tests__/**"
-    ],
-    "ci": [
-      "{workspaceRoot}/.github/workflows/ci.yml",
-      "{workspaceRoot}/.github/actions/nx-cache/**/*",
-      "{workspaceRoot}/.github/scripts/**/*"
     ]
   },
   "pluginsConfig": {
@@ -44,7 +35,7 @@
     },
     "lint": {
       "cache": true,
-      "inputs": ["default", "^lintable", "eslint", "ci"],
+      "inputs": ["default", "^lintable", "eslint"],
       "outputs": []
     },
     "type-check": {
