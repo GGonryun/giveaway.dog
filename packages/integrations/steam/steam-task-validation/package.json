@@ -11,11 +11,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/integrations/steam/steam-task-validation --suppressions-location packages/integrations/steam/steam-task-validation/eslint-suppressions.json",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

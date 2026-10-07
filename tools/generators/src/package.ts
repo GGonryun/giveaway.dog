@@ -72,7 +72,6 @@ const assertValid = ({
 };
 
 const packageJson = (
-  root: string,
   options: CreatePackageOptions,
   moduleName: string,
   extension: string
@@ -92,11 +91,7 @@ const packageJson = (
         ...(options.tags ?? [])
       ],
       targets: {
-        lint: {
-          command: `eslint ${root}`,
-          options: { cwd: '{workspaceRoot}' },
-          cache: true
-        }
+        lint: { executor: '@giveaway/eslint-config:lint' }
       }
     },
     exports: { [`./${moduleName}`]: `./src/${moduleName}.${extension}` },
@@ -172,7 +167,7 @@ export const createPackage = async (
   writeJson(
     tree,
     joinPathFragments(root, 'package.json'),
-    packageJson(root, options, moduleName, extension)
+    packageJson(options, moduleName, extension)
   );
   writeJson(tree, joinPathFragments(root, 'tsconfig.json'), {
     extends: `@giveaway/tsconfig/${react ? 'react-library' : 'library'}.json`

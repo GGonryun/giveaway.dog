@@ -38,7 +38,7 @@ describe('package generators', () => {
       name: '@giveaway/referrals-model',
       nx: {
         tags: ['type:model', 'runtime:isomorphic', 'scope:participants'],
-        targets: { lint: { command: `eslint ${root}` } }
+        targets: { lint: { executor: '@giveaway/eslint-config:lint' } }
       },
       exports: { './referrals-model': './src/referrals-model.ts' },
       scripts: {

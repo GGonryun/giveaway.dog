@@ -1,0 +1,11 @@
+{
+  "executors": {
+    "lint": {
+      "implementation": "./src/executors/lint/lint.mjs",
+      "batchImplementation": "./src/executors/lint/lint.mjs#batch",
+      "schema": "./src/executors/lint/schema.json",
+      "preferBatch": true,
+      "description": "Run ESLint on the project folder. In a batch, lint every project in one process."
+    }
+  }
+}

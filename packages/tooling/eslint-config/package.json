@@ -13,18 +13,16 @@
     },
     "targets": {
       "lint": {
-        "command": "eslint packages/tooling/eslint-config",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },
   "exports": {
     "./base": "./src/base.mjs",
-    "./boundaries": "./src/boundaries.mjs"
+    "./boundaries": "./src/boundaries.mjs",
+    "./package.json": "./package.json"
   },
+  "executors": "./executors.json",
   "scripts": {
     "test": "vitest run",
     "test:unit": "vitest run --project server",

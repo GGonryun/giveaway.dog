@@ -12,11 +12,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint apps/web-e2e",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

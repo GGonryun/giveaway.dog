@@ -11,11 +11,7 @@
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/integrations/bluesky/bluesky-connect",
-        "options": {
-          "cwd": "{workspaceRoot}"
-        },
-        "cache": true
+        "executor": "@giveaway/eslint-config:lint"
       }
     }
   },

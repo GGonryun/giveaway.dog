@@ -388,7 +388,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 | Package                         | Type   | Files | Moves from                                                                                                                   |
 | ------------------------------- | ------ | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `@giveaway/eslint-config`       | config | 0 / 0 | Flat ESLint presets, the snapshot-assertion rule and the module boundary rules.                                              |
+| `@giveaway/eslint-config`       | config | 0 / 0 | Flat ESLint presets, the snapshot-assertion rule, the module boundary rules and the Nx `lint` executor.                      |
 | `@giveaway/testing-dom`         | config | 1 / 0 | `test/setup-dom.ts`                                                                                                          |
 | `@giveaway/testing-integration` | config | 3 / 0 | New: the setup of the integration tests (one database per test file, the auth mock), the test database client and fixtures.  |
 | `@giveaway/testing-postgres`    | config | 3 / 0 | New: the Postgres container of the integration tests (Testcontainers), the migrated template database and the Vitest config. |
