@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "label": "mutation tests",
-  "message": "1 survived",
-  "color": "red"
+  "message": "902/902 killed",
+  "color": "brightgreen"
 }
