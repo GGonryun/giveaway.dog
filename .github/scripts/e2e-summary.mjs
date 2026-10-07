@@ -8,7 +8,7 @@ if (!report) {
 
 if (!fs.existsSync(report)) {
   console.log(
-    '## E2E tests\n\nNo Playwright report: the run stopped before the tests ended.'
+    '## E2E tests\n\nNo Playwright report: the run stopped before the tests ended, or the tested commit does not write one.'
   );
   process.exit(0);
 }
