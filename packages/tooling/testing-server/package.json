@@ -15,6 +15,7 @@
     }
   },
   "exports": {
+    "./faults": "./src/faults.ts",
     "./fixtures-integrations-utils": "./src/fixtures-integrations-utils.ts",
     "./fixtures-procedures-browse-marketing-pickers": "./src/fixtures-procedures-browse-marketing-pickers.ts",
     "./fixtures-procedures-sweepstakes-a": "./src/fixtures-procedures-sweepstakes-a.ts",
