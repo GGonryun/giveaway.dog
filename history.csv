@@ -1,3 +1,4 @@
 date,commit,coverage,server_coverage,frontend_coverage,property_coverage,server_passed,server_failed,property_passed,property_failed,frontend_passed,frontend_failed,snapshot_passed,snapshot_failed,visual_passed,visual_failed,integration_passed,integration_failed,mutation_killed,mutation_checked,e2e,run
 2026-10-06T22:51:59Z,96f1ef24d5a5e79695fe6d03d5f2ed3569b13190,86.04,83.68,79.91,10.12,10700,0,72,0,2463,0,270,0,26,0,28,0,,,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/37542957150
 2026-10-06T23:55:21Z,e6dba346af0dbb7ce6f63752c2d47e7943207fd1,86.04,83.68,79.91,10.12,10700,0,72,0,2463,0,270,0,26,0,28,0,,,,https://github.com/GGonryun/giveaway.dog/actions/runs/37548933496
+2026-10-07T00:36:01Z,ee05aecdec677589a612964536825e296965a192,86.04,83.68,79.91,10.12,10700,0,72,0,2463,0,270,0,26,0,28,0,,,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/37552627088
