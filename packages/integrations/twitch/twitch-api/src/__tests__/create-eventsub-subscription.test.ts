@@ -625,46 +625,97 @@ describe('createEventSubSubscriptionsForFeatures', () => {
   });
 
   describe('when twitch returns an empty list for the new subscription', () => {
-    it('throws a TypeError', async () => {
+    it('throws BAD_GATEWAY without storing a subscription', async () => {
       routeFetch({ create: () => jsonResponse(subscriptionList([])) });
 
       await expect(
         createEventSubSubscriptionsForFeatures({ ...baseArgs, features: [] })
-      ).rejects.toBeInstanceOf(TypeError);
+      ).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: {
+          provider: 'twitch',
+          call: 'POST /helix/eventsub/subscriptions'
+        }
+      });
       expect(prismaMock.eventSubSubscription.create).not.toHaveBeenCalled();
     });
   });
 
-  describe('when twitch returns a malformed subscription list', () => {
-    it('throws a VALIDATION_ERROR for an error body on the list request', async () => {
-      routeFetch({
-        list: () =>
-          jsonResponse(
-            { error: 'Unauthorized', status: 401, message: 'Invalid token' },
-            401
-          )
-      });
+  describe('when twitch rejects the list request', () => {
+    const unauthorized = () =>
+      jsonResponse(
+        { error: 'Unauthorized', status: 401, message: 'Invalid token' },
+        401
+      );
+
+    it('throws INTERNAL_SERVER_ERROR with the response body', async () => {
+      routeFetch({ list: unauthorized });
 
       const error = await createEventSubSubscriptionsForFeatures({
         ...baseArgs,
         features: []
       }).catch((e: unknown) => e);
 
+      expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toMatchObject({
-        code: 'VALIDATION_ERROR',
-        message: 'Failed to validate EventSub subscriptions list schema'
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to list EventSub subscriptions',
+        data: JSON.stringify({
+          error: 'Unauthorized',
+          status: 401,
+          message: 'Invalid token'
+        })
       });
       expect(createCalls()).toHaveLength(0);
     });
 
-    it('throws a VALIDATION_ERROR for a malformed create response', async () => {
+    it('logs the failure and reports no schema mismatch', async () => {
+      routeFetch({ list: unauthorized });
+
+      await createEventSubSubscriptionsForFeatures({
+        ...baseArgs,
+        features: []
+      }).catch(() => undefined);
+
+      expect(console.error).toHaveBeenCalledWith(
+        'EventSub subscription listing failed:',
+        JSON.stringify({
+          error: 'Unauthorized',
+          status: 401,
+          message: 'Invalid token'
+        })
+      );
+      expect(console.error).not.toHaveBeenCalledWith(
+        '[provider-response]',
+        expect.anything()
+      );
+    });
+  });
+
+  describe('when twitch returns a malformed subscription list', () => {
+    it('throws BAD_GATEWAY for a malformed list response', async () => {
+      routeFetch({ list: () => jsonResponse({ data: 'nope' }) });
+
+      await expect(
+        createEventSubSubscriptionsForFeatures({ ...baseArgs, features: [] })
+      ).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: { provider: 'twitch', call: 'GET /helix/eventsub/subscriptions' }
+      });
+      expect(createCalls()).toHaveLength(0);
+    });
+
+    it('throws BAD_GATEWAY for a malformed create response', async () => {
       routeFetch({ create: () => jsonResponse({ data: 'nope' }) });
 
       await expect(
         createEventSubSubscriptionsForFeatures({ ...baseArgs, features: [] })
       ).rejects.toMatchObject({
-        code: 'VALIDATION_ERROR',
-        message: 'Failed to validate EventSub subscriptions list schema'
+        code: 'BAD_GATEWAY',
+        data: {
+          provider: 'twitch',
+          call: 'POST /helix/eventsub/subscriptions'
+        }
       });
     });
   });

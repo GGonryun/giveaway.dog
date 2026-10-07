@@ -1,18 +1,11 @@
 import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import { TWITCH_CLIENT_ID } from './scopes';
+import { twitchUsersResponseSchema } from './schemas';
 
-interface TwitchUser {
-  id: string;
-  login: string;
-  display_name: string;
-  profile_image_url: string;
-}
-
-export const getTwitchUser = async (
-  accessToken: string
-): Promise<TwitchUser> => {
+export const getTwitchUser = async (accessToken: string) => {
   const response = await fetch('https://api.twitch.tv/helix/users', {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -29,6 +22,11 @@ export const getTwitchUser = async (
     });
   }
 
-  const data = (await response.json()) as { data: TwitchUser[] };
-  return data.data[0];
+  const { data } = parseProviderResponse({
+    provider: 'twitch',
+    call: 'GET /helix/users',
+    schema: twitchUsersResponseSchema,
+    data: await response.json()
+  });
+  return data[0];
 };

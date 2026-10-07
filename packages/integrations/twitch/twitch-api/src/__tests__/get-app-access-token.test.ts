@@ -65,10 +65,17 @@ describe('getAppAccessToken', () => {
   });
 
   describe('when the response has no access token', () => {
-    it('returns undefined', async () => {
+    it('throws BAD_GATEWAY naming the provider and the call', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
       fetchMock.mockResolvedValue(jsonResponse({}));
 
-      await expect(getAppAccessToken()).resolves.toBeUndefined();
+      await expect(getAppAccessToken()).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: {
+          provider: 'twitch',
+          call: 'POST /oauth2/token client_credentials'
+        }
+      });
     });
   });
 

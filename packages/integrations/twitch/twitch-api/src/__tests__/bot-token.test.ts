@@ -143,6 +143,37 @@ describe('bot-token', () => {
           expect(redisMock.set).not.toHaveBeenCalled();
         });
       });
+
+      describe('and the refresh response does not match the schema', () => {
+        beforeEach(() => {
+          fetchMock.mockResolvedValue(jsonResponse({ expires_in: 3600 }));
+        });
+
+        it('returns null without caching anything', async () => {
+          await expect(getBotAccessToken()).resolves.toBeNull();
+          expect(redisMock.set).not.toHaveBeenCalled();
+        });
+
+        it('reports the provider and the call', async () => {
+          await getBotAccessToken();
+
+          expect(console.error).toHaveBeenCalledWith(
+            '[provider-response]',
+            JSON.stringify({
+              provider: 'twitch',
+              call: 'POST /oauth2/token refresh_token',
+              issues: [
+                {
+                  path: 'access_token',
+                  code: 'invalid_type',
+                  expected: 'string',
+                  received: 'undefined'
+                }
+              ]
+            })
+          );
+        });
+      });
     });
   });
 

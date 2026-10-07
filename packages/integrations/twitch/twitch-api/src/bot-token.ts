@@ -1,14 +1,12 @@
 import 'server-only';
 
+import type { z } from 'zod';
 import { redis } from '@giveaway/cache/redis';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from './scopes';
+import { twitchBotTokenResponseSchema } from './schemas';
 
 const BOT_TOKEN_CACHE_KEY = 'twitch:bot:access_token';
-
-type BotTokenResponse = {
-  access_token: string;
-  expires_in: number;
-};
 
 const refreshBotToken = async (): Promise<string | null> => {
   const refreshToken = process.env.TWITCH_BOT_REFRESH_TOKEN;
@@ -30,7 +28,20 @@ const refreshBotToken = async (): Promise<string | null> => {
     return null;
   }
 
-  const data = (await response.json()) as BotTokenResponse;
+  const body: unknown = await response.json();
+
+  let data: z.infer<typeof twitchBotTokenResponseSchema>;
+  try {
+    data = parseProviderResponse({
+      provider: 'twitch',
+      call: 'POST /oauth2/token refresh_token',
+      schema: twitchBotTokenResponseSchema,
+      data: body
+    });
+  } catch {
+    return null;
+  }
+
   await redis.set(BOT_TOKEN_CACHE_KEY, data.access_token, {
     ex: data.expires_in - 60
   });

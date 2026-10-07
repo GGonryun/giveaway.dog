@@ -6,6 +6,7 @@ import {
   jsonResponse,
   textResponse
 } from '@giveaway/testing-server/fixtures-twitch';
+import usersResponse from '../testing/fixtures-twitch-users.json';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_CLIENT_ID', 'client-id');
@@ -13,11 +14,13 @@ vi.hoisted(() => {
 
 const fetchMock = vi.fn<typeof fetch>();
 
+const recordedUser = usersResponse.body.data[0];
+
 const twitchUser = {
-  id: 'twitch-user-1',
-  login: 'streamer',
-  display_name: 'Streamer',
-  profile_image_url: 'https://static.twitch.tv/streamer.png'
+  id: recordedUser.id,
+  login: recordedUser.login,
+  display_name: recordedUser.display_name,
+  profile_image_url: recordedUser.profile_image_url
 };
 
 describe('getTwitchUser', () => {
@@ -35,7 +38,7 @@ describe('getTwitchUser', () => {
     beforeEach(() => {
       fetchMock.mockResolvedValue(
         jsonResponse({
-          data: [twitchUser, { ...twitchUser, id: 'twitch-user-2' }]
+          data: [recordedUser, { ...recordedUser, id: 'twitch-user-2' }]
         })
       );
     });
@@ -57,10 +60,14 @@ describe('getTwitchUser', () => {
   });
 
   describe('when twitch returns no users', () => {
-    it('returns undefined', async () => {
+    it('throws BAD_GATEWAY naming the provider and the call', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
       fetchMock.mockResolvedValue(jsonResponse({ data: [] }));
 
-      await expect(getTwitchUser('user-token')).resolves.toBeUndefined();
+      await expect(getTwitchUser('user-token')).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: { provider: 'twitch', call: 'GET /helix/users' }
+      });
     });
   });
 

@@ -1,0 +1,8 @@
+{
+  "recordedAt": null,
+  "body": {
+    "access_token": "redacted-access-token",
+    "expires_in": 5011271,
+    "token_type": "bearer"
+  }
+}

@@ -2,16 +2,10 @@ import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@giveaway/db-model';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
+import { twitchRefreshTokenResponseSchema } from './schemas';
 
 const EXPIRY_BUFFER_SECONDS = 300;
-
-type TwitchTokenResponse = {
-  access_token: string;
-  expires_in: number;
-  refresh_token?: string;
-  scope: string[];
-  token_type?: string;
-};
 
 export const refreshTwitchToken = async (
   db: PrismaClient,
@@ -153,7 +147,12 @@ export const refreshTwitchToken = async (
     });
   }
 
-  const tokens = (await tokenResponse.json()) as TwitchTokenResponse;
+  const tokens = parseProviderResponse({
+    provider: 'twitch',
+    call: 'POST /oauth2/token refresh_token',
+    schema: twitchRefreshTokenResponseSchema,
+    data: await tokenResponse.json()
+  });
 
   const expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
 

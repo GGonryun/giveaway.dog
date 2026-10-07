@@ -6,8 +6,7 @@ import {
   eventSubSubscriptionSchema,
   eventSubSubscriptionsListSchema,
   eventSubTransportSchema,
-  toEventSubSubscriptionSchema,
-  toEventSubSubscriptionSchemasListSchema
+  toEventSubSubscriptionSchema
 } from '../schemas';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
@@ -500,30 +499,6 @@ describe('eventSubSubscriptionsListSchema', () => {
     );
 
     expect(result.success).toBe(false);
-  });
-});
-
-describe('toEventSubSubscriptionSchemasListSchema', () => {
-  it('returns the parsed list for valid data', () => {
-    const list = subscriptionList([twitchSubscription()]);
-
-    expect(toEventSubSubscriptionSchemasListSchema(list)).toEqual(list);
-  });
-
-  it('throws a VALIDATION_ERROR application error for invalid data', () => {
-    let error: unknown;
-    try {
-      toEventSubSubscriptionSchemasListSchema({ data: null });
-    } catch (e) {
-      error = e;
-    }
-
-    expect(error).toBeInstanceOf(ApplicationError);
-    expect(error).toMatchObject({
-      code: 'VALIDATION_ERROR',
-      message: 'Failed to validate EventSub subscriptions list schema'
-    });
-    expect((error as ApplicationError).cause).toBeInstanceOf(ZodError);
   });
 });
 

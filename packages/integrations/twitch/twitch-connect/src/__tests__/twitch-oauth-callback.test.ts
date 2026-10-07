@@ -223,14 +223,15 @@ describe('twitchOAuthCallback', () => {
       expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
     });
 
-    it('returns INTERNAL_SERVER_ERROR when twitch returns no user', async () => {
+    it('returns BAD_GATEWAY when twitch returns no user', async () => {
       routeFetch({ users: () => jsonResponse({ data: [] }) });
 
       const result = await twitchOAuthCallback(input());
 
-      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
-        /Cannot read properties of undefined/
-      );
+      expect(expectFailure(result, 'BAD_GATEWAY')).toMatchObject({
+        message: 'Unexpected response from Twitch',
+        data: { provider: 'twitch', call: 'GET /helix/users' }
+      });
       expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
     });
   });

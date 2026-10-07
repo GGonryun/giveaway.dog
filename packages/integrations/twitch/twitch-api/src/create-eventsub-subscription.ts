@@ -7,7 +7,9 @@ import {
   TWITCH_EVENTSUB_SECRET
 } from './scopes';
 import { getAppAccessToken } from './get-app-access-token';
-import { toEventSubSubscriptionSchemasListSchema } from '@giveaway/twitch-model/schemas';
+import { eventSubSubscriptionsListSchema } from '@giveaway/twitch-model/schemas';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
+import { twitchCreatedSubscriptionResponseSchema } from './schemas';
 import {
   TwitchFeatureSchema,
   getEventSubTypesForTwitchFeatures
@@ -173,7 +175,12 @@ const createSubscription = async ({
     });
   }
 
-  const list = toEventSubSubscriptionSchemasListSchema(await response.json());
+  const list = parseProviderResponse({
+    provider: 'twitch',
+    call: 'POST /helix/eventsub/subscriptions',
+    schema: twitchCreatedSubscriptionResponseSchema,
+    data: await response.json()
+  });
   return list.data[0];
 };
 
@@ -195,7 +202,23 @@ const findExistingSubscription = async ({
       }
     }
   );
-  const list = toEventSubSubscriptionSchemasListSchema(await response.json());
+
+  if (!response.ok) {
+    const errorData = await response.text();
+    console.error('EventSub subscription listing failed:', errorData);
+    throw new ApplicationError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Failed to list EventSub subscriptions',
+      data: errorData
+    });
+  }
+
+  const list = parseProviderResponse({
+    provider: 'twitch',
+    call: 'GET /helix/eventsub/subscriptions',
+    schema: eventSubSubscriptionsListSchema,
+    data: await response.json()
+  });
   const existing = list.data;
 
   const subscription = existing.find((sub) => {

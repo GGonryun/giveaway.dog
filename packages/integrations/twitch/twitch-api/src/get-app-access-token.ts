@@ -1,11 +1,9 @@
 import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from './scopes';
-
-type AppAccessTokenResponse = {
-  access_token: string;
-};
+import { twitchAppTokenResponseSchema } from './schemas';
 
 export const getAppAccessToken = async () => {
   const tokenResponse = await fetch('https://id.twitch.tv/oauth2/token', {
@@ -29,6 +27,11 @@ export const getAppAccessToken = async () => {
     });
   }
 
-  const tokens = (await tokenResponse.json()) as AppAccessTokenResponse;
+  const tokens = parseProviderResponse({
+    provider: 'twitch',
+    call: 'POST /oauth2/token client_credentials',
+    schema: twitchAppTokenResponseSchema,
+    data: await tokenResponse.json()
+  });
   return tokens.access_token;
 };

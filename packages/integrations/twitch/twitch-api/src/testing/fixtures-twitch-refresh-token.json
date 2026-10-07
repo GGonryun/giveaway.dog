@@ -1,0 +1,10 @@
+{
+  "recordedAt": null,
+  "body": {
+    "access_token": "redacted-access-token",
+    "expires_in": 14124,
+    "refresh_token": "redacted-refresh-token",
+    "scope": ["channel:bot", "channel:read:redemptions", "user:read:chat"],
+    "token_type": "bearer"
+  }
+}

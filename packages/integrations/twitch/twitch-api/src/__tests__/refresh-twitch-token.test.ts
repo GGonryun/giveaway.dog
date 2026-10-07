@@ -376,37 +376,33 @@ describe('refreshTwitchToken', () => {
       );
     });
 
-    it('rejects with a TypeError and stores nothing when the scope is not an array', async () => {
-      fetchMock.mockResolvedValue(
-        jsonResponse({
-          access_token: 'new-access-token',
-          expires_in: 600,
-          scope: 'user:read:email'
-        })
-      );
+    it.each([
+      ['is not an array', { scope: 'user:read:email' }],
+      ['is missing', {}]
+    ])(
+      'throws BAD_GATEWAY and stores nothing when the scope %s',
+      async (_, scope) => {
+        fetchMock.mockResolvedValue(
+          jsonResponse({
+            access_token: 'new-access-token',
+            expires_in: 600,
+            ...scope
+          })
+        );
 
-      const error = await captureError(refresh());
+        const error = await captureError(refresh());
 
-      expect(error).toBeInstanceOf(TypeError);
-      expect(error).toMatchObject({
-        message: expect.stringContaining('join is not a function')
-      });
-      expect(prismaMock.account.update).not.toHaveBeenCalled();
-    });
-
-    it('rejects with a TypeError and stores nothing when the scope is missing', async () => {
-      fetchMock.mockResolvedValue(
-        jsonResponse({ access_token: 'new-access-token', expires_in: 600 })
-      );
-
-      const error = await captureError(refresh());
-
-      expect(error).toBeInstanceOf(TypeError);
-      expect(error).toMatchObject({
-        message: expect.stringContaining("reading 'join'")
-      });
-      expect(prismaMock.account.update).not.toHaveBeenCalled();
-    });
+        expect(error).toBeInstanceOf(ApplicationError);
+        expect(error).toMatchObject({
+          code: 'BAD_GATEWAY',
+          data: {
+            provider: 'twitch',
+            call: 'POST /oauth2/token refresh_token'
+          }
+        });
+        expect(prismaMock.account.update).not.toHaveBeenCalled();
+      }
+    );
 
     it('returns the new access token and absolute expiry', async () => {
       fetchMock.mockResolvedValue(

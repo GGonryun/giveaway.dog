@@ -154,18 +154,6 @@ export const eventSubSubscriptionsListSchema = z
   })
   .passthrough();
 
-export const toEventSubSubscriptionSchemasListSchema = (data: unknown) => {
-  const result = eventSubSubscriptionsListSchema.safeParse(data);
-  if (!result.success) {
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      cause: result.error,
-      message: 'Failed to validate EventSub subscriptions list schema'
-    });
-  }
-  return result.data;
-};
-
 export const toEventSubSubscriptionSchema = (data: unknown) => {
   const result = eventSubSubscriptionSchema.safeParse(data);
   if (!result.success) {
