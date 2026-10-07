@@ -115,13 +115,13 @@ describe('errors', () => {
       );
     });
 
-    describe('toNextResponse', () => {
+    describe('toResponse', () => {
       afterEach(() => {
         vi.useRealTimers();
       });
 
       it('uses the status mapped from the error code', async () => {
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({ code: 'NOT_FOUND', message: 'Missing' })
         );
 
@@ -130,7 +130,7 @@ describe('errors', () => {
       });
 
       it('serializes the code, message and data in an error envelope', async () => {
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({
             code: 'CONFLICT',
             message: 'Already exists',
@@ -148,7 +148,7 @@ describe('errors', () => {
       });
 
       it('omits undefined data from the body', async () => {
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({ code: 'BAD_REQUEST', message: 'Bad' })
         );
 
@@ -158,7 +158,7 @@ describe('errors', () => {
       });
 
       it('falls back to status 500 for codes without a mapped status', async () => {
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({
             code: 'VALIDATION_ERROR',
             message: 'Invalid'
@@ -176,7 +176,7 @@ describe('errors', () => {
         vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
         const retryAfter = Date.now() + 2500;
 
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({
             code: 'TOO_MANY_REQUESTS',
             message: 'Slow down',
@@ -199,7 +199,7 @@ describe('errors', () => {
         vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
         const retryAfter = Date.now() + 1000;
 
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({
             code: 'TOO_MANY_REQUESTS',
             message: 'Slow down',
@@ -220,7 +220,7 @@ describe('errors', () => {
         vi.useFakeTimers({ toFake: ['Date'] });
         vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
 
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({
             code: 'TOO_MANY_REQUESTS',
             message: 'Slow down',
@@ -232,7 +232,7 @@ describe('errors', () => {
       });
 
       it('uses the generic envelope for rate limit errors without retry data', async () => {
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({
             code: 'TOO_MANY_REQUESTS',
             message: 'Slow down'
@@ -247,7 +247,7 @@ describe('errors', () => {
       });
 
       it('uses the generic envelope for non rate limit errors carrying retryAfter', async () => {
-        const response = ApplicationError.toNextResponse(
+        const response = ApplicationError.toResponse(
           new ApplicationError({
             code: 'SERVICE_UNAVAILABLE',
             message: 'Down',
@@ -269,7 +269,7 @@ describe('errors', () => {
       it.each([new Error('boom'), 'string', null])(
         'returns a generic 500 for the unknown error %s',
         async (error) => {
-          const response = ApplicationError.toNextResponse(error);
+          const response = ApplicationError.toResponse(error);
 
           expect(response.status).toBe(500);
           expect(response.headers.get('Content-Type')).toBe('application/json');

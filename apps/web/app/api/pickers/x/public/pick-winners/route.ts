@@ -128,6 +128,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('[pick-winners] Error picking winners:', error);
-    return ApplicationError.toNextResponse(error);
+    return ApplicationError.toResponse(error);
   }
 }

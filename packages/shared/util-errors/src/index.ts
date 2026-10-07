@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server';
-
 export type ApplicationErrorCode =
   | 'BAD_REQUEST'
   | 'UNAUTHORIZED'
@@ -85,7 +83,7 @@ export class ApplicationError<T = unknown | undefined> extends Error {
     return 'An unknown error occurred...';
   }
 
-  static toNextResponse(error: unknown): NextResponse {
+  static toResponse(error: unknown): Response {
     if (isApplicationError(error)) {
       const status = codeToStatus[error.code] || 500;
 
@@ -98,7 +96,7 @@ export class ApplicationError<T = unknown | undefined> extends Error {
           (error.data.retryAfter - Date.now()) / 1000
         );
 
-        return NextResponse.json(
+        return Response.json(
           {
             success: false,
             error: error.message,
@@ -113,7 +111,7 @@ export class ApplicationError<T = unknown | undefined> extends Error {
         );
       }
 
-      return new NextResponse(
+      return new Response(
         JSON.stringify({
           error: {
             code: error.code,
@@ -129,7 +127,7 @@ export class ApplicationError<T = unknown | undefined> extends Error {
     }
 
     // For unknown errors, return a generic 500 response
-    return new NextResponse(
+    return new Response(
       JSON.stringify({
         error: {
           code: 'INTERNAL_SERVER_ERROR',

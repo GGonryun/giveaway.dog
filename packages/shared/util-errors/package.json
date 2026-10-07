@@ -25,9 +25,6 @@
     "test:server": "vitest run --project server",
     "test:property": "vitest run --project property --passWithNoTests"
   },
-  "peerDependencies": {
-    "next": "catalog:"
-  },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
