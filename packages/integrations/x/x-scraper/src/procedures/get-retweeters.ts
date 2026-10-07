@@ -1,9 +1,13 @@
 import 'server-only';
 
-import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
+import {
+  parseProviderItems,
+  parseProviderResponse
+} from '@giveaway/integration-server/provider-response';
 import { getScrapeBadgerClient } from '../client';
 import {
   scrapeBadgerUserPageSchema,
+  scrapeBadgerUserSchema,
   type ScrapeBadgerUser,
   type ScrapeBadgerUserPage
 } from '../schemas';
@@ -11,17 +15,32 @@ import {
 const DEFAULT_MAX_API_CALLS = 10;
 const DEFAULT_MAX_USERS = 500;
 
+const RETWEETERS_CALL = {
+  provider: 'scrapebadger',
+  call: 'tweets.getRetweeters'
+} as const;
+
 const getRetweetersPage = async (
   client: ReturnType<typeof getScrapeBadgerClient>,
   tweetId: string,
   options: { cursor?: string; count?: number }
-): Promise<ScrapeBadgerUserPage> =>
-  parseProviderResponse({
-    provider: 'scrapebadger',
-    call: 'tweets.getRetweeters',
+): Promise<ScrapeBadgerUserPage> => {
+  const page = parseProviderResponse({
+    ...RETWEETERS_CALL,
     schema: scrapeBadgerUserPageSchema,
     data: await client.twitter.tweets.getRetweeters(tweetId, options)
   });
+
+  return {
+    ...page,
+    data: parseProviderItems({
+      ...RETWEETERS_CALL,
+      schema: scrapeBadgerUserSchema,
+      items: page.data,
+      path: ['data']
+    })
+  };
+};
 
 export const getRetweeters = async ({
   tweetId,

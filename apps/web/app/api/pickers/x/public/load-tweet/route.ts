@@ -32,6 +32,15 @@ const loadTweetSchema = z.object({
     )
 });
 
+async function getAuthor(username: string) {
+  try {
+    return await getUserCached({ username });
+  } catch (error) {
+    console.error('[load-tweet] Error loading the author of the tweet:', error);
+    return null;
+  }
+}
+
 function extractTweetId(url: string): string | null {
   const patterns = [
     /(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/,
@@ -83,9 +92,7 @@ export async function POST(request: NextRequest) {
     );
 
     const tweet = await getTweetCached({ tweetId });
-    const user = tweet.username
-      ? await getUserCached({ username: tweet.username })
-      : null;
+    const user = tweet.username ? await getAuthor(tweet.username) : null;
 
     const profileImageUrl = user?.profile_image_url ?? null;
     const isBlueVerified = user?.is_blue_verified ?? false;
@@ -100,7 +107,7 @@ export async function POST(request: NextRequest) {
     const tweetData = {
       id: tweet.id,
       text: tweet.text,
-      username: tweet.username ?? tweet.user_name ?? null,
+      username: tweet.username ?? null,
       profileImageUrl,
       favoriteCount: likeCount,
       retweetCount,
@@ -112,13 +119,17 @@ export async function POST(request: NextRequest) {
         : new Date().toISOString(),
       isBlueVerified,
       userId: tweet.user_id ?? null,
-      media: (tweet.media?.filter((m) => m.type === 'photo') ?? []).map(
-        (m) => ({
-          url: m.url!,
-          width: m.width!,
-          height: m.height!,
-          altText: m.alt_text ?? null
-        })
+      media: tweet.media.flatMap((m) =>
+        m.type === 'photo' && m.url
+          ? [
+              {
+                url: m.url,
+                width: m.width!,
+                height: m.height!,
+                altText: m.alt_text ?? null
+              }
+            ]
+          : []
       ),
       estimatedDurationMs
     };

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import {
   fetchCall,
   jsonResponse
@@ -25,10 +26,13 @@ describe('ScrapeBadger tweets.getById contract', () => {
     vi.restoreAllMocks();
   });
 
-  it('parses the recorded response with the schema that getTweet uses', () => {
-    expect(() =>
-      scrapeBadgerTweetSchema.parse(scrapeBadgerTweetResponse)
-    ).not.toThrow();
+  it('matches each field of the recorded response without a fallback', () => {
+    expect(
+      findProviderResponseIssues(
+        scrapeBadgerTweetSchema,
+        scrapeBadgerTweetResponse
+      )
+    ).toEqual([]);
   });
 
   it('requests the tweet from the ScrapeBadger API with the API key', async () => {

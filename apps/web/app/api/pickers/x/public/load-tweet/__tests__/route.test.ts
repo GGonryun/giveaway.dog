@@ -394,14 +394,14 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
   });
 
   describe('when the tweet has no username', () => {
-    it('returns the tweet with the display name and without the author details', async () => {
+    it('returns the tweet without a username or the author details', async () => {
       m.getById.mockResolvedValue({ ...TWEET, username: null });
 
       const res = await POST(buildRequest());
 
       expect(res.status).toBe(200);
       expect((await res.json()).data).toMatchObject({
-        username: 'Giveaway Dog',
+        username: null,
         profileImageUrl: null,
         isBlueVerified: false
       });
@@ -409,9 +409,80 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
     });
   });
 
+  describe('when the author of the tweet cannot be loaded', () => {
+    const error = new Error('user lookup failed');
+
+    beforeEach(() => {
+      m.getByUsername.mockRejectedValue(error);
+    });
+
+    it('returns the tweet without the author details', async () => {
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(200);
+      expect((await res.json()).data).toMatchObject({
+        id: '1975236458112819456',
+        username: 'TheGiveawayDog',
+        profileImageUrl: null,
+        isBlueVerified: false
+      });
+    });
+
+    it('logs the error of the author lookup', async () => {
+      await POST(buildRequest());
+
+      expect(console.error).toHaveBeenCalledWith(
+        '[load-tweet] Error loading the author of the tweet:',
+        error
+      );
+    });
+
+    it('still records the site metrics', async () => {
+      await POST(buildRequest());
+
+      expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('when fields of the tweet fall back', () => {
+    it('returns the tweet with the fallback values', async () => {
+      m.getById.mockResolvedValue({
+        ...TWEET,
+        text: 7,
+        retweet_count: '1,204',
+        favorite_count: '48'
+      });
+
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(200);
+      expect((await res.json()).data).toMatchObject({
+        text: '',
+        retweetCount: 0,
+        favoriteCount: 48
+      });
+    });
+
+    it('leaves out a photo without a URL', async () => {
+      m.getById.mockResolvedValue({
+        ...TWEET,
+        media: [
+          { type: 'photo', url: 7 },
+          { type: 'photo', url: 'https://pbs.twimg.com/media/b.jpg' }
+        ]
+      });
+
+      const res = await POST(buildRequest());
+
+      expect((await res.json()).data.media).toEqual([
+        { url: 'https://pbs.twimg.com/media/b.jpg', altText: null }
+      ]);
+    });
+  });
+
   describe('when ScrapeBadger returns a tweet that does not match the schema', () => {
     beforeEach(() => {
-      m.getById.mockResolvedValue({ ...TWEET, retweet_count: '31' });
+      m.getById.mockResolvedValue({ ...TWEET, id: 123 });
     });
 
     it('returns 502 and names the provider and the call', async () => {
@@ -476,7 +547,7 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
     });
 
     it('does not record site metrics', async () => {
-      m.getByUsername.mockRejectedValue(new Error('user lookup failed'));
+      m.getById.mockRejectedValue(new Error('scraper down'));
 
       await POST(buildRequest());
 

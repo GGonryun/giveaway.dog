@@ -32,12 +32,15 @@ const ids = (list: ScrapeBadgerUser[]) => list.map((entry) => entry.id);
 
 const INVALID_PAGES = [
   ['without data', { data: null, hasMore: false }],
-  ['with an empty entry', { data: [null], hasMore: false }],
-  ['without the hasMore flag', { data: [] }],
-  [
-    'with a retweeter without an id',
-    { data: [{ username: 'u' }], hasMore: false }
-  ]
+  ['with data that is not a list', { data: { 0: {} }, hasMore: false }],
+  ['without the hasMore flag', { data: [] }]
+] as const;
+
+const INVALID_RETWEETERS = [
+  ['an empty entry', null],
+  ['a retweeter without an id', { username: 'u' }],
+  ['a retweeter without a username', { id: 'u' }],
+  ['a retweeter with a numeric id', { id: 7, username: 'u' }]
 ] as const;
 
 const BAD_PAGE_ERROR = {
@@ -113,6 +116,69 @@ describe('scrapebadger retweeter procedures', () => {
         );
       }
     );
+
+    it.each(INVALID_RETWEETERS)(
+      'drops %s and keeps the other retweeters of the page',
+      async (_, entry) => {
+        m.getRetweeters.mockResolvedValue({
+          data: [user('1'), entry, user('2')],
+          nextCursor: 'next',
+          hasMore: true
+        });
+
+        const result = await getRetweeters({ tweetId: 't-1' });
+
+        expect(result).toEqual({
+          data: [user('1'), user('2')],
+          nextCursor: 'next',
+          hasMore: true
+        });
+        expect(console.error).toHaveBeenCalledWith(
+          '[provider-response]',
+          expect.stringContaining('"outcome":"dropped","dropped":1')
+        );
+      }
+    );
+
+    it('logs where in the page the dropped retweeter was', async () => {
+      m.getRetweeters.mockResolvedValue({
+        data: [user('1'), { id: 'u' }],
+        hasMore: false
+      });
+
+      await getRetweeters({ tweetId: 't-1' });
+
+      expect(console.error).toHaveBeenCalledWith(
+        '[provider-response]',
+        JSON.stringify({
+          provider: 'scrapebadger',
+          call: 'tweets.getRetweeters',
+          outcome: 'dropped',
+          dropped: 1,
+          issues: [
+            {
+              path: 'data.*.username',
+              code: 'invalid_type',
+              expected: 'string',
+              received: 'undefined'
+            }
+          ]
+        })
+      );
+    });
+
+    it('keeps a retweeter whose display fields fall back', async () => {
+      m.getRetweeters.mockResolvedValue({
+        data: [{ ...user('1'), name: 7, followers_count: '1,204' }],
+        hasMore: false
+      });
+
+      const result = await getRetweeters({ tweetId: 't-1' });
+
+      expect(result.data).toEqual([
+        { ...user('1'), name: '', followers_count: null }
+      ]);
+    });
 
     it('rejects when the API key is missing', async () => {
       vi.stubEnv('SCRAPEBADGER_API_KEY', undefined);

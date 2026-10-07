@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { z } from 'zod';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { jsonResponse } from '@giveaway/testing-server/fixtures-integrations-utils';
 import { scrapeBadgerUserSchema } from '../../schemas';
 import { scrapeBadgerRetweetersResponse } from '../../testing/fixtures-scrapebadger';
@@ -8,7 +9,7 @@ import { getRetweeters, getRetweetersUntil } from '../get-retweeters';
 
 const fetchMock = vi.fn();
 
-const RECORDED_CURSOR = 'DAABCgABG7TBuVb__-sKAAIbtMG5Vv__6wgAAwAAAAEAAA';
+const RECORDED_CURSOR = 'recorded-cursor';
 
 const RETWEETERS = [
   {
@@ -20,13 +21,13 @@ const RETWEETERS = [
     url: 'https://example.com/retweeter_1',
     profile_image_url: 'https://example.com/retweeter_1/profile.jpg',
     profile_banner_url: 'https://example.com/retweeter_1/banner.jpg',
-    followers_count: 523,
-    following_count: 311,
-    tweet_count: 4120,
+    followers_count: 100,
+    following_count: 10,
+    tweet_count: 1000,
     verified: false,
     verified_type: null,
     is_blue_verified: false,
-    created_at: '2019-04-02T08:15:00Z',
+    created_at: '2020-01-01T12:00:00Z',
     can_dm: false
   },
   {
@@ -38,13 +39,13 @@ const RETWEETERS = [
     url: null,
     profile_image_url: 'https://example.com/retweeter_2/profile.jpg',
     profile_banner_url: null,
-    followers_count: 12,
-    following_count: 98,
-    tweet_count: 37,
+    followers_count: 200,
+    following_count: 20,
+    tweet_count: 2000,
     verified: false,
     verified_type: null,
     is_blue_verified: false,
-    created_at: '2025-12-30T21:04:00Z',
+    created_at: '2020-01-02T12:00:00Z',
     can_dm: true
   },
   {
@@ -75,6 +76,7 @@ describe('ScrapeBadger tweets.getRetweeters contract', () => {
     vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');
     vi.stubGlobal('fetch', fetchMock);
     vi.spyOn(console, 'info').mockImplementation(() => {});
+    vi.spyOn(console, 'error');
     fetchMock.mockReset();
     fetchMock.mockImplementation(async () =>
       jsonResponse(scrapeBadgerRetweetersResponse)
@@ -87,10 +89,13 @@ describe('ScrapeBadger tweets.getRetweeters contract', () => {
     vi.restoreAllMocks();
   });
 
-  it('parses each recorded retweeter with the schema that the retweeter procedures use', () => {
-    expect(() =>
-      z.array(scrapeBadgerUserSchema).parse(scrapeBadgerRetweetersResponse.data)
-    ).not.toThrow();
+  it('matches each field of each recorded retweeter without a fallback', () => {
+    expect(
+      findProviderResponseIssues(
+        z.array(scrapeBadgerUserSchema),
+        scrapeBadgerRetweetersResponse.data
+      )
+    ).toEqual([]);
   });
 
   it('returns a page of the recorded retweeters with the cursor of the next page', async () => {
@@ -104,6 +109,7 @@ describe('ScrapeBadger tweets.getRetweeters contract', () => {
       nextCursor: RECORDED_CURSOR,
       hasMore: true
     });
+    expect(console.error).not.toHaveBeenCalled();
   });
 
   it('follows the recorded cursor until a page has none', async () => {
@@ -144,11 +150,11 @@ describe('ScrapeBadger tweets.getRetweeters contract', () => {
         location: 'Location 1',
         profileImageUrl: 'https://example.com/retweeter_1/profile.jpg',
         bannerImageUrl: 'https://example.com/retweeter_1/banner.jpg',
-        createdAt: new Date('2019-04-02T08:15:00Z'),
+        createdAt: new Date('2020-01-01T12:00:00Z'),
         canDm: false,
-        followersCount: 523,
-        followingCount: 311,
-        tweetCount: 4120,
+        followersCount: 100,
+        followingCount: 10,
+        tweetCount: 1000,
         verified: false
       },
       {
@@ -161,11 +167,11 @@ describe('ScrapeBadger tweets.getRetweeters contract', () => {
         location: '',
         profileImageUrl: 'https://example.com/retweeter_2/profile.jpg',
         bannerImageUrl: null,
-        createdAt: new Date('2025-12-30T21:04:00Z'),
+        createdAt: new Date('2020-01-02T12:00:00Z'),
         canDm: true,
-        followersCount: 12,
-        followingCount: 98,
-        tweetCount: 37,
+        followersCount: 200,
+        followingCount: 20,
+        tweetCount: 2000,
         verified: false
       }
     ]);
@@ -178,7 +184,7 @@ describe('ScrapeBadger tweets.getRetweeters contract', () => {
       id: '1000000000000000001',
       name: 'Retweeter 1',
       username: 'retweeter_1',
-      created_at: new Date('2019-04-02T08:15:00Z'),
+      created_at: new Date('2020-01-01T12:00:00Z'),
       description: 'Bio of retweeter 1',
       location: 'Location 1',
       profile_image_url: 'https://example.com/retweeter_1/profile.jpg',
@@ -187,9 +193,9 @@ describe('ScrapeBadger tweets.getRetweeters contract', () => {
       verified: false,
       verified_type: undefined,
       public_metrics: {
-        followers_count: 523,
-        following_count: 311,
-        tweet_count: 4120
+        followers_count: 100,
+        following_count: 10,
+        tweet_count: 1000
       }
     });
   });

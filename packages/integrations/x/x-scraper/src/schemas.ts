@@ -1,26 +1,48 @@
 import { z } from 'zod';
+import { withFallback } from '@giveaway/integration-server/provider-response';
+
+const toNumber = (value: unknown) =>
+  typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : value;
+
+const optionalCount = withFallback(
+  z.preprocess(toNumber, z.number().nullish()),
+  null
+);
+
+const countOrZero = optionalCount.transform((count) => count ?? 0);
+
+const optionalText = withFallback(z.string().nullish(), null);
+
+const textOrEmpty = optionalText.transform((text) => text ?? '');
+
+const optionalFlag = withFallback(z.boolean().nullish(), null);
+
+const flagOrFalse = optionalFlag.transform((flag) => flag ?? false);
 
 export const scrapeBadgerMediaSchema = z.object({
-  type: z.string().nullish(),
-  url: z.string().nullish(),
-  width: z.number().nullish(),
-  height: z.number().nullish(),
-  alt_text: z.string().nullish()
+  type: optionalText,
+  url: optionalText,
+  width: optionalCount,
+  height: optionalCount,
+  alt_text: optionalText
 });
 
 export const scrapeBadgerTweetSchema = z.object({
   id: z.string(),
-  text: z.string().default(''),
-  created_at: z.string().nullish(),
-  user_id: z.string().nullish(),
-  username: z.string().nullish(),
-  user_name: z.string().nullish(),
-  favorite_count: z.number().default(0),
-  retweet_count: z.number().default(0),
-  reply_count: z.number().default(0),
-  quote_count: z.number().default(0),
-  view_count: z.number().nullish(),
-  media: z.array(scrapeBadgerMediaSchema).default([])
+  text: textOrEmpty,
+  created_at: optionalText,
+  user_id: optionalText,
+  username: optionalText,
+  user_name: optionalText,
+  favorite_count: countOrZero,
+  retweet_count: countOrZero,
+  reply_count: countOrZero,
+  quote_count: countOrZero,
+  view_count: optionalCount,
+  media: withFallback(
+    z.array(scrapeBadgerMediaSchema).nullish(),
+    null
+  ).transform((media) => media ?? [])
 });
 
 export type ScrapeBadgerTweet = z.infer<typeof scrapeBadgerTweetSchema>;
@@ -28,26 +50,26 @@ export type ScrapeBadgerTweet = z.infer<typeof scrapeBadgerTweetSchema>;
 export const scrapeBadgerUserSchema = z.object({
   id: z.string(),
   username: z.string(),
-  name: z.string().default(''),
-  description: z.string().nullish(),
-  location: z.string().nullish(),
-  url: z.string().nullish(),
-  profile_image_url: z.string().nullish(),
-  profile_banner_url: z.string().nullish(),
-  followers_count: z.number().nullish(),
-  following_count: z.number().nullish(),
-  tweet_count: z.number().nullish(),
-  verified: z.boolean().default(false),
-  verified_type: z.string().nullish(),
-  is_blue_verified: z.boolean().nullish(),
-  created_at: z.string().nullish(),
-  can_dm: z.boolean().nullish()
+  name: textOrEmpty,
+  description: optionalText,
+  location: optionalText,
+  url: optionalText,
+  profile_image_url: optionalText,
+  profile_banner_url: optionalText,
+  followers_count: optionalCount,
+  following_count: optionalCount,
+  tweet_count: optionalCount,
+  verified: flagOrFalse,
+  verified_type: optionalText,
+  is_blue_verified: optionalFlag,
+  created_at: optionalText,
+  can_dm: optionalFlag
 });
 
 export type ScrapeBadgerUser = z.infer<typeof scrapeBadgerUserSchema>;
 
 export const scrapeBadgerUserPageSchema = z.object({
-  data: z.array(scrapeBadgerUserSchema),
+  data: z.array(z.unknown()),
   nextCursor: z
     .string()
     .nullish()
@@ -55,4 +77,8 @@ export const scrapeBadgerUserPageSchema = z.object({
   hasMore: z.boolean()
 });
 
-export type ScrapeBadgerUserPage = z.infer<typeof scrapeBadgerUserPageSchema>;
+export type ScrapeBadgerUserPage = {
+  data: ScrapeBadgerUser[];
+  nextCursor?: string;
+  hasMore: boolean;
+};

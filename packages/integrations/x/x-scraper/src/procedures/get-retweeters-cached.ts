@@ -1,17 +1,23 @@
 import 'server-only';
 
+import { z } from 'zod';
 import { redis } from '@giveaway/cache/redis';
 import { getRetweetersUntil } from './get-retweeters';
-import type { ScrapeBadgerUser } from '../schemas';
+import { scrapeBadgerUserSchema } from '../schemas';
 
 // 1 hour
 const CACHE_TTL_SECONDS = 60 * 60;
 
-interface RetweetersResult {
-  users: ScrapeBadgerUser[];
-  nextCursor?: string;
-  hasMore: boolean;
-}
+const retweetersResultSchema = z.object({
+  users: z.array(scrapeBadgerUserSchema),
+  nextCursor: z
+    .string()
+    .nullish()
+    .transform((cursor) => cursor ?? undefined),
+  hasMore: z.boolean()
+});
+
+type RetweetersResult = z.infer<typeof retweetersResultSchema>;
 
 export const getRetweetersUntilCached = async ({
   tweetId,
@@ -22,12 +28,12 @@ export const getRetweetersUntilCached = async ({
 }): Promise<RetweetersResult> => {
   const cacheKey = `scrapebadger:retweeters:${tweetId}:${maxApiCalls}`;
 
-  const cached = await redis.get<RetweetersResult>(cacheKey);
-  if (cached) {
+  const cached = retweetersResultSchema.safeParse(await redis.get(cacheKey));
+  if (cached.success) {
     console.info(
-      `[ScrapeBadger] Using cached retweeters for tweet ${tweetId} (${cached.users.length} users, maxApiCalls=${maxApiCalls})`
+      `[ScrapeBadger] Using cached retweeters for tweet ${tweetId} (${cached.data.users.length} users, maxApiCalls=${maxApiCalls})`
     );
-    return cached;
+    return cached.data;
   }
 
   console.info(

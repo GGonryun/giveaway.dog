@@ -49,14 +49,47 @@ describe('getTweetCached', () => {
 
   describe('when the tweet is cached', () => {
     it('returns the cached tweet without calling the API', async () => {
-      const cached = { id: '123', text: 'cached' };
+      const cached = scrapeBadgerTweet({ id: '123', text: 'cached' });
       m.redis.get.mockResolvedValue(cached);
 
       const result = await getTweetCached({ tweetId: '123' });
 
-      expect(result).toBe(cached);
+      expect(result).toEqual(cached);
       expect(m.getById).not.toHaveBeenCalled();
       expect(m.redis.set).not.toHaveBeenCalled();
+    });
+
+    it('reads the cached tweet with the schema of the API response', async () => {
+      m.redis.get.mockResolvedValue({
+        id: '123',
+        retweet_count: '31',
+        media: null
+      });
+
+      const result = await getTweetCached({ tweetId: '123' });
+
+      expect(result).toMatchObject({
+        id: '123',
+        text: '',
+        retweet_count: 31,
+        favorite_count: 0,
+        media: []
+      });
+      expect(m.getById).not.toHaveBeenCalled();
+    });
+
+    it('fetches the tweet again when the cached value has no id', async () => {
+      m.redis.get.mockResolvedValue({ text: 'cached by an older version' });
+
+      const result = await getTweetCached({ tweetId: '123' });
+
+      expect(m.getById).toHaveBeenCalledWith('123');
+      expect(result).toEqual(tweet);
+      expect(m.redis.set).toHaveBeenCalledWith(
+        'scrapebadger:tweet:123',
+        tweet,
+        { ex: 3600 }
+      );
     });
 
     it('logs that the cached tweet was used', async () => {

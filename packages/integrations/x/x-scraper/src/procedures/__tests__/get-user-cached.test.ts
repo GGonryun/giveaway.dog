@@ -49,19 +49,53 @@ describe('getUserCached', () => {
 
   describe('when the user is cached', () => {
     it('returns the cached user without calling the API', async () => {
-      const cached = { id: '1', username: 'cached' };
+      const cached = scrapeBadgerAuthor({ id: '1', username: 'cached' });
       m.redis.get.mockResolvedValue(cached);
 
       const result = await getUserCached({ username: 'alice' });
 
-      expect(result).toBe(cached);
+      expect(result).toEqual(cached);
       expect(m.getByUsername).not.toHaveBeenCalled();
       expect(m.redis.set).not.toHaveBeenCalled();
     });
 
+    it('reads the cached user with the schema of the API response', async () => {
+      m.redis.get.mockResolvedValue({
+        id: '1',
+        username: 'cached',
+        name: null,
+        followers_count: '12'
+      });
+
+      const result = await getUserCached({ username: 'alice' });
+
+      expect(result).toMatchObject({
+        id: '1',
+        username: 'cached',
+        name: '',
+        followers_count: 12,
+        verified: false
+      });
+      expect(m.getByUsername).not.toHaveBeenCalled();
+    });
+
+    it('fetches the user again when the cached value has no username', async () => {
+      m.redis.get.mockResolvedValue({ id: '1' });
+
+      const result = await getUserCached({ username: 'alice' });
+
+      expect(m.getByUsername).toHaveBeenCalledWith('alice');
+      expect(result).toEqual(user);
+      expect(m.redis.set).toHaveBeenCalledWith(
+        'scrapebadger:user:alice',
+        user,
+        { ex: 86400 }
+      );
+    });
+
     it('logs that the cached user was used', async () => {
       const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-      m.redis.get.mockResolvedValue({ id: '1' });
+      m.redis.get.mockResolvedValue({ id: '1', username: 'cached' });
 
       await getUserCached({ username: 'Alice' });
 

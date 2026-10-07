@@ -60,10 +60,49 @@ describe('getRetweetersUntilCached', () => {
         maxApiCalls: 3
       });
 
-      expect(result).toBe(cached);
+      expect(result).toEqual(cached);
       expect(m.getRetweeters).not.toHaveBeenCalled();
       expect(m.redis.set).not.toHaveBeenCalled();
     });
+
+    it('reads a cached result without a cursor as the last page', async () => {
+      m.redis.get.mockResolvedValue({
+        users: [user('9')],
+        nextCursor: null,
+        hasMore: false
+      });
+
+      const result = await getRetweetersUntilCached({
+        tweetId: 't-1',
+        maxApiCalls: 3
+      });
+
+      expect(result).toEqual({ users: [user('9')], hasMore: false });
+      expect(m.getRetweeters).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['a user without a username', { users: [{ id: '9' }], hasMore: false }],
+      ['no users', { hasMore: false }],
+      ['no hasMore flag', { users: [user('9')] }]
+    ])(
+      'fetches the retweeters again when the cached result has %s',
+      async (_, cached) => {
+        m.redis.get.mockResolvedValue(cached);
+
+        const result = await getRetweetersUntilCached({
+          tweetId: 't-1',
+          maxApiCalls: 1
+        });
+
+        expect(m.getRetweeters).toHaveBeenCalledTimes(1);
+        expect(result).toEqual({
+          users: [user('1'), user('2')],
+          nextCursor: 'c-2',
+          hasMore: true
+        });
+      }
+    );
 
     it('logs the number of cached users', async () => {
       m.redis.get.mockResolvedValue({ users: [user('9')], hasMore: false });

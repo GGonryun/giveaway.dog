@@ -538,11 +538,23 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
       ]);
     });
 
-    it('returns 502 when ScrapeBadger returns a retweeter without a username', async () => {
+    it('leaves out a retweeter without a username', async () => {
       m.getRetweeters.mockResolvedValue({
-        data: [retweeter('1', { username: undefined })],
+        data: [retweeter('1'), retweeter('2', { username: undefined })],
         hasMore: false
       });
+
+      const res = await POST(buildRequest(buildBody({ winnersCount: 1 })));
+
+      expect(res.status).toBe(200);
+      const call = prismaMock.twitterPickerUser.createMany.mock.calls[0][0];
+      expect(call.data.map((user: { userId: string }) => user.userId)).toEqual([
+        '1'
+      ]);
+    });
+
+    it('returns 502 when ScrapeBadger returns a page without retweeters', async () => {
+      m.getRetweeters.mockResolvedValue({ data: null, hasMore: false });
 
       const res = await POST(buildRequest(buildBody({ winnersCount: 1 })));
 

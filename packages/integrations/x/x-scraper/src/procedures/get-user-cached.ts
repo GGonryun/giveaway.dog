@@ -2,7 +2,7 @@ import 'server-only';
 
 import { redis } from '@giveaway/cache/redis';
 import { getUser } from './get-user';
-import type { ScrapeBadgerUser } from '../schemas';
+import { scrapeBadgerUserSchema, type ScrapeBadgerUser } from '../schemas';
 
 // 24 hours - user details tend to change less frequently than tweets, so we can cache for longer
 const CACHE_TTL_SECONDS = 60 * 60 * 24;
@@ -14,12 +14,12 @@ export const getUserCached = async ({
 }): Promise<ScrapeBadgerUser> => {
   const cacheKey = `scrapebadger:user:${username.toLowerCase()}`;
 
-  const cached = await redis.get<ScrapeBadgerUser>(cacheKey);
-  if (cached) {
+  const cached = scrapeBadgerUserSchema.safeParse(await redis.get(cacheKey));
+  if (cached.success) {
     console.info(
       `[ScrapeBadger] Using cached user details for username ${username}`
     );
-    return cached;
+    return cached.data;
   }
 
   console.info(`[ScrapeBadger] Fetching fresh user data for ${username}`);

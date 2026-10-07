@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import {
   fetchCall,
   jsonResponse
@@ -24,10 +25,13 @@ describe('ScrapeBadger users.getByUsername contract', () => {
     vi.restoreAllMocks();
   });
 
-  it('parses the recorded response with the schema that getUser uses', () => {
-    expect(() =>
-      scrapeBadgerUserSchema.parse(scrapeBadgerUserResponse)
-    ).not.toThrow();
+  it('matches each field of the recorded response without a fallback', () => {
+    expect(
+      findProviderResponseIssues(
+        scrapeBadgerUserSchema,
+        scrapeBadgerUserResponse
+      )
+    ).toEqual([]);
   });
 
   it('requests the user from the ScrapeBadger API with the API key', async () => {
