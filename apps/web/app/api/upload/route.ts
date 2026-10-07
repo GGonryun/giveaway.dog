@@ -105,7 +105,7 @@ const toUploadError = (error: unknown): unknown =>
       })
     : error;
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: Request): Promise<Response> {
   try {
     const body = await parseBody(request);
 
@@ -208,6 +208,6 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json(jsonResponse);
   } catch (error) {
     console.error('Upload error:', JSON.stringify(error));
-    return ApplicationError.toNextResponse(toUploadError(error));
+    return ApplicationError.toResponse(toUploadError(error));
   }
 }
