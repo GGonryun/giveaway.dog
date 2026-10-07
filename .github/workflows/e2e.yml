@@ -131,7 +131,8 @@ jobs:
 
       - name: Summarize the results
         if: ${{ !cancelled() }}
-        run: node .e2e-workflow/.github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json >> "$GITHUB_STEP_SUMMARY"
+        shell: bash
+        run: node .e2e-workflow/.github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the Playwright report
         if: ${{ !cancelled() && hashFiles('apps/web-e2e/playwright-report/**') != '' }}
