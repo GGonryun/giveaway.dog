@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 import { twitterApiRequest } from '../twitter-api-request';
 import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
@@ -236,27 +236,44 @@ describe('twitterApiRequest', () => {
       expect(result).toEqual({ count: 7 });
     });
 
-    it('throws BAD_REQUEST with the zod error when the response does not match the schema', async () => {
+    it('throws BAD_GATEWAY naming the method and path when the response does not match the schema', async () => {
       fetchMock.mockResolvedValue(jsonResponse({ data: { id: 42 } }));
 
-      const error = await captureError(request());
+      const error = await captureError(request({ method: 'POST' }));
 
       expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toMatchObject({
-        code: 'BAD_REQUEST',
-        message: 'Invalid response format from Twitter'
+        code: 'BAD_GATEWAY',
+        message: 'Unexpected response from X',
+        data: { provider: 'x', call: 'POST /2/users/me' }
       });
-      expect((error as ApplicationError).cause).toBeInstanceOf(ZodError);
     });
 
-    it('logs schema validation failures', async () => {
-      fetchMock.mockResolvedValue(jsonResponse({ data: null }));
+    it('logs the paths that do not match the schema without the response', async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ data: { id: 42 } }));
 
       await captureError(request());
 
       expect(console.error).toHaveBeenCalledWith(
-        '[twitterApiRequest] Schema validation failed:',
-        expect.any(ZodError)
+        '[provider-response]',
+        JSON.stringify({
+          provider: 'x',
+          call: 'GET /2/users/me',
+          issues: [
+            {
+              path: 'data.id',
+              code: 'invalid_type',
+              expected: 'string',
+              received: 'number'
+            },
+            {
+              path: 'data.username',
+              code: 'invalid_type',
+              expected: 'string',
+              received: 'undefined'
+            }
+          ]
+        })
       );
     });
 

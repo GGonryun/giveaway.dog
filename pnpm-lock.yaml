@@ -4124,6 +4124,9 @@ importers:
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../core/integration-model
+      '@giveaway/integration-server':
+        specifier: workspace:*
+        version: link:../../core/integration-server
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../../infra/rpc-server
@@ -4789,6 +4792,9 @@ importers:
       '@giveaway/discord-model':
         specifier: workspace:*
         version: link:../discord-model
+      '@giveaway/integration-server':
+        specifier: workspace:*
+        version: link:../../core/integration-server
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../../../sweepstakes/sweepstakes-model
@@ -5877,6 +5883,9 @@ importers:
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../core/integration-model
+      '@giveaway/integration-server':
+        specifier: workspace:*
+        version: link:../../core/integration-server
       '@giveaway/twitch-model':
         specifier: workspace:*
         version: link:../twitch-model
@@ -6514,6 +6523,9 @@ importers:
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../core/integration-model
+      '@giveaway/integration-server':
+        specifier: workspace:*
+        version: link:../../core/integration-server
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../../infra/rpc-server

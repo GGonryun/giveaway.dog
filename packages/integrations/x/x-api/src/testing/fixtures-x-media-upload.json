@@ -1,0 +1,16 @@
+{
+  "recordedAt": null,
+  "body": {
+    "data": {
+      "id": "1975236401234567890",
+      "media_key": "3_1975236401234567890",
+      "size": 284311,
+      "expires_after_secs": 86400,
+      "image": {
+        "image_type": "image/jpeg",
+        "w": 1200,
+        "h": 675
+      }
+    }
+  }
+}

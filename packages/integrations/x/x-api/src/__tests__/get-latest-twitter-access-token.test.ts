@@ -410,6 +410,19 @@ describe('getLatestTwitterAccessToken', () => {
       );
     });
 
+    it('throws BAD_GATEWAY without storing tokens when the response has no access token', async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ expires_in: 7200 }));
+
+      const error = await captureError(getToken());
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: { provider: 'x', call: 'POST /2/oauth2/token' }
+      });
+      expect(prismaMock.integration.update).not.toHaveBeenCalled();
+    });
+
     it('keeps the existing refresh token when twitter returns an empty one', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({

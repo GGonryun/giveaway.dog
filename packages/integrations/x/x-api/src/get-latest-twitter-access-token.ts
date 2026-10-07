@@ -7,6 +7,8 @@ import {
   TWITTER_TEAM_APP_CLIENT_SECRET
 } from '@giveaway/integration-model/schemas';
 import { Tx } from '@giveaway/db-client/prisma';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
+import { xTokenResponseSchema } from './schemas';
 
 const EXPIRY_BUFFER_SECONDS = 300;
 
@@ -127,7 +129,12 @@ export const getLatestTwitterAccessToken = async (
     });
   }
 
-  const tokens = await tokenResponse.json();
+  const tokens = parseProviderResponse({
+    provider: 'x',
+    call: 'POST /2/oauth2/token',
+    schema: xTokenResponseSchema,
+    data: await tokenResponse.json()
+  });
 
   const expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
 

@@ -38,6 +38,7 @@
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
+    "@giveaway/integration-server": "workspace:*",
     "@giveaway/twitch-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "server-only": "catalog:",

@@ -2,21 +2,9 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import z from 'zod';
-
-interface TwitterOEmbedResponse {
-  url: string;
-  author_name: string;
-  author_url: string;
-  html: string;
-  width: number;
-  height: number | null;
-  type: string;
-  cache_age: string;
-  provider_name: string;
-  provider_url: string;
-  version: string;
-}
+import { xOEmbedResponseSchema } from './schemas';
 
 const twitterEmbedSchema = z.object({
   html: z.string(),
@@ -54,7 +42,12 @@ const getTwitterOEmbed = procedure()
         });
       }
 
-      const data: TwitterOEmbedResponse = await response.json();
+      const data = parseProviderResponse({
+        provider: 'x',
+        call: 'GET /oembed',
+        schema: xOEmbedResponseSchema,
+        data: await response.json()
+      });
       return {
         html: data.html,
         authorName: data.author_name,

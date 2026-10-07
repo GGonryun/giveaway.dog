@@ -42,6 +42,7 @@
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
+    "@giveaway/integration-server": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "zod": "catalog:"

@@ -36,6 +36,7 @@
     "@giveaway/automation-model": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-model": "workspace:*",
+    "@giveaway/integration-server": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",

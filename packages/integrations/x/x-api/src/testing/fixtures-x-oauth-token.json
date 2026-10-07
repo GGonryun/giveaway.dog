@@ -1,0 +1,10 @@
+{
+  "recordedAt": null,
+  "body": {
+    "token_type": "bearer",
+    "expires_in": 7200,
+    "access_token": "redacted-access-token",
+    "scope": "tweet.read tweet.write users.read media.write offline.access",
+    "refresh_token": "redacted-refresh-token"
+  }
+}

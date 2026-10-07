@@ -1,6 +1,7 @@
 'use server';
 
 import { ApplicationError } from '@giveaway/util-errors';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import { getLatestTwitterAccessToken } from './get-latest-twitter-access-token';
 import { Tx } from '@giveaway/db-client/prisma';
 import { z } from 'zod';
@@ -91,21 +92,10 @@ export async function twitterApiRequest<T>({
     });
   }
 
-  const data = await response.json();
-
-  const parsed = responseSchema.safeParse(data);
-
-  if (!parsed.success) {
-    console.error(
-      '[twitterApiRequest] Schema validation failed:',
-      parsed.error
-    );
-    throw new ApplicationError({
-      code: 'BAD_REQUEST',
-      message: 'Invalid response format from Twitter',
-      cause: parsed.error
-    });
-  }
-
-  return parsed.data;
+  return parseProviderResponse({
+    provider: 'x',
+    call: `${method} ${new URL(endpoint).pathname}`,
+    schema: responseSchema,
+    data: await response.json()
+  });
 }
