@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
 import { blueskyCreateRecordSchema } from '../schemas';
 import {
@@ -37,9 +38,12 @@ describe('Bluesky com.atproto.repo.createRecord contract', () => {
   });
 
   it('parses the recorded response with the schema that createSkeet uses', () => {
-    expect(() =>
-      blueskyCreateRecordSchema.parse(blueskyCreateRecordResponse)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        blueskyCreateRecordSchema,
+        blueskyCreateRecordResponse
+      )
+    ).toEqual([]);
   });
 
   it('creates a post record in the repository of the team account', async () => {

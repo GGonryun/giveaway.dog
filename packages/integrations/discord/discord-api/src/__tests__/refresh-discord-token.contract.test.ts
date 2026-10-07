@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { discordTokenResponseSchema } from '@giveaway/discord-model/schemas';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
@@ -35,9 +36,9 @@ describe('Discord POST /oauth2/token contract', () => {
   });
 
   it('parses the recorded response with the schema that refreshDiscordToken uses', () => {
-    expect(() =>
-      discordTokenResponseSchema.parse(tokenResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(discordTokenResponseSchema, tokenResponse.body)
+    ).toEqual([]);
   });
 
   it('stores the tokens of the recorded response', async () => {

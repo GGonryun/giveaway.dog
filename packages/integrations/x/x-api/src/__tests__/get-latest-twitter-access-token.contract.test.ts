@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   NOW,
@@ -37,7 +38,9 @@ describe('X POST /2/oauth2/token contract', () => {
   });
 
   it('parses the recorded response with the schema of the token refresh', () => {
-    expect(() => xTokenResponseSchema.parse(tokenResponse.body)).not.toThrow();
+    expect(
+      findProviderResponseIssues(xTokenResponseSchema, tokenResponse.body)
+    ).toEqual([]);
   });
 
   it('stores the tokens of the recorded response', async () => {

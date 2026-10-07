@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { expectOk } from '@giveaway/testing-server/result';
 import { jsonResponse } from '@giveaway/testing-server/fixtures-integrations-utils';
 import { blueskyOEmbedResponseSchema } from '../schemas';
@@ -21,9 +22,12 @@ describe('Bluesky GET /oembed contract', () => {
   });
 
   it('parses the recorded response with the schema that getBlueskyOEmbed uses', () => {
-    expect(() =>
-      blueskyOEmbedResponseSchema.parse(blueskyOEmbedResponse)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        blueskyOEmbedResponseSchema,
+        blueskyOEmbedResponse
+      )
+    ).toEqual([]);
   });
 
   it('returns the embed of the recorded response', async () => {

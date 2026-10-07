@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { jsonResponse } from '@giveaway/testing-server/fixtures-twitch';
 import refreshTokenResponse from '../testing/fixtures-twitch-refresh-token.json';
 import { twitchBotTokenResponseSchema } from '../schemas';
@@ -35,9 +36,12 @@ describe('Twitch POST /oauth2/token refresh_token contract for the bot', () => {
   });
 
   it('parses the recorded response with the schema that the bot token uses', () => {
-    expect(() =>
-      twitchBotTokenResponseSchema.parse(refreshTokenResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        twitchBotTokenResponseSchema,
+        refreshTokenResponse.body
+      )
+    ).toEqual([]);
   });
 
   it('caches the token of the recorded response for one minute less than it lives', async () => {

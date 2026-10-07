@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
 import { blueskyProfileSchema } from '../../schemas';
 import {
@@ -26,9 +27,9 @@ const withProfile = (profile: unknown) => {
 
 describe('Bluesky app.bsky.actor.getProfile contract', () => {
   it('parses the recorded response with the schema that the follow check uses', () => {
-    expect(() =>
-      blueskyProfileSchema.parse(blueskyProfileResponse)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(blueskyProfileSchema, blueskyProfileResponse)
+    ).toEqual([]);
   });
 
   it('requests the profile of the target', async () => {

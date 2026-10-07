@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   NOW,
@@ -39,9 +40,12 @@ describe('Twitch POST /oauth2/token refresh_token contract', () => {
   });
 
   it('parses the recorded response with the schema that refreshTwitchToken uses', () => {
-    expect(() =>
-      twitchRefreshTokenResponseSchema.parse(refreshTokenResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        twitchRefreshTokenResponseSchema,
+        refreshTokenResponse.body
+      )
+    ).toEqual([]);
   });
 
   it('stores the tokens and the scopes of the recorded response', async () => {

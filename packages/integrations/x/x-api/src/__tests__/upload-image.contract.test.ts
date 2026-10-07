@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { uploadMediaResponseSchema } from '@giveaway/integration-model/api';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
@@ -42,9 +43,12 @@ describe('X POST /2/media/upload contract', () => {
   });
 
   it('parses the recorded response with the schema that uploadImage uses', () => {
-    expect(() =>
-      uploadMediaResponseSchema.parse(mediaUploadResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        uploadMediaResponseSchema,
+        mediaUploadResponse.body
+      )
+    ).toEqual([]);
   });
 
   it('uploads the image to X and returns the media id of the recorded response', async () => {

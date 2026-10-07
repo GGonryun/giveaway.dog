@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { discordGuildInfoSchema } from '@giveaway/discord-model/schemas';
 import {
   fetchCall,
@@ -23,9 +24,9 @@ describe('Discord GET /guilds/:id contract', () => {
   });
 
   it('parses the recorded response with the schema that getDiscordGuildInfo uses', () => {
-    expect(() =>
-      discordGuildInfoSchema.parse(guildResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(discordGuildInfoSchema, guildResponse.body)
+    ).toEqual([]);
   });
 
   it('requests the guild with the bot token', async () => {

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import {
   TOKEN_URL,
   formBody,
@@ -27,9 +28,12 @@ describe('Twitch POST /oauth2/token client_credentials contract', () => {
   });
 
   it('parses the recorded response with the schema that getAppAccessToken uses', () => {
-    expect(() =>
-      twitchAppTokenResponseSchema.parse(appTokenResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        twitchAppTokenResponseSchema,
+        appTokenResponse.body
+      )
+    ).toEqual([]);
   });
 
   it('requests a client_credentials token for the app', async () => {

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { expectOk } from '@giveaway/testing-server/result';
 import { jsonResponse } from '@giveaway/testing-server/fixtures-integrations-utils';
 import oembedResponse from '../testing/fixtures-x-oembed.json';
@@ -22,9 +23,9 @@ describe('X GET /oembed contract', () => {
   });
 
   it('parses the recorded response with the schema that getTwitterOEmbed uses', () => {
-    expect(() =>
-      xOEmbedResponseSchema.parse(oembedResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(xOEmbedResponseSchema, oembedResponse.body)
+    ).toEqual([]);
   });
 
   it('returns the embed of the recorded response', async () => {

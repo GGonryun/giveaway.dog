@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { eventSubSubscriptionsListSchema } from '@giveaway/twitch-model/schemas';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
@@ -62,17 +63,21 @@ describe('Twitch EventSub subscriptions contract', () => {
   });
 
   it('parses the recorded list with the schema of the list request', () => {
-    expect(() =>
-      eventSubSubscriptionsListSchema.parse(subscriptionsResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        eventSubSubscriptionsListSchema,
+        subscriptionsResponse.body
+      )
+    ).toEqual([]);
   });
 
   it('parses the recorded subscription with the schema of the create request', () => {
-    expect(() =>
-      twitchCreatedSubscriptionResponseSchema.parse(
+    expect(
+      findProviderResponseIssues(
+        twitchCreatedSubscriptionResponseSchema,
         createdSubscriptionResponse.body
       )
-    ).not.toThrow();
+    ).toEqual([]);
   });
 
   it('stores the matching subscription of the recorded list without creating one', async () => {

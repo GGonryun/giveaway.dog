@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
 import { blueskyRepostedBySchema } from '../schemas';
 import {
@@ -21,9 +22,12 @@ const recordedAgent = () =>
 
 describe('Bluesky app.bsky.feed.getRepostedBy contract', () => {
   it('parses the recorded response with the schema that getBlueskyReposts uses', () => {
-    expect(() =>
-      blueskyRepostedBySchema.parse(blueskyRepostedByResponse)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        blueskyRepostedBySchema,
+        blueskyRepostedByResponse
+      )
+    ).toEqual([]);
   });
 
   it('requests the reposts of the post that the url names', async () => {

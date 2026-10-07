@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import {
   USERS_URL,
   jsonResponse
@@ -25,9 +26,9 @@ describe('Twitch GET /helix/users contract', () => {
   });
 
   it('parses the recorded response with the schema that getTwitchUser uses', () => {
-    expect(() =>
-      twitchUsersResponseSchema.parse(usersResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(twitchUsersResponseSchema, usersResponse.body)
+    ).toEqual([]);
   });
 
   it('requests the user of the token', async () => {

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import {
   discordMessageResponseSchema,
   type PostDiscordMessageOptions
@@ -63,9 +64,12 @@ describe('Discord channel messages contract', () => {
   });
 
   it('parses the recorded message with the schema that posting and editing use', () => {
-    expect(() =>
-      discordMessageResponseSchema.parse(messageResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        discordMessageResponseSchema,
+        messageResponse.body
+      )
+    ).toEqual([]);
   });
 
   it('posts the embed and buttons and returns the ids of the recorded message', async () => {

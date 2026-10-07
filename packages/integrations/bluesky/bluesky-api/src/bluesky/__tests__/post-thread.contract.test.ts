@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
 import { blueskyPostThreadSchema } from '../../schemas';
 import {
@@ -51,9 +52,12 @@ describe('Bluesky app.bsky.feed.getPostThread contract', () => {
   });
 
   it('parses the recorded response with the schema that the like and repost checks use', () => {
-    expect(() =>
-      blueskyPostThreadSchema.parse(blueskyPostThreadResponse)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        blueskyPostThreadSchema,
+        blueskyPostThreadResponse
+      )
+    ).toEqual([]);
   });
 
   it('requests the thread of the post without replies', async () => {

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { findProviderResponseIssues } from '@giveaway/integration-server/provider-response';
 import { createTweetResponseSchema } from '@giveaway/integration-model/api';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
@@ -37,9 +38,12 @@ describe('X POST /2/tweets contract', () => {
   });
 
   it('parses the recorded response with the schema that createTweet uses', () => {
-    expect(() =>
-      createTweetResponseSchema.parse(createTweetResponse.body)
-    ).not.toThrow();
+    expect(
+      findProviderResponseIssues(
+        createTweetResponseSchema,
+        createTweetResponse.body
+      )
+    ).toEqual([]);
   });
 
   it('posts the text to X with the token of the team', async () => {
