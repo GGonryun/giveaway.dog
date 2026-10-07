@@ -41,7 +41,7 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
 
 ### Environment Variables
 
-- **Sources**: Production reads the Vercel variables with the Production target, and every preview deployment reads the Vercel variables with the Preview target (Project, Settings, Environment Variables). Local development reads `apps/web/.env.local`, which starts as a copy of `apps/web/.env.example`. Vercel sets `VERCEL_ENV`, `VERCEL_URL` and `NEXT_PUBLIC_VERCEL_URL` itself
+- **Sources**: Production reads the Vercel variables with the Production target, and every preview deployment reads the Vercel variables with the Preview target (Project, Settings, Environment Variables). Local development reads `apps/web/.env.local`, which starts as a copy of `apps/web/.env.example`. Vercel sets `VERCEL_ENV`, `VERCEL_TARGET_ENV`, `VERCEL_URL` and `NEXT_PUBLIC_VERCEL_URL` itself
 - **One target for each value**: Give each Vercel variable one target. Never give Preview a production value: pull request code runs on Preview, and the end-to-end tests send their own requests to it. A change in Vercel takes effect only in new deployments. The build copies each `NEXT_PUBLIC_*` value into the client code
 - **What each environment uses**: "Not set" means that the variable has no value in that environment. The notes below the table give the reasons
 
@@ -54,6 +54,8 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
   | `BLOB_READ_WRITE_TOKEN`                                                        | The production Blob store       | Its own Blob store             | Optional                        |
   | `CRON_SECRET`                                                                  | The production secret           | Its own secret                 | Optional                        |
   | `E2E_LOGIN_SECRET`                                                             | Never set                       | The GitHub Actions secret      | Optional                        |
+  | `E2E_ALLOW_WRITES`                                                             | Never set                       | `1`                            | Optional                        |
+  | `E2E_ALLOW_PUBLIC`                                                             | Never set                       | Not set, or `1`                | Optional                        |
   | `NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY`, `CLOUDFLARE_TURNSTILE_SECRET_KEY` | The production widget           | The test keys                  | The test keys                   |
   | `BLUESKY_PRIVATE_KEY`, `TWITCH_EVENTSUB_SECRET`                                | The production keys             | Their own keys                 | Their own keys                  |
   | `DISCORD_WEBHOOK_URL`                                                          | The alerts channel              | Not set                        | Not set                         |
@@ -62,13 +64,14 @@ This is a Next.js 15 application for hosting and participating in giveaways and 
   | Sign-in providers (see below)                                                  | The production apps             | Not set, or test apps          | Optional                        |
   | Team integrations (see below)                                                  | The production apps and bots    | Not set, or test apps and bots | Optional                        |
   | `TWITCH_EVENTSUB_URL`                                                          | Not set                         | Not set                        | Optional                        |
-  | `VERCEL_ENV`, `VERCEL_URL`, `NEXT_PUBLIC_VERCEL_URL`                           | Set by Vercel                   | Set by Vercel                  | Not set                         |
+  | `VERCEL_ENV`, `VERCEL_TARGET_ENV`, `VERCEL_URL`, `NEXT_PUBLIC_VERCEL_URL`      | Set by Vercel                   | Set by Vercel                  | Not set                         |
 
 - **App URLs**: Each preview deployment uses its own URL (see App URL)
 - **`AUTH_SECRET`**: Auth.js signs the sessions with it. With the production secret, a preview could make sessions that production accepts
 - **Databases and Blob store**: See Postgres and Redis. The preview Blob store is one that production does not use (#200). Uploads fail without `BLOB_READ_WRITE_TOKEN`
 - **`CRON_SECRET`**: The cron and workflow routes accept `Bearer <CRON_SECRET>`, and they refuse every request when it is not set. Locally, set it to call the cron routes by hand
-- **`E2E_LOGIN_SECRET`**: The same value as the GitHub Actions secret of the same name, 32 characters or more (see E2E Tests). Locally, the login test needs it
+- **`E2E_LOGIN_SECRET`**: The same value as the GitHub Actions secret of the same name, 32 characters or more (see E2E Tests). Locally, the login test and the seed API need it
+- **`E2E_ALLOW_WRITES`, `E2E_ALLOW_PUBLIC`**: The seed API writes only with `E2E_ALLOW_WRITES=1`, and makes PUBLIC giveaways only with `E2E_ALLOW_PUBLIC=1` too (see E2E Tests). PUBLIC giveaways appear on `/browse` of every preview, so set `E2E_ALLOW_PUBLIC` only while tests need them. Both have no effect where the e2e gate is closed
 - **Turnstile**: Cloudflare's always-pass test keys are `1x00000000000000000000AA` (site key) and `1x0000000000000000000000000000000AA` (secret key). With them, a headless browser passes the security check of the giveaway page
 - **`BLUESKY_PRIVATE_KEY`, `TWITCH_EVENTSUB_SECRET`**: The tests can hold the preview keys in CI. Bluesky OAuth also needs a public HTTPS `NEXT_PUBLIC_APP_URL`
 - **`DISCORD_WEBHOOK_URL`**: Without it, no preview posts to the internal alerts channel. The activation job only sends this post: without the variable, it still checks the giveaway and reschedules one that has not started, but it then logs a warning, sends nothing and marks the job `COMPLETED`. #204 can add a fake webhook so that a test can check the post
@@ -174,6 +177,7 @@ packages/ (each folder is a package named @giveaway/<folder>; docs/monorepo/pack
 ├── templates/ (templates-editor, templates-gallery, templates-model, templates-server)
 ├── ui/ (theme-model, theme-server, ui-brand, ui-carousel, ui-charts, ui-command, ui-date, ui-file-upload, ui-hooks, ui-layouts, ui-primitives, ui-qr, ui-rich-text, ui-theme, ui-utils)
 ├── winners/ (leaderboard-model, leaderboard-server, leaderboard-ui, winners-model, winners-server)
+├── e2e/ (e2e-gate, e2e-model, e2e-server: the gate and the seed API of the end-to-end tests, see E2E Tests)
 └── tooling/
     ├── tsconfig/ (@giveaway/tsconfig: tsconfig presets and shared type declarations)
     ├── eslint-config/ (@giveaway/eslint-config: ESLint presets)
@@ -394,11 +398,28 @@ vitest.config.ts (lists the Vitest projects of every package)
 
 - **Location**: Put Playwright tests in `apps/web-e2e/src/`, named `<name>.spec.ts`. They run in Chromium. Vitest does not run them
 - **Run locally**: Start the app with `pnpm dev`, then run `pnpm run test:e2e:local`. It reads `apps/web/.env.local`. Run `pnpm --filter web-e2e exec playwright install chromium` one time first. The tests use `http://localhost:3000`. Set `E2E_BASE_URL` to test another deployment
-- **Login**: The login test signs in through the `e2e` credentials provider in `packages/auth/auth-provider-e2e/src/e2e.ts`. The app adds this provider only when `E2E_LOGIN_SECRET` has at least 32 characters, and only on Vercel preview deployments (`VERCEL_ENV=preview`) and the local development server (`next dev`). The provider signs in one host user, `e2e-host@example.com`. Without `E2E_LOGIN_SECRET`, the login test is skipped
+- **Gate**: `@giveaway/e2e-gate` decides where the e2e code exists. It opens only on a Vercel preview deployment (`VERCEL_ENV=preview`, and `VERCEL_TARGET_ENV` unset or `preview`) and on the local development server (`next dev`, with `VERCEL_ENV` and `VERCEL_TARGET_ENV` unset or `development`), and only when `E2E_LOGIN_SECRET` has at least 32 characters. A custom Vercel environment such as `staging` reports `VERCEL_ENV=preview`, so the check of `VERCEL_TARGET_ENV` keeps the gate closed there. The `e2e` provider and the seed API use the same gate and the same secret
+- **Login**: The login test signs in through the `e2e` credentials provider in `packages/auth/auth-provider-e2e/src/e2e.ts`. The app adds this provider only where the gate is open. The provider signs in one host user, `e2e-host@example.com`. Without `E2E_LOGIN_SECRET`, the login test is skipped
+- **Seed API**: `app/api/e2e/[...path]/route.ts` passes every request to `handleE2eRequest` in `@giveaway/e2e-server/router`. Tests use it to make states that the UI cannot make, or makes slowly, and to read rows that the UI does not show. Send the secret in the `x-e2e-secret` header and JSON in the body:
+  - `GET health`: `{ environment, writes, allowPublic }`
+  - `POST teams`: `{ ns, suffix, owner?, members?: [{ persona, role }], tier? }`. It creates the team `e2e-<ns>-<suffix>` (at most 20 characters) and signs up each persona as `e2e-<persona>-<ns>@example.com`, outside `MAX_USER_TEAMS`. When the team exists, it updates the tier and the roles, so a restarted worker gets its team back
+  - `POST sweepstakes`: `{ ns, team, preset?, startsIn?, endsIn?, name?, description?, visibility?, slug? }`. `preset` is `draft`, `scheduled`, `running` (the default), `ended` or `completed`, and `startsIn` and `endsIn` are seconds from now. It creates the giveaway from the editor defaults (`toNewSweepstakesData` in `@giveaway/sweepstakes-editor-server/lifecycle`) and saves it with `applySweepstakesChanges` as the owner of the team, so it gets the same jobs as a giveaway from the editor. A `completed` giveaway also gets the `PROCESS_COMPLETION` job, as `completeSweepstakes` does. The name starts with `[e2e <ns>]`, and a slug must start with `e2e-<ns>-`
+  - `GET rows?view=team&slug=…`, `view=sweepstakes&id=…`, `view=participants&id=…` or `view=jobs&id=…`: read-only views of e2e records. A participant who is not an e2e user has `email: null`
+  - `DELETE runs/<runId>`: deletes the teams whose slug starts with `e2e-<runId>` (with their giveaways) and the persona users whose namespace starts with `<runId>`. `<runId>` is 6 base36 characters, so start each namespace of a run with its run id
+  - `POST janitor`: deletes e2e teams and persona users that are older than 24 hours
+  - The cleanup calls delete at most 100 teams and 200 users. They return `more: true` when more are left; call them again. They delete the X picker draws of a team before the team, because `TwitterPickerDraw.pickerId` is `ON DELETE RESTRICT`
+- **Seed API safety rules**:
+  - When the gate is closed or the secret is wrong, every path returns 404 with an empty body. The API compares the secret in constant time and never reads it from the query string. An unknown path or method also returns 404
+  - Writes also need `E2E_ALLOW_WRITES=1`; without it they return 403. A PUBLIC giveaway also needs `E2E_ALLOW_PUBLIC=1`, because PUBLIC giveaways appear on `/browse`. Giveaways are UNLISTED by default
+  - It touches only users whose email matches `e2e-<persona>[-<ns>]@example.com` and teams whose slug starts with `e2e-`. It refuses a team that has a member who is not an e2e user, and it does not delete a persona user who is a member of a team outside `e2e-`. It never deletes the shared `e2e-host@example.com`
+  - It has named builders only, with zod schemas that refuse unknown fields, and limits: a body of at most 64 KB, at most 10 team members, names of at most 80 characters and descriptions of at most 10,000 characters. It has no generic model access
+  - Each call writes one log line, `[e2e] {"method","path","status","ms"}`, without the secret or the body
+  - After a write, it expires the cache tags of the giveaway at once with `revalidateTag(tag, { expire: 0 })`: `sweepstakes-<id>`, `sweepstakes-<id>-privacy`, `participant-sweepstake` and `winners-leaderboard`, plus the browse lists for a PUBLIC giveaway and after a cleanup. It does not use the `'max'` profile, and the app's own reads never skip the cache
+  - Its round trip runs against a real database in `packages/e2e/e2e-server/src/__tests__/round-trip.integration.test.ts`
 - **Protected deployments**: `apps/web-e2e/src/vercel.setup.ts` sends `VERCEL_AUTOMATION_BYPASS_SECRET` one time to get the Vercel bypass cookie. The other tests use that cookie, so the secret goes only to the deployment
 - **Origin check**: `apps/web-e2e/src/vercel.setup.ts` also reads `/api/bluesky/client-metadata.json` and fails when its `client_id` is not on the origin of `E2E_BASE_URL`. A deployment that builds its URLs on production or on `localhost` then stops the run before the other tests (see App URL)
 - **CI**: `.github/workflows/e2e.yml` runs after each successful Vercel preview deployment (the `vercel.deployment.success` repository dispatch event). It tests the commit of the deployment against the preview URL and sets the `E2E tests` status on that commit. To test a deployment by hand, run the workflow from the Actions tab with the deployment URL
-- **Secrets**: The workflow needs the `VERCEL_AUTOMATION_BYPASS_SECRET` and `E2E_LOGIN_SECRET` GitHub Actions secrets. Set the same `E2E_LOGIN_SECRET` in Vercel for the Preview environment only. Never set it for Production
+- **Secrets**: The workflow needs the `VERCEL_AUTOMATION_BYPASS_SECRET` and `E2E_LOGIN_SECRET` GitHub Actions secrets. Set the same `E2E_LOGIN_SECRET` in Vercel for the Preview environment only. Never set it for Production. Set `E2E_ALLOW_WRITES` and `E2E_ALLOW_PUBLIC` as Environment Variables shows
 
 ### Authentication Flow
 

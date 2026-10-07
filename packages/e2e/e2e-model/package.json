@@ -1,16 +1,16 @@
 {
-  "name": "@giveaway/auth-provider-e2e",
+  "name": "@giveaway/e2e-model",
   "private": true,
   "type": "module",
   "nx": {
     "tags": [
-      "type:server",
-      "runtime:server",
-      "scope:auth"
+      "type:model",
+      "runtime:isomorphic",
+      "scope:e2e"
     ],
     "targets": {
       "lint": {
-        "command": "eslint packages/auth/auth-provider-e2e",
+        "command": "eslint packages/e2e/e2e-model",
         "options": {
           "cwd": "{workspaceRoot}"
         },
@@ -19,7 +19,9 @@
     }
   },
   "exports": {
-    "./e2e": "./src/e2e.ts"
+    "./naming": "./src/naming.ts",
+    "./personas": "./src/personas.ts",
+    "./requests": "./src/requests.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
@@ -28,13 +30,8 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
-    "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
-    "@giveaway/e2e-gate": "workspace:*",
-    "server-only": "catalog:"
-  },
-  "peerDependencies": {
-    "next-auth": "catalog:"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",

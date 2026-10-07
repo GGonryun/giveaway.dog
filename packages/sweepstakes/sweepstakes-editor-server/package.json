@@ -26,6 +26,7 @@
     "./get-published-sweepstakes": "./src/get-published-sweepstakes.ts",
     "./get-sweepstakes-form": "./src/get-sweepstakes-form.ts",
     "./get-sweepstakes-status": "./src/get-sweepstakes-status.ts",
+    "./lifecycle": "./src/lifecycle.ts",
     "./publish-sweepstakes": "./src/publish-sweepstakes.ts",
     "./toggle-visibility": "./src/toggle-visibility.ts",
     "./update-sweepstakes": "./src/update-sweepstakes.ts",
@@ -50,6 +51,7 @@
     "@giveaway/util-errors": "workspace:*",
     "lodash": "catalog:",
     "nanoid": "catalog:",
+    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
