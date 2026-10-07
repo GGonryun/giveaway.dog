@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ZodError } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { updateDiscordMessage } from '../update-discord-message';
 import type { UpdateDiscordMessageOptions } from '@giveaway/discord-model/schemas';
@@ -217,18 +216,19 @@ describe('updateDiscordMessage', () => {
   });
 
   describe('when discord returns malformed data', () => {
-    it('throws VALIDATION_ERROR with the zod error as cause', async () => {
+    it('throws BAD_GATEWAY naming the call when the response does not match the schema', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({ id: 'message-1', channel_id: 7 })
       );
 
       const error = await captureError(updateDiscordMessage(options()));
 
+      expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toMatchObject({
-        code: 'VALIDATION_ERROR',
-        message: 'Invalid Discord message response'
+        code: 'BAD_GATEWAY',
+        message: 'Unexpected response from Discord',
+        data: { provider: 'discord', call: 'PATCH /channels/:id/messages/:id' }
       });
-      expect((error as ApplicationError).cause).toBeInstanceOf(ZodError);
     });
   });
 });

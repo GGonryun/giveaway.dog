@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ZodError } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getDiscordGuildInfo } from '../get-discord-guild-name';
 
@@ -102,16 +101,17 @@ describe('getDiscordGuildInfo', () => {
   });
 
   describe('when discord returns malformed data', () => {
-    it('throws VALIDATION_ERROR with the zod error as cause', async () => {
+    it('throws BAD_GATEWAY naming the call when the guild does not match the schema', async () => {
       fetchMock.mockResolvedValue(jsonResponse(guild({ name: 42 })));
 
       const error = await captureError(getDiscordGuildInfo('guild-1'));
 
+      expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toMatchObject({
-        code: 'VALIDATION_ERROR',
-        message: 'Invalid Discord guild data'
+        code: 'BAD_GATEWAY',
+        message: 'Unexpected response from Discord',
+        data: { provider: 'discord', call: 'GET /guilds/:id' }
       });
-      expect((error as ApplicationError).cause).toBeInstanceOf(ZodError);
     });
 
     it('rejects a guild whose icon property is missing', async () => {
@@ -120,7 +120,7 @@ describe('getDiscordGuildInfo', () => {
 
       const error = await captureError(getDiscordGuildInfo('guild-1'));
 
-      expect(error).toMatchObject({ code: 'VALIDATION_ERROR' });
+      expect(error).toMatchObject({ code: 'BAD_GATEWAY' });
     });
 
     it('rejects a guild without an owner id', async () => {
@@ -128,15 +128,15 @@ describe('getDiscordGuildInfo', () => {
 
       const error = await captureError(getDiscordGuildInfo('guild-1'));
 
-      expect(error).toMatchObject({ code: 'VALIDATION_ERROR' });
+      expect(error).toMatchObject({ code: 'BAD_GATEWAY' });
     });
 
-    it('throws a TypeError when discord returns a null body', async () => {
+    it('rejects a null body', async () => {
       fetchMock.mockResolvedValue(jsonResponse(null));
 
       const error = await captureError(getDiscordGuildInfo('guild-1'));
 
-      expect(error).toBeInstanceOf(TypeError);
+      expect(error).toMatchObject({ code: 'BAD_GATEWAY' });
     });
   });
 });

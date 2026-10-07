@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import {
   discordGuildInfoSchema,
   type DiscordGuildInfoSchema
@@ -25,22 +26,10 @@ export async function getDiscordGuildInfo(
     });
   }
 
-  const guildData = (await response.json()) as Record<string, unknown>;
-
-  const result = discordGuildInfoSchema.safeParse({
-    id: guildData.id,
-    name: guildData.name,
-    icon: guildData.icon,
-    owner_id: guildData.owner_id
+  return parseProviderResponse({
+    provider: 'discord',
+    call: 'GET /guilds/:id',
+    schema: discordGuildInfoSchema,
+    data: await response.json()
   });
-
-  if (!result.success) {
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      message: 'Invalid Discord guild data',
-      cause: result.error
-    });
-  }
-
-  return result.data;
 }

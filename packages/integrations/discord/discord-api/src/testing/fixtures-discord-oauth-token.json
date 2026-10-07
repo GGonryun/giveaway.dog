@@ -1,0 +1,10 @@
+{
+  "recordedAt": null,
+  "body": {
+    "access_token": "redacted-access-token",
+    "token_type": "Bearer",
+    "expires_in": 604800,
+    "refresh_token": "redacted-refresh-token",
+    "scope": "identify guilds"
+  }
+}

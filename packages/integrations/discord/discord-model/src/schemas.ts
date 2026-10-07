@@ -54,6 +54,14 @@ export type DiscordMessageResponseSchema = z.infer<
   typeof discordMessageResponseSchema
 >;
 
+export const discordTokenResponseSchema = z.object({
+  access_token: z.string(),
+  expires_in: z.number(),
+  refresh_token: z.string().nullish(),
+  scope: z.string().nullish(),
+  token_type: z.string().nullish()
+});
+
 export const discordBotTokenSchema = z
   .string()
   .min(1, 'Discord bot token is required');

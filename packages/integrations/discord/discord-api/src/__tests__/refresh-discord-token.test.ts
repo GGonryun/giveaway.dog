@@ -358,6 +358,21 @@ describe('refreshDiscordToken', () => {
       });
     });
 
+    it('throws BAD_GATEWAY and stores nothing when the response has no expiry', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({ access_token: 'new-access-token' })
+      );
+
+      const error = await captureError(refresh());
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: { provider: 'discord', call: 'POST /oauth2/token' }
+      });
+      expect(prismaMock.account.update).not.toHaveBeenCalled();
+    });
+
     it('returns the new access token and absolute expiry', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({ access_token: 'new-access-token', expires_in: 604800 })

@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import {
   discordMessageResponseSchema,
   PostDiscordMessageOptions,
@@ -72,16 +73,10 @@ export async function postDiscordMessage(
     });
   }
 
-  const data = await response.json();
-  const parsed = discordMessageResponseSchema.safeParse(data);
-
-  if (!parsed.success) {
-    throw new ApplicationError({
-      code: 'VALIDATION_ERROR',
-      message: 'Invalid Discord message response',
-      cause: parsed.error
-    });
-  }
-
-  return parsed.data;
+  return parseProviderResponse({
+    provider: 'discord',
+    call: 'POST /channels/:id/messages',
+    schema: discordMessageResponseSchema,
+    data: await response.json()
+  });
 }
