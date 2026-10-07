@@ -4,7 +4,8 @@ const EMPTY_SCRIPT_HOSTS = [
   'platform.twitter.com',
   'embed.bsky.app',
   'connect.facebook.net',
-  'va.vercel-scripts.com'
+  'va.vercel-scripts.com',
+  'vercel.live'
 ];
 
 const VERCEL_INSIGHTS_PATH = '/_vercel/insights/';

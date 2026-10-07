@@ -44,6 +44,7 @@ test.describe('onboarding', () => {
     ).setFiles({ name: 'avatar.png', mimeType: 'image/png', buffer: PNG });
 
     await expect(page.getByRole('img', { name: 'Preview' })).toBeVisible();
+    await expect(page.getByText('Uploading...')).toBeHidden();
     expect(uploads).toEqual([{ pathname: 'avatar.png', url: STUB_BLOB_URL }]);
 
     await completeSetup(page);
