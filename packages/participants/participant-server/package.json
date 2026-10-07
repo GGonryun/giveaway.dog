@@ -33,13 +33,17 @@
     "@giveaway/db-model": "workspace:*",
     "@giveaway/participant-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/task-model": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
+    "@giveaway/team-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",

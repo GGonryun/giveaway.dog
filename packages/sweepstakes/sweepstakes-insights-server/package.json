@@ -25,24 +25,31 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:server": "vitest run --project server",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
     "@giveaway/user-model": "workspace:*",
     "@giveaway/util-collections": "workspace:*",
-    "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-time": "workspace:*",
     "date-fns": "catalog:",
     "lodash": "catalog:",
     "zod": "catalog:"
   },
+  "peerDependencies": {
+    "next": "catalog:"
+  },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-integration": "workspace:*",
+    "@giveaway/testing-postgres": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",

@@ -3,7 +3,6 @@ import getSweepstakeEntries from '../get-sweepstake-entries';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
 import {
   buildTaskRecord,
@@ -48,6 +47,10 @@ const completion = (
 });
 
 describe('getSweepstakeEntries', () => {
+  beforeEach(() => {
+    signIn();
+  });
+
   describe('when the input is invalid', () => {
     it('rejects a missing slug', async () => {
       const result = await getSweepstakeEntries({
@@ -56,43 +59,6 @@ describe('getSweepstakeEntries', () => {
 
       expectFailure(result, 'UNPROCESSABLE_CONTENT');
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('when the sweepstakes cannot be found', () => {
-    it('looks up the sweepstakes by id and team slug', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
-
-      await getSweepstakeEntries(input);
-
-      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
-        where: { id: SWEEPSTAKES_ID, team: { slug: TEAM_SLUG } },
-        include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
-      });
-    });
-
-    it('returns NOT_FOUND naming the id when nothing matches', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
-
-      const result = await getSweepstakeEntries(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
-      );
-      expect(prismaMock.taskCompletion.findMany).not.toHaveBeenCalled();
-    });
-
-    it('returns NOT_FOUND when the sweepstakes has no team', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(
-        sweepstakes({ team: null })
-      );
-
-      const result = await getSweepstakeEntries(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
-      );
-      expect(prismaMock.taskCompletion.findMany).not.toHaveBeenCalled();
     });
   });
 
@@ -121,15 +87,6 @@ describe('getSweepstakeEntries', () => {
 
     it('returns an empty list when there are no completions', async () => {
       prismaMock.taskCompletion.findMany.mockResolvedValue([]);
-
-      const result = await getSweepstakeEntries(input);
-
-      expect(expectOk(result)).toEqual([]);
-    });
-
-    it('is available to anonymous visitors and signed in users alike', async () => {
-      prismaMock.taskCompletion.findMany.mockResolvedValue([]);
-      signIn();
 
       const result = await getSweepstakeEntries(input);
 

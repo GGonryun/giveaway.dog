@@ -4,6 +4,7 @@ import { SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY } from '@giveaway/participant-mod
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { buildTeamSweepstakes } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 import {
   buildCompletionRow,
   buildParticipantRow,
@@ -32,9 +33,12 @@ describe('getSweepstakesParticipants', () => {
     });
   });
 
-  describe('when the caller is signed in', () => {
+  describe('when the caller is a member of the team', () => {
     beforeEach(() => {
       signIn();
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        buildTeamSweepstakes()
+      );
     });
 
     it.each(['slug', 'sweepstakesId'])(
@@ -50,13 +54,11 @@ describe('getSweepstakesParticipants', () => {
         expect(
           expectFailure(result, 'UNPROCESSABLE_CONTENT').message
         ).toContain(key);
-        expect(
-          prismaMock.sweepstakesParticipant.findMany
-        ).not.toHaveBeenCalled();
+        expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
       }
     );
 
-    it('lists participants of the sweepstakes without filtering by team', async () => {
+    it('lists the participants of the sweepstakes', async () => {
       prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
 
       await getSweepstakesParticipants(input);

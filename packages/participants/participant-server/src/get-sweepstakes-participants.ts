@@ -3,6 +3,9 @@
 import z from 'zod';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
+import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
+import { TeamPermission } from '@giveaway/team-permissions';
+import { TeamTier } from '@giveaway/db-model';
 import {
   listSweepstakesParticipants,
   onlyParticipantsWithCompletions,
@@ -26,14 +29,18 @@ export const getSweepstakesParticipants = procedure()
     })
   )
   .handler(async ({ db, input, user }) => {
-    const data = {
-      ...input,
-      userId: user.id
-    };
+    await findUserSweepstakes({
+      db,
+      user,
+      id: input.sweepstakesId,
+      slug: input.slug,
+      permission: TeamPermission.VIEW_SWEEPSTAKES,
+      tier: TeamTier.FREE
+    });
 
     const participants = await listSweepstakesParticipants({
       db,
-      sweepstakesId: data.sweepstakesId
+      sweepstakesId: input.sweepstakesId
     });
 
     const processedUsers = participants

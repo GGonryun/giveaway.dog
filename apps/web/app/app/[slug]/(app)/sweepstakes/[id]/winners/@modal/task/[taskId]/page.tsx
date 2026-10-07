@@ -29,9 +29,10 @@ const Wrapper: React.FC<{
   sweepstakesId: string;
   taskId: string;
   slug: string;
-}> = async ({ sweepstakesId, taskId }) => {
+}> = async ({ sweepstakesId, taskId, slug }) => {
   const details = await getSweepstakeEntry({
     sweepstakesId,
+    slug,
     taskId
   });
 

@@ -19,18 +19,20 @@ const Page: React.FC<{
   return (
     <TaskCompletionDetailSheet sweepstakesId={id} slug={slug}>
       <Suspense fallback={<div>Loading...</div>}>
-        <Wrapper sweepstakesId={id} taskId={taskId} />
+        <Wrapper sweepstakesId={id} taskId={taskId} slug={slug} />
       </Suspense>
     </TaskCompletionDetailSheet>
   );
 };
 
-const Wrapper: React.FC<{ sweepstakesId: string; taskId: string }> = async ({
-  sweepstakesId,
-  taskId
-}) => {
+const Wrapper: React.FC<{
+  sweepstakesId: string;
+  taskId: string;
+  slug: string;
+}> = async ({ sweepstakesId, taskId, slug }) => {
   const details = await getSweepstakeEntry({
     sweepstakesId,
+    slug,
     taskId
   });
 

@@ -25,13 +25,16 @@ import { assertMinimumTeamTier } from '@giveaway/team-model/team/util';
 
 export const findUserSweepstakesQuery = ({
   userId,
-  id
+  id,
+  slug
 }: {
   userId: string;
   id: string;
+  slug?: string;
 }): Prisma.SweepstakesWhereUniqueInput => ({
   id,
   team: {
+    slug,
     members: {
       some: {
         userId
@@ -44,18 +47,21 @@ export const findUserSweepstakes = async ({
   db,
   user,
   id,
+  slug,
   permission,
   tier
 }: {
   db: PrismaClient;
   user: RecursiveRequired<User>;
   id: string;
+  slug?: string;
   permission: TeamPermission;
   tier: TeamTier;
 }) => {
   const sweepstakes = await db.sweepstakes.findUnique({
     where: findUserSweepstakesQuery({
       id,
+      slug,
       userId: user.id
     }),
     include: TEAM_SWEEPSTAKES_PAYLOAD

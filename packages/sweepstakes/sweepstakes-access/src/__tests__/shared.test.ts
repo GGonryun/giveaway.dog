@@ -40,6 +40,19 @@ describe('findUserSweepstakesQuery', () => {
       team: { members: { some: { userId: 'user-9' } } }
     });
   });
+
+  it('also matches the team slug when one is given', () => {
+    expect(
+      findUserSweepstakesQuery({
+        id: 'sweep-9',
+        userId: 'user-9',
+        slug: 'team-9'
+      })
+    ).toStrictEqual({
+      id: 'sweep-9',
+      team: { slug: 'team-9', members: { some: { userId: 'user-9' } } }
+    });
+  });
 });
 
 describe('findUserSweepstakes', () => {
@@ -74,6 +87,27 @@ describe('findUserSweepstakes', () => {
       where: {
         id: SWEEPSTAKES_ID,
         team: { members: { some: { userId: TEST_USER.id } } }
+      },
+      include: TEAM_SWEEPSTAKES_PAYLOAD
+    });
+  });
+
+  it('scopes the query to the team slug when one is given', async () => {
+    prismaMock.sweepstakes.findUnique.mockResolvedValue(buildTeamSweepstakes());
+
+    await findUserSweepstakes({
+      db,
+      user: TEST_USER,
+      id: SWEEPSTAKES_ID,
+      slug: 'acme',
+      permission: TeamPermission.VIEW_SWEEPSTAKES,
+      tier: TeamTier.FREE
+    });
+
+    expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
+      where: {
+        id: SWEEPSTAKES_ID,
+        team: { slug: 'acme', members: { some: { userId: TEST_USER.id } } }
       },
       include: TEAM_SWEEPSTAKES_PAYLOAD
     });

@@ -1,6 +1,8 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
+import { TeamPermission } from '@giveaway/team-permissions';
 import { SWEEPSTAKES_TASK_WHERE_QUERY } from '@giveaway/task-model/queries';
 
 import z from 'zod';
@@ -13,7 +15,7 @@ import {
   TEAM_PARTICIPANT_USER_SELECT_QUERY,
   toTeamParticipant
 } from '@giveaway/participant-model/db';
-import { Prisma } from '@giveaway/db-model';
+import { Prisma, TeamTier } from '@giveaway/db-model';
 
 export const getTeamParticipants = procedure()
   .authorization({
@@ -30,6 +32,14 @@ export const getTeamParticipants = procedure()
     })
   )
   .handler(async ({ db, input, user }) => {
+    await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.VIEW_SWEEPSTAKES,
+      tier: TeamTier.FREE
+    });
+
     const ownedBySweepstakes = SWEEPSTAKES_TASK_WHERE_QUERY({
       slug: input.slug,
       userId: user.id

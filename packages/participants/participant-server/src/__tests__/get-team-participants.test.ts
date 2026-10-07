@@ -4,6 +4,7 @@ import { TEAM_PARTICIPANT_USER_SELECT_QUERY } from '@giveaway/participant-model/
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { buildTeam } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 import {
   buildCompletion,
   buildCompletionRow,
@@ -46,9 +47,10 @@ describe('getTeamParticipants', () => {
     });
   });
 
-  describe('when the caller is signed in', () => {
+  describe('when the caller is a member of the team', () => {
     beforeEach(() => {
       signIn();
+      prismaMock.team.findUnique.mockResolvedValue(buildTeam());
       prismaMock.user.count.mockResolvedValue(0);
       prismaMock.user.findMany.mockResolvedValue([]);
     });

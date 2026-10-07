@@ -3,7 +3,6 @@ import getSweepstakesPrizes from '../get-sweepstake-prizes';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { PRIZE_WINNERS_INCLUDE_QUERY } from '@giveaway/sweepstakes-model/prizes';
 import {
   buildTaskRecord,
@@ -68,17 +67,6 @@ const prize = (overrides: Record<string, unknown> = {}) => ({
 });
 
 describe('getSweepstakesPrizes', () => {
-  describe('when the caller is not authenticated', () => {
-    it('returns UNAUTHORIZED without querying the database', async () => {
-      const result = await getSweepstakesPrizes(input);
-
-      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
-        'Invalid session'
-      );
-      expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
-    });
-  });
-
   describe('when the input is invalid', () => {
     it('rejects a missing sweepstakes id', async () => {
       signIn();
@@ -89,47 +77,6 @@ describe('getSweepstakesPrizes', () => {
 
       expectFailure(result, 'UNPROCESSABLE_CONTENT');
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('when the sweepstakes cannot be found', () => {
-    beforeEach(() => {
-      signIn();
-    });
-
-    it('looks up the sweepstakes by id and team slug only', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
-
-      await getSweepstakesPrizes(input);
-
-      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
-        where: { id: SWEEPSTAKES_ID, team: { slug: TEAM_SLUG } },
-        include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
-      });
-    });
-
-    it('returns NOT_FOUND when nothing matches', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
-
-      const result = await getSweepstakesPrizes(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
-      );
-      expect(prismaMock.prize.findMany).not.toHaveBeenCalled();
-    });
-
-    it('returns NOT_FOUND when the sweepstakes has no team', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(
-        sweepstakes({ team: null })
-      );
-
-      const result = await getSweepstakesPrizes(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
-      );
-      expect(prismaMock.prize.findMany).not.toHaveBeenCalled();
     });
   });
 

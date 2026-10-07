@@ -20,25 +20,31 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 interface SweepstakesDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string; id: string }>;
 }
 
 export default async function Page({ params }: SweepstakesDetailPageProps) {
-  const { id } = await params;
+  const { id, slug } = await params;
 
   return (
     <Suspense
       key={`${id}/analytics`}
       fallback={<SweepstakesAnalyticsSkeleton />}
     >
-      <Wrapper id={id} />
+      <Wrapper id={id} slug={slug} />
     </Suspense>
   );
 }
 
-const Wrapper: React.FC<{ id: string }> = async ({ id: sweepstakesId }) => {
+const Wrapper: React.FC<{ id: string; slug: string }> = async ({
+  id: sweepstakesId,
+  slug
+}) => {
   const participant = await getParticipantSweepstake({ sweepstakesId });
-  const timeseries = await getSweepstakesEntryTimeSeries({ sweepstakesId });
+  const timeseries = await getSweepstakesEntryTimeSeries({
+    sweepstakesId,
+    slug
+  });
   const allocations = await getSweepstakesAllocations({ sweepstakesId });
 
   if (!participant.ok) {

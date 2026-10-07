@@ -2,6 +2,9 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
+import { TeamPermission } from '@giveaway/team-permissions';
+import { TeamTier } from '@giveaway/db-model';
 
 import z from 'zod';
 
@@ -22,20 +25,43 @@ export const getTeamParticipant = procedure()
     })
   )
   .output(sweepstakesParticipantSchema)
-  .handler(async ({ db, input }) => {
-    const user = await db.user.findFirst({
+  .handler(async ({ db, input, user }) => {
+    await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.VIEW_SWEEPSTAKES,
+      tier: TeamTier.FREE
+    });
+
+    const participant = await db.user.findFirst({
       where: {
-        id: input.userId
+        id: input.userId,
+        participation: {
+          some: {
+            taskCompletions: {
+              some: {
+                task: {
+                  sweepstakes: {
+                    team: {
+                      slug: input.slug
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       select: TEAM_PARTICIPANT_USER_SELECT_QUERY(input)
     });
 
-    if (!user) {
+    if (!participant) {
       throw new ApplicationError({
         code: 'NOT_FOUND',
         message: `User with ID ${input.userId} not found`
       });
     }
 
-    return toTeamParticipant(user);
+    return toTeamParticipant(participant);
   });

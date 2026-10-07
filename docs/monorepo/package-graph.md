@@ -255,7 +255,7 @@ flowchart TB
   sweepstakes_editor_selection --> sweepstakes_model
   sweepstakes_editor_server --> sweepstakes_access
   sweepstakes_editor_setup --> sweepstakes_model
-  sweepstakes_insights_server --> sweepstakes_model
+  sweepstakes_insights_server --> sweepstakes_access
   sweepstakes_jobs --> sweepstakes_model
   sweepstakes_moderation_server --> sweepstakes_access
   sweepstakes_participation --> sweepstakes_participation_states

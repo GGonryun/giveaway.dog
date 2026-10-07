@@ -4,6 +4,7 @@ import { TEAM_PARTICIPANT_USER_SELECT_QUERY } from '@giveaway/participant-model/
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { buildTeam } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 import {
   buildCompletion,
   buildCompletionRow,
@@ -25,9 +26,10 @@ describe('getTeamParticipant', () => {
     });
   });
 
-  describe('when the caller is signed in', () => {
+  describe('when the caller is a member of the team', () => {
     beforeEach(() => {
       signIn();
+      prismaMock.team.findUnique.mockResolvedValue(buildTeam());
     });
 
     it.each(['slug', 'userId'])('rejects input without %s', async (key) => {
@@ -41,10 +43,10 @@ describe('getTeamParticipant', () => {
       expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
         key
       );
-      expect(prismaMock.user.findFirst).not.toHaveBeenCalled();
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
     });
 
-    it('loads the user with completions scoped to the team slug', async () => {
+    it('loads the user only if they entered a giveaway of the team, with completions scoped to the team slug', async () => {
       prismaMock.user.findFirst.mockResolvedValue({
         ...buildUserRow(),
         participation: []
@@ -53,7 +55,16 @@ describe('getTeamParticipant', () => {
       await getTeamParticipant(input);
 
       expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
-        where: { id: 'user-2' },
+        where: {
+          id: 'user-2',
+          participation: {
+            some: {
+              taskCompletions: {
+                some: { task: { sweepstakes: { team: { slug: 'acme' } } } }
+              }
+            }
+          }
+        },
         select: TEAM_PARTICIPANT_USER_SELECT_QUERY({ slug: 'acme' })
       });
     });
@@ -75,7 +86,7 @@ describe('getTeamParticipant', () => {
       });
     });
 
-    it('returns NOT_FOUND when the user does not exist', async () => {
+    it('returns NOT_FOUND when the user does not exist or never entered a giveaway of the team', async () => {
       prismaMock.user.findFirst.mockResolvedValue(null);
 
       const result = await getTeamParticipant(input);
