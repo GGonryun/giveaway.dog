@@ -344,14 +344,18 @@ describe('the batch implementation', () => {
     );
   });
 
-  it('keeps the output of each task apart', async () => {
-    const results = await runBatch(['broken', 'invalid']);
+  it.each(['1', '2'])(
+    'keeps the output of each task apart with LINT_WORKERS=%s',
+    async (workers) => {
+      vi.stubEnv('LINT_WORKERS', workers);
+      const results = await runBatch(['broken', 'invalid']);
 
-    expect(results['broken:lint'].terminalOutput).toContain('broken.js');
-    expect(results['broken:lint'].terminalOutput).not.toContain('invalid.js');
-    expect(results['invalid:lint'].terminalOutput).toContain('invalid.js');
-    expect(results['invalid:lint'].terminalOutput).not.toContain('broken.js');
-  });
+      expect(results['broken:lint'].terminalOutput).toContain('broken.js');
+      expect(results['broken:lint'].terminalOutput).not.toContain('invalid.js');
+      expect(results['invalid:lint'].terminalOutput).toContain('invalid.js');
+      expect(results['invalid:lint'].terminalOutput).not.toContain('broken.js');
+    }
+  );
 
   it('lints the largest projects first', async () => {
     vi.stubEnv('LINT_WORKERS', '1');
