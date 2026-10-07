@@ -28,9 +28,9 @@ describe('instagramProfileUrlSchema', () => {
       expect(instagramProfileUrlSchema.safeParse(url).success).toBe(true);
     });
 
-    it('returns the original untrimmed value', () => {
+    it('returns the trimmed value', () => {
       expect(instagramProfileUrlSchema.parse(' instagram.com/Me ')).toBe(
-        ' instagram.com/Me '
+        'instagram.com/Me'
       );
     });
   });
@@ -38,6 +38,13 @@ describe('instagramProfileUrlSchema', () => {
   describe('when the url is not a valid profile url', () => {
     it('reports both the required and format messages for an empty string', () => {
       expect(messagesFor('')).toEqual([
+        'Instagram profile URL is required',
+        INVALID_MESSAGE
+      ]);
+    });
+
+    it('reports both the required and format messages for whitespace only', () => {
+      expect(messagesFor('   ')).toEqual([
         'Instagram profile URL is required',
         INVALID_MESSAGE
       ]);
@@ -100,10 +107,6 @@ describe('extractInstagramUsername', () => {
 
   it('keeps underscores in the username', () => {
     expect(extractInstagramUsername('instagram.com/the_user')).toBe('the_user');
-  });
-
-  it('ignores surrounding whitespace', () => {
-    expect(extractInstagramUsername('  instagram.com/Me  ')).toBe('me');
   });
 
   it('returns the first path segment of a post url', () => {

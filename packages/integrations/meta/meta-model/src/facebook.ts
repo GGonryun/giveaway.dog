@@ -6,9 +6,10 @@ import { z } from 'zod';
 // - https://www.facebook.com/username
 export const facebookProfileUrlSchema = z
   .string()
+  .trim()
   .min(1, 'Facebook profile URL is required')
   .refine((url) => {
-    const normalized = url.toLowerCase().trim();
+    const normalized = url.toLowerCase();
     // Match username-based or ID-based profile URLs
     const usernamePattern =
       /^(https?:\/\/)?(www\.)?facebook\.com\/([a-zA-Z0-9.]+)\/?$/;

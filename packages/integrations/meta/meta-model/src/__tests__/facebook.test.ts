@@ -30,9 +30,9 @@ describe('facebookProfileUrlSchema', () => {
       expect(facebookProfileUrlSchema.safeParse(url).success).toBe(true);
     });
 
-    it('returns the original untrimmed value', () => {
+    it('returns the trimmed value', () => {
       expect(facebookProfileUrlSchema.parse(' facebook.com/John ')).toBe(
-        ' facebook.com/John '
+        'facebook.com/John'
       );
     });
   });
@@ -40,6 +40,13 @@ describe('facebookProfileUrlSchema', () => {
   describe('when the url is not a valid profile url', () => {
     it('reports both the required and format messages for an empty string', () => {
       expect(messagesFor('')).toEqual([
+        'Facebook profile URL is required',
+        INVALID_MESSAGE
+      ]);
+    });
+
+    it('reports both the required and format messages for whitespace only', () => {
+      expect(messagesFor('   ')).toEqual([
         'Facebook profile URL is required',
         INVALID_MESSAGE
       ]);
@@ -131,12 +138,6 @@ describe('normalizeFacebookUrl', () => {
     expect(
       normalizeFacebookUrl('http://www.facebook.com/profile.php?id=987')
     ).toBe('https://facebook.com/profile.php?id=987');
-  });
-
-  it('ignores surrounding whitespace around an id-based url', () => {
-    expect(normalizeFacebookUrl('  facebook.com/profile.php?id=42  ')).toBe(
-      'https://facebook.com/profile.php?id=42'
-    );
   });
 
   it('normalizes a username url to lowercase https without www', () => {

@@ -8,9 +8,10 @@ import { z } from 'zod';
 // Rejects: Posts (/p/), Reels, Stories, etc. - only profiles allowed
 export const instagramProfileUrlSchema = z
   .string()
+  .trim()
   .min(1, 'Instagram profile URL is required')
   .refine((url) => {
-    const normalized = url.toLowerCase().trim();
+    const normalized = url.toLowerCase();
     // Match profile URLs only (not posts, reels, etc.)
     const pattern =
       /^(https?:\/\/)?(www\.)?instagram\.com\/([a-zA-Z0-9._]+)\/?$/;
