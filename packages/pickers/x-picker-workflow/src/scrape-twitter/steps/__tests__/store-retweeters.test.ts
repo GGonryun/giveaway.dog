@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { User } from 'scrapebadger';
+import type { ScrapeBadgerUser } from '@giveaway/x-scraper/schemas';
+import { scrapeBadgerRetweeter } from '@giveaway/x-scraper/testing/fixtures-scrapebadger';
 import { storeRetweeters } from '../store-retweeters';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 
@@ -25,8 +26,8 @@ vi.mock('@giveaway/x-scraper/procedures/get-retweeters', () => ({
   getRetweetersUntil: mocks.getRetweetersUntil
 }));
 
-const scrapedUser = (id: string): User =>
-  ({
+const scrapedUser = (id: string): ScrapeBadgerUser =>
+  scrapeBadgerRetweeter({
     id,
     username: `user${id}`,
     name: `User ${id}`,
@@ -41,7 +42,7 @@ const scrapedUser = (id: string): User =>
     following_count: 2,
     tweet_count: 3,
     verified: true
-  }) as unknown as User;
+  });
 
 describe('storeRetweeters', () => {
   beforeEach(() => {

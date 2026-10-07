@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { Tweet } from 'scrapebadger';
+import { scrapeBadgerTweet } from '@giveaway/x-scraper/testing/fixtures-scrapebadger';
 import { storeTweetData } from '../store-tweet-data';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 
@@ -20,7 +20,7 @@ vi.mock('@giveaway/x-scraper/procedures/get-tweet', () => ({
   getTweet: mocks.getTweet
 }));
 
-const tweet = {
+const tweet = scrapeBadgerTweet({
   id: '1111',
   text: 'Retweet to win!',
   created_at: '2025-01-01T00:00:00.000Z',
@@ -31,7 +31,7 @@ const tweet = {
   reply_count: 5,
   view_count: 1000,
   quote_count: 2
-} as unknown as Tweet;
+});
 
 describe('storeTweetData', () => {
   beforeEach(() => {

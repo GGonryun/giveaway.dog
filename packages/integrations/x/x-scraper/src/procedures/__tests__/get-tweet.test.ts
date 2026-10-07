@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  scrapeBadgerTweet,
+  scrapeBadgerTweetResponse
+} from '../../testing/fixtures-scrapebadger';
 import { getTweet } from '../get-tweet';
 
 const m = vi.hoisted(() => ({
@@ -27,7 +31,7 @@ describe('getTweet', () => {
   });
 
   it('fetches the tweet by id with a client using the configured API key', async () => {
-    m.getById.mockResolvedValue({ id: '123', text: 'hello' });
+    m.getById.mockResolvedValue(scrapeBadgerTweetResponse);
 
     await getTweet({ tweetId: '123' });
 
@@ -36,15 +40,40 @@ describe('getTweet', () => {
   });
 
   it('returns the tweet from the API', async () => {
-    const tweet = { id: '123', text: 'hello' };
-    m.getById.mockResolvedValue(tweet);
+    m.getById.mockResolvedValue(scrapeBadgerTweetResponse);
 
-    await expect(getTweet({ tweetId: '123' })).resolves.toBe(tweet);
+    await expect(getTweet({ tweetId: '123' })).resolves.toEqual(
+      scrapeBadgerTweet()
+    );
+  });
+
+  it('fills the counts, the text and the media that the API leaves out', async () => {
+    m.getById.mockResolvedValue({ id: '123' });
+
+    await expect(getTweet({ tweetId: '123' })).resolves.toEqual({
+      id: '123',
+      text: '',
+      favorite_count: 0,
+      retweet_count: 0,
+      reply_count: 0,
+      quote_count: 0,
+      media: []
+    });
+  });
+
+  it('rejects with BAD_GATEWAY when the tweet does not match the schema', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    m.getById.mockResolvedValue({ ...scrapeBadgerTweetResponse, id: 123 });
+
+    await expect(getTweet({ tweetId: '123' })).rejects.toMatchObject({
+      code: 'BAD_GATEWAY',
+      data: { provider: 'scrapebadger', call: 'tweets.getById' }
+    });
   });
 
   it('logs the tweet being fetched', async () => {
     const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-    m.getById.mockResolvedValue({ id: '123' });
+    m.getById.mockResolvedValue(scrapeBadgerTweetResponse);
 
     await getTweet({ tweetId: '123' });
 

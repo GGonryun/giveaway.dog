@@ -24,8 +24,6 @@ const buildUser = (
   url: 'https://alice.example',
   profile_image_url: 'https://img.example/alice.png',
   profile_banner_url: 'https://img.example/profile-banner.png',
-  banner_image_url: 'https://img.example/banner.png',
-  protected: true,
   verified: true,
   verified_type: 'blue',
   can_dm: true,
@@ -49,6 +47,7 @@ const buildTweet = (
   reply_count: 3,
   view_count: 999,
   quote_count: 1,
+  media: [],
   ...overrides
 });
 
@@ -66,7 +65,7 @@ describe('toTwitterUserSchema', () => {
       description: 'Dog lover',
       location: 'Berlin',
       profile_image_url: 'https://img.example/alice.png',
-      profile_banner_url: 'https://img.example/banner.png',
+      profile_banner_url: 'https://img.example/profile-banner.png',
       protected: false,
       verified: true,
       verified_type: 'blue',
@@ -110,12 +109,32 @@ describe('toTwitterUserSchema', () => {
     expect(Number.isNaN(result.created_at?.getTime())).toBe(true);
   });
 
-  it('reads the banner from banner_image_url and ignores profile_banner_url', () => {
+  it('turns the null fields of the API into undefined fields and zero counts', () => {
     const result = toTwitterUserSchema(
-      buildUser({ banner_image_url: undefined })
+      buildUser({
+        description: null,
+        location: null,
+        profile_image_url: null,
+        profile_banner_url: null,
+        verified_type: null,
+        followers_count: null,
+        following_count: null,
+        tweet_count: null
+      })
     );
 
-    expect(result.profile_banner_url).toBeUndefined();
+    expect(result).toMatchObject({
+      description: undefined,
+      location: undefined,
+      profile_image_url: undefined,
+      profile_banner_url: undefined,
+      verified_type: undefined,
+      public_metrics: {
+        followers_count: 0,
+        following_count: 0,
+        tweet_count: 0
+      }
+    });
   });
 
   it('always reports the account as not protected', () => {
@@ -124,13 +143,14 @@ describe('toTwitterUserSchema', () => {
     expect(result.protected).toBe(false);
   });
 
-  it('passes through missing optional fields as undefined', () => {
+  it('passes through missing optional fields as undefined and missing counts as zero', () => {
     const result = toTwitterUserSchema({
       id: '1',
       name: 'Bare',
       username: 'bare',
+      verified: false,
       created_at: '2020-01-01T00:00:00.000Z'
-    } as ScrapeBadgerUser);
+    });
 
     expect(result).toEqual({
       id: '1',
@@ -142,12 +162,12 @@ describe('toTwitterUserSchema', () => {
       profile_image_url: undefined,
       profile_banner_url: undefined,
       protected: false,
-      verified: undefined,
+      verified: false,
       verified_type: undefined,
       public_metrics: {
-        followers_count: undefined,
-        following_count: undefined,
-        tweet_count: undefined
+        followers_count: 0,
+        following_count: 0,
+        tweet_count: 0
       }
     });
   });
@@ -244,7 +264,7 @@ describe('toTwitterPickerUsers', () => {
     });
   });
 
-  it('ignores banner_image_url for the banner column', () => {
+  it('leaves the banner column empty when the user has no banner', () => {
     const [row] = toTwitterPickerUsers({
       pickerId: 'picker-1',
       users: [buildUser({ profile_banner_url: undefined })]

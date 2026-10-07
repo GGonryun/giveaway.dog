@@ -3,24 +3,10 @@ import 'server-only';
 import { getTweetCached } from '@giveaway/x-scraper/procedures/get-tweet-cached';
 import { getRetweetersUntilCached } from '@giveaway/x-scraper/procedures/get-retweeters-cached';
 import { calculateApiCalls } from '@giveaway/x-picker-model/calculate-api-calls';
+import type { ScrapeBadgerUser } from '@giveaway/x-scraper/schemas';
 
 interface FetchRetweetersResult {
-  users: Array<{
-    id: string;
-    username: string;
-    name: string;
-    description: string | null;
-    url: string | null;
-    location: string | null;
-    profile_image_url: string | null;
-    profile_banner_url: string | null;
-    created_at: string | null;
-    can_dm: boolean | null;
-    followers_count: number | null;
-    following_count: number | null;
-    tweet_count: number | null;
-    verified: boolean | null;
-  }>;
+  users: ScrapeBadgerUser[];
   tweet: Awaited<ReturnType<typeof getTweetCached>>;
 }
 

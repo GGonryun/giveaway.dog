@@ -1,5 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { Tweet, User } from 'scrapebadger';
+import type {
+  ScrapeBadgerTweet,
+  ScrapeBadgerUser
+} from '@giveaway/x-scraper/schemas';
+import {
+  scrapeBadgerRetweeter,
+  scrapeBadgerTweet
+} from '@giveaway/x-scraper/testing/fixtures-scrapebadger';
 import { fetchRetweetersWithCoverage } from '../fetch-retweeters-with-coverage';
 
 const mocks = vi.hoisted(() => ({
@@ -15,19 +22,14 @@ vi.mock('@giveaway/x-scraper/procedures/get-retweeters-cached', () => ({
   getRetweetersUntilCached: mocks.getRetweetersUntilCached
 }));
 
-const buildTweet = (retweetCount: unknown): Tweet =>
+const buildTweet = (retweetCount: unknown): ScrapeBadgerTweet =>
   ({
-    id: '1111',
-    text: 'Retweet to win!',
+    ...scrapeBadgerTweet({ id: '1111', text: 'Retweet to win!' }),
     retweet_count: retweetCount
-  }) as unknown as Tweet;
+  }) as ScrapeBadgerTweet;
 
-const buildUser = (id: string): User =>
-  ({
-    id,
-    username: `user${id}`,
-    name: `User ${id}`
-  }) as unknown as User;
+const buildUser = (id: string): ScrapeBadgerUser =>
+  scrapeBadgerRetweeter({ id, username: `user${id}`, name: `User ${id}` });
 
 describe('fetchRetweetersWithCoverage', () => {
   beforeEach(() => {

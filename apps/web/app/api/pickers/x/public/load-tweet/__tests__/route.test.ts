@@ -8,6 +8,10 @@ import {
   X_PICKER_REPLIES_KEY,
   X_PICKER_RETWEETS_KEY
 } from '@giveaway/x-picker-model/constants';
+import {
+  scrapeBadgerTweetResponse,
+  scrapeBadgerUserResponse
+} from '@giveaway/x-scraper/testing/fixtures-scrapebadger';
 
 const m = vi.hoisted(() => ({
   creditsLimit: vi.fn(),
@@ -37,48 +41,9 @@ vi.mock('scrapebadger', () => ({
 const NOW = new Date('2026-06-01T00:00:00.000Z');
 const POST_URL = 'https://x.com/author/status/123';
 
-const TWEET = {
-  id: '123',
-  text: 'Retweet to win!',
-  created_at: '2026-05-01T12:00:00.000Z',
-  user_id: 'author-id',
-  username: 'Author',
-  user_name: 'Author Name',
-  favorite_count: 10,
-  retweet_count: 400,
-  reply_count: 2,
-  quote_count: 1,
-  view_count: 500,
-  media: [
-    {
-      type: 'photo',
-      url: 'https://img.example.com/1.jpg',
-      width: 800,
-      height: 600,
-      alt_text: 'A dog'
-    },
-    {
-      type: 'video',
-      url: 'https://video.example.com/1.mp4',
-      width: 1280,
-      height: 720
-    },
-    {
-      type: 'photo',
-      url: 'https://img.example.com/2.jpg',
-      width: 100,
-      height: 50
-    }
-  ]
-};
+const TWEET = scrapeBadgerTweetResponse;
 
-const USER = {
-  id: 'author-id',
-  username: 'Author',
-  name: 'Author Name',
-  profile_image_url: 'https://img.example.com/author.png',
-  is_blue_verified: true
-};
+const USER = scrapeBadgerUserResponse;
 
 const buildRequest = (
   body: unknown = { postUrl: POST_URL },
@@ -264,33 +229,28 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       expect(await res.json()).toEqual({
         success: true,
         data: {
-          id: '123',
-          text: 'Retweet to win!',
-          username: 'Author',
-          profileImageUrl: 'https://img.example.com/author.png',
-          favoriteCount: 10,
-          retweetCount: 400,
-          replyCount: 2,
-          viewCount: 500,
-          quoteCount: 1,
-          createdAt: '2026-05-01T12:00:00.000Z',
+          id: '1975236458112819456',
+          text: 'Giveaway time! Retweet this post for a chance to win a year of dog treats #giveaway https://t.co/AbCdEf1234',
+          username: 'TheGiveawayDog',
+          profileImageUrl:
+            'https://pbs.twimg.com/profile_images/1701234567890123456/AbCdEfGh_normal.jpg',
+          favoriteCount: 48,
+          retweetCount: 31,
+          replyCount: 12,
+          viewCount: 5408,
+          quoteCount: 2,
+          createdAt: '2026-10-06T16:00:00.000Z',
           isBlueVerified: true,
-          userId: 'author-id',
+          userId: '1701234567890123456',
           media: [
             {
-              url: 'https://img.example.com/1.jpg',
-              width: 800,
-              height: 600,
-              altText: 'A dog'
-            },
-            {
-              url: 'https://img.example.com/2.jpg',
-              width: 100,
-              height: 50,
-              altText: null
+              url: 'https://pbs.twimg.com/media/G2AbCdEfGhIjKlM.jpg',
+              width: 1200,
+              height: 675,
+              altText: 'A box of dog treats'
             }
           ],
-          estimatedDurationMs: 6000
+          estimatedDurationMs: 3000
         }
       });
     });
@@ -298,7 +258,7 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
     it('looks up the author by the tweet username', async () => {
       await POST(buildRequest());
 
-      expect(m.getByUsername).toHaveBeenCalledWith('Author');
+      expect(m.getByUsername).toHaveBeenCalledWith('TheGiveawayDog');
     });
 
     it.each([
@@ -327,29 +287,29 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
         [
           {
             where: { key: X_PICKER_LIKES_KEY },
-            create: { key: X_PICKER_LIKES_KEY, value: 10 },
-            update: { value: { increment: 10 } }
+            create: { key: X_PICKER_LIKES_KEY, value: 48 },
+            update: { value: { increment: 48 } }
           }
         ],
         [
           {
             where: { key: X_PICKER_RETWEETS_KEY },
-            create: { key: X_PICKER_RETWEETS_KEY, value: 400 },
-            update: { value: { increment: 400 } }
+            create: { key: X_PICKER_RETWEETS_KEY, value: 31 },
+            update: { value: { increment: 31 } }
           }
         ],
         [
           {
             where: { key: X_PICKER_REPLIES_KEY },
-            create: { key: X_PICKER_REPLIES_KEY, value: 2 },
-            update: { value: { increment: 2 } }
+            create: { key: X_PICKER_REPLIES_KEY, value: 12 },
+            update: { value: { increment: 12 } }
           }
         ],
         [
           {
             where: { key: X_PICKER_QUOTES_KEY },
-            create: { key: X_PICKER_QUOTES_KEY, value: 1 },
-            update: { value: { increment: 1 } }
+            create: { key: X_PICKER_QUOTES_KEY, value: 2 },
+            update: { value: { increment: 2 } }
           }
         ]
       ]);
@@ -381,7 +341,7 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       const res = await POST(buildRequest());
 
       expect(res.status).toBe(200);
-      expect((await res.json()).data.id).toBe('123');
+      expect((await res.json()).data.id).toBe('1975236458112819456');
     });
   });
 
@@ -389,11 +349,7 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
     const sparseTweet = {
       id: '123',
       text: 'Hello',
-      username: 'Author',
-      favorite_count: undefined,
-      retweet_count: 'not-a-number',
-      reply_count: null,
-      quote_count: undefined
+      username: 'Author'
     };
 
     beforeEach(() => {
@@ -438,14 +394,44 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
   });
 
   describe('when the tweet has no username', () => {
-    it('returns a generic 500 instead of falling back to user_name', async () => {
-      m.getById.mockResolvedValue({ ...TWEET, username: undefined });
+    it('returns the tweet with the display name and without the author details', async () => {
+      m.getById.mockResolvedValue({ ...TWEET, username: null });
 
       const res = await POST(buildRequest());
 
-      expect(res.status).toBe(500);
-      expect(await res.json()).toEqual(genericError);
+      expect(res.status).toBe(200);
+      expect((await res.json()).data).toMatchObject({
+        username: 'Giveaway Dog',
+        profileImageUrl: null,
+        isBlueVerified: false
+      });
       expect(m.getByUsername).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when ScrapeBadger returns a tweet that does not match the schema', () => {
+    beforeEach(() => {
+      m.getById.mockResolvedValue({ ...TWEET, retweet_count: '31' });
+    });
+
+    it('returns 502 and names the provider and the call', async () => {
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(502);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'BAD_GATEWAY',
+          message: 'Unexpected response from X',
+          data: { provider: 'scrapebadger', call: 'tweets.getById' }
+        }
+      });
+    });
+
+    it('does not cache the tweet or record site metrics', async () => {
+      await POST(buildRequest());
+
+      expect(m.redisSet).not.toHaveBeenCalled();
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
     });
   });
 

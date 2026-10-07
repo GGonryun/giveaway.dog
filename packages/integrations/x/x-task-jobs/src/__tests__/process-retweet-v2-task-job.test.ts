@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
-import type { User } from 'scrapebadger';
+import type { ScrapeBadgerUser } from '@giveaway/x-scraper/schemas';
+import { scrapeBadgerRetweeter } from '@giveaway/x-scraper/testing/fixtures-scrapebadger';
 import { processRetweetV2TaskJob } from '../process-retweet-v2-task-job';
 import { ApplicationError } from '@giveaway/util-errors';
 import type { Prisma } from '@giveaway/db-model';
@@ -33,17 +34,20 @@ const MINUTE = 60 * 1000;
 const db = asPrismaClient(prismaMock);
 const task = taskOf('TWITTER_RETWEET_IMPORT_V2');
 
-const scrapeUser = (id: string, overrides: Partial<User> = {}): User => ({
-  id,
-  username: `user_${id}`,
-  name: `User ${id}`,
-  followers_count: 10,
-  following_count: 5,
-  tweet_count: 100,
-  listed_count: 0,
-  verified: false,
-  ...overrides
-});
+const scrapeUser = (
+  id: string,
+  overrides: Partial<ScrapeBadgerUser> = {}
+): ScrapeBadgerUser =>
+  scrapeBadgerRetweeter({
+    id,
+    username: `user_${id}`,
+    name: `User ${id}`,
+    followers_count: 10,
+    following_count: 5,
+    tweet_count: 100,
+    verified: false,
+    ...overrides
+  });
 
 const imported = (userId: string, twitterUserId = `tw-${userId}`) => ({
   userId,
@@ -58,7 +62,7 @@ const jobWith = (
 ) => buildTaskJob({ type: 'TWITTER_RETWEET_IMPORT_V2', data, timing });
 
 const respond = (response: {
-  users?: User[];
+  users?: ScrapeBadgerUser[];
   nextCursor?: string;
   hasMore: boolean;
 }) => m.getRetweetersUntilUser.mockResolvedValue(response);
@@ -216,7 +220,7 @@ describe('processRetweetV2TaskJob', () => {
             description: 'bio',
             location: 'Earth',
             profile_image_url: 'https://img.example/u1.png',
-            profile_banner_url: undefined,
+            profile_banner_url: 'https://example.com/retweeter_1/banner.jpg',
             protected: false,
             verified: true,
             verified_type: 'blue',

@@ -6,7 +6,6 @@ import {
   calculateApiCalls,
   estimateDuration
 } from '@giveaway/x-picker-model/calculate-api-calls';
-import type { Tweet } from 'scrapebadger';
 import { ApplicationError } from '@giveaway/util-errors';
 import { checkAndConsumeCredits } from '@giveaway/x-scraper/credits';
 import { CREDIT_COSTS } from '@giveaway/x-scraper/settings';
@@ -84,10 +83,12 @@ export async function POST(request: NextRequest) {
     );
 
     const tweet = await getTweetCached({ tweetId });
-    const user = await getUserCached({ username: tweet.username });
+    const user = tweet.username
+      ? await getUserCached({ username: tweet.username })
+      : null;
 
-    const profileImageUrl = user.profile_image_url ?? null;
-    const isBlueVerified = user.is_blue_verified ?? false;
+    const profileImageUrl = user?.profile_image_url ?? null;
+    const isBlueVerified = user?.is_blue_verified ?? false;
 
     const retweetCount = Number(tweet.retweet_count) || 0;
     const likeCount = Number(tweet.favorite_count) || 0;
@@ -111,16 +112,14 @@ export async function POST(request: NextRequest) {
         : new Date().toISOString(),
       isBlueVerified,
       userId: tweet.user_id ?? null,
-      media: (
-        tweet.media?.filter(
-          (m: Tweet['media'][number]) => m.type === 'photo'
-        ) ?? []
-      ).map((m: Tweet['media'][number]) => ({
-        url: m.url!,
-        width: m.width!,
-        height: m.height!,
-        altText: m.alt_text ?? null
-      })),
+      media: (tweet.media?.filter((m) => m.type === 'photo') ?? []).map(
+        (m) => ({
+          url: m.url!,
+          width: m.width!,
+          height: m.height!,
+          altText: m.alt_text ?? null
+        })
+      ),
       estimatedDurationMs
     };
 

@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { ScrapeBadgerUser } from '../../schemas';
+import { scrapeBadgerRetweeter } from '../../testing/fixtures-scrapebadger';
 import {
   getAllRetweeters,
   getRetweeters,
@@ -15,24 +17,39 @@ vi.mock('scrapebadger', () => ({
   ScrapeBadger: m.ScrapeBadger
 }));
 
-type TestUser = { id: string; username: string } | null;
-
-const user = (id: string) => ({ id, username: `user${id}` });
+const user = (id: string) =>
+  scrapeBadgerRetweeter({ id, username: `user${id}` });
 
 const users = (from: number, count: number) =>
   Array.from({ length: count }, (_, index) => user(String(from + index)));
 
 const page = (
-  data: TestUser[] | null | undefined,
+  data: ScrapeBadgerUser[],
   options: { nextCursor?: string; hasMore?: boolean } = {}
-) => ({ data, ...options });
+) => ({ data, hasMore: false, ...options });
 
-const ids = (list: TestUser[]) => list.map((entry) => entry?.id ?? null);
+const ids = (list: ScrapeBadgerUser[]) => list.map((entry) => entry.id);
+
+const INVALID_PAGES = [
+  ['without data', { data: null, hasMore: false }],
+  ['with an empty entry', { data: [null], hasMore: false }],
+  ['without the hasMore flag', { data: [] }],
+  [
+    'with a retweeter without an id',
+    { data: [{ username: 'u' }], hasMore: false }
+  ]
+] as const;
+
+const BAD_PAGE_ERROR = {
+  code: 'BAD_GATEWAY',
+  data: { provider: 'scrapebadger', call: 'tweets.getRetweeters' }
+};
 
 describe('scrapebadger retweeter procedures', () => {
   beforeEach(() => {
     vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');
     vi.spyOn(console, 'info').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     m.getRetweeters.mockReset();
     m.ScrapeBadger.mockReset();
     m.ScrapeBadger.mockImplementation(function () {
@@ -65,12 +82,37 @@ describe('scrapebadger retweeter procedures', () => {
       });
     });
 
-    it('returns the raw API response', async () => {
+    it('returns the page of retweeters from the API', async () => {
       const response = page([user('1')], { nextCursor: 'c-2', hasMore: true });
       m.getRetweeters.mockResolvedValue(response);
 
-      await expect(getRetweeters({ tweetId: 't-1' })).resolves.toBe(response);
+      await expect(getRetweeters({ tweetId: 't-1' })).resolves.toEqual(
+        response
+      );
     });
+
+    it('returns no next cursor when the API reports a null cursor', async () => {
+      m.getRetweeters.mockResolvedValue({
+        data: [],
+        nextCursor: null,
+        hasMore: false
+      });
+
+      const result = await getRetweeters({ tweetId: 't-1' });
+
+      expect(result).toHaveProperty('nextCursor', undefined);
+    });
+
+    it.each(INVALID_PAGES)(
+      'rejects a page %s with BAD_GATEWAY',
+      async (_, response) => {
+        m.getRetweeters.mockResolvedValue(response);
+
+        await expect(getRetweeters({ tweetId: 't-1' })).rejects.toMatchObject(
+          BAD_PAGE_ERROR
+        );
+      }
+    );
 
     it('rejects when the API key is missing', async () => {
       vi.stubEnv('SCRAPEBADGER_API_KEY', undefined);
@@ -210,20 +252,9 @@ describe('scrapebadger retweeter procedures', () => {
       expect(result).toEqual({ users: [], nextCursor: 'start', hasMore: true });
     });
 
-    it.each([null, undefined])(
-      'treats %j page data as an empty page',
-      async (data) => {
-        m.getRetweeters.mockResolvedValue(page(data, { hasMore: false }));
-
-        const result = await getRetweetersUntil({ tweetId: 't-1' });
-
-        expect(result.users).toEqual([]);
-      }
-    );
-
-    it('treats a missing hasMore flag as no more results', async () => {
+    it('stops when the API reports no more results with a cursor', async () => {
       m.getRetweeters.mockResolvedValue(
-        page([user('1')], { nextCursor: 'c-2' })
+        page([user('1')], { nextCursor: 'c-2', hasMore: false })
       );
 
       const result = await getRetweetersUntil({ tweetId: 't-1' });
@@ -233,15 +264,16 @@ describe('scrapebadger retweeter procedures', () => {
       expect(result.nextCursor).toBe('c-2');
     });
 
-    it('keeps empty entries returned by the API', async () => {
-      m.getRetweeters.mockResolvedValue(
-        page([user('1'), null], { hasMore: false })
-      );
+    it.each(INVALID_PAGES)(
+      'rejects a page %s with BAD_GATEWAY',
+      async (_, response) => {
+        m.getRetweeters.mockResolvedValue(response);
 
-      const result = await getRetweetersUntil({ tweetId: 't-1' });
-
-      expect(ids(result.users)).toEqual(['1', null]);
-    });
+        await expect(
+          getRetweetersUntil({ tweetId: 't-1' })
+        ).rejects.toMatchObject(BAD_PAGE_ERROR);
+      }
+    );
 
     it('propagates API errors', async () => {
       m.getRetweeters.mockRejectedValue(new Error('rate limited'));
@@ -503,28 +535,14 @@ describe('scrapebadger retweeter procedures', () => {
       });
     });
 
-    it('removes empty entries from the result', async () => {
-      m.getRetweeters.mockResolvedValue(
-        page([null, user('1'), null, user('2')], { hasMore: false })
-      );
+    it.each(INVALID_PAGES)(
+      'rejects a page %s with BAD_GATEWAY',
+      async (_, response) => {
+        m.getRetweeters.mockResolvedValue(response);
 
-      const result = await getRetweetersUntilUser({ tweetId: 't-1' });
-
-      expect(ids(result.users)).toEqual(['1', '2']);
-    });
-
-    it.each([null, undefined])(
-      'treats %j page data as an empty page',
-      async (data) => {
-        m.getRetweeters.mockResolvedValue(page(data, { hasMore: false }));
-
-        const result = await getRetweetersUntilUser({
-          tweetId: 't-1',
-          stopAtUserId: '1'
-        });
-
-        expect(result.users).toEqual([]);
-        expect(result.hasMore).toBe(false);
+        await expect(
+          getRetweetersUntilUser({ tweetId: 't-1', stopAtUserId: '1' })
+        ).rejects.toMatchObject(BAD_PAGE_ERROR);
       }
     );
   });
@@ -563,9 +581,9 @@ describe('scrapebadger retweeter procedures', () => {
       expect(result).toEqual([user('1')]);
     });
 
-    it('stops when the hasMore flag is missing even with a cursor', async () => {
+    it('stops when the API reports no more results with a cursor', async () => {
       m.getRetweeters.mockResolvedValue(
-        page([user('1')], { nextCursor: 'c-2' })
+        page([user('1')], { nextCursor: 'c-2', hasMore: false })
       );
 
       await getAllRetweeters({ tweetId: 't-1' });
@@ -573,22 +591,14 @@ describe('scrapebadger retweeter procedures', () => {
       expect(m.getRetweeters).toHaveBeenCalledTimes(1);
     });
 
-    it('removes empty entries from the result', async () => {
-      m.getRetweeters.mockResolvedValue(
-        page([user('1'), null, user('2')], { hasMore: false })
-      );
+    it.each(INVALID_PAGES)(
+      'rejects a page %s with BAD_GATEWAY',
+      async (_, response) => {
+        m.getRetweeters.mockResolvedValue(response);
 
-      const result = await getAllRetweeters({ tweetId: 't-1' });
-
-      expect(ids(result)).toEqual(['1', '2']);
-    });
-
-    it.each([null, undefined])(
-      'returns an empty list for %j page data',
-      async (data) => {
-        m.getRetweeters.mockResolvedValue(page(data, { hasMore: false }));
-
-        await expect(getAllRetweeters({ tweetId: 't-1' })).resolves.toEqual([]);
+        await expect(
+          getAllRetweeters({ tweetId: 't-1' })
+        ).rejects.toMatchObject(BAD_PAGE_ERROR);
       }
     );
 

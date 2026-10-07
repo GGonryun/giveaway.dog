@@ -2,13 +2,13 @@ import 'server-only';
 
 import { redis } from '@giveaway/cache/redis';
 import { getRetweetersUntil } from './get-retweeters';
-import type { User } from 'scrapebadger';
+import type { ScrapeBadgerUser } from '../schemas';
 
 // 1 hour
 const CACHE_TTL_SECONDS = 60 * 60;
 
 interface RetweetersResult {
-  users: User[];
+  users: ScrapeBadgerUser[];
   nextCursor?: string;
   hasMore: boolean;
 }

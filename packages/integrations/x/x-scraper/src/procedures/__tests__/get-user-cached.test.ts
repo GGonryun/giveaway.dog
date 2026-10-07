@@ -1,4 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  scrapeBadgerAuthor,
+  scrapeBadgerUserResponse
+} from '../../testing/fixtures-scrapebadger';
 import { getUserCached } from '../get-user-cached';
 
 const m = vi.hoisted(() => ({
@@ -16,7 +20,7 @@ vi.mock('scrapebadger', () => ({
 }));
 
 describe('getUserCached', () => {
-  const user = { id: '1', username: 'Alice' };
+  const user = scrapeBadgerAuthor();
 
   beforeEach(() => {
     vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');
@@ -24,7 +28,7 @@ describe('getUserCached', () => {
     m.redis.set.mockReset();
     m.redis.set.mockResolvedValue('OK');
     m.getByUsername.mockReset();
-    m.getByUsername.mockResolvedValue(user);
+    m.getByUsername.mockResolvedValue(scrapeBadgerUserResponse);
     m.ScrapeBadger.mockImplementation(function () {
       return { twitter: { users: { getByUsername: m.getByUsername } } };
     });
@@ -74,7 +78,7 @@ describe('getUserCached', () => {
       const result = await getUserCached({ username: 'AliCE' });
 
       expect(m.getByUsername).toHaveBeenCalledWith('AliCE');
-      expect(result).toBe(user);
+      expect(result).toEqual(user);
     });
 
     it('caches the fetched user for 24 hours under the lowercased key', async () => {
@@ -95,7 +99,7 @@ describe('getUserCached', () => {
       const result = await getUserCached({ username: 'alice' });
 
       expect(m.getByUsername).toHaveBeenCalledTimes(1);
-      expect(result).toBe(user);
+      expect(result).toEqual(user);
     });
 
     it('propagates cache write failures', async () => {

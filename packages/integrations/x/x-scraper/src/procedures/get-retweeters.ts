@@ -1,11 +1,27 @@
 import 'server-only';
 
-import { compact } from 'lodash';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import { getScrapeBadgerClient } from '../client';
-import { User } from 'scrapebadger';
+import {
+  scrapeBadgerUserPageSchema,
+  type ScrapeBadgerUser,
+  type ScrapeBadgerUserPage
+} from '../schemas';
 
 const DEFAULT_MAX_API_CALLS = 10;
 const DEFAULT_MAX_USERS = 500;
+
+const getRetweetersPage = async (
+  client: ReturnType<typeof getScrapeBadgerClient>,
+  tweetId: string,
+  options: { cursor?: string; count?: number }
+): Promise<ScrapeBadgerUserPage> =>
+  parseProviderResponse({
+    provider: 'scrapebadger',
+    call: 'tweets.getRetweeters',
+    schema: scrapeBadgerUserPageSchema,
+    data: await client.twitter.tweets.getRetweeters(tweetId, options)
+  });
 
 export const getRetweeters = async ({
   tweetId,
@@ -14,7 +30,7 @@ export const getRetweeters = async ({
   tweetId: string;
   cursor?: string;
 }) => {
-  return await getScrapeBadgerClient().twitter.tweets.getRetweeters(tweetId, {
+  return await getRetweetersPage(getScrapeBadgerClient(), tweetId, {
     cursor
   });
 };
@@ -27,9 +43,13 @@ export const getRetweetersUntil = async ({
   tweetId: string;
   cursor?: string;
   maxApiCalls?: number;
-}): Promise<{ users: User[]; nextCursor?: string; hasMore: boolean }> => {
+}): Promise<{
+  users: ScrapeBadgerUser[];
+  nextCursor?: string;
+  hasMore: boolean;
+}> => {
   const client = getScrapeBadgerClient();
-  const users: User[] = [];
+  const users: ScrapeBadgerUser[] = [];
   let cursor: string | undefined = startCursor;
   let hasMore = true;
   let apiCallCount = 0;
@@ -42,15 +62,15 @@ export const getRetweetersUntil = async ({
     console.info(
       `Fetching retweeters batch ${apiCallCount + 1}, current user count=${users.length}`
     );
-    const response = await client.twitter.tweets.getRetweeters(tweetId, {
+    const response = await getRetweetersPage(client, tweetId, {
       cursor,
       count: 20
     });
     apiCallCount++;
 
-    users.push(...(response.data || []));
+    users.push(...response.data);
 
-    hasMore = response.hasMore || false;
+    hasMore = response.hasMore;
     cursor = response.nextCursor;
 
     console.info(
@@ -82,9 +102,13 @@ export const getRetweetersUntilUser = async ({
   stopAtUserId?: string;
   cursor?: string;
   maxUsers?: number;
-}): Promise<{ users: User[]; nextCursor?: string; hasMore: boolean }> => {
+}): Promise<{
+  users: ScrapeBadgerUser[];
+  nextCursor?: string;
+  hasMore: boolean;
+}> => {
   const client = getScrapeBadgerClient();
-  const users: User[] = [];
+  const users: ScrapeBadgerUser[] = [];
   let cursor: string | undefined = startCursor;
   let hasMore = true;
   let foundStopUser = false;
@@ -98,20 +122,18 @@ export const getRetweetersUntilUser = async ({
     console.info(
       `Fetching retweeters batch ${batchIndex + 1}, current count=${users.length}`
     );
-    const response = await client.twitter.tweets.getRetweeters(tweetId, {
+    const response = await getRetweetersPage(client, tweetId, {
       cursor
     });
     batchIndex++;
 
-    const batch = response.data || [];
+    const batch = response.data;
     console.info(
       `Fetched retweeters batch ${batchIndex}, found=${batch.length}`
     );
 
     if (stopAtUserId) {
-      const stopIndex = batch.findIndex(
-        (user: User) => user.id === stopAtUserId
-      );
+      const stopIndex = batch.findIndex((user) => user.id === stopAtUserId);
       if (stopIndex !== -1) {
         users.push(...batch.slice(0, stopIndex));
         foundStopUser = true;
@@ -124,7 +146,7 @@ export const getRetweetersUntilUser = async ({
 
     users.push(...batch);
 
-    hasMore = response.hasMore || false;
+    hasMore = response.hasMore;
     cursor = response.nextCursor;
 
     console.info(
@@ -145,7 +167,7 @@ export const getRetweetersUntilUser = async ({
     `Finished fetching retweeters, total count=${users.length}, foundStopUser=${foundStopUser}`
   );
   return {
-    users: compact(users),
+    users,
     nextCursor: foundStopUser ? undefined : cursor,
     hasMore: hasMore && !foundStopUser
   };
@@ -155,9 +177,9 @@ export const getAllRetweeters = async ({
   tweetId
 }: {
   tweetId: string;
-}): Promise<User[]> => {
+}): Promise<ScrapeBadgerUser[]> => {
   const client = getScrapeBadgerClient();
-  const users: User[] = [];
+  const users: ScrapeBadgerUser[] = [];
   let cursor: string | undefined;
   let hasMore = true;
   let batchIndex = 0;
@@ -165,19 +187,19 @@ export const getAllRetweeters = async ({
   console.info(`[getAllRetweeters] Starting fetch for tweet ${tweetId}`);
 
   while (hasMore) {
-    const response = await client.twitter.tweets.getRetweeters(tweetId, {
+    const response = await getRetweetersPage(client, tweetId, {
       cursor
     });
     batchIndex++;
 
-    const batch = response.data || [];
+    const batch = response.data;
     users.push(...batch);
 
     console.info(
       `[getAllRetweeters] Batch ${batchIndex}: fetched ${batch.length} users (total: ${users.length})`
     );
 
-    hasMore = response.hasMore || false;
+    hasMore = response.hasMore;
     cursor = response.nextCursor;
 
     if (!hasMore || !cursor) {
@@ -190,5 +212,5 @@ export const getAllRetweeters = async ({
     `[getAllRetweeters] Completed: ${users.length} total retweeters for tweet ${tweetId}`
   );
 
-  return compact(users);
+  return users;
 };

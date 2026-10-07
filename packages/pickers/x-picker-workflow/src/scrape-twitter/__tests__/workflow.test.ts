@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { Tweet, User } from 'scrapebadger';
+import type { ScrapeBadgerUser } from '@giveaway/x-scraper/schemas';
+import {
+  scrapeBadgerRetweeter,
+  scrapeBadgerTweet
+} from '@giveaway/x-scraper/testing/fixtures-scrapebadger';
 import { scrapeTwitterWorkflow } from '../workflow';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 
@@ -34,35 +38,36 @@ vi.mock('@giveaway/x-scraper/procedures/get-retweeters', () => ({
   getRetweetersUntil: mocks.getRetweetersUntil
 }));
 
-type Page = { users: User[]; nextCursor?: string; hasMore: boolean };
+type Page = {
+  users: ScrapeBadgerUser[];
+  nextCursor?: string;
+  hasMore: boolean;
+};
 
-const scrapedUsers = (count: number, prefix: string): User[] =>
-  Array.from(
-    { length: count },
-    (_, i) =>
-      ({
-        id: `${prefix}-${i}`,
-        username: `${prefix}${i}`,
-        name: `${prefix} ${i}`,
-        created_at: '2020-01-01T00:00:00.000Z',
-        followers_count: 1,
-        following_count: 1,
-        tweet_count: 1,
-        verified: false
-      }) as unknown as User
+const scrapedUsers = (count: number, prefix: string): ScrapeBadgerUser[] =>
+  Array.from({ length: count }, (_, i) =>
+    scrapeBadgerRetweeter({
+      id: `${prefix}-${i}`,
+      username: `${prefix}${i}`,
+      name: `${prefix} ${i}`,
+      created_at: '2020-01-01T00:00:00.000Z',
+      followers_count: 1,
+      following_count: 1,
+      tweet_count: 1,
+      verified: false
+    })
   );
 
 const setupTweets = (
   tweets: Record<string, { retweetCount: number | null; pages: Page[] }>
 ) => {
-  mocks.getTweet.mockImplementation(
-    async ({ tweetId }: { tweetId: string }) =>
-      ({
-        id: tweetId,
-        text: `tweet ${tweetId}`,
-        created_at: '2025-01-01T00:00:00.000Z',
-        retweet_count: tweets[tweetId].retweetCount
-      }) as unknown as Tweet
+  mocks.getTweet.mockImplementation(async ({ tweetId }: { tweetId: string }) =>
+    scrapeBadgerTweet({
+      id: tweetId,
+      text: `tweet ${tweetId}`,
+      created_at: '2025-01-01T00:00:00.000Z',
+      retweet_count: tweets[tweetId].retweetCount ?? 0
+    })
   );
   prismaMock.twitterPost.create.mockImplementation(
     async ({ data }: { data: { tweetId: string } }) => ({

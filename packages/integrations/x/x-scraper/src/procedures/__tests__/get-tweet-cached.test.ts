@@ -1,4 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  scrapeBadgerTweet,
+  scrapeBadgerTweetResponse
+} from '../../testing/fixtures-scrapebadger';
 import { getTweetCached } from '../get-tweet-cached';
 
 const m = vi.hoisted(() => ({
@@ -16,7 +20,7 @@ vi.mock('scrapebadger', () => ({
 }));
 
 describe('getTweetCached', () => {
-  const tweet = { id: '123', text: 'fresh' };
+  const tweet = scrapeBadgerTweet();
 
   beforeEach(() => {
     vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');
@@ -24,7 +28,7 @@ describe('getTweetCached', () => {
     m.redis.set.mockReset();
     m.redis.set.mockResolvedValue('OK');
     m.getById.mockReset();
-    m.getById.mockResolvedValue(tweet);
+    m.getById.mockResolvedValue(scrapeBadgerTweetResponse);
     m.ScrapeBadger.mockImplementation(function () {
       return { twitter: { tweets: { getById: m.getById } } };
     });
@@ -74,7 +78,7 @@ describe('getTweetCached', () => {
       const result = await getTweetCached({ tweetId: '123' });
 
       expect(m.getById).toHaveBeenCalledWith('123');
-      expect(result).toBe(tweet);
+      expect(result).toEqual(tweet);
     });
 
     it('caches the fetched tweet for one hour', async () => {

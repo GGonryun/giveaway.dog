@@ -1,12 +1,21 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import type { Tweet, User } from 'scrapebadger';
+import type {
+  ScrapeBadgerTweet,
+  ScrapeBadgerUser
+} from '@giveaway/x-scraper/schemas';
+import {
+  scrapeBadgerRetweeter,
+  scrapeBadgerTweet
+} from '@giveaway/x-scraper/testing/fixtures-scrapebadger';
 import { toTwitterPickerUsers, toTwitterPost } from '../shared';
 import * as scrapebadgerUtils from '@giveaway/x-scraper/utils';
 
 const NOW = new Date('2025-06-15T12:00:00.000Z');
 
-const scrapedUser = (overrides: Partial<User> = {}): User =>
-  ({
+const scrapedUser = (
+  overrides: Partial<ScrapeBadgerUser> = {}
+): ScrapeBadgerUser =>
+  scrapeBadgerRetweeter({
     id: 'x-1',
     username: 'doglover',
     name: 'Dog Lover',
@@ -22,10 +31,12 @@ const scrapedUser = (overrides: Partial<User> = {}): User =>
     tweet_count: 1000,
     verified: false,
     ...overrides
-  }) as User;
+  });
 
-const scrapedTweet = (overrides: Partial<Tweet> = {}): Tweet =>
-  ({
+const scrapedTweet = (
+  overrides: Partial<ScrapeBadgerTweet> = {}
+): ScrapeBadgerTweet =>
+  scrapeBadgerTweet({
     id: '1111',
     text: 'Retweet to win!',
     created_at: '2025-01-01T00:00:00.000Z',
@@ -38,7 +49,7 @@ const scrapedTweet = (overrides: Partial<Tweet> = {}): Tweet =>
     view_count: 1000,
     quote_count: 2,
     ...overrides
-  }) as Tweet;
+  });
 
 describe('scrape-twitter shared mappers', () => {
   afterEach(() => {

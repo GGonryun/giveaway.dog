@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  scrapeBadgerAuthor,
+  scrapeBadgerUserResponse
+} from '../../testing/fixtures-scrapebadger';
 import { getUser } from '../get-user';
 
 const m = vi.hoisted(() => ({
@@ -27,7 +31,7 @@ describe('getUser', () => {
   });
 
   it('fetches the user by username with a client using the configured API key', async () => {
-    m.getByUsername.mockResolvedValue({ id: '1', username: 'Alice' });
+    m.getByUsername.mockResolvedValue(scrapeBadgerUserResponse);
 
     await getUser({ username: 'Alice' });
 
@@ -36,15 +40,37 @@ describe('getUser', () => {
   });
 
   it('returns the user from the API', async () => {
-    const user = { id: '1', username: 'alice' };
-    m.getByUsername.mockResolvedValue(user);
+    m.getByUsername.mockResolvedValue(scrapeBadgerUserResponse);
 
-    await expect(getUser({ username: 'alice' })).resolves.toBe(user);
+    await expect(getUser({ username: 'alice' })).resolves.toEqual(
+      scrapeBadgerAuthor()
+    );
+  });
+
+  it('fills the name and the verified flag that the API leaves out', async () => {
+    m.getByUsername.mockResolvedValue({ id: '1', username: 'alice' });
+
+    await expect(getUser({ username: 'alice' })).resolves.toEqual({
+      id: '1',
+      username: 'alice',
+      name: '',
+      verified: false
+    });
+  });
+
+  it('rejects with BAD_GATEWAY when the user does not match the schema', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    m.getByUsername.mockResolvedValue({ id: '1' });
+
+    await expect(getUser({ username: 'alice' })).rejects.toMatchObject({
+      code: 'BAD_GATEWAY',
+      data: { provider: 'scrapebadger', call: 'users.getByUsername' }
+    });
   });
 
   it('logs the username being fetched', async () => {
     const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-    m.getByUsername.mockResolvedValue({ id: '1' });
+    m.getByUsername.mockResolvedValue(scrapeBadgerUserResponse);
 
     await getUser({ username: 'alice' });
 

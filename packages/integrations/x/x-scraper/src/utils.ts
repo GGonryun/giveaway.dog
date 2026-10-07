@@ -1,25 +1,27 @@
 import 'server-only';
 
 import { Prisma } from '@giveaway/db-model';
-import { Tweet, User } from 'scrapebadger';
 import { TwitterUserSchema } from '@giveaway/integration-model/api';
+import type { ScrapeBadgerTweet, ScrapeBadgerUser } from './schemas';
 
-export const toTwitterUserSchema = (user: User): TwitterUserSchema => ({
+export const toTwitterUserSchema = (
+  user: ScrapeBadgerUser
+): TwitterUserSchema => ({
   id: user.id,
   name: user.name,
   username: user.username,
   created_at: user.created_at ? new Date(user.created_at) : new Date(),
-  description: user.description,
-  location: user.location,
-  profile_image_url: user.profile_image_url,
-  profile_banner_url: user.banner_image_url,
+  description: user.description ?? undefined,
+  location: user.location ?? undefined,
+  profile_image_url: user.profile_image_url ?? undefined,
+  profile_banner_url: user.profile_banner_url ?? undefined,
   protected: false,
   verified: user.verified,
-  verified_type: user.verified_type,
+  verified_type: user.verified_type ?? undefined,
   public_metrics: {
-    followers_count: user.followers_count,
-    following_count: user.following_count,
-    tweet_count: user.tweet_count
+    followers_count: user.followers_count ?? 0,
+    following_count: user.following_count ?? 0,
+    tweet_count: user.tweet_count ?? 0
   }
 });
 
@@ -27,7 +29,7 @@ export const toTwitterPickerUsers = ({
   pickerId,
   users
 }: {
-  users: User[];
+  users: ScrapeBadgerUser[];
   pickerId: string;
 }): Prisma.TwitterPickerUserCreateManyInput[] => {
   return users.map((user) => ({
@@ -54,7 +56,7 @@ export const toTwitterPost = ({
   tweet
 }: {
   pickerId: string;
-  tweet: Tweet;
+  tweet: ScrapeBadgerTweet;
 }): Prisma.TwitterPostCreateInput => ({
   picker: { connect: { id: pickerId } },
   tweetId: tweet.id,

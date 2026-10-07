@@ -15,7 +15,8 @@
     }
   },
   "exports": {
-    "./get-team-integrations": "./src/get-team-integrations.tsx"
+    "./get-team-integrations": "./src/get-team-integrations.tsx",
+    "./provider-response": "./src/provider-response.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
@@ -27,6 +28,7 @@
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

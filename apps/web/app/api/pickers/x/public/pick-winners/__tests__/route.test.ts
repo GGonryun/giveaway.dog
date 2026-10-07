@@ -2,6 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { prismaMock } from '@giveaway/testing-server/prisma';
+import type { ScrapeBadgerUser } from '@giveaway/x-scraper/schemas';
+import {
+  scrapeBadgerRetweetersResponse,
+  scrapeBadgerTweetResponse
+} from '@giveaway/x-scraper/testing/fixtures-scrapebadger';
 
 const m = vi.hoisted(() => ({
   creditsLimit: vi.fn(),
@@ -33,27 +38,8 @@ vi.mock('@paralleldrive/cuid2', () => ({ createId: m.createId }));
 const NOW = new Date('2026-06-01T00:00:00.000Z');
 const POST_URL = 'https://x.com/author/status/123';
 
-type RetweeterFixture = {
-  id: string;
-  username?: string;
-  name?: string;
-  description?: string;
-  url?: string;
-  location?: string;
-  profile_image_url?: string;
-  profile_banner_url?: string;
-  created_at?: string;
-  can_dm?: boolean;
-  followers_count: number;
-  following_count: number;
-  tweet_count: number;
-  verified: boolean;
-};
-
-const retweeter = (
-  id: string,
-  overrides: Partial<RetweeterFixture> = {}
-): RetweeterFixture => ({
+const retweeter = (id: string, overrides: Partial<ScrapeBadgerUser> = {}) => ({
+  ...scrapeBadgerRetweetersResponse.data[0],
   id,
   username: `user${id}`,
   name: `User ${id}`,
@@ -72,11 +58,13 @@ const retweeter = (
 });
 
 const TWEET = {
+  ...scrapeBadgerTweetResponse,
   id: '123',
   text: 'Retweet to win!',
   created_at: '2026-05-01T00:00:00.000Z',
   user_id: 'author-id',
   username: 'author',
+  user_name: 'Author',
   favorite_count: 10,
   retweet_count: 3,
   reply_count: 2,
@@ -524,13 +512,13 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
   });
 
   describe('winner and author fallbacks', () => {
-    it('fills in placeholders for winners without a username, name or image', async () => {
+    it('fills in placeholders for winners with an empty username, name and image', async () => {
       m.getRetweeters.mockResolvedValue({
         data: [
           retweeter('1', {
-            username: undefined,
-            name: undefined,
-            profile_image_url: undefined
+            username: '',
+            name: '',
+            profile_image_url: null
           })
         ],
         hasMore: false
@@ -544,10 +532,29 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
           id: '1',
           username: 'unknown',
           name: 'Unknown User',
-          profileImageUrl: 'https://avatar.vercel.sh/undefined',
-          profileUrl: 'https://x.com/undefined'
+          profileImageUrl: 'https://avatar.vercel.sh/',
+          profileUrl: 'https://x.com/'
         }
       ]);
+    });
+
+    it('returns 502 when ScrapeBadger returns a retweeter without a username', async () => {
+      m.getRetweeters.mockResolvedValue({
+        data: [retweeter('1', { username: undefined })],
+        hasMore: false
+      });
+
+      const res = await POST(buildRequest(buildBody({ winnersCount: 1 })));
+
+      expect(res.status).toBe(502);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'BAD_GATEWAY',
+          message: 'Unexpected response from X',
+          data: { provider: 'scrapebadger', call: 'tweets.getRetweeters' }
+        }
+      });
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
     });
 
     it('uses a generated avatar when only the profile image is missing', async () => {
