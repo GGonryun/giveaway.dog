@@ -157,9 +157,6 @@ if (e2e === 'success' || e2e === 'failure' || e2e === 'error') {
   });
 }
 
-// Every badge in the README. shields.io shows "resource not found" for a
-// badge whose file is missing, so each one gets a placeholder until its job
-// first reports.
 const README_BADGES = [
   ['coverage', 'coverage'],
   ['server-coverage', 'server coverage'],
