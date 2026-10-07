@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { toast } from 'sonner';
@@ -203,14 +203,20 @@ describe('SweepstakesStatusComponent', () => {
     });
 
     it('disables the visibility while it changes', async () => {
+      let finishChanging = () => {};
       mockedToggleVisibility.mockReturnValue(
-        new Promise<ToggleResult>(() => {})
+        new Promise<ToggleResult>((resolve) => {
+          finishChanging = () =>
+            resolve({ ok: true, data: { visibility: 'UNLISTED' } });
+        })
       );
       renderStatus({ visibility: 'PUBLIC' });
       await userEvent.click(screen.getByRole('combobox'));
       await userEvent.click(screen.getByRole('option', { name: 'Unlisted' }));
 
       await waitFor(() => expect(screen.getByRole('combobox')).toBeDisabled());
+
+      await act(async () => finishChanging());
     });
   });
 

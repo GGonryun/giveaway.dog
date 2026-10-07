@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -95,7 +95,12 @@ describe('DeleteEntryDialog', () => {
 
   it('disables both buttons while deleting', async () => {
     const user = userEvent.setup();
-    vi.mocked(deleteTaskCompletion).mockReturnValue(new Promise(() => {}));
+    let finishDeleting = () => {};
+    vi.mocked(deleteTaskCompletion).mockReturnValue(
+      new Promise((resolve) => {
+        finishDeleting = () => resolve({ ok: true, data: { success: true } });
+      })
+    );
     renderDialog();
 
     await user.click(screen.getByRole('button', { name: 'Delete Entry' }));
@@ -104,5 +109,7 @@ describe('DeleteEntryDialog', () => {
       await screen.findByRole('button', { name: 'Deleting...' })
     ).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
+
+    await act(async () => finishDeleting());
   });
 });

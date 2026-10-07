@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -101,7 +101,13 @@ describe('SubscriptionCTA', () => {
 
   it('shows a loading label while subscribing', async () => {
     const user = userEvent.setup();
-    vi.mocked(subscribeEmail).mockReturnValue(new Promise(() => {}));
+    let finishSubscribing = () => {};
+    vi.mocked(subscribeEmail).mockReturnValue(
+      new Promise((resolve) => {
+        finishSubscribing = () =>
+          resolve({ ok: true, data: { success: true } });
+      })
+    );
     render(<SubscriptionCTA />);
 
     await user.type(emailInput(), 'jane@example.com');
@@ -110,5 +116,7 @@ describe('SubscriptionCTA', () => {
     expect(
       await screen.findByRole('button', { name: 'Subscribing...' })
     ).toBeDisabled();
+
+    await act(async () => finishSubscribing());
   });
 });
