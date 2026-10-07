@@ -4,7 +4,7 @@ import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { e2eSweepstakesRequestSchema } from '@giveaway/e2e-model/requests';
 import { applySweepstakesChanges } from '@giveaway/sweepstakes-access/shared';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
-import { seedE2eSweepstakes } from '../sweepstakes';
+import { E2E_GIVEAWAY_BANNER, seedE2eSweepstakes } from '../sweepstakes';
 import { e2eUser, NOW, realUser, teamRow } from './fixtures';
 
 vi.mock('@giveaway/sweepstakes-access/shared', () => ({
@@ -131,16 +131,63 @@ describe('seedE2eSweepstakes', () => {
     expect(appliedInput().setup).toEqual({
       name: '[e2e abc123] Summer',
       description: '<img src=x onerror=alert(1)>',
-      banner: undefined
+      banner: '/images/demo-sweepstakes-banner-2.jpg'
     });
     expect(appliedInput().audience).toBeDefined();
     expect(appliedInput().criteria).toBeDefined();
   });
 
-  it('uses an empty description when the request sends one', async () => {
-    await seed({ description: '' });
+  it('gives the giveaway a banner that the deployment serves', async () => {
+    await seed({});
 
-    expect(appliedInput().setup?.description).toBe('');
+    expect(E2E_GIVEAWAY_BANNER).toMatch(/^\/images\/[^/]+\.jpg$/);
+    expect(appliedInput().setup?.banner).toBe(E2E_GIVEAWAY_BANNER);
+  });
+
+  it('gives the giveaway one bonus task and one prize by default', async () => {
+    await seed({});
+
+    expect(appliedInput().tasks).toEqual([
+      {
+        id: expect.any(String),
+        type: 'BONUS_TASK',
+        title: 'Click for a bonus entry',
+        value: 1,
+        mandatory: false,
+        tasksRequired: 0
+      }
+    ]);
+    expect(appliedInput().prizes).toEqual([
+      { id: expect.any(String), name: 'My Custom Prize', quota: 1 }
+    ]);
+  });
+
+  it('gives each task and each prize of the request its own new id', async () => {
+    await seed({
+      tasks: [
+        { type: 'SECRET_CODE', code: 'OPEN-SESAME' },
+        { type: 'BONUS_TASK', title: 'Second' }
+      ],
+      prizes: [{ name: 'A mug' }, { name: 'A hat', quota: 3 }]
+    });
+
+    const { tasks, prizes } = appliedInput();
+    expect(tasks).toEqual([
+      expect.objectContaining({ type: 'SECRET_CODE', code: 'OPEN-SESAME' }),
+      expect.objectContaining({ type: 'BONUS_TASK', title: 'Second' })
+    ]);
+    expect(prizes).toEqual([
+      { id: expect.any(String), name: 'A mug', quota: 1 },
+      { id: expect.any(String), name: 'A hat', quota: 3 }
+    ]);
+    const ids = [...(tasks ?? []), ...(prizes ?? [])].map((item) => item?.id);
+    expect(ids).toEqual([
+      expect.stringMatching(/^[\w-]{21}$/),
+      expect.stringMatching(/^[\w-]{21}$/),
+      expect.stringMatching(/^[\w-]{21}$/),
+      expect.stringMatching(/^[\w-]{21}$/)
+    ]);
+    expect(new Set(ids).size).toBe(4);
   });
 
   it('keeps the default description when none is given', async () => {
@@ -313,7 +360,9 @@ describe('seedE2eSweepstakes', () => {
   });
 
   it('returns what the test needs', async () => {
-    expect(await seed({ preset: 'running', slug: 'e2e-abc123-x' })).toEqual({
+    const result = await seed({ preset: 'running', slug: 'e2e-abc123-x' });
+
+    expect(result).toEqual({
       id: ID,
       name: '[e2e abc123] Giveaway',
       status: 'ACTIVE',
@@ -323,7 +372,11 @@ describe('seedE2eSweepstakes', () => {
       visibility: 'UNLISTED',
       slug: 'e2e-abc123-x',
       startDate: new Date(NOW.getTime() - HOUR),
-      endDate: new Date(NOW.getTime() + 7 * DAY)
+      endDate: new Date(NOW.getTime() + 7 * DAY),
+      tasks: appliedInput().tasks,
+      prizes: appliedInput().prizes
     });
+    expect(result.tasks).toHaveLength(1);
+    expect(result.prizes).toHaveLength(1);
   });
 });

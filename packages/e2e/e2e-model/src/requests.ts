@@ -1,10 +1,33 @@
 import { z } from 'zod';
+import { omit } from 'lodash';
 import {
   SweepstakesStatus,
   TeamRole,
   TeamTier,
   VisibilityType
 } from '@giveaway/db-model';
+import {
+  DEFAULT_SWEEPSTAKES_PRIZE_NAME,
+  DEFAULT_SWEEPSTAKES_PRIZE_QUOTA
+} from '@giveaway/sweepstakes-model/defaults';
+import { prizeSchema } from '@giveaway/sweepstakes-model/schemas';
+import { toDefaultValues } from '@giveaway/task-model/defaults';
+import {
+  askQuestionTaskSchema,
+  bonusCompleteProfileTaskSchema,
+  bonusLimitedTaskSchema,
+  bonusLoyaltyTaskSchema,
+  bonusTaskSchema,
+  bonusTimedTaskSchema,
+  multipleChoiceTaskSchema,
+  referralLinkTaskSchema,
+  secretCodeTaskSchema,
+  secretCodeV2TaskSchema,
+  singleChoiceTaskSchema,
+  submitMediaTaskSchema,
+  TaskType,
+  visitUrlTaskSchema
+} from '@giveaway/task-model/schemas';
 import { e2eNamespaceSchema, e2ePersonaSchema } from './personas';
 import {
   E2E_TEAM_SLUG_MAX_LENGTH,
@@ -15,7 +38,10 @@ import {
 
 export const E2E_MAX_TEAM_MEMBERS = 10;
 export const E2E_MAX_GIVEAWAY_NAME_LENGTH = 80;
+export const E2E_MIN_DESCRIPTION_LENGTH = 3;
 export const E2E_MAX_DESCRIPTION_LENGTH = 10_000;
+export const E2E_MAX_TASKS = 10;
+export const E2E_MAX_PRIZES = 10;
 export const E2E_MAX_OFFSET_SECONDS = 366 * 24 * 60 * 60;
 
 const HOUR = 60 * 60;
@@ -153,6 +179,60 @@ export const toE2eSweepstakesTiming = (
   };
 };
 
+export const E2E_TASK_TYPES = [
+  'BONUS_TASK',
+  'BONUS_TIMED',
+  'BONUS_LIMITED',
+  'BONUS_LOYALTY',
+  'BONUS_COMPLETE_PROFILE',
+  'VISIT_URL',
+  'ASK_QUESTION',
+  'SINGLE_CHOICE',
+  'MULTIPLE_CHOICE',
+  'SECRET_CODE',
+  'SECRET_CODE_V2',
+  'REFERRAL_LINK',
+  'SUBMIT_MEDIA'
+] as const satisfies readonly TaskType[];
+
+const hermeticTaskSchema = z.discriminatedUnion('type', [
+  bonusTaskSchema.omit({ id: true }).strict(),
+  bonusTimedTaskSchema.omit({ id: true }).strict(),
+  bonusLimitedTaskSchema.omit({ id: true }).strict(),
+  bonusLoyaltyTaskSchema.omit({ id: true }).strict(),
+  bonusCompleteProfileTaskSchema.omit({ id: true }).strict(),
+  visitUrlTaskSchema.omit({ id: true }).strict(),
+  askQuestionTaskSchema.omit({ id: true }).strict(),
+  singleChoiceTaskSchema.omit({ id: true }).strict(),
+  multipleChoiceTaskSchema.omit({ id: true }).strict(),
+  secretCodeTaskSchema.omit({ id: true }).strict(),
+  secretCodeV2TaskSchema.omit({ id: true }).strict(),
+  referralLinkTaskSchema.omit({ id: true }).strict(),
+  submitMediaTaskSchema.omit({ id: true }).strict()
+]);
+
+export const e2eTaskRequestSchema = z
+  .object({ type: z.enum(E2E_TASK_TYPES) })
+  .passthrough()
+  .transform(({ type, ...fields }) => ({
+    ...omit(toDefaultValues(type), 'id'),
+    ...fields
+  }))
+  .pipe(hermeticTaskSchema);
+
+export type E2eTaskRequest = z.infer<typeof e2eTaskRequestSchema>;
+
+export const e2ePrizeRequestSchema = prizeSchema
+  .omit({ id: true })
+  .extend({
+    quota: prizeSchema.shape.quota
+      .int()
+      .default(DEFAULT_SWEEPSTAKES_PRIZE_QUOTA)
+  })
+  .strict();
+
+export type E2ePrizeRequest = z.infer<typeof e2ePrizeRequestSchema>;
+
 export const e2eSweepstakesRequestSchema = z
   .object({
     ns: e2eNamespaceSchema,
@@ -166,13 +246,27 @@ export const e2eSweepstakesRequestSchema = z
       .min(1)
       .max(E2E_MAX_GIVEAWAY_NAME_LENGTH)
       .default('Giveaway'),
-    description: z.string().max(E2E_MAX_DESCRIPTION_LENGTH).optional(),
+    description: z
+      .string()
+      .min(E2E_MIN_DESCRIPTION_LENGTH)
+      .max(E2E_MAX_DESCRIPTION_LENGTH)
+      .optional(),
     visibility: z.nativeEnum(VisibilityType).default(VisibilityType.UNLISTED),
     slug: z
       .string()
       .max(50)
       .regex(/^[a-z0-9-]+$/)
-      .optional()
+      .optional(),
+    tasks: z
+      .array(e2eTaskRequestSchema)
+      .min(1)
+      .max(E2E_MAX_TASKS)
+      .default([{ type: 'BONUS_TASK' }]),
+    prizes: z
+      .array(e2ePrizeRequestSchema)
+      .min(1)
+      .max(E2E_MAX_PRIZES)
+      .default([{ name: DEFAULT_SWEEPSTAKES_PRIZE_NAME }])
   })
   .strict()
   .superRefine((value, ctx) => {

@@ -91,7 +91,10 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
         />
         <div className="flex gap-1">
           <ClockIcon className="h-4 w-4 text-muted-foreground" />
-          <div className="text-xs text-muted-foreground font-semibold">
+          <div
+            className="text-xs text-muted-foreground font-semibold"
+            suppressHydrationWarning
+          >
             {timing}
           </div>
         </div>

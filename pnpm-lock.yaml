@@ -3384,6 +3384,15 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/sweepstakes-model':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-model
+      '@giveaway/task-model':
+        specifier: workspace:*
+        version: link:../../tasks/task-model
+      lodash:
+        specifier: 'catalog:'
+        version: 4.17.23
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -3400,6 +3409,9 @@ importers:
       '@giveaway/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
+      '@types/lodash':
+        specifier: 'catalog:'
+        version: 4.17.23
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
@@ -3439,6 +3451,9 @@ importers:
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors
+      nanoid:
+        specifier: 'catalog:'
+        version: 5.1.6
       next:
         specifier: 'catalog:'
         version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3452,6 +3467,9 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@giveaway/participation-server':
+        specifier: workspace:*
+        version: link:../../participants/participation-server
       '@giveaway/testing-integration':
         specifier: workspace:*
         version: link:../../tooling/testing-integration
@@ -11374,6 +11392,12 @@ importers:
       '@types/react':
         specifier: 19.2.10
         version: 19.2.10
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.10)
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
       typescript:
         specifier: 'catalog:'
         version: 5.7.2

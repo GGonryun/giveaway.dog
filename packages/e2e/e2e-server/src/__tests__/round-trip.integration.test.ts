@@ -1,11 +1,30 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from '@giveaway/testing-integration/database';
 import { createHost } from '@giveaway/testing-integration/fixtures';
+import { expectOk } from '@giveaway/testing-server/result';
+import { signIn, signOut } from '@giveaway/testing-server/session';
+import { E2E_MAX_TASKS, E2E_TASK_TYPES } from '@giveaway/e2e-model/requests';
+import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import { getOrCreateSweepstakesParticipant } from '@giveaway/participation-server/get-sweepstake-participant';
+import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
 import { handleE2eRequest } from '../router';
 
 const SECRET = 'e2e-secret-with-at-least-32-chars';
 const HOUR = 60 * 60 * 1000;
 const PRESETS = ['draft', 'scheduled', 'running', 'ended', 'completed'];
+const DERIVED_STATUS: Record<string, string> = {
+  draft: 'DRAFT',
+  scheduled: 'SCHEDULED',
+  running: 'RUNNING',
+  ended: 'EXPIRED',
+  completed: 'COMPLETED'
+};
+const REQUIRED_TASK_FIELDS: Record<string, object> = {
+  VISIT_URL: { href: 'https://example.com/' },
+  ASK_QUESTION: { question: 'Why?' },
+  SINGLE_CHOICE: { question: 'Which one?' },
+  MULTIPLE_CHOICE: { question: 'Which ones?' }
+};
 
 const call = async (method: string, path: string, body?: unknown) => {
   const request = new Request(`https://preview.giveaway.test/api/e2e/${path}`, {
@@ -66,6 +85,12 @@ const seedRun = async (runId: string) => {
   });
 
   return { team, teamId, ids: Object.values(giveaways).map((g) => g.id) };
+};
+
+const loadGiveawayPage = async (sweepstakesId: string) => {
+  const giveaway = expectOk(await getParticipantSweepstake({ sweepstakesId }));
+  expect(expectOk(await getSweepstakesPrivacy({ sweepstakesId }))).toBe(true);
+  return giveaway;
 };
 
 const countRunRows = async (runId: string, ids: string[]) => ({
@@ -154,6 +179,65 @@ describe('the e2e seed API against a real database', () => {
 
     const endedRow = await read(ended);
     expect(new Date(endedRow.timing.endDate).getTime()).toBeLessThan(now);
+  });
+
+  it('gives each preset a giveaway whose page loads for a visitor and for a participant', async () => {
+    const { ids } = await seedRun('abc123');
+    const participant = await db.user.create({
+      data: { email: 'e2e-participant2-abc123t1@example.com' }
+    });
+
+    for (const [index, preset] of PRESETS.entries()) {
+      const sweepstakesId = ids[index];
+      signOut();
+      const visitor = await loadGiveawayPage(sweepstakesId);
+
+      expect(visitor, preset).toMatchObject({
+        sweepstakes: {
+          id: sweepstakesId,
+          status: DERIVED_STATUS[preset],
+          setup: { banner: '/images/demo-sweepstakes-banner-2.jpg' },
+          tasks: [{ type: 'BONUS_TASK', title: 'Click for a bonus entry' }],
+          prizes: [{ name: 'My Custom Prize', quota: 1 }]
+        },
+        host: { slug: 'e2e-abc123-w0' },
+        prizes: [{ prizeName: 'My Custom Prize', quota: 1, draws: [] }]
+      });
+
+      signIn({ id: participant.id, email: participant.email });
+      expect(await loadGiveawayPage(sweepstakesId), preset).toEqual(visitor);
+      expect(
+        expectOk(await getOrCreateSweepstakesParticipant({ sweepstakesId })),
+        preset
+      ).toMatchObject({ user: { id: participant.id }, completions: [] });
+    }
+  });
+
+  it('stores each task type and prize of the request so that the giveaway page reads them back', async () => {
+    await call('POST', 'teams', { ns: 'abc123', suffix: 'w0' });
+    const groups = [
+      E2E_TASK_TYPES.slice(0, E2E_MAX_TASKS),
+      E2E_TASK_TYPES.slice(E2E_MAX_TASKS)
+    ];
+
+    for (const types of groups) {
+      const seeded = await call('POST', 'sweepstakes', {
+        ns: 'abc123',
+        team: 'e2e-abc123-w0',
+        tasks: types.map((type) => ({ type, ...REQUIRED_TASK_FIELDS[type] })),
+        prizes: [{ name: 'A mug', quota: 2 }, { name: 'A hat' }]
+      });
+
+      const { sweepstakes, prizes } = await loadGiveawayPage(seeded.id);
+
+      expect(sweepstakes.tasks).toEqual(seeded.tasks);
+      expect(sweepstakes.tasks.map((task) => task.type)).toEqual(types);
+      expect(sweepstakes.prizes).toEqual(seeded.prizes);
+      expect(prizes.map(({ prizeName, quota }) => [prizeName, quota])).toEqual([
+        ['A mug', 2],
+        ['A hat', 1]
+      ]);
+    }
   });
 
   it('gives the team its tier and each persona its role', async () => {
