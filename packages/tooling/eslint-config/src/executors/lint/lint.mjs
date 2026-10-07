@@ -5,7 +5,7 @@ import { format } from 'node:util';
 import { Worker } from 'node:worker_threads';
 
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error'];
-const WORKERS = 8;
+const WORKERS = 2;
 const SUPPRESSIONS_FLAGS = [
   '--prune-suppressions',
   '--suppress-all',

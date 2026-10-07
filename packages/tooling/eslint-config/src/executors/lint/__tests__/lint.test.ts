@@ -251,12 +251,12 @@ describe('projectSize', () => {
 });
 
 describe('toWorkerCount', () => {
-  it('starts 8 workers', () => {
-    expect(toWorkerCount(jobsWith(...Array(20).fill([])), {})).toBe(8);
+  it('starts 2 workers', () => {
+    expect(toWorkerCount(jobsWith(...Array(20).fill([])), {})).toBe(2);
   });
 
   it('never starts more workers than tasks', () => {
-    expect(toWorkerCount(jobsWith([], []), {})).toBe(2);
+    expect(toWorkerCount(jobsWith([]), {})).toBe(1);
   });
 
   it('starts the number of workers in LINT_WORKERS', () => {
@@ -270,7 +270,7 @@ describe('toWorkerCount', () => {
     (LINT_WORKERS) => {
       expect(
         toWorkerCount(jobsWith(...Array(20).fill([])), { LINT_WORKERS })
-      ).toBe(8);
+      ).toBe(2);
     }
   );
 
