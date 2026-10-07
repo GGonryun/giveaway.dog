@@ -20,17 +20,24 @@
     "./stable-dom": "./src/stable-dom.ts",
     "./test-utils": "./src/test-utils.ts"
   },
+  "scripts": {
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:"
   },
   "peerDependencies": {
+    "react": "catalog:",
     "vitest": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
+    "@types/react": "catalog:",
     "typescript": "catalog:"
   }
 }

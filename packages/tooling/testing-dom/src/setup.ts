@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
+import { afterAll, afterEach, vi } from 'vitest';
+import { expectNoPendingTransition } from './transitions';
 
 class ResizeObserverStub {
   observe() {}
@@ -46,3 +47,5 @@ Element.prototype.releasePointerCapture = vi.fn();
 afterEach(() => {
   cleanup();
 });
+
+afterAll(expectNoPendingTransition);
