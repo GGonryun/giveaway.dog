@@ -965,6 +965,9 @@ describe('procedure', () => {
     beforeEach(() => {
       vi.useFakeTimers();
       vi.spyOn(Math, 'random').mockReturnValue(0);
+      vi.stubEnv('E2E_LOGIN_SECRET', undefined);
+      vi.stubEnv('VERCEL_ENV', undefined);
+      vi.stubEnv('VERCEL_TARGET_ENV', undefined);
     });
 
     it('waits before authenticating in development', async () => {
@@ -982,6 +985,20 @@ describe('procedure', () => {
       expect(calledBeforeDelay).toBe(0);
       expect(authMock).toHaveBeenCalledTimes(1);
       expect(expectOk(result)).toBe('data');
+    });
+
+    it('does not wait in development when the e2e gate is open', async () => {
+      vi.stubEnv('NODE_ENV', 'development');
+      vi.stubEnv('E2E_LOGIN_SECRET', 'e2e-secret-with-at-least-32-chars');
+      const run = procedure()
+        .authorization({ required: false })
+        .handler(async () => 'data');
+
+      const pending = run();
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(authMock).toHaveBeenCalledTimes(1);
+      expect(expectOk(await pending)).toBe('data');
     });
 
     it('does not wait outside development', async () => {

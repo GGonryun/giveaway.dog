@@ -3947,6 +3947,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../db-model
+      '@giveaway/e2e-gate':
+        specifier: workspace:*
+        version: link:../../e2e/e2e-gate
       '@giveaway/rpc-model':
         specifier: workspace:*
         version: link:../rpc-model
