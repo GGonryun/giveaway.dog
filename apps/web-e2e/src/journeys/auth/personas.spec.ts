@@ -1,8 +1,8 @@
 import type { Page } from '@playwright/test';
 import type { E2ePersona } from '@giveaway/e2e-model/personas';
-import { expect, test } from './fixtures/personas';
-import { E2E_SECRET, RUN_ID, personaState } from './env';
-import { PERSONAS, toPersonaEmail } from './helpers/personas';
+import { expect, test } from '../../fixtures/test';
+import { E2E_SECRET, RUN_ID, personaState } from '../../env';
+import { PERSONAS, toPersonaEmail } from '../../helpers/personas';
 
 const expectTeamPicker = async (page: Page) => {
   await expect(page).toHaveURL(/\/app$/);

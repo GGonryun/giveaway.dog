@@ -10,5 +10,23 @@ export default defineConfig([
       next: { rootDir: 'apps/web/' }
     }
   },
+  {
+    files: ['apps/web-e2e/src/**/*.spec.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@playwright/test',
+              importNames: ['test', 'expect'],
+              message:
+                'Import test and expect from src/fixtures/test.ts. Its fixtures block the third-party scripts, fail on page errors and mark the known bugs.'
+            }
+          ]
+        }
+      ]
+    }
+  },
   globalIgnores(['apps/web/app/.well-known/**'])
 ]);

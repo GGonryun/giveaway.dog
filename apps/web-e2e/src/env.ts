@@ -6,6 +6,13 @@ export const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:3000';
 
 export const E2E_SECRET = process.env.E2E_LOGIN_SECRET ?? '';
 
+export const BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET ?? '';
+
+export const JSON_REPORT = path.join(
+  __dirname,
+  '../.playwright-results/results.json'
+);
+
 const AUTH_DIR = path.join(__dirname, '.auth');
 
 export const BYPASS_STATE = path.join(AUTH_DIR, 'vercel.json');

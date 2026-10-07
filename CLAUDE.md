@@ -146,7 +146,7 @@ apps/
 │   ├── vercel.json
 │   └── vitest.config.ts
 └── web-e2e/ (Playwright tests)
-    ├── src/
+    ├── src/ (setup, api, smoke, security, journeys, prod, fixtures and helpers, see E2E Tests)
     └── playwright.config.ts
 packages/ (each folder is a package named @giveaway/<folder>; docs/monorepo/package-graph.md describes them)
 ├── account/ (account-context, account-email, account-history, account-profile, account-server, account-settings, onboarding, user-model)
@@ -429,8 +429,71 @@ vitest.config.ts (lists the Vitest projects of every package)
 
 ### E2E Tests
 
-- **Location**: Put Playwright tests in `apps/web-e2e/src/`, named `<name>.spec.ts`. They run in Chromium. Vitest does not run them
-- **Run locally**: Start the app with `pnpm dev`, then run `pnpm run test:e2e:local`. It reads `apps/web/.env.local`. Run `pnpm --filter web-e2e exec playwright install chromium` one time first. The tests use `http://localhost:3000`. Set `E2E_BASE_URL` to test another deployment. `next dev` compiles each page on its first visit, which can take longer than the 30-second test timeout: open the pages once first, or pass `--timeout 120000`
+- **Location**: Put Playwright tests in `apps/web-e2e/src/`, named `<name>.spec.ts`, in the folder of their kind. They run in Chromium. Vitest does not run them:
+
+  | Folder                | Contents                                                                                          | Project                         |
+  | --------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------- |
+  | `src/setup`           | The setup and the teardown of a run (`*.setup.ts`, `run.teardown.ts`)                             | `setup`, `personas`, `teardown` |
+  | `src/api`             | Checks of the API routes that only send requests and start no browser                             | `api`                           |
+  | `src/smoke`           | The quick checks that the deployment works                                                        | `chromium`, `mobile`            |
+  | `src/security`        | Checks that the app refuses forged requests and sends no data that it should not                  | `chromium`, `mobile`            |
+  | `src/journeys/<area>` | The journeys of #128, in one folder for each area, for example `auth`, `navigation`, `onboarding` | `chromium`, `mobile`            |
+  | `src/a11y`            | The accessibility checks (#222 adds them)                                                         | `chromium`, `mobile`            |
+  | `src/prod`            | Checks that only read, and that also run against production                                       | `prod-smoke`                    |
+  | `src/fixtures`        | `test.ts`: the `test` and `expect` of every spec, with the shared fixtures                        |                                 |
+  | `src/helpers`         | The shared helpers (see Helpers)                                                                  |                                 |
+
+- **Projects**: `playwright.config.ts` defines them. `playwright test --list` lists the tests of each one:
+
+  | Project      | Runs                                                        | Notes                                                                                                                                                                                                                                                          |
+  | ------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `setup`      | `src/setup/vercel.setup.ts`                                 | The Vercel bypass cookie and the origin check (see Protected deployments). Its teardown is `teardown`                                                                                                                                                          |
+  | `personas`   | `src/setup/personas.setup.ts`, `src/setup/janitor.setup.ts` | After `setup`: the storage state of each persona (see Signed-in tests), and `POST janitor`                                                                                                                                                                     |
+  | `api`        | `src/api`                                                   | After `personas`. No browser starts                                                                                                                                                                                                                            |
+  | `chromium`   | `src/smoke`, `src/security`, `src/journeys`, `src/a11y`     | After `personas`. Desktop Chrome at 1280×800 (the giveaway editor needs 1024 px or more) and `timezoneId: 'UTC'`                                                                                                                                               |
+  | `mobile`     | The same folders, only the tests tagged `@mobile`           | After `personas`. Pixel 7 (Chromium) and `timezoneId: 'America/Los_Angeles'`, so the tests also catch time zone bugs such as #11, #47 and #68                                                                                                                  |
+  | `prod-smoke` | `src/prod`                                                  | Never signs in and never writes. Every test needs `@prod-safe`. With `VERCEL_AUTOMATION_BYPASS_SECRET` it runs after `setup`, for a protected preview. Without it, it needs no other project, so `--project=prod-smoke` runs against production with no secret |
+  | `teardown`   | `src/setup/run.teardown.ts`                                 | After every project that runs after `setup`: `DELETE runs/<RUN_ID>`                                                                                                                                                                                            |
+
+  `--grep` does not filter the projects that a project depends on, so `--grep @smoke` still signs in the personas first. The janitor and the teardown skip when `GET health` of the seed API does not allow writes
+
+- **Tags**: Set them with the `tag` option of `test` or `test.describe`. `TAGS` in `src/helpers/tags.ts` lists them:
+  - `@smoke`: the quick set. `--grep @smoke` takes under 2 minutes (about 25 seconds against `next dev`)
+  - `@slow`: a test that waits longer than 30 seconds. The fixture calls `test.slow()`, which triples its timeout
+  - `@mobile`: the test also runs in the `mobile` project. A test that works only on a small screen skips when the `isMobile` fixture is false
+  - `@a11y` and `@security`: the kind of check
+  - `@prod-safe`: the test only reads, never signs in and has no side effects. The `prod-smoke` project fails a test without it
+  - `@known-bug`: `knownBug(<issue>)` adds it (see Known bugs)
+  - `@quarantine`: `quarantine(<issue>)` adds it, with the issue. `grepInvert` in the config leaves these tests out of every run. Quarantine only a test that fails for a reason outside the app, and fix it in that issue
+- **Shared fixture**: Import `test` and `expect` from `src/fixtures/test.ts`, never from `@playwright/test`. ESLint refuses that import in a spec. The fixture:
+  - Blocks the third-party scripts of the root layout in every context of the test (see `third-party.ts` in Helpers)
+  - Fails the test on an uncaught error or a `console.error` of a page. `test.use({ allowedPageErrors: [...] })` allows the strings and patterns that a test expects, as the onboarding replay test does for the request that it aborts. `PAGE_ERROR_ALLOWLIST` in `third-party.ts` applies to every test, and is empty. Fix a page error in the app instead of adding it there: this check found the hydration mismatches of `ThemeToggleButton` and `OrbitingPlatforms`
+  - Applies the tags `@slow`, `@known-bug` and `@prod-safe`, and has `freshPersona` (see Signed-in tests)
+- **Helpers** in `src/helpers`:
+  - `known-bug.ts`: `knownBug(issue)` and `quarantine(issue)` return the details of a test, for example `test('title', knownBug(100), async ({ page }) => ...)`. Pass more details as the second argument: `knownBug(100, { tag: '@mobile' })`
+  - `third-party.ts`: `blockThirdParties(context)` answers `platform.twitter.com`, `embed.bsky.app`, `connect.facebook.net`, `va.vercel-scripts.com` and `/_vercel/insights/` with an empty body (an aborted script logs a `console.error`), and `avatar.vercel.sh` with a 1×1 PNG. With the avatar loaded, the avatar menu button gets its accessible name from the alt text of the image. The fixture calls it for the context of the test. Call it yourself for a context from `browser.newContext()`
+  - `http.ts`: `noRedirect` (`maxRedirects: 0`), `expectSameOrigin(location)`, which fails when a `Location` header leaves the origin of `E2E_BASE_URL`, and `expectNoStackTrace(body)`, which fails on a stack trace or an internal path (`node_modules`, `.next/server`, `/var/task`, `webpack-internal`, `PrismaClient`). Use it on API and error responses: the HTML of `next dev` names chunks after `node_modules`
+  - `rsc.ts`: every procedure is a Server Action. The browser POSTs to the URL of the page with a `Next-Action: <id>` header and the body `JSON.stringify([input])`. The ids change with each build, so capture them at runtime while a persona that is allowed drives the UI:
+    - `captureServerAction(page, trigger, { abort })` returns `{ id, url, args }` of the first action that `trigger` sends. With `abort: true`, the action never reaches the server
+    - `replayServerAction(page, action, args?)` sends it again with `fetch` from `page`, so the browser supplies the origin and the cookies of that page. Open a page of the same origin in `page` first
+    - `rewriteServerActions(page, rewrite)` changes the arguments of each action in flight, and collects the responses
+    - `readActionResult(response)` reads the result of the Flight response. A refusal is `{ ok: false, data: { code: 'FORBIDDEN', ... } }`, with HTTP status 200
+    - Arguments that are not plain JSON (a `File`, a `Date`, a string that starts with `$`) do not replay as they are
+  - `leaks.ts`: `expectNotInPayload(request, url, { name: value })` loads the page as HTML and as an RSC payload (`RSC: 1`), and fails when either one contains a value. Layouts are not an auth boundary, and the props of a client component are in the payload even when the page does not show them
+  - `poll.ts`: `expectAfterReloads(page, assertion)` runs an assertion again after at most 2 reloads. `revalidateTag(tag, 'max')` serves the stale page while it revalidates, so the first reload after a write can be stale, and a missing invalidation still fails after the second reload. Do not add a mode that skips the cache to the app: it would hide the cache bugs
+  - `blob.ts`: `stubBlobUploads(page)` answers the client token request to `/api/upload` and the `PUT` to `https://vercel.com/api/blob/` that `@vercel/blob` 1.1 sends, so an upload succeeds with `STUB_BLOB_URL` (the `/logo.png` of the deployment) and nothing is uploaded. It returns the list of uploads. Check both shapes again after an update of `@vercel/blob`
+  - `seed.ts`: `seedApi(request)` calls the seed API with the secret: `health`, `team`, `sweepstakes`, `deleteRun` and `janitor`. The last two call again while the response has `more: true`
+  - `personas.ts` and `user-metrics.ts`: see Signed-in tests
+- **Known bugs**: When a journey finds a bug, file a bug issue, then write the test with `knownBug(<issue>)`. The fixture marks the test as expected to fail (`test.fail()`), so the run passes while the bug is open. When the bug is fixed, the test passes, Playwright reports it as a failure, and the job summary lists it under "Known bugs that pass now". Remove `knownBug` in the pull request that fixes the bug. `src/journeys/navigation/menus.spec.ts` pins #100 this way
+- **Locators**: Use roles and accessible names (`getByRole`, `getByLabel`). Many controls have no name today (#100, #108, #93, #87, #90, #85). When a journey needs one, fix the issue in the app (add the `aria-label`, or link the label) instead of using a CSS selector. Use `data-testid` only where no accessible name makes sense. A test that checks that a control has a name, such as the `knownBug(100)` test, can find it with a CSS selector
+- **Run locally**:
+  1. Start Redis with `docker compose up -d redis serverless-redis-http`, and Postgres with `pnpm run docker:psql:local`. In a Claude Code cloud session, start Docker first with `dockerd > /tmp/dockerd.log 2>&1 &`
+  2. Copy `apps/web/.env.example` to `apps/web/.env.local` and set `POSTGRES_URL` and `POSTGRES_URL_NON_POOLING` to `postgresql://prisma:prisma@localhost:5432/prisma`, `REDIS_URL=http://default:6b58d1d2@localhost:8079`, `AUTH_SECRET`, `STEAM_SECRET` (any value: the Auth.js config throws without it), `E2E_LOGIN_SECRET` (32 characters or more) and `E2E_ALLOW_WRITES=1` (for the janitor and the teardown). Keep `NEXTAUTH_URL=http://localhost:3000`. Leave the Turnstile keys empty: without a site key, the giveaway page shows no security check
+  3. Run `pnpm --filter web run prisma:migrate:local`
+  4. Start the app with `pnpm dev`, then run `pnpm run test:e2e:local`. With `E2E_WEB_SERVER=1`, Playwright starts `pnpm dev` itself, or uses the server that already answers on `E2E_BASE_URL`
+  - `test:e2e:local` reads `apps/web/.env.local`. Install Chromium one time first with `pnpm --filter web-e2e exec playwright install chromium`, or set `E2E_CHROMIUM_PATH` to a Chromium binary (in Claude Code cloud sessions: `E2E_CHROMIUM_PATH=/opt/pw-browsers/chromium`). The tests use `http://localhost:3000`. Set `E2E_BASE_URL` to test another deployment
+  - `next dev` compiles each page on its first visit, which can take longer than the 30-second test timeout: open the pages once first, or pass `--timeout 120000`
+  - In development, each procedure waits 200 to 1000 ms to simulate the network (`packages/infra/rpc-server/src/procedures.ts`). It does not wait where the e2e gate is open (`isE2eGateOpen` in `@giveaway/e2e-gate/gate`), so the delay does not slow the tests
 - **Gate**: `@giveaway/e2e-gate` decides where the e2e code exists. It opens only on a Vercel preview deployment (`VERCEL_ENV=preview`, and `VERCEL_TARGET_ENV` unset or `preview`) and on the local development server (`next dev`, with `VERCEL_ENV` and `VERCEL_TARGET_ENV` unset or `development`), and only when `E2E_LOGIN_SECRET` has at least 32 characters. A custom Vercel environment such as `staging` reports `VERCEL_ENV=preview`, so the check of `VERCEL_TARGET_ENV` keeps the gate closed there. The `e2e` provider and the seed API use the same gate and the same secret
 - **Login**: The tests sign in through the `e2e` credentials provider in `packages/auth/auth-provider-e2e/src/e2e.ts`. The app adds this provider only where the gate is open. With the secret alone, it signs in the shared host, `e2e-host@example.com`, as `login.spec.ts` does. With `persona` and `ns` too, it signs in `e2e-<persona>-<ns>@example.com`. It computes the email and never reads one from the request. It signs in no one for a persona that is not in the list below, a namespace that does not match `^[a-z0-9]{4,10}$`, or a persona without a namespace or a namespace without a persona. Without `E2E_LOGIN_SECRET`, the tests that sign in are skipped
 - **Personas**: `E2E_PERSONAS` in `@giveaway/e2e-model/personas`. Each sign-in resets the attributes of the persona, so a retry starts clean:
@@ -443,10 +506,10 @@ vitest.config.ts (lists the Vitest projects of every package)
 
   Team memberships and roles are data. The seed API creates them for each test (`POST teams`), so `admin` is an ADMIN only of the team that the test seeds
 
-- **Run id**: `RUN_ID` in `apps/web-e2e/src/env.ts` is `E2E_RUN_ID`, or 6 random base36 characters when it is not set. `playwright.config.ts` imports it, so the runner sets `E2E_RUN_ID` and every worker gets the same id. Start each namespace of a run with it (see `DELETE runs/<runId>`)
-- **Signed-in tests**: The `setup` project (`src/vercel.setup.ts`) runs first, then the `personas` project (`src/personas.setup.ts`), then `chromium`:
+- **Run id**: `RUN_ID` in `apps/web-e2e/src/env.ts` is `E2E_RUN_ID`, or 6 random base36 characters when it is not set. `playwright.config.ts` imports it, so the runner sets `E2E_RUN_ID` and every worker gets the same id. In CI, `e2e.yml` makes it from `GITHUB_RUN_ID` and `GITHUB_RUN_ATTEMPT`, so each attempt of a run has its own id. Start each namespace of a run with it (see `DELETE runs/<runId>`)
+- **Signed-in tests**: The `setup` project runs first, then the `personas` project, then `api`, `chromium` and `mobile` (see Projects):
   - `personas` signs in each persona with `ns = RUN_ID` and saves `src/.auth/<persona>.json`, on top of the Vercel bypass cookie. A test that only reads as a persona uses that state: `test.use({ storageState: personaState('participant') })`
-  - A test that changes its user (onboarding, a role switch, a deletion) uses `freshPersona(persona)` from `src/fixtures/personas.ts` instead. It signs the page of the test in as the persona in a namespace that no other test uses (`RUN_ID`, the worker index and a counter, 10 characters), and returns `{ persona, ns, id, email }`
+  - A test that changes its user (onboarding, a role switch, a deletion) uses the `freshPersona(persona)` fixture instead (`src/fixtures/personas.ts`, in the `test` of `src/fixtures/test.ts`). It signs the page of the test in as the persona in a namespace that no other test uses (`RUN_ID`, the worker index and a counter, 10 characters), and returns `{ persona, ns, id, email }`
   - `signInAs(request, persona, ns = RUN_ID)` in `src/helpers/personas.ts` signs in any request context: it gets a CSRF token from `/api/auth/csrf`, posts to `/api/auth/callback/e2e`, and reads the user from `/api/auth/session`. The context of a page shares its cookies with `page.request`
   - Each storage state has a `user_metrics` cookie (`src/helpers/user-metrics.ts`). Without it, the metrics collector calls `trackUser` on the first page of each signed-in context. That call geolocates the request through ipwho.is on the server, and it can loop (#75)
 - **Rules for persona tests**:
@@ -469,9 +532,12 @@ vitest.config.ts (lists the Vitest projects of every package)
   - Each call writes one log line, `[e2e] {"method","path","status","ms"}`, without the secret or the body
   - After a write, it expires the cache tags of the giveaway at once with `revalidateTag(tag, { expire: 0 })`: `sweepstakes-<id>`, `sweepstakes-<id>-privacy`, `participant-sweepstake` and `winners-leaderboard`, plus the browse lists for a PUBLIC giveaway and after a cleanup. It does not use the `'max'` profile, and the app's own reads never skip the cache
   - Its round trip runs against a real database in `packages/e2e/e2e-server/src/__tests__/round-trip.integration.test.ts`
-- **Protected deployments**: `apps/web-e2e/src/vercel.setup.ts` sends `VERCEL_AUTOMATION_BYPASS_SECRET` one time to get the Vercel bypass cookie. The other tests use that cookie, so the secret goes only to the deployment
-- **Origin check**: `apps/web-e2e/src/vercel.setup.ts` also reads `/api/bluesky/client-metadata.json` and fails when its `client_id` is not on the origin of `E2E_BASE_URL`. A deployment that builds its URLs on production or on `localhost` then stops the run before the other tests (see App URL)
-- **CI**: `.github/workflows/e2e.yml` runs after each successful Vercel preview deployment (the `vercel.deployment.success` repository dispatch event). It tests the commit of the deployment against the preview URL and sets the `E2E tests` status on that commit. To test a deployment by hand, run the workflow from the Actions tab with the deployment URL
+- **Protected deployments**: `apps/web-e2e/src/setup/vercel.setup.ts` sends `VERCEL_AUTOMATION_BYPASS_SECRET` one time to get the Vercel bypass cookie. The other tests use that cookie, so the secret goes only to the deployment
+- **Origin check**: `apps/web-e2e/src/setup/vercel.setup.ts` also reads `/api/bluesky/client-metadata.json` and fails when its `client_id` is not on the origin of `E2E_BASE_URL`. A deployment that builds its URLs on production or on `localhost` then stops the run before the other tests (see App URL)
+- **CI**: `.github/workflows/e2e.yml` runs after each successful Vercel preview deployment (the `vercel.deployment.success` repository dispatch event). It tests the commit of the deployment against the preview URL and sets the `E2E tests` status on that commit. To test a deployment by hand, run the workflow from the Actions tab with the deployment URL. A repository dispatch event runs `e2e.yml` from `main`, with the tests of the deployed commit, so a change to the workflow applies after it merges; run it by hand on the branch to test the change:
+  - The job has 30 minutes. It sets `E2E_RUN_ID` (see Run id) and keeps 1 retry
+  - The `json` reporter writes `apps/web-e2e/.playwright-results/results.json`, and `.github/scripts/e2e-summary.mjs` turns it into the job summary: the number of passed, failed, flaky, known-bug and skipped tests, and a table of each failed and flaky test, each known bug with its issue, and each known bug that passes now
+  - The `playwright-report-<attempt>` artifact has the HTML report, with the trace, the video and the screenshot of each failed test (`trace` and `video` are `retain-on-failure`). Open it with `pnpm --filter web-e2e exec playwright show-report <folder>`
 - **Secrets**: The workflow needs the `VERCEL_AUTOMATION_BYPASS_SECRET` and `E2E_LOGIN_SECRET` GitHub Actions secrets. Set the same `E2E_LOGIN_SECRET` in Vercel for the Preview environment only. Never set it for Production. Set `E2E_ALLOW_WRITES` and `E2E_ALLOW_PUBLIC` as Environment Variables shows
 
 ### Authentication Flow
