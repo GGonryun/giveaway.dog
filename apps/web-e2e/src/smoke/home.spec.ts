@@ -19,6 +19,6 @@ test.describe('home page', { tag: '@smoke' }, () => {
     await page.getByRole('link', { name: 'Login', exact: true }).click();
 
     await expect(page).toHaveURL(/\/login$/);
-    await expect(page.getByText('Scratch: this text is not on the page')).toBeVisible();
+    await expect(page.getByText('Connect with us')).toBeVisible();
   });
 });
