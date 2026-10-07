@@ -715,6 +715,20 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+  e2e:
+    name: E2E tests
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/e2e.yml
+    permissions:
+      contents: read
+      deployments: read
+      statuses: write
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+    secrets:
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      E2E_LOGIN_SECRET: ${{ secrets.E2E_LOGIN_SECRET }}
+
   checks:
     name: Checks
     needs:
@@ -727,6 +741,7 @@ jobs:
       - visual
       - integration
       - mutation
+      - e2e
     if: ${{ always() }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
@@ -742,7 +757,7 @@ jobs:
             echo "| --- | --- |"
             jq -r 'to_entries[] | "| \(.key) | \(.value.result) |"' <<< "$RESULTS"
           } | tee -a "$GITHUB_STEP_SUMMARY"
-          failed=$(jq -r '[to_entries[] | select(.value.result != "success") | .key] | join(", ")' <<< "$RESULTS")
+          failed=$(jq -r '[to_entries[] | select(.value.result != "success" and (.key != "e2e" or .value.result != "skipped")) | .key] | join(", ")' <<< "$RESULTS")
           if [ -n "$failed" ]; then
             echo "::error::These jobs did not pass: $failed. The log of each failed shard names the check that failed."
             exit 1
