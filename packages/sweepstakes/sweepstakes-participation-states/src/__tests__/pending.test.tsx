@@ -128,7 +128,13 @@ describe('Pending', () => {
     });
 
     it('disables the button while the refresh is in progress', async () => {
-      vi.mocked(refreshSweepstakes).mockReturnValue(new Promise(() => {}));
+      let finishRefreshing = () => {};
+      vi.mocked(refreshSweepstakes).mockReturnValue(
+        new Promise((resolve) => {
+          finishRefreshing = () =>
+            resolve({ ok: true, data: { success: true } });
+        })
+      );
       renderPending(secondsFromNow(-60));
 
       fireEvent.click(screen.getByRole('button', { name: 'Refresh Page' }));
@@ -138,6 +144,8 @@ describe('Pending', () => {
       expect(button).toBeDisabled();
       expect(button.querySelector('svg')).toHaveClass('animate-spin');
       expect(navigation.router.refresh).not.toHaveBeenCalled();
+
+      await act(async () => finishRefreshing());
     });
   });
 });

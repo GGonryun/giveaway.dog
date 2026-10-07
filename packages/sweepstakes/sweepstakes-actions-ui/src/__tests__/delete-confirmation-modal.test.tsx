@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -114,7 +114,12 @@ describe('DeleteConfirmationModal', () => {
 
     it('locks the dialog while the deletion is in progress', async () => {
       const user = userEvent.setup();
-      vi.mocked(deleteSweepstakes).mockReturnValue(new Promise(() => {}));
+      let finishDeleting = () => {};
+      vi.mocked(deleteSweepstakes).mockReturnValue(
+        new Promise((resolve) => {
+          finishDeleting = () => resolve({ ok: true, data: { slug: 'acme' } });
+        })
+      );
       const { onClose } = renderModal();
 
       await user.type(confirmInput(), 'Summer Giveaway');
@@ -125,6 +130,8 @@ describe('DeleteConfirmationModal', () => {
       expect(confirmInput()).toBeDisabled();
       expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
       expect(onClose).not.toHaveBeenCalled();
+
+      await act(async () => finishDeleting());
     });
 
     it('explains that a missing sweepstakes could not be found', async () => {

@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -116,7 +116,12 @@ describe('CreateGiveawayButton', () => {
 
     it('disables both buttons while creating', async () => {
       const user = userEvent.setup();
-      vi.mocked(createSweepstakes).mockReturnValue(new Promise(() => {}));
+      let finishCreating = () => {};
+      vi.mocked(createSweepstakes).mockReturnValue(
+        new Promise((resolve) => {
+          finishCreating = () => resolve(createdSweepstakes);
+        })
+      );
       renderButton();
 
       await user.click(screen.getByRole('button', { name: 'Create' }));
@@ -126,6 +131,8 @@ describe('CreateGiveawayButton', () => {
       });
       expect(creating).toBeDisabled();
       expect(screen.getAllByRole('button')[1]).toBeDisabled();
+
+      await act(async () => finishCreating());
     });
   });
 

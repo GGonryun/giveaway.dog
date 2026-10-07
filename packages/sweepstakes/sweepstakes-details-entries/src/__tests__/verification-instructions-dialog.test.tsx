@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { useState, type ComponentProps } from 'react';
@@ -239,7 +239,13 @@ describe('VerificationInstructionsDialog', () => {
 
     it('shows progress while re-verifying', async () => {
       const user = userEvent.setup();
-      vi.mocked(reverifyTaskCompletion).mockReturnValue(new Promise(() => {}));
+      let finishVerifying = () => {};
+      vi.mocked(reverifyTaskCompletion).mockReturnValue(
+        new Promise((resolve) => {
+          finishVerifying = () =>
+            resolve({ ok: true, data: { success: true, status: 'COMPLETED' } });
+        })
+      );
       renderDialog({ task: discordTask });
 
       await user.click(
@@ -249,6 +255,8 @@ describe('VerificationInstructionsDialog', () => {
       expect(
         await screen.findByRole('button', { name: 'Verifying...' })
       ).toBeDisabled();
+
+      await act(async () => finishVerifying());
     });
   });
 

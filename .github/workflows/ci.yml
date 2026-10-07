@@ -192,7 +192,7 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:server --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json --reporter=json --outputFile.json=.vitest-results/server.json
+        run: pnpm nx run-many -t test:server --projects="$PROJECTS" --parallel=4 --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/server.json --reporter=json --outputFile.json=.vitest-results/server.json
 
       - name: Count the tests
         if: ${{ !cancelled() && steps.projects.outputs.projects }}
@@ -271,7 +271,7 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:property --projects="$PROJECTS" --output-style=static -- --coverage --coverage.reportsDirectory=coverage/property --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/property.json --reporter=json --outputFile.json=.vitest-results/property.json
+        run: pnpm nx run-many -t test:property --projects="$PROJECTS" --parallel=4 --output-style=static -- --coverage --coverage.reportsDirectory=coverage/property --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/property.json --reporter=json --outputFile.json=.vitest-results/property.json
 
       - name: Count the tests
         if: ${{ !cancelled() && steps.projects.outputs.projects }}
@@ -354,7 +354,7 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:frontend --projects="$PROJECTS" --output-style=static -- --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json --reporter=json --outputFile.json=.vitest-results/frontend.json
+        run: pnpm nx run-many -t test:frontend --projects="$PROJECTS" --parallel=4 --output-style=static -- --maxWorkers=1 --coverage --reporter=default --reporter=blob --outputFile.blob=.vitest-reports/frontend.json --reporter=json --outputFile.json=.vitest-results/frontend.json
 
       - name: Count the tests
         if: ${{ !cancelled() && steps.projects.outputs.projects }}
@@ -523,7 +523,7 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t test:snapshot --projects="$PROJECTS" --output-style=static -- --reporter=default --reporter=json --outputFile.json=.vitest-results/snapshot.json
+        run: pnpm nx run-many -t test:snapshot --projects="$PROJECTS" --parallel=4 --output-style=static -- --maxWorkers=1 --reporter=default --reporter=json --outputFile.json=.vitest-results/snapshot.json
 
       - name: Count the tests
         if: ${{ !cancelled() && steps.projects.outputs.projects }}

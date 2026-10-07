@@ -1,4 +1,5 @@
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -315,7 +316,22 @@ describe('SweepstakesWinners', () => {
     });
 
     it('snaps a quality score between enforcement levels to the nearest level', async () => {
-      vi.mocked(updateWinnerCriteria).mockReturnValue(new Promise(() => {}));
+      let finishSaving = () => {};
+      vi.mocked(updateWinnerCriteria).mockReturnValue(
+        new Promise((resolve) => {
+          finishSaving = () =>
+            resolve({
+              ok: true,
+              data: {
+                minTasksCompleted: 1,
+                minQualityScore: 75,
+                allowMultipleWins: false,
+                allowUserSelection: false,
+                externalPlatforms: null
+              }
+            });
+        })
+      );
       renderWinners({ criteria: buildCriteria({ minQualityScore: 70 }) });
       const { user, dialog } = await openEditor();
 
@@ -326,6 +342,8 @@ describe('SweepstakesWinners', () => {
       expect(vi.mocked(updateWinnerCriteria).mock.lastCall?.[0]).toMatchObject({
         minQualityScore: 75
       });
+
+      await act(async () => finishSaving());
     });
 
     it('discards the edits when cancelled', async () => {
@@ -404,7 +422,12 @@ describe('SweepstakesWinners', () => {
 
     it('shows that winners are being rolled', async () => {
       const user = userEvent.setup();
-      vi.mocked(rollPrizes).mockReturnValue(new Promise(() => {}));
+      let finishRolling = () => {};
+      vi.mocked(rollPrizes).mockReturnValue(
+        new Promise((resolve) => {
+          finishRolling = () => resolve({ ok: true, data: { success: true } });
+        })
+      );
       renderWinners({ prizes: [giftCard] });
 
       await user.click(
@@ -414,6 +437,8 @@ describe('SweepstakesWinners', () => {
       expect(
         (await screen.findAllByRole('button', { name: /Rolling\.\.\./ }))[0]
       ).toBeDisabled();
+
+      await act(async () => finishRolling());
     });
 
     it('opens the public picker', async () => {
@@ -429,7 +454,12 @@ describe('SweepstakesWinners', () => {
 
     it('rolls a single prize from its empty state', async () => {
       const user = userEvent.setup();
-      vi.mocked(rollPrize).mockReturnValue(new Promise(() => {}));
+      let finishRolling = () => {};
+      vi.mocked(rollPrize).mockReturnValue(
+        new Promise((resolve) => {
+          finishRolling = () => resolve({ ok: true, data: { success: true } });
+        })
+      );
       renderWinners({ prizes: [giftCard] });
 
       const card = prizeCard('Gift Card');
@@ -443,6 +473,8 @@ describe('SweepstakesWinners', () => {
         slug: 'acme',
         prizeId: 'prize-2'
       });
+
+      await act(async () => finishRolling());
     });
   });
 
@@ -584,7 +616,13 @@ describe('SweepstakesWinners', () => {
     };
 
     it('disqualifies a winner with a reason', async () => {
-      vi.mocked(disqualifyDraw).mockReturnValue(new Promise(() => {}));
+      let finishDisqualifying = () => {};
+      vi.mocked(disqualifyDraw).mockReturnValue(
+        new Promise((resolve) => {
+          finishDisqualifying = () =>
+            resolve({ ok: true, data: { success: true } });
+        })
+      );
       renderWinners();
       const { user, dialog } = await openWinnerAction('Disqualify');
 
@@ -606,10 +644,18 @@ describe('SweepstakesWinners', () => {
       });
       expect(rerollDraw).not.toHaveBeenCalled();
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+      await act(async () => finishDisqualifying());
     });
 
     it('re-rolls a winner with a reason', async () => {
-      vi.mocked(rerollDraw).mockReturnValue(new Promise(() => {}));
+      let finishRerolling = () => {};
+      vi.mocked(rerollDraw).mockReturnValue(
+        new Promise((resolve) => {
+          finishRerolling = () =>
+            resolve({ ok: true, data: { success: true } });
+        })
+      );
       renderWinners();
       const { user, dialog } = await openWinnerAction('Re-roll');
 
@@ -629,6 +675,8 @@ describe('SweepstakesWinners', () => {
         disqualificationReason: 'Duplicate account'
       });
       expect(disqualifyDraw).not.toHaveBeenCalled();
+
+      await act(async () => finishRerolling());
     });
 
     it('shows the reason of a disqualified draw', async () => {
