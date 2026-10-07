@@ -730,6 +730,8 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
+    permissions:
+      statuses: write
     steps:
       - name: Check that every job passed
         env:
@@ -745,6 +747,26 @@ jobs:
             echo "::error::These jobs did not pass: $failed. The log of each failed shard names the check that failed."
             exit 1
           fi
+
+      - name: Report the result to Vercel
+        if: ${{ (success() || failure()) && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$JOB_STATUS" = success ]; then
+            state=success
+            description='Every job passed'
+          else
+            state=failure
+            description='A job did not pass'
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
+            -f state="$state" \
+            -f context='Vercel - giveaway-dog: Checks' \
+            -f description="$description" \
+            -f target_url="$RUN_URL"
 
   badges:
     name: Badges
