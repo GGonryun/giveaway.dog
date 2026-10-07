@@ -65,7 +65,7 @@ export const disqualifyDraw = procedure()
           },
           data: {
             result: PrizeDrawResult.DISQUALIFIED,
-            disqualificationReason: disqualificationReason?.trim()
+            disqualificationReason: disqualificationReason.trim()
           }
         });
 
@@ -81,7 +81,7 @@ export const disqualifyDraw = procedure()
           },
           data: {
             status: 'REJECTED',
-            reason: `Participant disqualified: ${disqualificationReason?.trim() || 'No reason provided'}`
+            reason: `Participant disqualified: ${disqualificationReason.trim() || 'No reason provided'}`
           }
         });
       });

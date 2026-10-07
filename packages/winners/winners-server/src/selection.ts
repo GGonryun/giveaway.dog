@@ -8,7 +8,6 @@ import {
   pickUniqueWeighted,
   WeightedItem
 } from '@giveaway/winners-model/weighted-rolls';
-import { ApplicationError } from '@giveaway/util-errors';
 import { nanoid } from 'nanoid';
 import { SweepstakesCriteriaSchema } from '@giveaway/winners-model/criteria';
 
@@ -55,10 +54,6 @@ export const toUniquePrizeDraw = (
             alloc.prizeId === slots[i].prizeId
         )
       );
-    }
-
-    if (availableCompletions.length === 0) {
-      continue;
     }
 
     const weightedCompletions: WeightedItem<ExpandedEligibleTaskCompletion>[] =
@@ -121,13 +116,6 @@ export const toDuplicatePrizeDraw = (
       }));
 
     const pickedWinners = pickManyWeighted(weightedCompletions, 1);
-
-    if (pickedWinners.length < 1) {
-      throw new ApplicationError({
-        code: 'VALIDATION_ERROR',
-        message: `Not enough eligible participants to fill prize slot for prize ${slots[i].prizeId}`
-      });
-    }
 
     winnersData.push({
       id: nanoid(),
