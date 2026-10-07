@@ -179,15 +179,6 @@ const processSweepstakesActivation = async ({
   db: PrismaClient;
   job: Prisma.SweepstakesJobGetPayload<{}>;
 }) => {
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
-
-  if (!webhookUrl) {
-    throw new ApplicationError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'DISCORD_WEBHOOK_URL environment variable is not set'
-    });
-  }
-
   const sweepstakes = await db.sweepstakes.findUnique({
     where: { id: job.sweepstakesId },
     include: {
@@ -247,6 +238,19 @@ const processSweepstakesActivation = async ({
     });
     console.info(
       `Sweepstakes ${sweepstakes.id} has not started yet, rescheduling job`
+    );
+    return;
+  }
+
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+
+  if (!webhookUrl) {
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: { status: SweepstakesJobStatus.COMPLETED }
+    });
+    console.warn(
+      `DISCORD_WEBHOOK_URL is not set, skipping Discord notification for sweepstakes ${sweepstakes.id}`
     );
     return;
   }

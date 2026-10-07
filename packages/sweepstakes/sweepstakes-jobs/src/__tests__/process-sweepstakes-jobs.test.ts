@@ -373,17 +373,6 @@ describe('processSweepstakesJobs', () => {
       fetchMock.mockResolvedValue(new Response(null, { status: 204 }));
     });
 
-    it('fails the job without querying when the webhook url is not configured', async () => {
-      vi.stubEnv('DISCORD_WEBHOOK_URL', '');
-
-      await processSweepstakesJobs();
-
-      expect(updateCalls()).toEqual([
-        failed(JOB_ID, 'DISCORD_WEBHOOK_URL environment variable is not set')
-      ]);
-      expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
-    });
-
     it('loads the sweepstakes with details, timing, visibility and team', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
@@ -612,6 +601,90 @@ describe('processSweepstakesJobs', () => {
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Failed to send Discord webhook: 429 Too Many Requests')
       ]);
+    });
+
+    describe('without DISCORD_WEBHOOK_URL', () => {
+      beforeEach(() => {
+        vi.stubEnv('DISCORD_WEBHOOK_URL', undefined);
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      });
+
+      it('fails the job when the sweepstakes does not exist', async () => {
+        prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
+
+        await processSweepstakesJobs();
+
+        expect(updateCalls()).toEqual([
+          failed(JOB_ID, 'Sweepstakes with id sw-1 not found')
+        ]);
+      });
+
+      it('completes without notifying when the sweepstakes is not public', async () => {
+        prismaMock.sweepstakes.findUnique.mockResolvedValue(
+          activationSweepstakes({
+            visibility: { visibility: 'UNLISTED', slug: 'x' }
+          })
+        );
+
+        await processSweepstakesJobs();
+
+        expect(updateCalls()).toEqual([completed(JOB_ID)]);
+        expect(fetchMock).not.toHaveBeenCalled();
+        expect(console.info).toHaveBeenCalledWith(
+          'Sweepstakes sw-1 is not public, skipping Discord notification'
+        );
+      });
+
+      it('completes without notifying when the sweepstakes already ended', async () => {
+        prismaMock.sweepstakes.findUnique.mockResolvedValue(
+          activationSweepstakes({ timing: { startDate: null, endDate: NOW } })
+        );
+
+        await processSweepstakesJobs();
+
+        expect(updateCalls()).toEqual([completed(JOB_ID)]);
+        expect(fetchMock).not.toHaveBeenCalled();
+        expect(console.info).toHaveBeenCalledWith(
+          'Sweepstakes sw-1 has already ended, completing job'
+        );
+      });
+
+      it('reschedules the job for the start date when it has not started', async () => {
+        const startDate = new Date('2026-03-05T00:00:00.000Z');
+        prismaMock.sweepstakes.findUnique.mockResolvedValue(
+          activationSweepstakes({
+            timing: { startDate, endDate: new Date('2026-03-10T00:00:00.000Z') }
+          })
+        );
+
+        await processSweepstakesJobs();
+
+        expect(updateCalls()).toEqual([
+          {
+            where: { id: JOB_ID },
+            data: { status: 'PENDING', runAt: startDate }
+          }
+        ]);
+        expect(fetchMock).not.toHaveBeenCalled();
+      });
+
+      it.each([undefined, ''])(
+        'completes without notifying a public started sweepstakes when the url is %j',
+        async (webhookUrl) => {
+          vi.stubEnv('DISCORD_WEBHOOK_URL', webhookUrl);
+          prismaMock.sweepstakes.findUnique.mockResolvedValue(
+            activationSweepstakes()
+          );
+
+          await processSweepstakesJobs();
+
+          expect(updateCalls()).toEqual([completed(JOB_ID)]);
+          expect(fetchMock).not.toHaveBeenCalled();
+          expect(console.warn).toHaveBeenCalledWith(
+            'DISCORD_WEBHOOK_URL is not set, skipping Discord notification for sweepstakes sw-1'
+          );
+        }
+      );
     });
   });
 
