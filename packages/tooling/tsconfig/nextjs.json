@@ -6,6 +6,7 @@
     "allowJs": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "noUncheckedSideEffectImports": false,
     "plugins": [{ "name": "next" }]
   },
   "files": ["./react.d.ts", "./scrapebadger.d.ts"]

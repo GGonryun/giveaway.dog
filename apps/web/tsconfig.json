@@ -1,9 +1,8 @@
 {
   "extends": "@giveaway/tsconfig/nextjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@/app/*": ["app/*"]
+      "@/app/*": ["./app/*"]
     }
   },
   "include": [

@@ -14,11 +14,17 @@
       }
     }
   },
+  "bin": {
+    "tsgo": "./tsgo.mjs"
+  },
   "exports": {
     "./base.json": "./base.json",
     "./library.json": "./library.json",
     "./react-library.json": "./react-library.json",
     "./nextjs.json": "./nextjs.json"
+  },
+  "dependencies": {
+    "typescript": "catalog:native"
   },
   "peerDependencies": {
     "react": "catalog:",

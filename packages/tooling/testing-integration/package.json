@@ -11,16 +11,14 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
     "./database": "./src/database.ts",
     "./fixtures": "./src/fixtures.ts",
     "./setup": "./src/setup.ts"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@giveaway/testing-mocks": "workspace:*",

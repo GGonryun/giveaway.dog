@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -21,7 +22,6 @@
     "./sweepstakes-winners-skeleton": "./src/sweepstakes-winners-skeleton.tsx"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project frontend",
     "test:frontend": "vitest run --project frontend",
