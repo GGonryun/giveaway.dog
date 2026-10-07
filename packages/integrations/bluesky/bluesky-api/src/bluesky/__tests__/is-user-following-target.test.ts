@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  blueskyProfileResponse,
+  xrpcResponse
+} from '../../testing/fixtures-bluesky';
 import { isUserFollowingTarget } from '../is-user-following-target';
 
 const m = vi.hoisted(() => ({
@@ -24,6 +28,9 @@ vi.mock('@atproto/jwk-jose', () => ({
 vi.mock('@atproto/api', () => ({
   Agent: m.Agent
 }));
+
+const profileWithViewer = (viewer?: Record<string, unknown>) =>
+  xrpcResponse({ ...blueskyProfileResponse, viewer });
 
 const captureError = async (promise: Promise<unknown>) => {
   try {
@@ -70,7 +77,7 @@ describe('isUserFollowingTarget', () => {
 
   describe('when the profile lookup succeeds', () => {
     it('loads the bluesky credentials of the given user', async () => {
-      m.agent.getProfile.mockResolvedValue({ data: { viewer: {} } });
+      m.agent.getProfile.mockResolvedValue(profileWithViewer({}));
 
       await isUserFollowingTarget(asPrismaClient(), {
         userId: 'user-7',
@@ -83,7 +90,7 @@ describe('isUserFollowingTarget', () => {
     });
 
     it('requests the profile of the target handle', async () => {
-      m.agent.getProfile.mockResolvedValue({ data: { viewer: {} } });
+      m.agent.getProfile.mockResolvedValue(profileWithViewer({}));
 
       await isUserFollowingTarget(asPrismaClient(), {
         userId: 'user-1',
@@ -96,9 +103,9 @@ describe('isUserFollowingTarget', () => {
     });
 
     it('returns true when the viewer follows the target', async () => {
-      m.agent.getProfile.mockResolvedValue({
-        data: { viewer: { following: 'at://did:plc:viewer/follow/1' } }
-      });
+      m.agent.getProfile.mockResolvedValue(
+        profileWithViewer({ following: 'at://did:plc:viewer/follow/1' })
+      );
 
       const result = await isUserFollowingTarget(asPrismaClient(), {
         userId: 'user-1',
@@ -108,10 +115,10 @@ describe('isUserFollowingTarget', () => {
       expect(result).toBe(true);
     });
 
-    it('returns true when the following reference is null', async () => {
-      m.agent.getProfile.mockResolvedValue({
-        data: { viewer: { following: null } }
-      });
+    it('returns true when the following reference is an empty string', async () => {
+      m.agent.getProfile.mockResolvedValue(
+        profileWithViewer({ following: '' })
+      );
 
       const result = await isUserFollowingTarget(asPrismaClient(), {
         userId: 'user-1',
@@ -122,9 +129,9 @@ describe('isUserFollowingTarget', () => {
     });
 
     it('returns false when the viewer does not follow the target', async () => {
-      m.agent.getProfile.mockResolvedValue({
-        data: { viewer: { followedBy: 'at://follow' } }
-      });
+      m.agent.getProfile.mockResolvedValue(
+        profileWithViewer({ followedBy: 'at://follow' })
+      );
 
       const result = await isUserFollowingTarget(asPrismaClient(), {
         userId: 'user-1',
@@ -135,7 +142,7 @@ describe('isUserFollowingTarget', () => {
     });
 
     it('returns false when the profile has no viewer state', async () => {
-      m.agent.getProfile.mockResolvedValue({ data: {} });
+      m.agent.getProfile.mockResolvedValue(profileWithViewer());
 
       const result = await isUserFollowingTarget(asPrismaClient(), {
         userId: 'user-1',
@@ -180,8 +187,14 @@ describe('isUserFollowingTarget', () => {
       expect(m.agent.getProfile).not.toHaveBeenCalled();
     });
 
-    it('wraps a response without data', async () => {
-      m.agent.getProfile.mockResolvedValue({});
+    it.each([
+      ['without data', {}],
+      [
+        'with a following reference that is not a string',
+        profileWithViewer({ following: null })
+      ]
+    ])('wraps the BAD_GATEWAY error of a response %s', async (_, response) => {
+      m.agent.getProfile.mockResolvedValue(response);
 
       const error = await captureError(
         isUserFollowingTarget(asPrismaClient(), {
@@ -190,7 +203,10 @@ describe('isUserFollowingTarget', () => {
         })
       );
 
-      expect(expectWrappedFailure(error)).toBeInstanceOf(TypeError);
+      expect(expectWrappedFailure(error)).toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: { provider: 'bluesky', call: 'app.bsky.actor.getProfile' }
+      });
     });
 
     it('logs the underlying error', async () => {

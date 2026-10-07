@@ -3,6 +3,9 @@
 import { Tx } from '@giveaway/db-client/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
 import { Agent } from '@atproto/api';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
+import { toBlueskyPostUri } from './bluesky/post-uri';
+import { blueskyRepostedBySchema } from './schemas';
 
 export interface BlueskyUserSchema {
   did: string;
@@ -28,7 +31,7 @@ export const getBlueskyReposts = async (
 ): Promise<BlueskyRepostsResponse> => {
   const { agent } = input;
 
-  const uri = await convertBskyUrlToUri(agent, input.postUrl);
+  const uri = await toBlueskyPostUri(agent, input.postUrl);
 
   try {
     const response = await agent.api.app.bsky.feed.getRepostedBy({
@@ -37,18 +40,23 @@ export const getBlueskyReposts = async (
       cursor: input.cursor
     });
 
-    const reposts: BlueskyUserSchema[] = response.data.repostedBy.map(
-      (actor) => ({
-        did: actor.did,
-        handle: actor.handle,
-        displayName: actor.displayName,
-        avatar: actor.avatar
-      })
-    );
+    const data = parseProviderResponse({
+      provider: 'bluesky',
+      call: 'app.bsky.feed.getRepostedBy',
+      schema: blueskyRepostedBySchema,
+      data: response.data
+    });
+
+    const reposts: BlueskyUserSchema[] = data.repostedBy.map((actor) => ({
+      did: actor.did,
+      handle: actor.handle,
+      displayName: actor.displayName,
+      avatar: actor.avatar
+    }));
 
     return {
       data: reposts,
-      cursor: response.data.cursor
+      cursor: data.cursor
     };
   } catch (error) {
     console.error('Error fetching Bluesky reposts:', error);
@@ -59,29 +67,3 @@ export const getBlueskyReposts = async (
     });
   }
 };
-
-async function convertBskyUrlToUri(
-  agent: Agent,
-  postUrl: string
-): Promise<string> {
-  const match = postUrl.match(/bsky\.app\/profile\/([^\/]+)\/post\/([^\/\?]+)/);
-  if (!match) {
-    throw new ApplicationError({
-      code: 'BAD_REQUEST',
-      message: 'Invalid Bluesky post URL'
-    });
-  }
-
-  const [, handle, rkey] = match;
-
-  const profileResponse = await agent.getProfile({ actor: handle });
-  if (!profileResponse.success) {
-    throw new ApplicationError({
-      code: 'NOT_FOUND',
-      message: 'Profile not found'
-    });
-  }
-
-  const did = profileResponse.data.did;
-  return `at://${did}/app.bsky.feed.post/${rkey}`;
-}

@@ -45,6 +45,7 @@
     "@giveaway/integration-server": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

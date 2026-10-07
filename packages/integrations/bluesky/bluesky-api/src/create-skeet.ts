@@ -4,6 +4,8 @@ import { Tx } from '@giveaway/db-client/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestTeamBlueskyCredentials } from './bluesky/get-latest-team-bluesky-agent';
 import { RichText } from '@atproto/api';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
+import { blueskyCreateRecordSchema } from './schemas';
 
 interface CreateSkeetInput {
   teamId: string;
@@ -56,10 +58,12 @@ export const createSkeet = async (
     };
   }
 
-  const response = await agent.post(postRecord);
+  const { uri, cid } = parseProviderResponse({
+    provider: 'bluesky',
+    call: 'com.atproto.repo.createRecord',
+    schema: blueskyCreateRecordSchema,
+    data: await agent.post(postRecord)
+  });
 
-  return {
-    uri: response.uri,
-    cid: response.cid
-  };
+  return { uri, cid };
 };

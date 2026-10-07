@@ -2,7 +2,10 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@giveaway/db-model';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import { getLatestBlueskyCredentials } from './get-latest-bluesky-agent';
+import { toBlueskyPostUri } from './post-uri';
+import { blueskyPostThreadSchema } from '../schemas';
 
 /**
  * Check if the authenticated user has liked a specific Bluesky post.
@@ -24,32 +27,28 @@ export async function isUserLikingPost(
     const { userId, postUrl } = args;
     const { agent } = await getLatestBlueskyCredentials(db, userId);
 
-    const uri = await convertBskyUrlToUri(agent, postUrl);
+    const uri = await toBlueskyPostUri(agent, postUrl);
 
     const threadResponse = await agent.getPostThread({
       uri,
       depth: 0
     });
 
-    if (!('post' in threadResponse.data.thread)) {
+    const { thread } = parseProviderResponse({
+      provider: 'bluesky',
+      call: 'app.bsky.feed.getPostThread',
+      schema: blueskyPostThreadSchema,
+      data: threadResponse.data
+    });
+
+    if (!threadResponse.success || thread.post === undefined) {
       throw new ApplicationError({
         code: 'NOT_FOUND',
         message: 'Post not found'
       });
     }
 
-    if (
-      !threadResponse.success ||
-      threadResponse.data.thread.post === undefined
-    ) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Post not found'
-      });
-    }
-
-    const post = threadResponse.data.thread.post;
-    return post.viewer?.like !== undefined;
+    return thread.post.viewer?.like !== undefined;
   } catch (error) {
     console.error('Error checking Bluesky like status:', error);
     throw new ApplicationError({
@@ -58,35 +57,4 @@ export async function isUserLikingPost(
       cause: error
     });
   }
-}
-
-/**
- * Convert a bsky.app URL to AT URI format
- * Example: https://bsky.app/profile/user.bsky.social/post/abc123
- * Returns: at://did:plc:xxx/app.bsky.feed.post/abc123
- */
-async function convertBskyUrlToUri(
-  agent: any,
-  postUrl: string
-): Promise<string> {
-  const match = postUrl.match(/bsky\.app\/profile\/([^\/]+)\/post\/([^\/\?]+)/);
-  if (!match) {
-    throw new ApplicationError({
-      code: 'BAD_REQUEST',
-      message: 'Invalid Bluesky post URL'
-    });
-  }
-
-  const [, handle, rkey] = match;
-
-  const profileResponse = await agent.getProfile({ actor: handle });
-  if (!profileResponse.success) {
-    throw new ApplicationError({
-      code: 'NOT_FOUND',
-      message: 'Profile not found'
-    });
-  }
-
-  const did = profileResponse.data.did;
-  return `at://${did}/app.bsky.feed.post/${rkey}`;
 }

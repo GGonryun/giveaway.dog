@@ -144,16 +144,32 @@ describe('getBlueskyOEmbed', () => {
 
   describe('when the oembed payload is incomplete', () => {
     it.each(['html', 'author_name', 'author_url'])(
-      'returns UNPROCESSABLE_CONTENT when %s is missing',
+      'returns BAD_GATEWAY with the generic preview message when %s is missing',
       async (field) => {
+        vi.spyOn(console, 'error').mockImplementation(() => undefined);
         fetchMock.mockResolvedValue(
           jsonResponse({ ...oembed, [field]: undefined })
         );
 
         const result = await getBlueskyOEmbed({ postUrl: POST_URL });
 
-        expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
-          /^Output validation failed: /
+        expect(expectFailure(result, 'BAD_GATEWAY').message).toBe(
+          'Unable to load Bluesky post preview'
+        );
+        expect(console.error).toHaveBeenCalledWith(
+          '[provider-response]',
+          JSON.stringify({
+            provider: 'bluesky',
+            call: 'GET /oembed',
+            issues: [
+              {
+                path: field,
+                code: 'invalid_type',
+                expected: 'string',
+                received: 'undefined'
+              }
+            ]
+          })
         );
       }
     );

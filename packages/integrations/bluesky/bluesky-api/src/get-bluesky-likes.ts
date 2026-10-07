@@ -3,6 +3,9 @@
 import { Tx } from '@giveaway/db-client/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
 import { Agent } from '@atproto/api';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
+import { toBlueskyPostUri } from './bluesky/post-uri';
+import { blueskyLikesSchema } from './schemas';
 
 export interface BlueskyUserSchema {
   did: string;
@@ -35,7 +38,7 @@ export const getBlueskyLikes = async (
 ): Promise<BlueskyLikesResponse> => {
   const { agent } = input;
 
-  const uri = await convertBskyUrlToUri(agent, input.postUrl);
+  const uri = await toBlueskyPostUri(agent, input.postUrl);
 
   try {
     const response = await agent.api.app.bsky.feed.getLikes({
@@ -44,7 +47,14 @@ export const getBlueskyLikes = async (
       cursor: input.cursor
     });
 
-    const likes: BlueskyUserSchema[] = response.data.likes.map((like) => ({
+    const data = parseProviderResponse({
+      provider: 'bluesky',
+      call: 'app.bsky.feed.getLikes',
+      schema: blueskyLikesSchema,
+      data: response.data
+    });
+
+    const likes: BlueskyUserSchema[] = data.likes.map((like) => ({
       did: like.actor.did,
       handle: like.actor.handle,
       displayName: like.actor.displayName,
@@ -53,7 +63,7 @@ export const getBlueskyLikes = async (
 
     return {
       data: likes,
-      cursor: response.data.cursor
+      cursor: data.cursor
     };
   } catch (error) {
     console.error('Error fetching Bluesky likes:', error);
@@ -64,29 +74,3 @@ export const getBlueskyLikes = async (
     });
   }
 };
-
-async function convertBskyUrlToUri(
-  agent: Agent,
-  postUrl: string
-): Promise<string> {
-  const match = postUrl.match(/bsky\.app\/profile\/([^\/]+)\/post\/([^\/\?]+)/);
-  if (!match) {
-    throw new ApplicationError({
-      code: 'BAD_REQUEST',
-      message: 'Invalid Bluesky post URL'
-    });
-  }
-
-  const [, handle, rkey] = match;
-
-  const profileResponse = await agent.getProfile({ actor: handle });
-  if (!profileResponse.success) {
-    throw new ApplicationError({
-      code: 'NOT_FOUND',
-      message: 'Profile not found'
-    });
-  }
-
-  const did = profileResponse.data.did;
-  return `at://${did}/app.bsky.feed.post/${rkey}`;
-}

@@ -1,0 +1,15 @@
+{
+  "recordedAt": null,
+  "body": {
+    "type": "rich",
+    "version": "1.0",
+    "author_name": "Giveaway Dog (@giveaway.dog)",
+    "author_url": "https://bsky.app/profile/giveaway.dog",
+    "provider_name": "Bluesky Social",
+    "provider_url": "https://bsky.app",
+    "cache_age": 86400,
+    "width": 600,
+    "height": null,
+    "html": "<blockquote class=\"bluesky-embed\" data-bluesky-uri=\"at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7mls222b\" data-bluesky-cid=\"bafyreibqoz2qrjwd6t6zbwzhbte5g2r32zac7flxdhvmeonfgo6zlkxppi\"><p lang=\"en\">Giveaway time! Like and repost this post for a chance to win a year of dog treats.</p>&mdash; Giveaway Dog (<a href=\"https://bsky.app/profile/did:plc:gvdogxk4ui5q2nf3rmbz7ytc?ref_src=embed\">@giveaway.dog</a>) <a href=\"https://bsky.app/profile/did:plc:gvdogxk4ui5q2nf3rmbz7ytc/post/3m2jy7mls222b?ref_src=embed\">October 6, 2026 at 4:00 PM</a></blockquote><script async src=\"https://embed.bsky.app/static/embed.js\" charset=\"utf-8\"></script>"
+  }
+}

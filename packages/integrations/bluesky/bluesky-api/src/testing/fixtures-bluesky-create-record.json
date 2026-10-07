@@ -1,0 +1,12 @@
+{
+  "recordedAt": null,
+  "body": {
+    "uri": "at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7reeuj2b",
+    "cid": "bafyreihx67gkhrusycvbjhwcxmk6w43hu4u7osm7zzbf5pg6oepwq63fty",
+    "commit": {
+      "cid": "bafyreifsr2tr5w6oeayq5csnstwxyptkhygisfcjyrd37uwkclcirrfpqu",
+      "rev": "3m2jy7scvgm2b"
+    },
+    "validationStatus": "valid"
+  }
+}

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
+import { blueskyProfileResponse } from '../../testing/fixtures-bluesky';
 import { isUserLikingPost } from '../is-user-liking-post';
 
 const m = vi.hoisted(() => ({
@@ -31,7 +32,11 @@ const POST_URI = 'at://did:plc:alice/app.bsky.feed.post/3kabc';
 
 const profileResponse = (overrides: Record<string, unknown> = {}) => ({
   success: true,
-  data: { did: 'did:plc:alice', handle: 'alice.bsky.social' },
+  data: {
+    ...blueskyProfileResponse,
+    did: 'did:plc:alice',
+    handle: 'alice.bsky.social'
+  },
   ...overrides
 });
 
@@ -315,6 +320,24 @@ describe('isUserLikingPost', () => {
       const cause = expectWrappedFailure(error);
       expect(cause.code).toBe('NOT_FOUND');
       expect(cause.message).toBe('Post not found');
+    });
+
+    it('wraps the BAD_GATEWAY error of a thread that does not match the schema', async () => {
+      m.agent.getPostThread.mockResolvedValue(
+        threadResponse({ viewer: { like: 1, repost: 1 } })
+      );
+
+      const error = await captureError(
+        isUserLikingPost(asPrismaClient(), {
+          userId: 'user-1',
+          postUrl: POST_URL
+        })
+      );
+
+      expect(expectWrappedFailure(error)).toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: { provider: 'bluesky', call: 'app.bsky.feed.getPostThread' }
+      });
     });
 
     it('wraps a thread whose post is undefined', async () => {

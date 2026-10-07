@@ -2,7 +2,9 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@giveaway/db-model';
+import { parseProviderResponse } from '@giveaway/integration-server/provider-response';
 import { getLatestBlueskyCredentials } from './get-latest-bluesky-agent';
+import { blueskyProfileSchema } from '../schemas';
 
 /**
  * Check if the authenticated user follows a target user on Bluesky.
@@ -27,9 +29,14 @@ export async function isUserFollowingTarget(
       actor: targetHandle
     });
 
-    // Check if viewer.following is defined
-    // If it's defined, the authenticated user follows the target
-    return profileResponse.data.viewer?.following !== undefined;
+    const profile = parseProviderResponse({
+      provider: 'bluesky',
+      call: 'app.bsky.actor.getProfile',
+      schema: blueskyProfileSchema,
+      data: profileResponse.data
+    });
+
+    return profile.viewer?.following !== undefined;
   } catch (error) {
     console.error('Error checking Bluesky follow status:', error);
     throw new ApplicationError({

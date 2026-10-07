@@ -3,6 +3,11 @@ import type { Agent } from '@atproto/api';
 import { getBlueskyLikes } from '../get-bluesky-likes';
 import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
+import {
+  blueskyLikesResponse,
+  blueskyProfileResponse,
+  xrpcResponse
+} from '../testing/fixtures-bluesky';
 
 const POST_URL = 'https://bsky.app/profile/acme.bsky.social/post/3kpost';
 
@@ -19,9 +24,9 @@ const createAgent = () => {
 };
 
 const like = (did: string, extra: Record<string, unknown> = {}) => ({
-  indexedAt: '2026-01-01T00:00:00.000Z',
-  createdAt: '2026-01-01T00:00:00.000Z',
+  ...blueskyLikesResponse.likes[0],
   actor: {
+    ...blueskyLikesResponse.likes[0].actor,
     did,
     handle: `${did}.bsky.social`,
     displayName: `User ${did}`,
@@ -36,10 +41,9 @@ describe('getBlueskyLikes', () => {
 
   beforeEach(() => {
     mocks = createAgent();
-    mocks.getProfile.mockResolvedValue({
-      success: true,
-      data: { did: 'did:plc:acme' }
-    });
+    mocks.getProfile.mockResolvedValue(
+      xrpcResponse({ ...blueskyProfileResponse, did: 'did:plc:acme' })
+    );
     mocks.getLikes.mockResolvedValue({ data: { likes: [] } });
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
   });
@@ -239,15 +243,33 @@ describe('getBlueskyLikes', () => {
       });
     });
 
-    it('wraps a malformed likes response in INTERNAL_SERVER_ERROR', async () => {
+    it('wraps the BAD_GATEWAY error of a malformed likes response', async () => {
       mocks.getLikes.mockResolvedValue({ data: {} });
 
       await expect(
         getBlueskyLikes(tx, { agent: mocks.agent, postUrl: POST_URL })
       ).rejects.toMatchObject({
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to fetch Bluesky likes'
+        message: 'Failed to fetch Bluesky likes',
+        cause: {
+          code: 'BAD_GATEWAY',
+          data: { provider: 'bluesky', call: 'app.bsky.feed.getLikes' }
+        }
       });
+    });
+
+    it('throws BAD_GATEWAY when the profile of the author does not match the schema', async () => {
+      mocks.getProfile.mockResolvedValue(
+        xrpcResponse({ handle: 'acme.bsky.social' })
+      );
+
+      await expect(
+        getBlueskyLikes(tx, { agent: mocks.agent, postUrl: POST_URL })
+      ).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: { provider: 'bluesky', call: 'app.bsky.actor.getProfile' }
+      });
+      expect(mocks.getLikes).not.toHaveBeenCalled();
     });
 
     it('logs the likes request failure', async () => {

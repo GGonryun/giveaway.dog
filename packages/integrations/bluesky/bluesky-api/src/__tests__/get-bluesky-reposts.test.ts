@@ -3,6 +3,11 @@ import type { Agent } from '@atproto/api';
 import { getBlueskyReposts } from '../get-bluesky-reposts';
 import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
+import {
+  blueskyProfileResponse,
+  blueskyRepostedByResponse,
+  xrpcResponse
+} from '../testing/fixtures-bluesky';
 
 const POST_URL = 'https://bsky.app/profile/acme.bsky.social/post/3kpost';
 
@@ -19,6 +24,7 @@ const createAgent = () => {
 };
 
 const actor = (did: string, extra: Record<string, unknown> = {}) => ({
+  ...blueskyRepostedByResponse.repostedBy[0],
   did,
   handle: `${did}.bsky.social`,
   displayName: `User ${did}`,
@@ -32,10 +38,9 @@ describe('getBlueskyReposts', () => {
 
   beforeEach(() => {
     mocks = createAgent();
-    mocks.getProfile.mockResolvedValue({
-      success: true,
-      data: { did: 'did:plc:acme' }
-    });
+    mocks.getProfile.mockResolvedValue(
+      xrpcResponse({ ...blueskyProfileResponse, did: 'did:plc:acme' })
+    );
     mocks.getRepostedBy.mockResolvedValue({ data: { repostedBy: [] } });
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
   });
@@ -229,14 +234,18 @@ describe('getBlueskyReposts', () => {
       );
     });
 
-    it('wraps a malformed reposts response in INTERNAL_SERVER_ERROR', async () => {
+    it('wraps the BAD_GATEWAY error of a malformed reposts response', async () => {
       mocks.getRepostedBy.mockResolvedValue({ data: {} });
 
       await expect(
         getBlueskyReposts(tx, { agent: mocks.agent, postUrl: POST_URL })
       ).rejects.toMatchObject({
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to fetch Bluesky reposts'
+        message: 'Failed to fetch Bluesky reposts',
+        cause: {
+          code: 'BAD_GATEWAY',
+          data: { provider: 'bluesky', call: 'app.bsky.feed.getRepostedBy' }
+        }
       });
     });
   });

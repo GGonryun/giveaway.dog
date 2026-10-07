@@ -89,6 +89,20 @@ describe('createSkeet', () => {
       expect(mocks.uploadBlob).not.toHaveBeenCalled();
     });
 
+    it('throws BAD_GATEWAY when the created record has no cid', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
+      mocks.post.mockResolvedValue({
+        uri: 'at://did:plc:team/app.bsky.feed.post/3kskeet'
+      });
+
+      await expect(
+        createSkeet(tx, { teamId: 'team-1', text: 'hi' })
+      ).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        data: { provider: 'bluesky', call: 'com.atproto.repo.createRecord' }
+      });
+    });
+
     it('returns only the uri and cid of the created post', async () => {
       const result = await createSkeet(tx, { teamId: 'team-1', text: 'hi' });
 

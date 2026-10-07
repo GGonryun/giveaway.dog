@@ -1,0 +1,51 @@
+{
+  "recordedAt": null,
+  "body": {
+    "thread": {
+      "$type": "app.bsky.feed.defs#threadViewPost",
+      "post": {
+        "uri": "at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7mls222b",
+        "cid": "bafyreibqoz2qrjwd6t6zbwzhbte5g2r32zac7flxdhvmeonfgo6zlkxppi",
+        "author": {
+          "did": "did:plc:gvdogxk4ui5q2nf3rmbz7ytc",
+          "handle": "giveaway.dog",
+          "displayName": "Giveaway Dog",
+          "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:gvdogxk4ui5q2nf3rmbz7ytc/bafkreihbjgtfuffnkscayspqrjierepzkr6p5usyvkavwjuwdmm3gkq4bi@jpeg",
+          "associated": {
+            "activitySubscription": {
+              "allowSubscriptions": "followers"
+            }
+          },
+          "viewer": {
+            "muted": false,
+            "blockedBy": false,
+            "following": "at://did:plc:vxewer2y6kq3m5n7p4r2s3t5/app.bsky.graph.follow/3m2jy7phdqd2b"
+          },
+          "labels": [],
+          "createdAt": "2024-11-18T09:12:44.000Z"
+        },
+        "record": {
+          "$type": "app.bsky.feed.post",
+          "createdAt": "2026-10-06T16:00:00.000Z",
+          "langs": ["en"],
+          "text": "Giveaway time! Like and repost this post for a chance to win a year of dog treats."
+        },
+        "bookmarkCount": 1,
+        "replyCount": 3,
+        "repostCount": 9,
+        "likeCount": 27,
+        "quoteCount": 0,
+        "indexedAt": "2026-10-06T16:00:01.512Z",
+        "viewer": {
+          "bookmarked": false,
+          "like": "at://did:plc:vxewer2y6kq3m5n7p4r2s3t5/app.bsky.feed.like/3m2jy7nkcm52b",
+          "repost": "at://did:plc:vxewer2y6kq3m5n7p4r2s3t5/app.bsky.feed.repost/3m2jy7oit6a2b",
+          "threadMuted": false,
+          "embeddingDisabled": false
+        },
+        "labels": []
+      },
+      "replies": []
+    }
+  }
+}

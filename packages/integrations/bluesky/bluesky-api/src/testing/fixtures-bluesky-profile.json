@@ -1,0 +1,28 @@
+{
+  "recordedAt": null,
+  "body": {
+    "did": "did:plc:gvdogxk4ui5q2nf3rmbz7ytc",
+    "handle": "giveaway.dog",
+    "displayName": "Giveaway Dog",
+    "description": "Host giveaways and raffles on X, Discord, Twitch and Bluesky.",
+    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:gvdogxk4ui5q2nf3rmbz7ytc/bafkreihbjgtfuffnkscayspqrjierepzkr6p5usyvkavwjuwdmm3gkq4bi@jpeg",
+    "banner": "https://cdn.bsky.app/img/banner/plain/did:plc:gvdogxk4ui5q2nf3rmbz7ytc/bafkreieituniyaf6x4vnu52jifkrib53dcc4rgejp3ost4cweovccqjjfi@jpeg",
+    "followersCount": 1204,
+    "followsCount": 87,
+    "postsCount": 342,
+    "associated": {
+      "lists": 0,
+      "feedgens": 0,
+      "starterPacks": 0,
+      "labeler": false
+    },
+    "indexedAt": "2025-02-01T10:00:00.000Z",
+    "createdAt": "2024-11-18T09:12:44.000Z",
+    "viewer": {
+      "muted": false,
+      "blockedBy": false,
+      "following": "at://did:plc:vxewer2y6kq3m5n7p4r2s3t5/app.bsky.graph.follow/3m2jy7phdqd2b"
+    },
+    "labels": []
+  }
+}

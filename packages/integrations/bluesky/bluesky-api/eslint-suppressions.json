@@ -4,16 +4,6 @@
       "count": 1
     }
   },
-  "packages/integrations/bluesky/bluesky-api/src/bluesky/is-user-liking-post.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "packages/integrations/bluesky/bluesky-api/src/bluesky/is-user-reposting-post.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "packages/integrations/bluesky/bluesky-api/src/bluesky/team-bluesky-client.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
