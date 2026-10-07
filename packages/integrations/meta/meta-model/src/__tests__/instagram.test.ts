@@ -102,6 +102,10 @@ describe('extractInstagramUsername', () => {
     expect(extractInstagramUsername('instagram.com/the_user')).toBe('the_user');
   });
 
+  it('ignores surrounding whitespace', () => {
+    expect(extractInstagramUsername('  instagram.com/Me  ')).toBe('me');
+  });
+
   it('returns the first path segment of a post url', () => {
     expect(extractInstagramUsername('https://instagram.com/p/abc')).toBe('p');
   });

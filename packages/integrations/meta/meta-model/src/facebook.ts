@@ -25,7 +25,7 @@ export type FacebookLoginFormSchema = z.infer<typeof facebookLoginFormSchema>;
 
 // Extract identifier from Facebook URL
 export const extractFacebookIdentifier = (url: string): string => {
-  const normalized = url.toLowerCase().trim();
+  const normalized = url.toLowerCase();
 
   // Check for ID-based URL
   const idMatch = normalized.match(/profile\.php\?id=(\d+)/);
@@ -38,7 +38,7 @@ export const extractFacebookIdentifier = (url: string): string => {
 
 // Normalize Facebook URL to consistent format
 export const normalizeFacebookUrl = (url: string): string => {
-  const normalized = url.toLowerCase().trim();
+  const normalized = url.toLowerCase();
 
   // If it's an ID-based URL, keep that format
   const idMatch = normalized.match(/profile\.php\?id=(\d+)/);

@@ -25,7 +25,7 @@ export type InstagramLoginFormSchema = z.infer<typeof instagramLoginFormSchema>;
 
 // Extract username from Instagram URL
 export const extractInstagramUsername = (url: string): string => {
-  const normalized = url.toLowerCase().trim();
+  const normalized = url.toLowerCase();
   const match = normalized.match(/instagram\.com\/([a-zA-Z0-9._]+)/);
   return match ? match[1] : url;
 };

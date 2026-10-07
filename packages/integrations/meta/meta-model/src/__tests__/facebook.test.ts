@@ -24,6 +24,7 @@ describe('facebookProfileUrlSchema', () => {
       'HTTPS://WWW.FACEBOOK.COM/JOHNDOE',
       '  https://facebook.com/johndoe  ',
       'https://facebook.com/profile.php?id=123456789',
+      'http://facebook.com/profile.php?id=123456789',
       'facebook.com/profile.php?id=1'
     ])('accepts %s', (url) => {
       expect(facebookProfileUrlSchema.safeParse(url).success).toBe(true);
@@ -57,6 +58,7 @@ describe('facebookProfileUrlSchema', () => {
       'https://facebook.com/john-doe',
       'https://facebook.com/profile.php?id=abc',
       'https://facebook.com/profile.php?id=123/',
+      'https://notfacebook.com/profile.php?id=123',
       'https://facebook.com/johndoe?ref=bookmarks',
       'ftp://facebook.com/johndoe',
       'https://notfacebook.com/johndoe'
@@ -113,7 +115,7 @@ describe('extractFacebookIdentifier', () => {
     ).toBe('john');
   });
 
-  it('trims surrounding whitespace before matching', () => {
+  it('ignores surrounding whitespace', () => {
     expect(extractFacebookIdentifier('  facebook.com/Jane  ')).toBe('jane');
   });
 
@@ -129,6 +131,12 @@ describe('normalizeFacebookUrl', () => {
     expect(
       normalizeFacebookUrl('http://www.facebook.com/profile.php?id=987')
     ).toBe('https://facebook.com/profile.php?id=987');
+  });
+
+  it('ignores surrounding whitespace around an id-based url', () => {
+    expect(normalizeFacebookUrl('  facebook.com/profile.php?id=42  ')).toBe(
+      'https://facebook.com/profile.php?id=42'
+    );
   });
 
   it('normalizes a username url to lowercase https without www', () => {
