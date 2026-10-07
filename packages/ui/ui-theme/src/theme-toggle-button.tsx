@@ -2,6 +2,7 @@
 
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { useSyncExternalStore } from 'react';
 import { Button } from '@giveaway/ui-primitives/button';
 import {
   DropdownMenu,
@@ -10,14 +11,24 @@ import {
   DropdownMenuTrigger
 } from '@giveaway/ui-primitives/dropdown-menu';
 
+const subscribe = () => () => {};
+
+const useIsClient = () =>
+  useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
+
 export function ThemeToggleButton() {
   const { theme, setTheme } = useTheme();
+  const isClient = useIsClient();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="border">
-          {theme === 'system' ? (
+          {isClient && theme === 'system' ? (
             <Monitor className="h-[1.2rem] w-[1.2rem]" />
           ) : (
             <>
