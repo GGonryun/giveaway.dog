@@ -82,13 +82,14 @@ jobs:
           fetch-depth: ${{ env.IGNORED == 'true' && '0' || '1' }}
           persist-credentials: false
 
-      - name: Check out the script of the workflow
-        if: env.IGNORED == 'true'
+      - name: Check out the scripts of the workflow
         uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
           path: .e2e-workflow
-          sparse-checkout: .github/scripts/same-app-preview.sh
+          sparse-checkout: |
+            .github/scripts/same-app-preview.sh
+            .github/scripts/e2e-summary.mjs
           sparse-checkout-cone-mode: false
           persist-credentials: false
 
@@ -130,7 +131,7 @@ jobs:
 
       - name: Summarize the results
         if: ${{ !cancelled() }}
-        run: node .github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json >> "$GITHUB_STEP_SUMMARY"
+        run: node .e2e-workflow/.github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the Playwright report
         if: ${{ !cancelled() && hashFiles('apps/web-e2e/playwright-report/**') != '' }}
