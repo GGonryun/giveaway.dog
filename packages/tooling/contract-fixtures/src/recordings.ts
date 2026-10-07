@@ -1,9 +1,19 @@
 import {
+  allow,
   anonymousBlueskyActor,
   anonymousXUser,
-  firstItems,
+  date,
+  empty,
+  fields,
+  id,
+  items,
+  keep,
+  keepAll,
   redactSecrets,
-  replaceText
+  syntheticDate,
+  text,
+  viewerState,
+  type Replace
 } from './sanitize.ts';
 
 export type RecordingEnv = Record<string, string | undefined>;
@@ -82,28 +92,97 @@ const blueskyPostUri = async (env: RecordingEnv, fetchJson: FetchJson) => {
   };
 };
 
-const anonymousActors =
-  (listKey: string, role: string, actorKey?: string) => (body: unknown) => {
-    const page = asRecord(body);
-    return redactSecrets({
-      ...page,
-      ...('cursor' in page
-        ? { cursor: replaceText(page.cursor, RECORDED_CURSOR) }
-        : {}),
-      [listKey]: firstItems(page[listKey]).map((item, index) =>
-        actorKey
-          ? {
-              ...asRecord(item),
-              [actorKey]: anonymousBlueskyActor(
-                asRecord(item)[actorKey],
-                role,
-                index
-              )
-            }
-          : anonymousBlueskyActor(item, role, index)
-      )
-    });
-  };
+const sanitizeWith = (spec: Record<string, Replace>) => (body: unknown) =>
+  redactSecrets(allow(body, spec, 'body'));
+
+const X_TWEET = {
+  ...keepAll([
+    'id',
+    'text',
+    'created_at',
+    'user_id',
+    'username',
+    'user_name',
+    'favorite_count',
+    'retweet_count',
+    'reply_count',
+    'quote_count',
+    'view_count'
+  ]),
+  media: items(
+    (item) =>
+      allow(
+        item,
+        keepAll(['type', 'url', 'width', 'height', 'alt_text']),
+        'media'
+      ),
+    4
+  )
+};
+
+const X_USER = keepAll([
+  'id',
+  'username',
+  'name',
+  'description',
+  'location',
+  'url',
+  'profile_image_url',
+  'profile_banner_url',
+  'followers_count',
+  'following_count',
+  'tweet_count',
+  'verified',
+  'verified_type',
+  'is_blue_verified',
+  'created_at',
+  'can_dm'
+]);
+
+const BLUESKY_PAGE = {
+  uri: keep,
+  cid: keep,
+  cursor: text(RECORDED_CURSOR)
+};
+
+const blueskyLike = (like: unknown, index: number) =>
+  allow(
+    like,
+    {
+      indexedAt: date(syntheticDate(index)),
+      createdAt: date(syntheticDate(index)),
+      actor: (actor) => anonymousBlueskyActor(actor, 'liker', index)
+    },
+    'likes'
+  );
+
+const blueskyThreadPost: Replace = (post, key) => {
+  const authorDid = asRecord(asRecord(post).author).did;
+  return allow(
+    post,
+    {
+      ...keepAll([
+        'uri',
+        'cid',
+        'bookmarkCount',
+        'replyCount',
+        'repostCount',
+        'likeCount',
+        'quoteCount',
+        'indexedAt'
+      ]),
+      author: fields({
+        ...keepAll(['did', 'handle', 'displayName', 'avatar', 'createdAt']),
+        viewer: viewerState(authorDid),
+        labels: empty
+      }),
+      record: fields(keepAll(['$type', 'text', 'createdAt', 'langs'])),
+      viewer: viewerState(authorDid),
+      labels: empty
+    },
+    key
+  );
+};
 
 const twitchAppToken = async (env: RecordingEnv, fetchJson: FetchJson) =>
   fetchJson('https://id.twitch.tv/oauth2/token', {
@@ -130,18 +209,24 @@ const twitchHelix = async (
   });
 };
 
+const anonymousCondition = (condition: unknown, index: number) =>
+  Object.fromEntries(
+    Object.entries(asRecord(condition)).map(([key, value]) => [
+      key,
+      key.endsWith('broadcaster_user_id')
+        ? id(BigInt(100000001 + index))(value, key)
+        : value
+    ])
+  );
+
 const anonymousSubscription = (subscription: unknown, index: number) => {
   const value = asRecord(subscription);
-  const condition = asRecord(value.condition);
   return {
     ...value,
     id: `00000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
-    condition: {
-      ...condition,
-      ...('broadcaster_user_id' in condition
-        ? { broadcaster_user_id: String(100000001 + index) }
-        : {})
-    }
+    ...('condition' in value
+      ? { condition: anonymousCondition(value.condition, index) }
+      : {})
   };
 };
 
@@ -158,7 +243,7 @@ export const RECORDINGS: Recording[] = [
     needs: ['SCRAPEBADGER_API_KEY', 'RECORD_X_TWEET_ID'],
     record: (env, fetchJson) =>
       scrapeBadger(env, `/tweets/tweet/${env.RECORD_X_TWEET_ID}`, fetchJson),
-    sanitize: (body) => redactSecrets(body)
+    sanitize: sanitizeWith(X_TWEET)
   },
   {
     name: 'ScrapeBadger users.getByUsername',
@@ -170,7 +255,7 @@ export const RECORDINGS: Recording[] = [
         `/users/${env.RECORD_X_USERNAME}/by_username`,
         fetchJson
       ),
-    sanitize: (body) => redactSecrets(body)
+    sanitize: sanitizeWith(X_USER)
   },
   {
     name: 'ScrapeBadger tweets.getRetweeters',
@@ -182,14 +267,10 @@ export const RECORDINGS: Recording[] = [
         `/tweets/tweet/${env.RECORD_X_TWEET_ID}/retweeters`,
         fetchJson
       ),
-    sanitize: (body) => {
-      const page = asRecord(body);
-      return redactSecrets({
-        ...page,
-        data: firstItems(page.data).map(anonymousXUser),
-        next_cursor: replaceText(page.next_cursor, RECORDED_CURSOR)
-      });
-    }
+    sanitize: sanitizeWith({
+      data: items(anonymousXUser),
+      next_cursor: text(RECORDED_CURSOR)
+    })
   },
   {
     name: 'X GET /oembed',
@@ -212,7 +293,24 @@ export const RECORDINGS: Recording[] = [
       (await blueskyXrpc(env, fetchJson))('app.bsky.actor.getProfile', {
         actor: blueskyPost(env).handle
       }),
-    sanitize: (body) => redactSecrets(body)
+    sanitize: (body) =>
+      sanitizeWith({
+        ...keepAll([
+          'did',
+          'handle',
+          'displayName',
+          'description',
+          'avatar',
+          'banner',
+          'followersCount',
+          'followsCount',
+          'postsCount',
+          'indexedAt',
+          'createdAt'
+        ]),
+        viewer: viewerState(asRecord(body).did),
+        labels: empty
+      })(body)
   },
   {
     name: 'Bluesky app.bsky.feed.getLikes',
@@ -222,7 +320,7 @@ export const RECORDINGS: Recording[] = [
       const { xrpc, uri } = await blueskyPostUri(env, fetchJson);
       return xrpc('app.bsky.feed.getLikes', { uri, limit: '3' });
     },
-    sanitize: anonymousActors('likes', 'liker', 'actor')
+    sanitize: sanitizeWith({ ...BLUESKY_PAGE, likes: items(blueskyLike) })
   },
   {
     name: 'Bluesky app.bsky.feed.getRepostedBy',
@@ -232,7 +330,12 @@ export const RECORDINGS: Recording[] = [
       const { xrpc, uri } = await blueskyPostUri(env, fetchJson);
       return xrpc('app.bsky.feed.getRepostedBy', { uri, limit: '3' });
     },
-    sanitize: anonymousActors('repostedBy', 'reposter')
+    sanitize: sanitizeWith({
+      ...BLUESKY_PAGE,
+      repostedBy: items((actor, index) =>
+        anonymousBlueskyActor(actor, 'reposter', index)
+      )
+    })
   },
   {
     name: 'Bluesky app.bsky.feed.getPostThread',
@@ -240,9 +343,19 @@ export const RECORDINGS: Recording[] = [
     needs: ['RECORD_BLUESKY_POST_URL'],
     record: async (env, fetchJson) => {
       const { xrpc, uri } = await blueskyPostUri(env, fetchJson);
-      return xrpc('app.bsky.feed.getPostThread', { uri, depth: '0' });
+      return xrpc('app.bsky.feed.getPostThread', {
+        uri,
+        depth: '0',
+        parentHeight: '0'
+      });
     },
-    sanitize: (body) => redactSecrets(body)
+    sanitize: sanitizeWith({
+      thread: fields({
+        $type: keep,
+        post: blueskyThreadPost,
+        replies: empty
+      })
+    })
   },
   {
     name: 'Bluesky GET /oembed',
@@ -281,22 +394,11 @@ export const RECORDINGS: Recording[] = [
     needs: ['TWITCH_CLIENT_ID', 'TWITCH_CLIENT_SECRET'],
     record: (env, fetchJson) =>
       twitchHelix(env, '/eventsub/subscriptions', fetchJson),
-    sanitize: (body) => {
-      const list = asRecord(body);
-      const pagination = asRecord(list.pagination);
-      return redactSecrets({
-        ...list,
-        data: firstItems(list.data, 2).map(anonymousSubscription),
-        ...('pagination' in list
-          ? {
-              pagination:
-                'cursor' in pagination
-                  ? { cursor: replaceText(pagination.cursor, RECORDED_CURSOR) }
-                  : pagination
-            }
-          : {})
-      });
-    }
+    sanitize: sanitizeWith({
+      ...keepAll(['total', 'total_cost', 'max_total_cost']),
+      data: items(anonymousSubscription, 2),
+      pagination: fields({ cursor: text(RECORDED_CURSOR) })
+    })
   },
   {
     name: 'Discord GET /guilds/:id',

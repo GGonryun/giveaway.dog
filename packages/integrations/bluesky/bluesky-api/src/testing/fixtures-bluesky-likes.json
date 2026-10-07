@@ -2,36 +2,39 @@
   "recordedAt": null,
   "body": {
     "uri": "at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7mls222b",
-    "cursor": "1759770123456::bafyreieyuxepfyv6j5uwhgp2dnz3rmvxssx4h66qlyqyqynuyqxpcoirxa",
+    "cursor": "recorded-cursor",
     "likes": [
       {
-        "indexedAt": "2026-10-06T16:05:12.000Z",
-        "createdAt": "2026-10-06T16:05:11.482Z",
+        "indexedAt": "2020-01-01T12:00:00.000Z",
+        "createdAt": "2020-01-01T12:00:00.000Z",
         "actor": {
           "did": "did:plc:likerone2222222222222222",
           "handle": "liker-one.bsky.social",
           "displayName": "Liker One",
-          "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:likerone2222222222222222/bafkreihbjgtfuffnkscayspqrjierepzkr6p5usyvkavwjuwdmm3gkq4bi@jpeg",
-          "associated": {
-            "activitySubscription": { "allowSubscriptions": "followers" }
+          "avatar": "https://example.com/liker-one/avatar.jpg",
+          "viewer": {
+            "muted": false,
+            "blockedBy": false
           },
-          "viewer": { "muted": false, "blockedBy": false },
           "labels": [],
-          "createdAt": "2023-05-02T18:20:00.000Z",
+          "createdAt": "2020-01-01T12:00:00.000Z",
           "description": "Bio of liker one",
-          "indexedAt": "2025-01-10T12:00:00.000Z"
+          "indexedAt": "2020-01-01T12:00:00.000Z"
         }
       },
       {
-        "indexedAt": "2026-10-06T16:07:40.000Z",
-        "createdAt": "2026-10-06T16:07:39.104Z",
+        "indexedAt": "2020-01-02T12:00:00.000Z",
+        "createdAt": "2020-01-02T12:00:00.000Z",
         "actor": {
           "did": "did:plc:likertwo2222222222222222",
           "handle": "liker-two.bsky.social",
-          "viewer": { "muted": false, "blockedBy": false },
+          "viewer": {
+            "muted": false,
+            "blockedBy": false
+          },
           "labels": [],
-          "createdAt": "2026-09-30T08:00:00.000Z",
-          "indexedAt": "2026-09-30T08:00:00.000Z"
+          "createdAt": "2020-01-02T12:00:00.000Z",
+          "indexedAt": "2020-01-02T12:00:00.000Z"
         }
       }
     ]

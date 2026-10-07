@@ -53,12 +53,10 @@ describe('Bluesky app.bsky.feed.getRepostedBy contract', () => {
           did: 'did:plc:reposterone2222222222222',
           handle: 'reposter-one.bsky.social',
           displayName: 'Reposter One',
-          avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:reposterone2222222222222/bafkreihbjgtfuffnkscayspqrjierepzkr6p5usyvkavwjuwdmm3gkq4bi@jpeg'
+          avatar: 'https://example.com/reposter-one/avatar.jpg'
         }
       ],
-      cursor:
-        '1759770200000::bafyreih3i2j2bldakwo3dpiq5mvofb5qvp6m57jwuhigootvolyoyhnmxi'
+      cursor: 'recorded-cursor'
     });
   });
 });

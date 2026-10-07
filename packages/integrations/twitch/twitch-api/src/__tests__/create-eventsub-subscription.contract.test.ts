@@ -80,19 +80,19 @@ describe('Twitch EventSub subscriptions contract', () => {
 
     await createEventSubSubscriptionsForFeatures({
       integrationId: 'integration-1',
-      broadcasterId: '141981764',
+      broadcasterId: '100000001',
       features: []
     });
 
     expect(createCalls()).toHaveLength(0);
     expect(prismaMock.eventSubSubscription.create).toHaveBeenCalledWith({
       data: {
-        twitch_id: '26b1c993-bfcf-44d9-b876-379dacafe75a',
+        twitch_id: '00000000-0000-4000-8000-000000000001',
         integrationId: 'integration-1',
         type: 'channel.chat.message',
         version: '1',
         status: 'enabled',
-        broadcaster_user_id: '141981764',
+        broadcaster_user_id: '100000001',
         cost: 0,
         callback: 'https://www.giveaway.dog/api/twitch/webhooks',
         method: 'webhook',
@@ -106,7 +106,7 @@ describe('Twitch EventSub subscriptions contract', () => {
 
     await createEventSubSubscriptionsForFeatures({
       integrationId: 'integration-1',
-      broadcasterId: '141981764',
+      broadcasterId: '100000001',
       features: []
     });
 
@@ -114,7 +114,7 @@ describe('Twitch EventSub subscriptions contract', () => {
     expect(jsonBody(createCalls()[0][1])).toEqual({
       type: 'channel.chat.message',
       version: '1',
-      condition: { broadcaster_user_id: '141981764', user_id: '1024680359' },
+      condition: { broadcaster_user_id: '100000001', user_id: '1024680359' },
       transport: {
         method: 'webhook',
         callback: 'https://www.giveaway.dog/api/twitch/webhooks',
@@ -128,7 +128,7 @@ describe('Twitch EventSub subscriptions contract', () => {
         type: 'channel.chat.message',
         version: '1',
         status: 'webhook_callback_verification_pending',
-        broadcaster_user_id: '141981764',
+        broadcaster_user_id: '100000001',
         cost: 0,
         callback: 'https://www.giveaway.dog/api/twitch/webhooks',
         method: 'webhook',

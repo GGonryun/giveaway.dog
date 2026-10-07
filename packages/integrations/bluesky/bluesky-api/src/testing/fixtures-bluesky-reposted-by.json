@@ -2,21 +2,21 @@
   "recordedAt": null,
   "body": {
     "uri": "at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7mls222b",
-    "cursor": "1759770200000::bafyreih3i2j2bldakwo3dpiq5mvofb5qvp6m57jwuhigootvolyoyhnmxi",
+    "cursor": "recorded-cursor",
     "repostedBy": [
       {
         "did": "did:plc:reposterone2222222222222",
         "handle": "reposter-one.bsky.social",
         "displayName": "Reposter One",
-        "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:reposterone2222222222222/bafkreihbjgtfuffnkscayspqrjierepzkr6p5usyvkavwjuwdmm3gkq4bi@jpeg",
-        "associated": {
-          "activitySubscription": { "allowSubscriptions": "followers" }
+        "avatar": "https://example.com/reposter-one/avatar.jpg",
+        "viewer": {
+          "muted": false,
+          "blockedBy": false
         },
-        "viewer": { "muted": false, "blockedBy": false },
         "labels": [],
-        "createdAt": "2024-02-11T14:30:00.000Z",
+        "createdAt": "2020-01-01T12:00:00.000Z",
         "description": "Bio of reposter one",
-        "indexedAt": "2025-03-04T09:00:00.000Z"
+        "indexedAt": "2020-01-01T12:00:00.000Z"
       }
     ]
   }

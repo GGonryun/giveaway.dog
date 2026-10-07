@@ -11,11 +11,6 @@
           "handle": "giveaway.dog",
           "displayName": "Giveaway Dog",
           "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:gvdogxk4ui5q2nf3rmbz7ytc/bafkreihbjgtfuffnkscayspqrjierepzkr6p5usyvkavwjuwdmm3gkq4bi@jpeg",
-          "associated": {
-            "activitySubscription": {
-              "allowSubscriptions": "followers"
-            }
-          },
           "viewer": {
             "muted": false,
             "blockedBy": false,

@@ -41,7 +41,7 @@ describe('Discord GET /guilds/:id contract', () => {
       id: '197038439483310086',
       name: 'Discord Testers',
       icon: 'f64c482b807da4f539cff778d174971c',
-      owner_id: '73193882359173120'
+      owner_id: '100000000000000001'
     });
   });
 });

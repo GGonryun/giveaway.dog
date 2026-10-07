@@ -64,16 +64,14 @@ describe('Bluesky app.bsky.feed.getLikes contract', () => {
           did: 'did:plc:likerone2222222222222222',
           handle: 'liker-one.bsky.social',
           displayName: 'Liker One',
-          avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:likerone2222222222222222/bafkreihbjgtfuffnkscayspqrjierepzkr6p5usyvkavwjuwdmm3gkq4bi@jpeg'
+          avatar: 'https://example.com/liker-one/avatar.jpg'
         },
         {
           did: 'did:plc:likertwo2222222222222222',
           handle: 'liker-two.bsky.social'
         }
       ],
-      cursor:
-        '1759770123456::bafyreieyuxepfyv6j5uwhgp2dnz3rmvxssx4h66qlyqyqynuyqxpcoirxa'
+      cursor: 'recorded-cursor'
     });
   });
 });

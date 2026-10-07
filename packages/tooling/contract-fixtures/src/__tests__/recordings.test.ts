@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { VIEWER_DID } from '../sanitize.ts';
 import {
   RECORDED_CURSOR,
   RECORDINGS,
@@ -58,15 +59,31 @@ describe('RECORDINGS', () => {
     }
   );
 
+  it.each(RECORDINGS.map((entry) => [entry.name, entry]))(
+    'keeps the fixture of %s in the form that the recorder writes',
+    (_, entry) => {
+      const { body } = JSON.parse(
+        readFileSync(join(ROOT, entry.fixture), 'utf8')
+      );
+
+      expect(entry.sanitize(body)).toEqual(body);
+    }
+  );
+
   it('has one recording for each fixture', () => {
     const fixtures = RECORDINGS.map((entry) => entry.fixture);
     expect(new Set(fixtures).size).toBe(fixtures.length);
   });
 
-  it('only reads from the providers', async () => {
+  it('only reads from the providers, after it gets a token or a session', async () => {
+    const env = {
+      ...ENV,
+      RECORD_BLUESKY_IDENTIFIER: 'tester.bsky.social',
+      RECORD_BLUESKY_APP_PASSWORD: 'app-password'
+    };
     const methods = await Promise.all(
       RECORDINGS.map(async (entry) =>
-        (await requests(entry.name)).map(({ url, method }) =>
+        (await requests(entry.name, env)).map(({ url, method }) =>
           method === 'GET' ? 'GET' : `${method} ${new URL(url).pathname}`
         )
       )
@@ -74,7 +91,8 @@ describe('RECORDINGS', () => {
 
     expect([...new Set(methods.flat())].sort()).toEqual([
       'GET',
-      'POST /oauth2/token'
+      'POST /oauth2/token',
+      'POST /xrpc/com.atproto.server.createSession'
     ]);
   });
 });
@@ -104,18 +122,75 @@ describe('ScrapeBadger recordings', () => {
     );
   });
 
+  it('keeps the tweet fields that the app reads and drops the people it mentions', () => {
+    expect(
+      recording('ScrapeBadger tweets.getById').sanitize({
+        id: '1975236458112819456',
+        text: 'Giveaway time!',
+        username: 'TheGiveawayDog',
+        favorite_count: 48,
+        user_mentions: [{ id: '44196397', username: 'real_person' }],
+        in_reply_to_screen_name: 'real_person',
+        quoted_status: { id: '1', username: 'real_person' },
+        media: [
+          {
+            type: 'photo',
+            url: 'https://pbs.twimg.com/media/a.jpg',
+            width: 1200,
+            height: 675,
+            alt_text: null,
+            tagged_users: [{ username: 'real_person' }]
+          }
+        ],
+        api_key: 'sb-key'
+      })
+    ).toEqual({
+      id: '1975236458112819456',
+      text: 'Giveaway time!',
+      username: 'TheGiveawayDog',
+      favorite_count: 48,
+      media: [
+        {
+          type: 'photo',
+          url: 'https://pbs.twimg.com/media/a.jpg',
+          width: 1200,
+          height: 675,
+          alt_text: null
+        }
+      ]
+    });
+  });
+
+  it('keeps the user fields that the app reads', () => {
+    expect(
+      recording('ScrapeBadger users.getByUsername').sanitize({
+        id: '1701234567890123456',
+        username: 'TheGiveawayDog',
+        followers_count: 1204,
+        pinned_tweet_ids: ['1'],
+        email: 'owner@example.com'
+      })
+    ).toEqual({
+      id: '1701234567890123456',
+      username: 'TheGiveawayDog',
+      followers_count: 1204
+    });
+  });
+
   it('keeps three anonymous retweeters and replaces the cursor', () => {
     const user = (id: string) => ({
       id,
       username: `person${id}`,
       name: `Person ${id}`,
-      followers_count: 1
+      followers_count: 1,
+      created_at: '2019-04-02T08:15:00Z'
     });
 
     expect(
       recording('ScrapeBadger tweets.getRetweeters').sanitize({
         data: [user('1'), user('2'), user('3'), user('4')],
-        next_cursor: 'real-cursor'
+        next_cursor: 'real-cursor',
+        requested_by: 'real_person'
       })
     ).toEqual({
       data: [
@@ -123,23 +198,34 @@ describe('ScrapeBadger recordings', () => {
           id: '1000000000000000001',
           username: 'retweeter_1',
           name: 'Retweeter 1',
-          followers_count: 1
+          followers_count: 100,
+          created_at: '2020-01-01T12:00:00Z'
         },
         {
           id: '1000000000000000002',
           username: 'retweeter_2',
           name: 'Retweeter 2',
-          followers_count: 1
+          followers_count: 200,
+          created_at: '2020-01-02T12:00:00Z'
         },
         {
           id: '1000000000000000003',
           username: 'retweeter_3',
           name: 'Retweeter 3',
-          followers_count: 1
+          followers_count: 300,
+          created_at: '2020-01-03T12:00:00Z'
         }
       ],
       next_cursor: RECORDED_CURSOR
     });
+  });
+
+  it('fails instead of writing a retweeter that it cannot anonymize', () => {
+    expect(() =>
+      recording('ScrapeBadger tweets.getRetweeters').sanitize({
+        data: [{ id: '1', name: { first: 'Real' } }]
+      })
+    ).toThrow('The recorder cannot anonymize the value of name');
   });
 
   it('keeps a null cursor', () => {
@@ -182,7 +268,7 @@ describe('Bluesky recordings', () => {
     ],
     [
       'Bluesky app.bsky.feed.getPostThread',
-      'app.bsky.feed.getPostThread?uri=at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7mls222b&depth=0'
+      'app.bsky.feed.getPostThread?uri=at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7mls222b&depth=0&parentHeight=0'
     ]
   ])('%s resolves the author and reads the post', async (name, call) => {
     const calls = await requests(name, ENV, {
@@ -220,7 +306,7 @@ describe('Bluesky recordings', () => {
         headers: { Authorization: 'Bearer session-jwt' }
       },
       {
-        url: 'https://bsky.social/xrpc/app.bsky.feed.getPostThread?uri=at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7mls222b&depth=0',
+        url: 'https://bsky.social/xrpc/app.bsky.feed.getPostThread?uri=at://did:plc:gvdogxk4ui5q2nf3rmbz7ytc/app.bsky.feed.post/3m2jy7mls222b&depth=0&parentHeight=0',
         method: 'GET',
         headers: { Authorization: 'Bearer session-jwt' }
       }
@@ -243,15 +329,17 @@ describe('Bluesky recordings', () => {
     ).rejects.toThrow('RECORD_BLUESKY_POST_URL must look like');
   });
 
-  it('anonymizes the likers and replaces the cursor', () => {
+  it('anonymizes the likers and the times of their likes and replaces the cursor', () => {
     expect(
       recording('Bluesky app.bsky.feed.getLikes').sanitize({
         uri: 'at://post',
         cursor: 'real-cursor',
         likes: [
           {
-            createdAt: '2026-01-01T00:00:00.000Z',
-            actor: { did: 'did:plc:real', handle: 'real.bsky.social' }
+            indexedAt: '2026-01-01T00:00:01.000Z',
+            createdAt: '2026-01-01T00:00:00.482Z',
+            actor: { did: 'did:plc:real', handle: 'real.bsky.social' },
+            via: { uri: 'at://did:plc:other/app.bsky.feed.repost/1' }
           }
         ]
       })
@@ -260,13 +348,118 @@ describe('Bluesky recordings', () => {
       cursor: RECORDED_CURSOR,
       likes: [
         {
-          createdAt: '2026-01-01T00:00:00.000Z',
+          indexedAt: '2020-01-01T12:00:00.000Z',
+          createdAt: '2020-01-01T12:00:00.000Z',
           actor: {
             did: 'did:plc:likerone2222222222222222',
             handle: 'liker-one.bsky.social'
           }
         }
       ]
+    });
+  });
+
+  it('keeps the profile of the author without the people the viewer knows', () => {
+    const did = 'did:plc:gvdogxk4ui5q2nf3rmbz7ytc';
+
+    expect(
+      recording('Bluesky app.bsky.actor.getProfile').sanitize({
+        did,
+        handle: 'giveaway.dog',
+        followersCount: 1204,
+        joinedViaStarterPack: { creator: { did: 'did:plc:real' } },
+        pinnedPost: { uri: `at://${did}/app.bsky.feed.post/1` },
+        viewer: {
+          muted: false,
+          following:
+            'at://did:plc:realviewer/app.bsky.graph.follow/3m2jy7phdqd2b',
+          knownFollowers: {
+            count: 1,
+            followers: [{ did: 'did:plc:real', handle: 'real.bsky.social' }]
+          }
+        },
+        labels: [{ src: did, val: 'x' }]
+      })
+    ).toEqual({
+      did,
+      handle: 'giveaway.dog',
+      followersCount: 1204,
+      viewer: {
+        muted: false,
+        following: `at://${VIEWER_DID}/app.bsky.graph.follow/3m2jy7phdqd2b`
+      },
+      labels: []
+    });
+  });
+
+  it('keeps the post of the thread without its parents, replies, embeds and facets', () => {
+    const did = 'did:plc:gvdogxk4ui5q2nf3rmbz7ytc';
+
+    expect(
+      recording('Bluesky app.bsky.feed.getPostThread').sanitize({
+        thread: {
+          $type: 'app.bsky.feed.defs#threadViewPost',
+          post: {
+            uri: `at://${did}/app.bsky.feed.post/3m2jy7mls222b`,
+            cid: 'bafyreibqoz2qrjwd6t6zbwzhbte5g2r32zac7flxdhvmeonfgo6zlkxppi',
+            author: {
+              did,
+              handle: 'giveaway.dog',
+              viewer: {
+                following:
+                  'at://did:plc:realviewer/app.bsky.graph.follow/3m2jy7phdqd2b'
+              }
+            },
+            record: {
+              $type: 'app.bsky.feed.post',
+              text: 'Giveaway time!',
+              createdAt: '2026-10-06T16:00:00.000Z',
+              facets: [{ features: [{ did: 'did:plc:real' }] }],
+              reply: { parent: { uri: 'at://did:plc:real/post/1' } },
+              embed: { record: { uri: 'at://did:plc:real/post/2' } }
+            },
+            embed: { record: { author: { did: 'did:plc:real' } } },
+            likeCount: 27,
+            indexedAt: '2026-10-06T16:00:01.512Z',
+            viewer: {
+              like: 'at://did:plc:realviewer/app.bsky.feed.like/3m2jy7nkcm52b',
+              threadMuted: false
+            },
+            threadgate: { lists: [{ uri: 'at://did:plc:real/list/1' }] }
+          },
+          parent: { post: { author: { did: 'did:plc:real' } } },
+          replies: [{ post: { author: { did: 'did:plc:real' } } }],
+          threadContext: { rootAuthorLike: 'at://did:plc:real/like/1' }
+        },
+        threadgate: { uri: 'at://did:plc:real/threadgate/1' }
+      })
+    ).toEqual({
+      thread: {
+        $type: 'app.bsky.feed.defs#threadViewPost',
+        post: {
+          uri: `at://${did}/app.bsky.feed.post/3m2jy7mls222b`,
+          cid: 'bafyreibqoz2qrjwd6t6zbwzhbte5g2r32zac7flxdhvmeonfgo6zlkxppi',
+          author: {
+            did,
+            handle: 'giveaway.dog',
+            viewer: {
+              following: `at://${VIEWER_DID}/app.bsky.graph.follow/3m2jy7phdqd2b`
+            }
+          },
+          record: {
+            $type: 'app.bsky.feed.post',
+            text: 'Giveaway time!',
+            createdAt: '2026-10-06T16:00:00.000Z'
+          },
+          likeCount: 27,
+          indexedAt: '2026-10-06T16:00:01.512Z',
+          viewer: {
+            like: `at://${VIEWER_DID}/app.bsky.feed.like/3m2jy7nkcm52b`,
+            threadMuted: false
+          }
+        },
+        replies: []
+      }
     });
   });
 
@@ -351,6 +544,34 @@ describe('Twitch recordings', () => {
     });
   });
 
+  it('replaces each broadcaster of a condition', () => {
+    expect(
+      recording('Twitch GET /helix/eventsub/subscriptions').sanitize({
+        data: [
+          {
+            id: 'a',
+            type: 'channel.raid',
+            condition: {
+              from_broadcaster_user_id: '12826',
+              to_broadcaster_user_id: ''
+            }
+          }
+        ]
+      })
+    ).toEqual({
+      data: [
+        {
+          id: '00000000-0000-4000-8000-000000000001',
+          type: 'channel.raid',
+          condition: {
+            from_broadcaster_user_id: '100000001',
+            to_broadcaster_user_id: ''
+          }
+        }
+      ]
+    });
+  });
+
   it('keeps an empty pagination and a condition without a broadcaster', () => {
     expect(
       recording('Twitch GET /helix/eventsub/subscriptions').sanitize({
@@ -384,7 +605,7 @@ describe('Discord recordings', () => {
     expect(
       recording('Discord GET /guilds/:id').sanitize({
         id: '1',
-        owner_id: '73193882359173120',
+        owner_id: '200000000000000002',
         emojis: [{ user: { id: '2' } }],
         stickers: [{ user: { id: '3' } }],
         roles: [{ id: '4', name: 'Members' }]

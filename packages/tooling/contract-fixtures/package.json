@@ -12,7 +12,14 @@
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
       }
-    }
+    },
+    "implicitDependencies": [
+      "@giveaway/bluesky-api",
+      "@giveaway/discord-api",
+      "@giveaway/twitch-api",
+      "@giveaway/x-api",
+      "@giveaway/x-scraper"
+    ]
   },
   "exports": {
     "./recordings": "./src/recordings.ts",
