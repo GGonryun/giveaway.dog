@@ -1,5 +1,5 @@
 name: Setup
-description: Install pnpm, Node.js, and the project dependencies
+description: Install pnpm, Node.js, and the project dependencies. node_modules comes from the cache. The pnpm store is restored only when node_modules misses, and both are saved right after the install, so a check that fails later does not lose them
 
 runs:
   using: composite
@@ -13,11 +13,11 @@ runs:
       uses: actions/setup-node@v7
       with:
         node-version-file: .nvmrc
-        cache: pnpm
+        package-manager-cache: false
 
     - name: Restore node_modules
       id: node-modules
-      uses: actions/cache@v4
+      uses: actions/cache/restore@v4
       with:
         path: |
           node_modules
@@ -27,7 +27,40 @@ runs:
           tools/*/node_modules
         key: ${{ runner.os }}-${{ runner.arch }}-node-${{ hashFiles('.nvmrc') }}-modules-${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', 'packages/infra/db-schema/src/schema.prisma') }}
 
+    - name: Find the pnpm store
+      id: store
+      if: steps.node-modules.outputs.cache-hit != 'true'
+      shell: bash
+      run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+    - name: Restore the pnpm store
+      id: pnpm-store
+      if: steps.node-modules.outputs.cache-hit != 'true'
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ steps.store.outputs.path }}
+        key: ${{ runner.os }}-${{ runner.arch }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+
     - name: Install dependencies
       if: steps.node-modules.outputs.cache-hit != 'true'
       shell: bash
       run: pnpm install --frozen-lockfile
+
+    - name: Save node_modules
+      if: steps.node-modules.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: |
+          node_modules
+          apps/*/node_modules
+          packages/*/*/node_modules
+          packages/*/*/*/node_modules
+          tools/*/node_modules
+        key: ${{ steps.node-modules.outputs.cache-primary-key }}
+
+    - name: Save the pnpm store
+      if: steps.node-modules.outputs.cache-hit != 'true' && steps.pnpm-store.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ steps.store.outputs.path }}
+        key: ${{ steps.pnpm-store.outputs.cache-primary-key }}

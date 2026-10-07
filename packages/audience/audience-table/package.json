@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -23,7 +24,6 @@
     "./users-filters-sheet": "./src/users-filters-sheet.tsx"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server --project property --project frontend",
     "test:server": "vitest run --project server",

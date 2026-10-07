@@ -11,14 +11,14 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
     "./html": "./src/html.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server --project property",
     "test:server": "vitest run --project server",

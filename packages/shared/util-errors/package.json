@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -19,14 +20,10 @@
     "./testing/application-error": "./src/testing/application-error.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server",
     "test:server": "vitest run --project server",
     "test:property": "vitest run --project property --passWithNoTests"
-  },
-  "peerDependencies": {
-    "next": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",

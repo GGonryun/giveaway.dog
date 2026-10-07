@@ -16,7 +16,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -26,7 +27,6 @@
     "./workspace": "./src/workspace.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test:unit": "vitest run --project server",
     "test:server": "vitest run --project server"
   },

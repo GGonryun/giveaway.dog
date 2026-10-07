@@ -44,19 +44,37 @@ jobs:
         if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
         id: setup
+        if: steps.changes.outputs.projects != 'false' || matrix.shard == 1
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
         id: nx-cache
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/nx-cache
         with:
           id: lint-${{ matrix.shard }}-of-${{ strategy.job-total }}
 
       - name: Select the projects of this shard
         id: projects
+        if: steps.changes.outputs.projects != 'false'
         run: node .github/scripts/select-shard-projects.mjs lint ${{ matrix.shard }} ${{ strategy.job-total }}
+
+      - name: Check that Nx finds no affected project
+        if: steps.changes.outputs.projects == 'false' && matrix.shard == 1
+        run: |
+          affected=$(pnpm nx show projects --affected --json)
+          count=$(jq length <<< "$affected")
+          if [ "$count" != 0 ]; then
+            echo "::error::Nx finds $count affected projects, but the jobs skipped their setup because only root Markdown files, docs/, .github/ or .claude/ changed. Remove the pattern of the changed files from .github/actions/changes."
+            exit 1
+          fi
+          echo "Nx finds no affected project."
 
       - name: ESLint
         if: steps.projects.outputs.projects
@@ -86,7 +104,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        shard: [1, 2]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -98,24 +116,31 @@ jobs:
         if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
         id: nx-cache
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/nx-cache
         with:
           id: type-check-${{ matrix.shard }}-of-${{ strategy.job-total }}
 
       - name: Select the projects of this shard
         id: projects
+        if: steps.changes.outputs.projects != 'false'
         run: node .github/scripts/select-shard-projects.mjs type-check ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: TypeScript
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t type-check --projects="$PROJECTS" --output-style=static
+        run: pnpm nx run-many -t type-check --projects="$PROJECTS" --parallel=4 --output-style=static
 
       - name: Save the Nx cache
         if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
@@ -143,17 +168,24 @@ jobs:
         if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
         id: nx-cache
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/nx-cache
         with:
           id: server-${{ matrix.shard }}-of-${{ strategy.job-total }}
 
       - name: Select the projects of this shard
         id: projects
+        if: steps.changes.outputs.projects != 'false'
         run: node .github/scripts/select-shard-projects.mjs test:server ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest server tests with coverage
@@ -215,17 +247,24 @@ jobs:
         if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
         id: nx-cache
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/nx-cache
         with:
           id: property-${{ matrix.shard }}-of-${{ strategy.job-total }}
 
       - name: Select the projects of this shard
         id: projects
+        if: steps.changes.outputs.projects != 'false'
         run: node .github/scripts/select-shard-projects.mjs test:property ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest property tests with coverage
@@ -291,17 +330,24 @@ jobs:
         if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
         id: nx-cache
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/nx-cache
         with:
           id: frontend-${{ matrix.shard }}-of-${{ strategy.job-total }}
 
       - name: Select the projects of this shard
         id: projects
+        if: steps.changes.outputs.projects != 'false'
         run: node .github/scripts/select-shard-projects.mjs test:frontend ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest frontend tests with coverage
@@ -453,17 +499,24 @@ jobs:
         if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
       - name: Set up the Nx cache
         id: nx-cache
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/nx-cache
         with:
           id: snapshot-${{ matrix.shard }}-of-${{ strategy.job-total }}
 
       - name: Select the projects of this shard
         id: projects
+        if: steps.changes.outputs.projects != 'false'
         run: node .github/scripts/select-shard-projects.mjs test:snapshot ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest snapshots
@@ -510,11 +563,17 @@ jobs:
         if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
       - name: Select the projects of this shard
         id: projects
+        if: steps.changes.outputs.projects != 'false'
         run: node .github/scripts/select-shard-projects.mjs test:visual:docker ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest visual tests in the Playwright image
@@ -584,11 +643,17 @@ jobs:
         if: env.NX_RUN == 'affected'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
       - name: Select the projects of this shard
         id: projects
+        if: steps.changes.outputs.projects != 'false'
         run: node .github/scripts/select-shard-projects.mjs test:integration ${{ matrix.shard }} ${{ strategy.job-total }}
 
       - name: Vitest integration tests against Postgres in Docker
@@ -628,11 +693,17 @@ jobs:
         if: github.event_name != 'workflow_dispatch'
         uses: nrwl/nx-set-shas@v5
 
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
       - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
       - name: Stryker on the changed lines
         id: gate
+        if: steps.changes.outputs.projects != 'false'
         run: pnpm run test:mutation:changed
 
       - name: Upload the mutation reports
@@ -659,6 +730,8 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
+    permissions:
+      statuses: write
     steps:
       - name: Check that every job passed
         env:
@@ -674,6 +747,26 @@ jobs:
             echo "::error::These jobs did not pass: $failed. The log of each failed shard names the check that failed."
             exit 1
           fi
+
+      - name: Report the result to Vercel
+        if: ${{ (success() || failure()) && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$JOB_STATUS" = success ]; then
+            state=success
+            description='Every job passed'
+          else
+            state=failure
+            description='A job did not pass'
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" \
+            -f state="$state" \
+            -f context='Vercel - giveaway-dog: Checks' \
+            -f description="$description" \
+            -f target_url="$RUN_URL"
 
   badges:
     name: Badges

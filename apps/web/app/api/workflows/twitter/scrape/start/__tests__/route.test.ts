@@ -429,6 +429,32 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
     });
   });
 
+  describe('when the same picker is started twice at the same time', () => {
+    it.fails(
+      'leaves one scrape run going (fails until #308 is fixed)',
+      async () => {
+        let storedRunId: string | null = null;
+        prismaMock.twitterPicker.findUnique.mockImplementation(async () =>
+          picker(storedRunId)
+        );
+        prismaMock.twitterPicker.update.mockImplementation(async ({ data }) => {
+          storedRunId = data.runId as string;
+          return {};
+        });
+        m.start
+          .mockResolvedValueOnce({ runId: 'run-a' })
+          .mockResolvedValueOnce({ runId: 'run-b' });
+
+        await Promise.all([POST(buildRequest()), POST(buildRequest())]);
+
+        const cancelled = m.cancelRun.mock.calls.map(([runId]) => runId);
+        expect(
+          ['run-a', 'run-b'].filter((runId) => !cancelled.includes(runId))
+        ).toHaveLength(1);
+      }
+    );
+  });
+
   describe('when starting the workflow fails', () => {
     it('rejects without updating the picker', async () => {
       m.start.mockRejectedValue(new Error('start failed'));

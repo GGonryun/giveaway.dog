@@ -12,7 +12,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -35,11 +36,11 @@
     "./workflows/discord-interaction/workflow": "./src/workflows/discord-interaction/workflow.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server --project property",
     "test:server": "vitest run --project server",
-    "test:property": "vitest run --project property --passWithNoTests"
+    "test:property": "vitest run --project property --passWithNoTests",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
@@ -60,6 +61,8 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-integration": "workspace:*",
+    "@giveaway/testing-postgres": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",

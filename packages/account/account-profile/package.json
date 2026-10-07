@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -22,7 +23,6 @@
     "./user-profile": "./src/user-profile.tsx"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project frontend",
     "test:frontend": "vitest run --project frontend",

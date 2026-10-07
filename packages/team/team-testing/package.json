@@ -11,14 +11,14 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
     "./testing/fixtures-procedures-teams": "./src/testing/fixtures-procedures-teams.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {

@@ -156,6 +156,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('[load-tweet] Error loading tweet:', error);
 
-    return ApplicationError.toNextResponse(error);
+    return ApplicationError.toResponse(error);
   }
 }

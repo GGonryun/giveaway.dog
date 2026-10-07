@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -28,7 +29,6 @@
     "./theme": "./src/theme.tsx"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {

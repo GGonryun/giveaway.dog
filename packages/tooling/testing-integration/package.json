@@ -11,16 +11,16 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
     "./database": "./src/database.ts",
+    "./faults": "./src/faults.ts",
+    "./faults-setup": "./src/faults-setup.ts",
     "./fixtures": "./src/fixtures.ts",
     "./setup": "./src/setup.ts"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@giveaway/testing-mocks": "workspace:*",
@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@giveaway/auth-core": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@types/node": "catalog:",

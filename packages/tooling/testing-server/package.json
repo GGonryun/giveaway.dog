@@ -11,10 +11,12 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
+    "./faults": "./src/faults.ts",
     "./fixtures-integrations-utils": "./src/fixtures-integrations-utils.ts",
     "./fixtures-procedures-browse-marketing-pickers": "./src/fixtures-procedures-browse-marketing-pickers.ts",
     "./fixtures-procedures-sweepstakes-a": "./src/fixtures-procedures-sweepstakes-a.ts",
@@ -27,9 +29,6 @@
     "./result": "./src/result.ts",
     "./session": "./src/session.ts",
     "./setup": "./src/setup.ts"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@giveaway/testing-mocks": "workspace:*",

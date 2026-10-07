@@ -13,13 +13,13 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "scripts": {
     "test:e2e": "playwright test",
-    "test:e2e:local": "dotenv -e ../web/.env.local -- playwright test",
-    "type-check": "tsc --noEmit"
+    "test:e2e:local": "dotenv -e ../web/.env.local -- playwright test"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",

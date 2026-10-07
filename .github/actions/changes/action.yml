@@ -1,0 +1,43 @@
+name: Changes
+description: Check with git alone, before the setup, whether a pull request changes a file that can affect a project. Root Markdown files, docs/, .github/ and .claude/ belong to no project and no Nx input names them, so a pull request that changes only these files affects no project, and the job can skip its setup. A push to main and a manual run check every project
+
+outputs:
+  projects:
+    description: false when no changed file can affect a project, true otherwise
+    value: ${{ steps.check.outputs.projects }}
+
+runs:
+  using: composite
+  steps:
+    - name: Check the changed files
+      id: check
+      shell: bash
+      run: |
+        result() {
+          echo "$2"
+          echo "projects=$1" >> "$GITHUB_OUTPUT"
+          exit 0
+        }
+
+        if [ "${NX_RUN:-}" != "affected" ]; then
+          result true "This run checks every project."
+        fi
+        if [ -z "${NX_BASE:-}" ] || [ -z "${NX_HEAD:-}" ]; then
+          result true "NX_BASE or NX_HEAD is not set, so Nx selects the projects."
+        fi
+        if ! changed=$(git diff --name-only --no-renames "$NX_BASE...$NX_HEAD"); then
+          result true "git cannot compare $NX_BASE with $NX_HEAD, so Nx selects the projects."
+        fi
+        if [ -z "$changed" ]; then
+          result false "No file changed, so no project is affected and the job skips its setup."
+        fi
+
+        unused='^[^/]+\.md$|^docs/|^\.github/|^\.claude/'
+        used=$(grep -Ev "$unused" <<< "$changed" || true)
+        if [ -n "$used" ]; then
+          echo "Files that can affect a project:"
+          head -n 20 <<< "$used"
+          result true "Nx selects the affected projects."
+        fi
+
+        result false "Only root Markdown files, docs/, .github/ and .claude/ changed, so no project is affected and the job skips its setup."

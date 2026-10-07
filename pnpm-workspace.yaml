@@ -135,7 +135,7 @@ catalog:
   prop-types: ^15.8.1
   qrcode.react: ^4.2.0
   react: 19.2.4
-  react-day-picker: 9.8.0
+  react-day-picker: 10.0.2
   react-dom: 19.2.4
   react-error-boundary: ^6.0.0
   react-hook-form: ^7.54.2
@@ -157,6 +157,10 @@ catalog:
   workflow: 4.0.1-beta.50
   zlib: ^1.0.5
   zod: ^3.24.1
+
+catalogs:
+  native:
+    typescript: 7.0.2
 
 overrides:
   '@types/react': 19.2.10

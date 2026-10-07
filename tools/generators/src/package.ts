@@ -91,12 +91,12 @@ const packageJson = (
         ...(options.tags ?? [])
       ],
       targets: {
-        lint: { executor: '@giveaway/eslint-config:lint' }
+        lint: { executor: '@giveaway/eslint-config:lint' },
+        'type-check': {}
       }
     },
     exports: { [`./${moduleName}`]: `./src/${moduleName}.${extension}` },
     scripts: {
-      'type-check': 'tsc --noEmit',
       test: 'vitest run',
       'test:unit': `vitest run --project ${project}`,
       [`test:${project}`]: `vitest run --project ${project}`,

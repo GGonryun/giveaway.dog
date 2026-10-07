@@ -12,7 +12,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -23,7 +24,6 @@
     "./shared": "./src/shared.tsx"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {

@@ -11,14 +11,14 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {},
   "scripts": {
     "generate": "prisma generate",
     "postinstall": "prisma generate",
-    "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:integration": "vitest run --config vitest.integration.config.ts"
   },

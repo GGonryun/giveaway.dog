@@ -12,7 +12,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -20,7 +21,6 @@
     "./instagram-connect-form": "./src/instagram-connect-form.tsx"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {

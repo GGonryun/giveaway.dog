@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -26,7 +27,6 @@
     "./schemas/workflow": "./src/schemas/workflow.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server --project property",
     "test:server": "vitest run --project server",

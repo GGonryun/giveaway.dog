@@ -11,16 +11,14 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
     "./setup": "./src/setup.ts",
     "./stable-dom": "./src/stable-dom.ts",
     "./test-utils": "./src/test-utils.ts"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@testing-library/jest-dom": "catalog:",

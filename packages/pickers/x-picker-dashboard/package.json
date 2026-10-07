@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -23,7 +24,6 @@
     "./pickers-v2-tabs": "./src/pickers-v2-tabs.tsx"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {

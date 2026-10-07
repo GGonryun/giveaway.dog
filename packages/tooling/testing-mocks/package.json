@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -19,9 +20,6 @@
     "./prisma": "./src/prisma.ts",
     "./session": "./src/session.ts",
     "./setup": "./src/setup.ts"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "catalog:"
