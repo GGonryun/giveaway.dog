@@ -157,15 +157,22 @@ describe('GET /api/jobs/process', () => {
       });
     });
 
-    it('rejects when the sweepstakes processor throws and skips the post processor', async () => {
-      prismaMock.sweepstakesJob.findMany.mockRejectedValue(
-        new Error('sweepstakes down')
-      );
+    it.fails(
+      'still runs the post processor when the sweepstakes processor throws (fails until #300 is fixed)',
+      async () => {
+        prismaMock.sweepstakesJob.findMany.mockRejectedValue(
+          new Error('sweepstakes down')
+        );
 
-      await expect(GET(authorizedRequest())).rejects.toThrow(
-        'sweepstakes down'
-      );
-      expect(prismaMock.automatedPostJob.findMany).not.toHaveBeenCalled();
-    });
+        const res = await GET(authorizedRequest());
+
+        expect(res.status).toBe(200);
+        expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalled();
+        expect((await res.json()).posts).toEqual({
+          ok: true,
+          data: { processed: 0 }
+        });
+      }
+    );
   });
 });
