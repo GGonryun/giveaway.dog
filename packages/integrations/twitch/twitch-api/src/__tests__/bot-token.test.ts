@@ -162,6 +162,7 @@ describe('bot-token', () => {
             JSON.stringify({
               provider: 'twitch',
               call: 'POST /oauth2/token refresh_token',
+              outcome: 'rejected',
               issues: [
                 {
                   path: 'access_token',

@@ -161,6 +161,7 @@ describe('getBlueskyOEmbed', () => {
           JSON.stringify({
             provider: 'bluesky',
             call: 'GET /oembed',
+            outcome: 'rejected',
             issues: [
               {
                 path: field,

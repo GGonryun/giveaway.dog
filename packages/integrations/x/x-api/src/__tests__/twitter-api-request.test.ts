@@ -249,6 +249,28 @@ describe('twitterApiRequest', () => {
       });
     });
 
+    it.each([
+      [
+        'https://api.x.com/2/tweets/1460323737035677698/retweeted_by',
+        'GET /2/tweets/:id/retweeted_by'
+      ],
+      ['https://api.x.com/2/users/2244994945', 'GET /2/users/:id'],
+      [
+        'https://api.x.com/2/lists/84839422/members/7',
+        'GET /2/lists/:id/members/:id'
+      ],
+      [
+        'https://api.x.com/2/users/by/username/x2',
+        'GET /2/users/by/username/x2'
+      ]
+    ])('names the call of %s without its ids', async (endpoint, call) => {
+      fetchMock.mockResolvedValue(jsonResponse({ data: { id: 42 } }));
+
+      const error = await captureError(request({ endpoint }));
+
+      expect(error).toMatchObject({ data: { provider: 'x', call } });
+    });
+
     it('logs the paths that do not match the schema without the response', async () => {
       fetchMock.mockResolvedValue(jsonResponse({ data: { id: 42 } }));
 
@@ -259,6 +281,7 @@ describe('twitterApiRequest', () => {
         JSON.stringify({
           provider: 'x',
           call: 'GET /2/users/me',
+          outcome: 'rejected',
           issues: [
             {
               path: 'data.id',

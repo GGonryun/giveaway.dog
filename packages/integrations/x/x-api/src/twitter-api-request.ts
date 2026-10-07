@@ -18,6 +18,9 @@ interface TwitterApiRequestOptions<T> {
   responseSchema: z.ZodSchema<T>;
 }
 
+const toCallPath = (endpoint: string) =>
+  new URL(endpoint).pathname.replace(/(?<!^)\/\d+(?=\/|$)/g, '/:id');
+
 export async function twitterApiRequest<T>({
   tx,
   teamId,
@@ -94,7 +97,7 @@ export async function twitterApiRequest<T>({
 
   return parseProviderResponse({
     provider: 'x',
-    call: `${method} ${new URL(endpoint).pathname}`,
+    call: `${method} ${toCallPath(endpoint)}`,
     schema: responseSchema,
     data: await response.json()
   });

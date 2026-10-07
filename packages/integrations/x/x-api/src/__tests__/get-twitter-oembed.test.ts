@@ -216,6 +216,7 @@ describe('getTwitterOEmbed', () => {
           JSON.stringify({
             provider: 'x',
             call: 'GET /oembed',
+            outcome: 'rejected',
             issues: [
               {
                 path: field,
