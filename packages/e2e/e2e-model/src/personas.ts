@@ -21,6 +21,11 @@ export const E2E_NAMESPACE_PATTERN = /^[a-z0-9]{4,10}$/;
 
 export const e2eNamespaceSchema = z.string().regex(E2E_NAMESPACE_PATTERN);
 
+const e2ePersonaSignInSchema = z.object({
+  persona: e2ePersonaSchema,
+  ns: e2eNamespaceSchema
+});
+
 export const E2E_SHARED_HOST_EMAIL = 'e2e-host@example.com';
 
 const E2E_EMAIL_PATTERN = /^e2e-[a-z0-9]+(-[a-z0-9]{4,10})?@example\.com$/;
@@ -81,4 +86,38 @@ export const toE2ePersonaUpsert = ({
       ...attributes
     }
   };
+};
+
+export const toE2eSharedHostUpsert = (now: Date): Prisma.UserUpsertArgs => {
+  const attributes = E2E_PERSONA_ATTRIBUTES.host;
+
+  return {
+    where: { email: E2E_SHARED_HOST_EMAIL },
+    update: attributes,
+    create: {
+      email: E2E_SHARED_HOST_EMAIL,
+      emailVerified: now,
+      name: 'E2E Host',
+      ...attributes
+    }
+  };
+};
+
+export const toE2eSignInUpsert = ({
+  persona,
+  ns,
+  now
+}: {
+  persona: unknown;
+  ns: unknown;
+  now: Date;
+}): Prisma.UserUpsertArgs | undefined => {
+  if (persona === undefined && ns === undefined) {
+    return toE2eSharedHostUpsert(now);
+  }
+
+  const parsed = e2ePersonaSignInSchema.safeParse({ persona, ns });
+  if (!parsed.success) return undefined;
+
+  return toE2ePersonaUpsert({ ...parsed.data, now });
 };

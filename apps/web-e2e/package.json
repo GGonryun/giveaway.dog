@@ -22,6 +22,7 @@
     "test:e2e:local": "dotenv -e ../web/.env.local -- playwright test"
   },
   "devDependencies": {
+    "@giveaway/e2e-model": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@playwright/test": "catalog:",

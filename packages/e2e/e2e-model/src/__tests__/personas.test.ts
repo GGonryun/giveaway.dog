@@ -8,7 +8,9 @@ import {
   isE2eEmail,
   toE2eNamespaceOfEmail,
   toE2ePersonaEmail,
-  toE2ePersonaUpsert
+  toE2ePersonaUpsert,
+  toE2eSharedHostUpsert,
+  toE2eSignInUpsert
 } from '../personas';
 
 const NOW = new Date('2026-10-06T00:00:00.000Z');
@@ -171,5 +173,49 @@ describe('toE2eNamespaceOfEmail anchors', () => {
 
   it.each([null, undefined, ''])('finds no namespace in %j', (email) => {
     expect(toE2eNamespaceOfEmail(email)).toBeUndefined();
+  });
+});
+
+describe('toE2eSharedHostUpsert', () => {
+  it('creates and resets the shared host', () => {
+    expect(toE2eSharedHostUpsert(NOW)).toEqual({
+      where: { email: 'e2e-host@example.com' },
+      update: { accountType: 'HOST', onboarded: true },
+      create: {
+        email: 'e2e-host@example.com',
+        emailVerified: NOW,
+        name: 'E2E Host',
+        accountType: 'HOST',
+        onboarded: true
+      }
+    });
+  });
+});
+
+describe('toE2eSignInUpsert', () => {
+  it('signs in the shared host when there is no persona and no namespace', () => {
+    expect(
+      toE2eSignInUpsert({ persona: undefined, ns: undefined, now: NOW })
+    ).toEqual(toE2eSharedHostUpsert(NOW));
+  });
+
+  it.each(E2E_PERSONAS)('signs in %s in its namespace', (persona) => {
+    expect(toE2eSignInUpsert({ persona, ns: 'abc123', now: NOW })).toEqual(
+      toE2ePersonaUpsert({ persona, ns: 'abc123', now: NOW })
+    );
+  });
+
+  it.each([
+    ['a persona without a namespace', 'host', undefined],
+    ['a namespace without a persona', undefined, 'abc123'],
+    ['an unknown persona', 'owner', 'abc123'],
+    ['an empty persona', '', 'abc123'],
+    ['a null persona', null, 'abc123'],
+    ['a bad namespace', 'host', 'ABC123'],
+    ['an empty namespace', 'host', ''],
+    ['a null namespace', 'host', null],
+    ['a namespace in an array', 'host', ['abc123']]
+  ])('signs in nobody with %s', (_, persona, ns) => {
+    expect(toE2eSignInUpsert({ persona, ns, now: NOW })).toBeUndefined();
   });
 });
