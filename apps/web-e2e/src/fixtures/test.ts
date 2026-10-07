@@ -22,13 +22,14 @@ const suite = base.extend<
   ],
   context: async ({ context, allowedPageErrors }, provide) => {
     await blockThirdParties(context);
-    const errors = watchPageErrors(context, [
+    const readErrors = watchPageErrors(context, [
       ...PAGE_ERROR_ALLOWLIST,
       ...allowedPageErrors
     ]);
 
     await provide(context);
 
+    const errors = readErrors();
     if (errors.length > 0) {
       throw new Error(
         `The page reported ${errors.length} error(s). Fix them, or add a pattern to allowedPageErrors when one is expected:\n\n${errors.join('\n\n')}`

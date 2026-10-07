@@ -1,4 +1,4 @@
-import type { BrowserContext, Page } from '@playwright/test';
+import type { BrowserContext, Page, Request } from '@playwright/test';
 
 const EMPTY_SCRIPT_HOSTS = [
   'platform.twitter.com',
@@ -42,34 +42,68 @@ export const PAGE_ERROR_ALLOWLIST: PageErrorPattern[] = [];
 const matches = (text: string, pattern: PageErrorPattern) =>
   typeof pattern === 'string' ? text.includes(pattern) : pattern.test(text);
 
+const NOTABLE_HEADERS = [
+  'next-action',
+  'rsc',
+  'next-router-prefetch',
+  'next-router-segment-prefetch',
+  'sec-purpose',
+  'purpose'
+];
+
+const describeRequest = (request: Request) => {
+  const headers = request.headers();
+  const notable = NOTABLE_HEADERS.filter((name) => headers[name] !== undefined)
+    .map((name) => `${name}: ${headers[name]}`)
+    .join(', ');
+  return `${request.method()} ${request.resourceType()}${notable ? `, ${notable}` : ''}`;
+};
+
+type PageError = { kind: string; pageUrl: string; text: string; url?: string };
+
 export const watchPageErrors = (
   context: BrowserContext,
   allowlist: PageErrorPattern[]
 ) => {
-  const errors: string[] = [];
+  const errors: PageError[] = [];
+  const failedRequests = new Map<string, string>();
 
-  const record = (kind: string, page: Page, text: string) => {
-    if (allowlist.some((pattern) => matches(text, pattern))) return;
-    errors.push(`${kind} on ${page.url()}: ${text}`);
+  const record = (error: PageError) => {
+    if (allowlist.some((pattern) => matches(error.text, pattern))) return;
+    errors.push(error);
   };
 
   const watch = (page: Page) => {
     page.on('pageerror', (error) =>
-      record('Uncaught error', page, error.stack ?? error.message)
+      record({
+        kind: 'Uncaught error',
+        pageUrl: page.url(),
+        text: error.stack ?? error.message
+      })
     );
     page.on('console', (message) => {
       if (message.type() !== 'error') return;
-      const { url } = message.location();
-      record(
-        'console.error',
-        page,
-        url ? `${message.text()} (${url})` : message.text()
-      );
+      record({
+        kind: 'console.error',
+        pageUrl: page.url(),
+        text: message.text(),
+        url: message.location().url || undefined
+      });
+    });
+    page.on('response', (response) => {
+      if (response.status() >= 400) {
+        failedRequests.set(response.url(), describeRequest(response.request()));
+      }
     });
   };
 
   context.pages().forEach(watch);
   context.on('page', watch);
 
-  return errors;
+  return () =>
+    errors.map(({ kind, pageUrl, text, url }) => {
+      const request = url && failedRequests.get(url);
+      const source = url ? ` (${request ? `${request} ` : ''}${url})` : '';
+      return `${kind} on ${pageUrl}: ${text}${source}`;
+    });
 };
