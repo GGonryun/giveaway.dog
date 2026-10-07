@@ -1,0 +1,33 @@
+{
+  "name": "@giveaway/contract-fixtures",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:config",
+      "runtime:isomorphic",
+      "scope:tooling"
+    ],
+    "targets": {
+      "lint": {
+        "executor": "@giveaway/eslint-config:lint"
+      }
+    }
+  },
+  "exports": {
+    "./recordings": "./src/recordings.ts",
+    "./sanitize": "./src/sanitize.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}
