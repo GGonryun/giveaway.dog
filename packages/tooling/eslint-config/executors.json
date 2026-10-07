@@ -5,7 +5,7 @@
       "batchImplementation": "./src/executors/lint/lint.mjs#batch",
       "schema": "./src/executors/lint/schema.json",
       "preferBatch": true,
-      "description": "Run ESLint on the project folder. In a batch, lint every project in one process."
+      "description": "Run ESLint on the project folder. In a batch, lint the projects in a pool of worker threads, the largest first."
     }
   }
 }
