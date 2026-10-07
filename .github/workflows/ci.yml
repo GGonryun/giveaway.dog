@@ -104,7 +104,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        shard: [1, 2]
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -140,7 +140,7 @@ jobs:
         if: steps.projects.outputs.projects
         env:
           PROJECTS: ${{ steps.projects.outputs.projects }}
-        run: pnpm nx run-many -t type-check --projects="$PROJECTS" --output-style=static
+        run: pnpm nx run-many -t type-check --projects="$PROJECTS" --parallel=4 --output-style=static
 
       - name: Save the Nx cache
         if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}

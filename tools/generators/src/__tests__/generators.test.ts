@@ -38,11 +38,13 @@ describe('package generators', () => {
       name: '@giveaway/referrals-model',
       nx: {
         tags: ['type:model', 'runtime:isomorphic', 'scope:participants'],
-        targets: { lint: { executor: '@giveaway/eslint-config:lint' } }
+        targets: {
+          lint: { executor: '@giveaway/eslint-config:lint' },
+          'type-check': {}
+        }
       },
       exports: { './referrals-model': './src/referrals-model.ts' },
       scripts: {
-        'type-check': 'tsc --noEmit',
         'test:unit': 'vitest run --project server',
         'test:server': 'vitest run --project server',
         'test:property': 'vitest run --project property --passWithNoTests'

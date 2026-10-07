@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "exports": {
@@ -24,7 +25,6 @@
     "./testing/fixtures-sweepstakes-winners-email": "./src/testing/fixtures-sweepstakes-winners-email.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --project server --project property",
     "test:server": "vitest run --project server",

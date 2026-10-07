@@ -11,7 +11,8 @@
     "targets": {
       "lint": {
         "executor": "@giveaway/eslint-config:lint"
-      }
+      },
+      "type-check": {}
     }
   },
   "bin": {
@@ -21,9 +22,6 @@
     "./config": "./src/config.ts",
     "./render": "./src/render.tsx",
     "./setup": "./src/setup.ts"
-  },
-  "scripts": {
-    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@fontsource-variable/figtree": "catalog:",

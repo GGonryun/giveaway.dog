@@ -8,7 +8,7 @@
     "lint": "nx run-many -t lint && pnpm run lint:root",
     "lint:prune": "nx run-many -t lint --parallel=1 --skip-nx-cache -- --prune-suppressions && pnpm run lint:root --prune-suppressions",
     "lint:root": "eslint . --ignore-pattern 'apps/**' --ignore-pattern 'packages/**' --ignore-pattern 'tools/**'",
-    "type-check": "pnpm --recursive run type-check",
+    "type-check": "nx run-many -t type-check --parallel=4",
     "test:run": "vitest run",
     "test:unit": "vitest run --project '*:server' --project '*:property' --project '*:frontend'",
     "test:server": "vitest run --project '*:server'",

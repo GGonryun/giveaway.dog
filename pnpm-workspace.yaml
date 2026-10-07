@@ -158,6 +158,10 @@ catalog:
   zlib: ^1.0.5
   zod: ^3.24.1
 
+catalogs:
+  native:
+    typescript: 7.0.2
+
 overrides:
   '@types/react': 19.2.10
   '@types/react-dom': 19.2.3
