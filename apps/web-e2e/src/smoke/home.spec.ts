@@ -1,7 +1,7 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures/test';
 
-test.describe('home page', () => {
-  test('shows the hero to a visitor', async ({ page }) => {
+test.describe('home page', { tag: '@smoke' }, () => {
+  test('shows the hero to a visitor', { tag: '@mobile' }, async ({ page }) => {
     await page.goto('/');
 
     await expect(page).toHaveTitle(/Giveaway\.dog/);

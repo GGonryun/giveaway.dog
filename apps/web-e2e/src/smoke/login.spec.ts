@@ -1,8 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures/test';
+import { E2E_SECRET as secret } from '../env';
+import { noRedirect } from '../helpers/http';
 
-const secret = process.env.E2E_LOGIN_SECRET ?? '';
-
-test.describe('login', () => {
+test.describe('login', { tag: '@smoke' }, () => {
   test.skip(!secret, 'Set E2E_LOGIN_SECRET to run the login tests');
 
   test('signs a host in and opens the team picker', async ({ page }) => {
@@ -11,7 +11,7 @@ test.describe('login', () => {
 
     const signIn = await page.request.post('/api/auth/callback/e2e', {
       form: { csrfToken, secret, callbackUrl: '/' },
-      maxRedirects: 0
+      ...noRedirect
     });
 
     expect(signIn.status()).toBe(302);

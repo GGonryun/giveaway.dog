@@ -75,6 +75,8 @@ export const e2eTeamRequestSchema = z
 
 export type E2eTeamRequest = z.infer<typeof e2eTeamRequestSchema>;
 
+export type E2eTeamRequestInput = z.input<typeof e2eTeamRequestSchema>;
+
 export const E2E_SWEEPSTAKES_PRESETS = [
   'draft',
   'scheduled',
@@ -205,6 +207,10 @@ export const e2eSweepstakesRequestSchema = z
   });
 
 export type E2eSweepstakesRequest = z.infer<typeof e2eSweepstakesRequestSchema>;
+
+export type E2eSweepstakesRequestInput = z.input<
+  typeof e2eSweepstakesRequestSchema
+>;
 
 const e2eSweepstakesIdSchema = z.string().regex(/^[A-Za-z0-9_-]{1,32}$/);
 

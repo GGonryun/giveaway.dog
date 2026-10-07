@@ -9,6 +9,7 @@ import prisma from '@giveaway/db-client/prisma';
 import { PrismaClient } from '@giveaway/db-model';
 import { isPrismaError, prismaErrorBoundary } from './errors';
 import { environment } from '@giveaway/app-config/environment';
+import { isE2eGateOpen } from '@giveaway/e2e-gate/gate';
 import { simulateNetworkDelay } from '@giveaway/util-random/simulate';
 import { unstable_cache, revalidateTag } from 'next/cache';
 import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
@@ -125,7 +126,7 @@ class ProcedureBuilder<
 
     return async (input: InputType): Promise<Result<SuccessType>> => {
       try {
-        if (environment.is('development')) {
+        if (environment.is('development') && !isE2eGateOpen()) {
           // Simulate network delay in development for better UX
           await simulateNetworkDelay();
         }

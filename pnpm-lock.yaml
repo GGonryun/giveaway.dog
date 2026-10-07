@@ -3947,6 +3947,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../db-model
+      '@giveaway/e2e-gate':
+        specifier: workspace:*
+        version: link:../../e2e/e2e-gate
       '@giveaway/rpc-model':
         specifier: workspace:*
         version: link:../rpc-model
@@ -15020,6 +15023,12 @@ importers:
       '@types/react':
         specifier: 19.2.10
         version: 19.2.10
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.10)
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
       typescript:
         specifier: 'catalog:'
         version: 5.7.2

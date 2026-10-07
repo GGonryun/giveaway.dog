@@ -1,6 +1,6 @@
 import { test as setup } from '@playwright/test';
-import { E2E_SECRET, personaState } from './env';
-import { PERSONAS, signInAs } from './helpers/personas';
+import { E2E_SECRET, personaState } from '../env';
+import { PERSONAS, signInAs } from '../helpers/personas';
 
 setup.describe('sign in the personas', () => {
   setup.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');

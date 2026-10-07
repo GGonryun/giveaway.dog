@@ -1,6 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { ThemeToggleButton } from '../theme-toggle-button';
 
 const themeState = vi.hoisted(() => ({
@@ -42,6 +44,29 @@ describe('ThemeToggleButton', () => {
     expect(trigger().querySelector('.lucide-monitor')).toBeInTheDocument();
     expect(trigger().querySelector('.lucide-sun')).not.toBeInTheDocument();
     expect(trigger().querySelector('.lucide-moon')).not.toBeInTheDocument();
+  });
+
+  it('hydrates the system theme without a mismatch, then shows the monitor icon', async () => {
+    themeState.theme = 'system';
+    const html = renderToString(<ThemeToggleButton />);
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    document.body.appendChild(container);
+    const onRecoverableError = vi.fn();
+
+    const root = await act(async () =>
+      hydrateRoot(container, <ThemeToggleButton />, { onRecoverableError })
+    );
+    onTestFinished(() => {
+      act(() => root.unmount());
+      container.remove();
+    });
+
+    expect(html).toContain('lucide-sun');
+    expect(html).not.toContain('lucide-monitor');
+    expect(onRecoverableError).not.toHaveBeenCalled();
+    expect(container.querySelector('.lucide-monitor')).toBeInTheDocument();
+    expect(container.querySelector('.lucide-sun')).not.toBeInTheDocument();
   });
 
   it('opens a menu with the three theme options', async () => {

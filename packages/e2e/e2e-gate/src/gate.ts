@@ -32,6 +32,8 @@ export const getE2eSecret = () => {
   return secret;
 };
 
+export const isE2eGateOpen = () => getE2eSecret() !== undefined;
+
 const digest = (value: string) => createHash('sha256').update(value).digest();
 
 export const verifyE2eSecret = (given: unknown) => {

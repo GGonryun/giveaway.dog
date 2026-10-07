@@ -23,7 +23,7 @@ jobs:
     name: E2E tests
     if: github.event_name == 'workflow_dispatch' || github.event.client_payload.environment != 'production'
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       SHA: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.client_payload.git.sha }}
       DEPLOYMENT_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.url || github.event.client_payload.url }}
@@ -69,6 +69,11 @@ jobs:
       - name: Install Chromium
         run: pnpm --filter web-e2e exec playwright install --with-deps chromium
 
+      - name: Pick the run id
+        run: |
+          run_id=$(node -e 'const [id, attempt] = process.argv.slice(1).map(BigInt); console.log(((id * 100n + attempt) % 36n ** 6n).toString(36).padStart(6, "0"))' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT")
+          echo "E2E_RUN_ID=$run_id" >> "$GITHUB_ENV"
+
       - name: Playwright
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
@@ -78,14 +83,18 @@ jobs:
             http://* | https://*) E2E_BASE_URL="$DEPLOYMENT_URL" ;;
             *) E2E_BASE_URL="https://$DEPLOYMENT_URL" ;;
           esac
-          echo "Testing $E2E_BASE_URL at $SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Testing $E2E_BASE_URL at $SHA with the run id $E2E_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
           E2E_BASE_URL="$E2E_BASE_URL" pnpm run test:e2e
+
+      - name: Summarize the results
+        if: ${{ !cancelled() }}
+        run: node .github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the Playwright report
         if: ${{ !cancelled() && hashFiles('apps/web-e2e/playwright-report/**') != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ github.run_attempt }}
           path: apps/web-e2e/playwright-report/
           retention-days: 14
 

@@ -5,6 +5,7 @@ import {
   getE2eEnvironment,
   getE2eSecret,
   isE2eEnvironment,
+  isE2eGateOpen,
   verifyE2eSecret
 } from '../gate';
 
@@ -114,6 +115,34 @@ describe('getE2eSecret', () => {
     vi.stubEnv('E2E_LOGIN_SECRET', 'a'.repeat(32));
 
     expect(getE2eSecret()).toBe('a'.repeat(32));
+  });
+});
+
+describe('isE2eGateOpen', () => {
+  it('opens on a preview deployment with the secret', () => {
+    stubPreview();
+
+    expect(isE2eGateOpen()).toBe(true);
+  });
+
+  it('opens on the local development server with the secret', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+
+    expect(isE2eGateOpen()).toBe(true);
+  });
+
+  it('stays closed without the secret', () => {
+    stubPreview();
+    vi.stubEnv('E2E_LOGIN_SECRET', undefined);
+
+    expect(isE2eGateOpen()).toBe(false);
+  });
+
+  it('stays closed on a production deployment with the secret', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('VERCEL_ENV', 'production');
+
+    expect(isE2eGateOpen()).toBe(false);
   });
 });
 

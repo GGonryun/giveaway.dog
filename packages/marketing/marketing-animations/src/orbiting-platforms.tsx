@@ -13,6 +13,8 @@ import { useEffect, useState } from 'react';
 import type { ResolvedTheme } from '@giveaway/theme-server/get-server-theme';
 import Link from 'next/link';
 
+const GOLDEN_ANGLE = 137.5;
+
 const SIZE_PRESETS = {
   sm: {
     container: 400,
@@ -122,7 +124,7 @@ const OrbitRing = ({
     >
       {platforms.map((platformId, index) => {
         const angle = (360 / platforms.length) * index;
-        const randomRotation = Math.floor(Math.random() * 360);
+        const iconRotation = Math.floor(index * GOLDEN_ANGLE + radius) % 360;
         const iconSrc = getPlatformIcon(platformId, theme);
         const label = getPlatformLabel(platformId);
         return (
@@ -145,7 +147,7 @@ const OrbitRing = ({
                 height: `${iconSize}px`,
                 marginLeft: `-${iconSize / 2}px`,
                 marginTop: `-${iconSize / 2}px`,
-                transform: `rotate(${randomRotation}deg)`
+                transform: `rotate(${iconRotation}deg)`
               }}
             >
               <Image

@@ -8,6 +8,7 @@ node_modules
 # testing
 coverage
 playwright-report
+.playwright-results
 test-results
 blob-report
 .auth

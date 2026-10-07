@@ -29,6 +29,7 @@
     "@giveaway/auth-core": "workspace:*",
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/e2e-gate": "workspace:*",
     "@giveaway/rpc-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-random": "workspace:*",
