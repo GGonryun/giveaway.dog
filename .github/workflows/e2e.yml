@@ -2,7 +2,11 @@ name: E2E
 
 on:
   repository_dispatch:
-    types: [vercel.deployment.success]
+    types:
+      - vercel.deployment.success
+      - vercel.deployment.ignored
+      - vercel.deployment.skipped
+      - vercel.deployment.error
   workflow_dispatch:
     inputs:
       url:
@@ -12,6 +16,7 @@ on:
 
 permissions:
   contents: read
+  deployments: read
   statuses: write
 
 concurrency:
@@ -21,13 +26,17 @@ concurrency:
 jobs:
   e2e:
     name: E2E tests
-    if: github.event_name == 'workflow_dispatch' || github.event.client_payload.environment != 'production'
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.client_payload.environment != 'production' &&
+      contains(fromJSON('["vercel.deployment.success", "vercel.deployment.ignored", "vercel.deployment.skipped"]'), github.event.action))
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
     env:
       SHA: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.client_payload.git.sha }}
       DEPLOYMENT_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.url || github.event.client_payload.url }}
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      IGNORED: ${{ github.event.action == 'vercel.deployment.ignored' || github.event.action == 'vercel.deployment.skipped' }}
     steps:
       - name: Check the deployment and the secrets
         env:
@@ -35,8 +44,12 @@ jobs:
           E2E_LOGIN_SECRET: ${{ secrets.E2E_LOGIN_SECRET }}
         run: |
           failed=0
-          if [ -z "$SHA" ] || [ -z "$DEPLOYMENT_URL" ]; then
-            echo "::error::The event has no commit SHA or no deployment URL."
+          if [ -z "$SHA" ]; then
+            echo "::error::The event has no commit SHA."
+            failed=1
+          fi
+          if [ "$IGNORED" != true ] && [ -z "$DEPLOYMENT_URL" ]; then
+            echo "::error::The event has no deployment URL."
             failed=1
           fi
           for name in VERCEL_AUTOMATION_BYPASS_SECRET E2E_LOGIN_SECRET; do
@@ -51,17 +64,45 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          if [ "$IGNORED" = true ]; then
+            description='Vercel skipped this preview. Testing the last preview of the same app'
+          else
+            description='Testing the preview deployment'
+          fi
           gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
             -f state=pending \
             -f context='E2E tests' \
-            -f description='Testing the preview deployment' \
+            -f description="$description" \
             -f target_url="$RUN_URL"
 
       - name: Check out the deployed commit
         uses: actions/checkout@v7
         with:
           ref: ${{ env.SHA }}
+          fetch-depth: ${{ env.IGNORED == 'true' && '0' || '1' }}
           persist-credentials: false
+
+      - name: Check out the script of the workflow
+        if: env.IGNORED == 'true'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          path: .e2e-workflow
+          sparse-checkout: .github/scripts/same-app-preview.sh
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Pick the deployment to test
+        id: target
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$IGNORED" = true ]; then
+            url=$(bash .e2e-workflow/.github/scripts/same-app-preview.sh "$SHA")
+          else
+            url="$DEPLOYMENT_URL"
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Set up the project
         uses: ./.github/actions/setup
@@ -78,6 +119,7 @@ jobs:
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
           E2E_LOGIN_SECRET: ${{ secrets.E2E_LOGIN_SECRET }}
+          DEPLOYMENT_URL: ${{ steps.target.outputs.url }}
         run: |
           case "$DEPLOYMENT_URL" in
             http://* | https://*) E2E_BASE_URL="$DEPLOYMENT_URL" ;;
@@ -111,8 +153,35 @@ jobs:
             state=failure
             description='The preview deployment failed'
           fi
+          if [ "$IGNORED" = true ]; then
+            description="$description (Vercel skipped this preview, the last preview of the same app was tested)"
+          fi
           gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
             -f state="$state" \
             -f context='E2E tests' \
             -f description="$description" \
+            -f target_url="$RUN_URL"
+
+  failed-deployment:
+    name: Report a failed preview
+    if: github.event.action == 'vercel.deployment.error' && github.event.client_payload.environment != 'production'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    steps:
+      - name: Report the failure on the commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.client_payload.git.sha }}
+          DEPLOYMENT_URL: ${{ github.event.client_payload.url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$SHA" ]; then
+            echo "::error::The event has no commit SHA."
+            exit 1
+          fi
+          echo "The preview deployment $DEPLOYMENT_URL of $SHA failed" >> "$GITHUB_STEP_SUMMARY"
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state=failure \
+            -f context='E2E tests' \
+            -f description='The preview deployment failed, so nothing was tested' \
             -f target_url="$RUN_URL"
