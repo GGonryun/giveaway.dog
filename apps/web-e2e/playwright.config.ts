@@ -15,11 +15,17 @@ export default defineConfig({
     screenshot: 'only-on-failure'
   },
   projects: [
-    { name: 'setup', testMatch: /\.setup\.ts$/ },
+    { name: 'setup', testMatch: /vercel\.setup\.ts$/ },
+    {
+      name: 'personas',
+      testMatch: /personas\.setup\.ts$/,
+      use: { storageState: BYPASS_STATE },
+      dependencies: ['setup']
+    },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'], storageState: BYPASS_STATE },
-      dependencies: ['setup']
+      dependencies: ['personas']
     }
   ]
 });

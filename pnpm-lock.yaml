@@ -1642,6 +1642,9 @@ importers:
 
   apps/web-e2e:
     devDependencies:
+      '@giveaway/e2e-model':
+        specifier: workspace:*
+        version: link:../../packages/e2e/e2e-model
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../packages/tooling/eslint-config
@@ -2731,12 +2734,12 @@ importers:
       '@giveaway/db-client':
         specifier: workspace:*
         version: link:../../infra/db-client
-      '@giveaway/db-model':
-        specifier: workspace:*
-        version: link:../../infra/db-model
       '@giveaway/e2e-gate':
         specifier: workspace:*
         version: link:../../e2e/e2e-gate
+      '@giveaway/e2e-model':
+        specifier: workspace:*
+        version: link:../../e2e/e2e-model
       next-auth:
         specifier: 'catalog:'
         version: 5.0.0-beta.26(next@16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)

@@ -25,8 +25,8 @@
   },
   "dependencies": {
     "@giveaway/db-client": "workspace:*",
-    "@giveaway/db-model": "workspace:*",
     "@giveaway/e2e-gate": "workspace:*",
+    "@giveaway/e2e-model": "workspace:*",
     "server-only": "catalog:"
   },
   "peerDependencies": {

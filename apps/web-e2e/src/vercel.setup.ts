@@ -1,7 +1,10 @@
 import { expect, test as setup } from '@playwright/test';
 import { BASE_URL, BYPASS_STATE } from './env';
+import { userMetricsCookie } from './helpers/user-metrics';
 
 const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+
+setup.use({ storageState: { cookies: [userMetricsCookie()], origins: [] } });
 
 setup('open the deployment', async ({ request }) => {
   const headers = secret
