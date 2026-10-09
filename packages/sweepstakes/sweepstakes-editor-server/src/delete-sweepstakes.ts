@@ -8,7 +8,9 @@ import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
 
-const deleteSweepstakes = procedure()
+const deleteSweepstakes = procedure(
+  'sweepstakes-editor-server/deleteSweepstakes'
+)
   .authorization({ required: true })
   .input(
     z.object({

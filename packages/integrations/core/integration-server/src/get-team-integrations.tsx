@@ -9,7 +9,9 @@ import {
 } from '@giveaway/integration-model/schemas';
 import { toProviderUrl } from '@giveaway/integration-model/to-provider-url';
 
-export const getTeamIntegrations = procedure()
+export const getTeamIntegrations = procedure(
+  'integration-server/getTeamIntegrations'
+)
   .authorization({
     required: true
   })

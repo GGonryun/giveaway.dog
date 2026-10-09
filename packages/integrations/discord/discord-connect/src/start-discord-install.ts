@@ -6,7 +6,9 @@ import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
 
-export const startDiscordInstall = procedure()
+export const startDiscordInstall = procedure(
+  'discord-connect/startDiscordInstall'
+)
   .authorization({ required: true })
   .input(z.object({ slug: z.string() }))
   .output(z.string())

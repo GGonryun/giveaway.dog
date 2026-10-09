@@ -8,7 +8,7 @@ import {
 } from '@giveaway/referrals-model/schemas';
 import { getOrCreateReferral, toUserReferral } from './shared';
 
-const createReferralCode = procedure()
+const createReferralCode = procedure('referrals-server/createReferralCode')
   .authorization({ required: true })
   .input(createReferralSchema)
   .output(userReferralSchema)

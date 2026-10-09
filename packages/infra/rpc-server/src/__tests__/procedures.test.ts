@@ -22,7 +22,15 @@ const redirectError = () =>
 
 beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {});
+  vi.spyOn(console, 'info').mockImplementation(() => {});
 });
+
+const procedureLogs = () =>
+  vi
+    .mocked(console.info)
+    .mock.calls.map(([line]) => String(line))
+    .filter((line) => line.startsWith('[procedure] '))
+    .map((line) => JSON.parse(line.slice('[procedure] '.length)));
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -34,7 +42,7 @@ describe('procedure', () => {
   describe('when authorization is required', () => {
     it('returns UNAUTHORIZED when there is no session', async () => {
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(handler);
 
@@ -51,7 +59,7 @@ describe('procedure', () => {
 
     it('returns UNAUTHORIZED when the session user has no id', async () => {
       signIn({ id: '' });
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => 'data');
 
@@ -66,7 +74,7 @@ describe('procedure', () => {
       authMock.mockResolvedValue({
         expires: '2999-01-01T00:00:00.000Z'
       } as unknown as Awaited<ReturnType<typeof authMock>>);
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => 'data');
 
@@ -79,7 +87,7 @@ describe('procedure', () => {
 
     it('returns UNAUTHORIZED when the session has expired', async () => {
       authMock.mockResolvedValue(createSession({}, EXPIRED));
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => 'data');
 
@@ -92,7 +100,7 @@ describe('procedure', () => {
 
     it('returns UNAUTHORIZED when the session expiry is not a valid date', async () => {
       authMock.mockResolvedValue(createSession({}, 'not-a-date'));
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => 'data');
 
@@ -107,7 +115,7 @@ describe('procedure', () => {
       vi.useFakeTimers({ toFake: ['Date'] });
       vi.setSystemTime(new Date('2030-06-01T12:00:00.000Z'));
       authMock.mockResolvedValue(createSession({}, '2030-06-01T12:00:00.000Z'));
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => 'data');
 
@@ -122,7 +130,7 @@ describe('procedure', () => {
       vi.useFakeTimers({ toFake: ['Date'] });
       vi.setSystemTime(new Date('2030-06-01T12:00:00.000Z'));
       authMock.mockResolvedValue(createSession({}, '2030-06-01T12:00:00.001Z'));
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => 'data');
 
@@ -132,7 +140,7 @@ describe('procedure', () => {
     });
 
     it('logs the unauthorized application error', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => 'data');
 
@@ -147,7 +155,7 @@ describe('procedure', () => {
     it('passes the session user and prisma client to the handler', async () => {
       const session = signIn();
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(handler);
 
@@ -162,7 +170,7 @@ describe('procedure', () => {
 
     it('returns the handler result as ok data', async () => {
       signIn();
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => ({ value: 42 }));
 
@@ -173,7 +181,7 @@ describe('procedure', () => {
 
     it('calls auth exactly once per invocation', async () => {
       signIn();
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async () => 'data');
 
@@ -186,7 +194,7 @@ describe('procedure', () => {
   describe('when authorization is optional', () => {
     it('passes a null user when there is no session', async () => {
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(handler);
 
@@ -203,7 +211,7 @@ describe('procedure', () => {
     it('passes the session user when the session is valid', async () => {
       signIn({ name: 'Optional User' });
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(handler);
 
@@ -219,7 +227,7 @@ describe('procedure', () => {
     it('passes a null user when the session has expired', async () => {
       authMock.mockResolvedValue(createSession({}, EXPIRED));
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(handler);
 
@@ -239,7 +247,7 @@ describe('procedure', () => {
 
     it('passes undefined input to the handler when no schema is configured', async () => {
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(handler) as unknown as (input: unknown) => Promise<unknown>;
 
@@ -252,7 +260,7 @@ describe('procedure', () => {
 
     it('passes parsed data with coercions and defaults applied to the handler', async () => {
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .input(schema)
         .handler(handler);
@@ -266,7 +274,7 @@ describe('procedure', () => {
 
     it('strips unknown keys from the input before calling the handler', async () => {
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .input(schema)
         .handler(handler);
@@ -282,7 +290,7 @@ describe('procedure', () => {
 
     it('returns UNPROCESSABLE_CONTENT with the zod message when parsing fails', async () => {
       const handler = vi.fn(async () => 'data');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .input(schema)
         .handler(handler);
@@ -298,7 +306,7 @@ describe('procedure', () => {
     });
 
     it('checks authorization before validating input', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .input(schema)
         .handler(async () => 'data');
@@ -315,7 +323,7 @@ describe('procedure', () => {
 
   describe('output validation', () => {
     it('strips the keys that the output schema does not declare', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .output(z.object({ id: z.string() }))
         .handler(
@@ -328,7 +336,7 @@ describe('procedure', () => {
     });
 
     it('applies output schema transforms to the returned data', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .output(z.object({ n: z.number().transform((n) => n * 2) }))
         .handler(async () => ({ n: 2 }));
@@ -340,7 +348,7 @@ describe('procedure', () => {
 
     it('returns the handler data unchanged when no output schema is set', async () => {
       const data = { id: '1', extra: true };
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => data);
 
@@ -351,7 +359,7 @@ describe('procedure', () => {
 
     it('returns UNPROCESSABLE_CONTENT when the handler output does not match', async () => {
       const outputSchema = z.object({ id: z.string() });
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .output(outputSchema)
         .handler(async () => ({ id: 1 }) as unknown as { id: string });
@@ -365,7 +373,7 @@ describe('procedure', () => {
     });
 
     it('logs the invalid output and the zod error', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .output(z.string())
         .handler(async () => 7 as unknown as string);
@@ -382,7 +390,7 @@ describe('procedure', () => {
 
   describe('caching', () => {
     it('does not use unstable_cache when no cache config is set', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => 'data');
 
@@ -393,7 +401,7 @@ describe('procedure', () => {
 
     it('wraps the handler with key parts, tags and revalidate', async () => {
       const handler = vi.fn(async () => 'cached');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .input(z.object({ id: z.string() }))
         .cache({ keyParts: ['key'], tags: ['tag-a'], revalidate: 60 })
@@ -415,7 +423,7 @@ describe('procedure', () => {
     });
 
     it('passes undefined key parts when only tags are configured', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .cache({ tags: ['tag-a'] })
         .handler(async () => 'data');
@@ -430,7 +438,7 @@ describe('procedure', () => {
     });
 
     it('passes cache options with undefined tags when only key parts are configured', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .cache({ keyParts: ['k'] })
         .handler(async () => 'data');
@@ -445,7 +453,7 @@ describe('procedure', () => {
     });
 
     it('drops the revalidate option when neither tags nor key parts are configured', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .cache({ revalidate: 60 })
         .handler(async () => 'data');
@@ -460,7 +468,7 @@ describe('procedure', () => {
     });
 
     it('treats an empty key parts array as configured', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .cache({ keyParts: [] })
         .handler(async () => 'data');
@@ -477,7 +485,7 @@ describe('procedure', () => {
     it('passes the session user to the handler through the cache wrapper', async () => {
       const session = signIn();
       const handler = vi.fn(async () => 'cached');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .input(z.object({ id: z.string() }))
         .cache({ keyParts: ['k'], tags: ['t'] })
@@ -497,7 +505,7 @@ describe('procedure', () => {
         () => async () => 'from-cache'
       );
       const handler = vi.fn(async () => 'fresh');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .cache({ tags: ['t'] })
         .handler(handler);
@@ -511,7 +519,7 @@ describe('procedure', () => {
     it('calls the cached function with the parsed input', async () => {
       const cachedFn = vi.fn(async () => 'from-cache');
       nextCacheMock.unstable_cache.mockImplementation(() => cachedFn);
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .input(z.object({ id: z.string() }))
         .cache({ tags: ['t'] })
@@ -525,7 +533,7 @@ describe('procedure', () => {
     it('resolves a cache config function with the db, user and input', async () => {
       const session = signIn();
       const cacheConfig = vi.fn(() => ({ tags: ['dynamic'] }));
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .input(z.object({ id: z.string() }))
         .cache(cacheConfig)
@@ -547,7 +555,7 @@ describe('procedure', () => {
 
     it('skips caching when the cache config function returns undefined', async () => {
       const handler = vi.fn(async () => 'direct');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .cache(() => undefined)
         .handler(handler);
@@ -564,7 +572,7 @@ describe('procedure', () => {
     });
 
     it('keeps the cache config when the input schema is set afterwards', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .cache({ tags: ['kept'] })
         .input(z.string())
@@ -580,7 +588,7 @@ describe('procedure', () => {
     });
 
     it('keeps the cache config when the output schema is set afterwards', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .cache({ tags: ['kept'] })
         .output(z.string())
@@ -599,7 +607,7 @@ describe('procedure', () => {
 
   describe('invalidation', () => {
     it('revalidates every returned tag with the max profile', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .invalidate(async () => ['tag-a', 'tag-b'])
         .handler(async () => 'data');
@@ -622,7 +630,7 @@ describe('procedure', () => {
     it('passes the user, db, input and output to the invalidate function', async () => {
       const session = signIn();
       const invalidate = vi.fn(async () => []);
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .input(z.object({ id: z.string() }))
         .output(z.object({ saved: z.boolean() }))
@@ -641,7 +649,7 @@ describe('procedure', () => {
 
     it('passes the parsed output to the invalidate function', async () => {
       const invalidate = vi.fn(async () => []);
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .output(z.object({ saved: z.boolean() }))
         .invalidate(invalidate)
@@ -658,7 +666,7 @@ describe('procedure', () => {
     });
 
     it('does not revalidate anything when no tags are returned', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .invalidate(async () => [])
         .handler(async () => 'data');
@@ -671,7 +679,7 @@ describe('procedure', () => {
 
     it('does not invalidate when the handler throws', async () => {
       const invalidate = vi.fn(async () => ['tag']);
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .invalidate(invalidate)
         .handler(async () => {
@@ -686,7 +694,7 @@ describe('procedure', () => {
 
     it('does not invalidate when output validation fails', async () => {
       const invalidate = vi.fn(async () => ['tag']);
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .output(z.string())
         .invalidate(invalidate)
@@ -698,7 +706,7 @@ describe('procedure', () => {
     });
 
     it('returns a failure when the invalidate function throws', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .invalidate(async () => {
           throw new Error('invalidate failed');
@@ -714,7 +722,7 @@ describe('procedure', () => {
 
     it('drops the invalidate config when the input schema is set afterwards', async () => {
       const invalidate = vi.fn(async () => ['tag']);
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .invalidate(invalidate)
         .input(z.string())
@@ -727,7 +735,7 @@ describe('procedure', () => {
 
     it('drops the invalidate config when the output schema is set afterwards', async () => {
       const invalidate = vi.fn(async () => ['tag']);
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .invalidate(invalidate)
         .output(z.string())
@@ -739,7 +747,7 @@ describe('procedure', () => {
     });
 
     it('keeps the invalidate config when the cache config is set afterwards', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .invalidate(async () => ['kept'])
         .cache({ tags: ['t'] })
@@ -754,7 +762,7 @@ describe('procedure', () => {
   describe('error handling', () => {
     it('maps an ApplicationError to a failure with its code, message, cause and data', async () => {
       const cause = new Error('root');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw new ApplicationError({
@@ -780,7 +788,7 @@ describe('procedure', () => {
 
     it('logs non-silent application errors', async () => {
       const error = new ApplicationError({ code: 'FORBIDDEN', message: 'No' });
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw error;
@@ -792,7 +800,7 @@ describe('procedure', () => {
     });
 
     it('does not log silent application errors', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw new ApplicationError({
@@ -809,7 +817,7 @@ describe('procedure', () => {
     });
 
     it('maps a prisma P2025 error to NOT_FOUND', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw knownRequestError('P2025');
@@ -823,7 +831,7 @@ describe('procedure', () => {
     });
 
     it('maps other prisma known errors to INTERNAL_SERVER_ERROR with a reference code', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw knownRequestError('P2002');
@@ -837,7 +845,7 @@ describe('procedure', () => {
     });
 
     it('maps a prisma validation error to BAD_REQUEST', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw new Prisma.PrismaClientValidationError('bad', {
@@ -857,7 +865,7 @@ describe('procedure', () => {
       prismaMock.user.findUniqueOrThrow.mockRejectedValue(
         knownRequestError('P2025')
       );
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: true })
         .handler(async ({ db, user }) =>
           db.user.findUniqueOrThrow({ where: { id: user.id } })
@@ -877,7 +885,7 @@ describe('procedure', () => {
       const error = Object.assign(new Error('Exploded', { cause: 'fuse' }), {
         data: { extra: 1 }
       });
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw error;
@@ -897,7 +905,7 @@ describe('procedure', () => {
     });
 
     it('uses a default message when the thrown object has no message', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw {};
@@ -918,7 +926,7 @@ describe('procedure', () => {
 
     it('maps an error thrown by auth to INTERNAL_SERVER_ERROR', async () => {
       authMock.mockRejectedValue(new Error('auth down'));
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => 'data');
 
@@ -931,7 +939,7 @@ describe('procedure', () => {
 
     it('re-throws Next.js redirect errors', async () => {
       const error = redirectError();
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw error;
@@ -941,7 +949,7 @@ describe('procedure', () => {
     });
 
     it('rejects with a TypeError when the handler throws a string', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw 'plain string';
@@ -951,7 +959,7 @@ describe('procedure', () => {
     });
 
     it('rejects with a TypeError when the handler throws null', async () => {
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => {
           throw null;
@@ -972,7 +980,7 @@ describe('procedure', () => {
 
     it('waits before authenticating in development', async () => {
       vi.stubEnv('NODE_ENV', 'development');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => 'data');
 
@@ -990,7 +998,7 @@ describe('procedure', () => {
     it('does not wait in development when the e2e gate is open', async () => {
       vi.stubEnv('NODE_ENV', 'development');
       vi.stubEnv('E2E_LOGIN_SECRET', 'e2e-secret-with-at-least-32-chars');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => 'data');
 
@@ -1003,7 +1011,7 @@ describe('procedure', () => {
 
     it('does not wait outside development', async () => {
       vi.stubEnv('NODE_ENV', 'production');
-      const run = procedure()
+      const run = procedure('test/run')
         .authorization({ required: false })
         .handler(async () => 'data');
 
@@ -1012,6 +1020,182 @@ describe('procedure', () => {
 
       expect(authMock).toHaveBeenCalledTimes(1);
       expect(expectOk(await pending)).toBe('data');
+    });
+  });
+
+  describe('logging', () => {
+    it('logs one line with the name, the auth, the input keys, the outcome and the duration', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2030-06-01T12:00:00.000Z'));
+      signIn();
+      const run = procedure('sweepstakes-server/doThing')
+        .authorization({ required: true })
+        .input(z.object({ b: z.string(), a: z.number() }))
+        .handler(async () => {
+          vi.setSystemTime(new Date('2030-06-01T12:00:00.042Z'));
+          return 'data';
+        });
+
+      await run({ b: 'secret value', a: 1 });
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[procedure] {"procedure":"sweepstakes-server/doThing","auth":"required","authenticated":true,"input":["a","b"],"cached":false,"invalidated":0,"outcome":"OK","ms":42}'
+      );
+    });
+
+    it('never logs the input values', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .input(z.object({ email: z.string() }))
+        .handler(async () => 'data');
+
+      await run({ email: 'someone@example.com' });
+
+      expect(String(vi.mocked(console.info).mock.calls)).not.toContain(
+        'someone@example.com'
+      );
+    });
+
+    it('logs an anonymous call of an optional procedure', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .handler(async () => 'data');
+
+      await run();
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({
+          auth: 'optional',
+          authenticated: false,
+          input: null
+        })
+      ]);
+    });
+
+    it.each([
+      ['an array', ['x'], 'array'],
+      ['a string', 'x', 'string'],
+      ['a number', 1, 'number'],
+      ['null', null, null]
+    ])('describes %s input by its type', async (_, input, expected) => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .input(z.any())
+        .handler(async () => 'data');
+
+      await run(input);
+
+      expect(procedureLogs()[0].input).toEqual(expected);
+    });
+
+    it('logs the code of an application error', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: true })
+        .handler(async () => 'data');
+
+      await run();
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({ outcome: 'UNAUTHORIZED' })
+      ]);
+    });
+
+    it('logs the code of a Prisma error', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .handler(async () => {
+          throw knownRequestError('P2025');
+        });
+
+      await run();
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({ outcome: 'NOT_FOUND' })
+      ]);
+    });
+
+    it('logs INTERNAL_SERVER_ERROR for an unexpected error', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .handler(async () => {
+          throw new Error('boom');
+        });
+
+      await run();
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({ outcome: 'INTERNAL_SERVER_ERROR' })
+      ]);
+    });
+
+    it('logs an unauthenticated call when the session lookup fails', async () => {
+      signIn();
+      authMock.mockRejectedValue(new Error('auth down'));
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .handler(async () => 'data');
+
+      await run();
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({
+          authenticated: false,
+          outcome: 'INTERNAL_SERVER_ERROR'
+        })
+      ]);
+    });
+
+    it('logs a redirect before it throws it again', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .handler(async () => {
+          throw redirectError();
+        });
+
+      await expect(run()).rejects.toThrow('NEXT_REDIRECT');
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({ outcome: 'REDIRECT' })
+      ]);
+    });
+
+    it('logs that the call used the cache', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .cache({ tags: ['tag'] })
+        .handler(async () => 'data');
+
+      await run();
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({ cached: true })
+      ]);
+    });
+
+    it('logs that the call skipped the cache when the cache config returns nothing', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .cache(() => undefined)
+        .handler(async () => 'data');
+
+      await run();
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({ cached: false })
+      ]);
+    });
+
+    it('logs the number of invalidated tags', async () => {
+      const run = procedure('test/run')
+        .authorization({ required: false })
+        .invalidate(async () => ['a', 'b'])
+        .handler(async () => 'data');
+
+      await run();
+
+      expect(procedureLogs()).toEqual([
+        expect.objectContaining({ invalidated: 2 })
+      ]);
     });
   });
 });

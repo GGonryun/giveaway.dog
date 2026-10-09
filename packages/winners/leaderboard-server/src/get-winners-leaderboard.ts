@@ -5,7 +5,9 @@ import { z } from 'zod';
 import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { winnerLeaderboardSchema } from '@giveaway/leaderboard-model/winners';
 
-const getWinnersLeaderboard = procedure()
+const getWinnersLeaderboard = procedure(
+  'leaderboard-server/getWinnersLeaderboard'
+)
   .authorization({
     required: false
   })

@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { verifyTurnstileToken } from './server';
 import { setTurnstileToken } from './cookies';
 
-const verifyTurnstile = procedure()
+const verifyTurnstile = procedure('turnstile-server/verifyTurnstile')
   .authorization({ required: false })
   .input(
     z.object({

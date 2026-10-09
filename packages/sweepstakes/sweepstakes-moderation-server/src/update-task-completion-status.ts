@@ -10,7 +10,9 @@ import {
 } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 
-export const updateTaskCompletionStatus = procedure()
+export const updateTaskCompletionStatus = procedure(
+  'sweepstakes-moderation-server/updateTaskCompletionStatus'
+)
   .authorization({ required: true })
   .input(
     z.object({

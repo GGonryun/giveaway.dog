@@ -6,7 +6,7 @@ import { isValidEmail } from '@giveaway/util-strings/email-validation';
 import { emailSubscriptionSchema } from '@giveaway/marketing-model/email-subscription';
 import z from 'zod';
 
-const subscribeEmail = procedure()
+const subscribeEmail = procedure('marketing-server/subscribeEmail')
   .authorization({ required: false })
   .input(emailSubscriptionSchema)
   .output(

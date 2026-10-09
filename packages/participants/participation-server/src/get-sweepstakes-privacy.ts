@@ -19,7 +19,9 @@ const getCacheConfig = ({ user, input }: any) => {
   };
 };
 
-export const getSweepstakesPrivacy = procedure()
+export const getSweepstakesPrivacy = procedure(
+  'participation-server/getSweepstakesPrivacy'
+)
   .authorization({
     required: false
   })

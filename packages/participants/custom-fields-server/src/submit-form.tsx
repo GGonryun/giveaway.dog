@@ -246,7 +246,9 @@ const validateUniqueFields = async (params: ValidateUniqueFieldsParams) => {
   }
 };
 
-export const submitParticipantForm = procedure()
+export const submitParticipantForm = procedure(
+  'custom-fields-server/submitParticipantForm'
+)
   .authorization({ required: true })
   .input(
     z.object({

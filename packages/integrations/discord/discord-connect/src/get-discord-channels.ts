@@ -7,7 +7,9 @@ import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { IntegrationProvider, TeamTier } from '@giveaway/db-model';
 import z from 'zod';
 
-export const getDiscordChannels = procedure()
+export const getDiscordChannels = procedure(
+  'discord-connect/getDiscordChannels'
+)
   .authorization({ required: true })
   .input(
     z.object({

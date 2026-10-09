@@ -4,7 +4,9 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
-export const deleteAutomatedPostJob = procedure()
+export const deleteAutomatedPostJob = procedure(
+  'automation-server/deleteAutomatedPostJob'
+)
   .authorization({ required: true })
   .input(
     z.object({

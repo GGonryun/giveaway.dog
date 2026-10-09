@@ -5,7 +5,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { createUserProfileSchema } from '@giveaway/user-model/user';
 import z from 'zod';
 
-const createProfile = procedure()
+const createProfile = procedure('account-server/createProfile')
   .authorization({ required: true })
   .input(createUserProfileSchema)
   .output(

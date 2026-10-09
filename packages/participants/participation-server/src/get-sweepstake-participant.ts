@@ -6,7 +6,9 @@ import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schema
 
 import z from 'zod';
 
-export const getOrCreateSweepstakesParticipant = procedure()
+export const getOrCreateSweepstakesParticipant = procedure(
+  'participation-server/getOrCreateSweepstakesParticipant'
+)
   .authorization({ required: false })
   .input(z.object({ sweepstakesId: z.string() }))
   .output(sweepstakesParticipantSchema.optional())

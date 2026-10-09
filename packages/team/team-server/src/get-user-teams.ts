@@ -8,7 +8,7 @@ import {
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { TeamRole } from '@giveaway/db-model';
 
-const getUserTeams = procedure()
+const getUserTeams = procedure('team-server/getUserTeams')
   .authorization({ required: true })
   .output(detailedUserTeamSchema.array())
   .handler(async ({ db, user }) => {

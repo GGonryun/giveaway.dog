@@ -13,7 +13,9 @@ import { supportsAutomatedReverification } from '@giveaway/task-model/verificati
 import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { TeamPermission } from '@giveaway/team-permissions';
 
-export const reverifyTaskCompletion = procedure()
+export const reverifyTaskCompletion = procedure(
+  'sweepstakes-moderation-server/reverifyTaskCompletion'
+)
   .authorization({ required: true })
   .input(
     z.object({

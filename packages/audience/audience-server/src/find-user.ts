@@ -5,7 +5,7 @@ import { userSchema } from '@giveaway/user-model/user';
 import { getUserQuery } from '@giveaway/account-server/shared';
 import { z } from 'zod';
 
-const findUser = procedure()
+const findUser = procedure('audience-server/findUser')
   .authorization({ required: false })
   .input(
     z.union([

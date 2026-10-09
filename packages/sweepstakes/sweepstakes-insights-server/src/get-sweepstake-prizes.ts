@@ -10,7 +10,9 @@ import {
   toSweepstakesPrizes
 } from '@giveaway/sweepstakes-model/prizes';
 
-const getSweepstakesPrizes = procedure()
+const getSweepstakesPrizes = procedure(
+  'sweepstakes-insights-server/getSweepstakesPrizes'
+)
   .authorization({
     required: true
   })

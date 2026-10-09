@@ -5,7 +5,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { updateAccountTypeSchema } from '@giveaway/user-model/onboarding';
 import z from 'zod';
 
-const updateAccountType = procedure()
+const updateAccountType = procedure('account-server/updateAccountType')
   .authorization({ required: true })
   .input(updateAccountTypeSchema)
   .output(

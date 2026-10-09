@@ -9,7 +9,9 @@ import {
 
 import z from 'zod';
 
-export const getTaskCompletions = procedure()
+export const getTaskCompletions = procedure(
+  'participant-server/getTaskCompletions'
+)
   .authorization({
     required: true
   })

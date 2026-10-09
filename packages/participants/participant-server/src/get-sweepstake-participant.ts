@@ -7,7 +7,9 @@ import z from 'zod';
 import { findSweepstakesParticipant } from '@giveaway/participant-model/db';
 import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 
-export const getSweepstakesParticipant = procedure()
+export const getSweepstakesParticipant = procedure(
+  'participant-server/getSweepstakesParticipant'
+)
   .authorization({
     required: true
   })

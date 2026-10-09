@@ -15,7 +15,9 @@ import {
 } from '@giveaway/app-config/settings';
 import { Prisma } from '@giveaway/db-model';
 
-const getSweepstakesList = procedure()
+const getSweepstakesList = procedure(
+  'sweepstakes-insights-server/getSweepstakesList'
+)
   .authorization({ required: true })
   .input(
     listSweepstakesFiltersSchema.extend({

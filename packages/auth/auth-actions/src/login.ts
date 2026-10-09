@@ -20,7 +20,7 @@ import {
   normalizeFacebookUrl
 } from '@giveaway/meta-model/facebook';
 
-const login = procedure()
+const login = procedure('auth-actions/login')
   .authorization({
     required: false
   })

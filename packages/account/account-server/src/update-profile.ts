@@ -5,7 +5,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { updateUserProfileSchema } from '@giveaway/user-model/user';
 import z from 'zod';
 
-export const updateProfile = procedure()
+export const updateProfile = procedure('account-server/updateProfile')
   .authorization({ required: true })
   .input(updateUserProfileSchema)
   .output(

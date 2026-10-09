@@ -8,7 +8,7 @@ import {
   TeamPermission
 } from '@giveaway/team-permissions';
 
-const updateTeamLogo = procedure()
+const updateTeamLogo = procedure('team-server/updateTeamLogo')
   .authorization({ required: true })
   .input(
     z.object({

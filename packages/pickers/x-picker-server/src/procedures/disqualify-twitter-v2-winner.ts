@@ -4,7 +4,9 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
-export const disqualifyTwitterV2Winner = procedure()
+export const disqualifyTwitterV2Winner = procedure(
+  'x-picker-server/disqualifyTwitterV2Winner'
+)
   .authorization({
     required: true
   })

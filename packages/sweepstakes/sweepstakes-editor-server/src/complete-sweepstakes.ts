@@ -9,7 +9,9 @@ import {
   SweepstakesJobType
 } from '@giveaway/db-model';
 
-const completeSweepstakes = procedure()
+const completeSweepstakes = procedure(
+  'sweepstakes-editor-server/completeSweepstakes'
+)
   .authorization({ required: true })
   .input(
     z.object({

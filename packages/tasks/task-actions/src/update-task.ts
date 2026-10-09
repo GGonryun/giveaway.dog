@@ -7,7 +7,7 @@ import { toTaskSchema } from '@giveaway/task-model/schemas';
 import { saveTaskProof } from '@giveaway/task-validation-core/proof';
 import { validateSweepstakesState } from '@giveaway/task-validation-core/task-state';
 
-const submitTask = procedure()
+const updateTask = procedure('task-actions/updateTask')
   .authorization({ required: true })
   .input(
     z.object({
@@ -112,4 +112,4 @@ const submitTask = procedure()
     return true;
   });
 
-export default submitTask;
+export default updateTask;

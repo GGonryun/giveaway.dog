@@ -7,7 +7,7 @@ import { findUserTeamQuery } from '@giveaway/team-server/find-user-team';
 import { IntegrationProvider } from '@giveaway/db-model';
 import { deleteAllEventSubSubscriptions } from '@giveaway/twitch-api/delete-eventsub-subscription';
 
-export const disconnectTwitch = procedure()
+export const disconnectTwitch = procedure('twitch-connect/disconnectTwitch')
   .authorization({
     required: true
   })

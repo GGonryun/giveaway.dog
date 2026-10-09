@@ -10,7 +10,9 @@ import {
 } from '@giveaway/participant-model/db';
 import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
 
-export const getSweepstakesParticipants = procedure()
+export const getSweepstakesParticipants = procedure(
+  'participant-server/getSweepstakesParticipants'
+)
   .authorization({
     required: true
   })

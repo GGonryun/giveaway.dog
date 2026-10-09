@@ -7,7 +7,9 @@ import { nanoid } from 'nanoid';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { LastPostedType, PickerStatus, TeamTier } from '@giveaway/db-model';
 
-export const createTwitterPicker = procedure()
+export const createTwitterPicker = procedure(
+  'x-picker-server/createTwitterPicker'
+)
   .authorization({
     required: true
   })

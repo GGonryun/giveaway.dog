@@ -50,7 +50,9 @@ function parseYouTubeChannelUrl(url: string): YouTubeChannelParams | null {
   }
 }
 
-export const verifyYouTubeChannel = procedure()
+export const verifyYouTubeChannel = procedure(
+  'youtube-task-editor/verifyYouTubeChannel'
+)
   .authorization({ required: true })
   .input(
     z.object({

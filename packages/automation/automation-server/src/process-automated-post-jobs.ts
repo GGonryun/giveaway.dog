@@ -27,7 +27,9 @@ import { processPostToDiscord } from '@giveaway/discord-connect/process-post-to-
 
 const MAX_JOBS_PER_RUN = 5;
 
-export const processAutomatedPostJobs = procedure()
+export const processAutomatedPostJobs = procedure(
+  'automation-server/processAutomatedPostJobs'
+)
   .authorization({ required: false })
   .output(
     z.object({

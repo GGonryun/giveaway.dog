@@ -12,7 +12,7 @@ import {
 } from '@giveaway/winners-model/slots';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 
-export const rollPrizes = procedure()
+export const rollPrizes = procedure('winners-server/rollPrizes')
   .authorization({
     required: true
   })

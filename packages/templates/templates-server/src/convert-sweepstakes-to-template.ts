@@ -11,7 +11,9 @@ import {
   DEFAULT_TEMPLATE_NAME
 } from '@giveaway/templates-model/defaults';
 
-export const convertSweepstakesToTemplate = procedure()
+export const convertSweepstakesToTemplate = procedure(
+  'templates-server/convertSweepstakesToTemplate'
+)
   .authorization({ required: true })
   .input(
     z.object({

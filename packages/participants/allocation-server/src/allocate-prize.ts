@@ -4,7 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { allocatePrizeRequestSchema } from '@giveaway/sweepstakes-model/schemas';
 import z from 'zod';
 
-export const allocatePrize = procedure()
+export const allocatePrize = procedure('allocation-server/allocatePrize')
   .authorization({ required: true })
   .input(allocatePrizeRequestSchema)
   .output(

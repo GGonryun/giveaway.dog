@@ -9,7 +9,7 @@ import {
 } from '@giveaway/team-permissions';
 import { socialLinksSchema } from '@giveaway/team-model/social-links';
 
-const updateTeamLinks = procedure()
+const updateTeamLinks = procedure('team-server/updateTeamLinks')
   .authorization({ required: true })
   .input(
     z.object({

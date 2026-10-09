@@ -9,7 +9,7 @@ import {
 import { environment } from '@giveaway/app-config/environment';
 import z from 'zod';
 
-const getInviteLink = procedure()
+const getInviteLink = procedure('team-invites-server/getInviteLink')
   .authorization({ required: true })
   .input(
     z.object({

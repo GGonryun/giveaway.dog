@@ -15,7 +15,9 @@ import {
 } from '@giveaway/participant-model/db';
 import { Prisma } from '@giveaway/db-model';
 
-export const getTeamParticipants = procedure()
+export const getTeamParticipants = procedure(
+  'participant-server/getTeamParticipants'
+)
   .authorization({
     required: true
   })

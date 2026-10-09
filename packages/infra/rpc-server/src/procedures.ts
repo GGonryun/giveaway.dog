@@ -14,6 +14,21 @@ import { simulateNetworkDelay } from '@giveaway/util-random/simulate';
 import { unstable_cache, revalidateTag } from 'next/cache';
 import { RecursiveRequired } from '@giveaway/util-types/recursive-required';
 
+export type ProcedureName = `${string}/${string}`;
+
+type ProcedureOutcome = 'OK' | 'REDIRECT' | string;
+
+interface ProcedureLog {
+  procedure: ProcedureName;
+  auth: 'required' | 'optional';
+  authenticated: boolean;
+  input: string[] | string | null;
+  cached: boolean;
+  invalidated: number;
+  outcome: ProcedureOutcome;
+  ms: number;
+}
+
 interface AuthConfig {
   required: boolean;
 }
@@ -56,6 +71,7 @@ class ProcedureBuilder<
   TAuthRequired extends boolean = true
 > {
   constructor(
+    private name: ProcedureName,
     private authConfig: AuthConfig,
     private inputSchema?: TInputSchema,
     private outputSchema?: TOutputSchema,
@@ -69,6 +85,7 @@ class ProcedureBuilder<
 
   input<S extends z.ZodType<any>>(schema: S) {
     return new ProcedureBuilder<S, TOutputSchema, TAuthRequired>(
+      this.name,
       this.authConfig,
       schema,
       this.outputSchema,
@@ -79,6 +96,7 @@ class ProcedureBuilder<
 
   output<S extends z.ZodType<any>>(schema: S) {
     return new ProcedureBuilder<TInputSchema, S, TAuthRequired>(
+      this.name,
       this.authConfig,
       this.inputSchema,
       schema,
@@ -89,6 +107,7 @@ class ProcedureBuilder<
 
   cache(config: CacheConfig<TInputSchema, TAuthRequired>) {
     return new ProcedureBuilder<TInputSchema, TOutputSchema, TAuthRequired>(
+      this.name,
       this.authConfig,
       this.inputSchema,
       this.outputSchema,
@@ -101,6 +120,7 @@ class ProcedureBuilder<
     config: InvalidateConfig<TInputSchema, TOutputSchema, TAuthRequired>
   ) {
     return new ProcedureBuilder<TInputSchema, TOutputSchema, TAuthRequired>(
+      this.name,
       this.authConfig,
       this.inputSchema,
       this.outputSchema,
@@ -125,6 +145,20 @@ class ProcedureBuilder<
       TInputSchema extends z.ZodType<any> ? z.infer<TInputSchema> : void;
 
     return async (input: InputType): Promise<Result<SuccessType>> => {
+      const started = Date.now();
+      const log: Omit<ProcedureLog, 'outcome' | 'ms'> = {
+        procedure: this.name,
+        auth: this.authConfig.required ? 'required' : 'optional',
+        authenticated: false,
+        input: describeInput(input),
+        cached: false,
+        invalidated: 0
+      };
+      const finish = <R>(result: R, outcome: ProcedureOutcome): R => {
+        writeProcedureLog({ ...log, outcome, ms: Date.now() - started });
+        return result;
+      };
+
       try {
         if (environment.is('development') && !isE2eGateOpen()) {
           // Simulate network delay in development for better UX
@@ -134,6 +168,7 @@ class ProcedureBuilder<
         // --- Authenticate ---
         const session = await noProviderAuth.auth();
         let user: any = null;
+        log.authenticated = isValidSession(session);
 
         if (this.authConfig.required) {
           if (!isValidSession(session)) {
@@ -171,6 +206,7 @@ class ProcedureBuilder<
               : this.cacheConfig;
 
           if (cacheOptions) {
+            log.cached = true;
             // Wrap handler in unstable_cache
             const cachedFn = unstable_cache(
               async (input: any) => {
@@ -231,49 +267,59 @@ class ProcedureBuilder<
           for (const tag of tagsToInvalidate) {
             revalidateTag(tag, 'max');
           }
+          log.invalidated = tagsToInvalidate.length;
         }
 
-        return { ok: true, data } as Success<SuccessType>;
+        return finish({ ok: true, data } as Success<SuccessType>, 'OK');
       } catch (err: any) {
         if (isNextRedirect(err)) {
+          finish(null, 'REDIRECT');
           throw err; // Re-throw Next.js redirect errors
         }
 
         if (isPrismaError(err)) {
-          return prismaErrorBoundary(err);
+          const failure = prismaErrorBoundary(err);
+          return finish(failure, failure.data.code);
         }
 
         if (err instanceof ApplicationError) {
           if (!err.silent) {
             console.error('Application error:', err);
           }
-          return {
+          return finish(
+            {
+              ok: false,
+              data: {
+                code: err.code,
+                message: err.message,
+                cause: err.cause,
+                data: err.data
+              }
+            },
+            err.code
+          );
+        }
+
+        return finish(
+          {
             ok: false,
             data: {
-              code: err.code,
-              message: err.message,
+              code: 'INTERNAL_SERVER_ERROR',
+              message: err.message ?? 'An unexpected error occurred',
               cause: err.cause,
               data: err.data
             }
-          };
-        }
-
-        return {
-          ok: false,
-          data: {
-            code: 'INTERNAL_SERVER_ERROR',
-            message: err?.message ?? 'An unexpected error occurred',
-            cause: err.cause,
-            data: err?.data
-          }
-        };
+          },
+          'INTERNAL_SERVER_ERROR'
+        );
       }
     };
   }
 }
-export const procedure = () => ({
+export const procedure = (name: ProcedureName) => ({
   authorization: <T extends boolean>(config: AuthConfig & { required: T }) =>
     new ProcedureBuilder<undefined, undefined, T>(
+      name,
       config,
       undefined,
       undefined,
@@ -289,4 +335,15 @@ const isValidSession = (
   const now = new Date();
   const expiration = new Date(session.expires);
   return now < expiration;
+};
+
+const describeInput = (input: unknown): ProcedureLog['input'] => {
+  if (input === undefined || input === null) return null;
+  if (Array.isArray(input)) return 'array';
+  if (typeof input === 'object') return Object.keys(input).sort();
+  return typeof input;
+};
+
+const writeProcedureLog = (entry: ProcedureLog) => {
+  console.info(`[procedure] ${JSON.stringify(entry)}`);
 };

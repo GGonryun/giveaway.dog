@@ -8,7 +8,7 @@ import z from 'zod';
 import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
 import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
 
-const createTeam = procedure()
+const createTeam = procedure('team-server/createTeam')
   .authorization({ required: true })
   .input(createTeamInputSchema)
   .output(

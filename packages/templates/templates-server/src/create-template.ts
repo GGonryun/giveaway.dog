@@ -46,7 +46,7 @@ const toTemplate = async ({
   return toTemplateInputSchema(dbTemplate);
 };
 
-export const createTemplate = procedure()
+export const createTemplate = procedure('templates-server/createTemplate')
   .authorization({ required: true })
   .input(
     z.object({

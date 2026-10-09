@@ -6,7 +6,9 @@ import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
 import z from 'zod';
 import { toDerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 
-const getParticipationHistory = procedure()
+const getParticipationHistory = procedure(
+  'participation-history-server/getParticipationHistory'
+)
   .authorization({ required: true })
   .output(participationHistorySchema)
   .handler(async ({ db, user }) => {

@@ -10,7 +10,9 @@ import {
   sweepstakesInputSchema
 } from '@giveaway/sweepstakes-model/db';
 
-const getSweepstakesForm = procedure()
+const getSweepstakesForm = procedure(
+  'sweepstakes-editor-server/getSweepstakesForm'
+)
   .authorization({ required: true })
   .input(z.object({ id: z.string() }))
   .output(sweepstakesInputSchema)

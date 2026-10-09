@@ -7,7 +7,7 @@ import { getSweepstakesCriteria } from '@giveaway/winners-model/criteria';
 import { PrizeDrawResult } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
 
-export const disqualifyDraw = procedure()
+export const disqualifyDraw = procedure('winners-server/disqualifyDraw')
   .authorization({
     required: true
   })

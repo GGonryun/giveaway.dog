@@ -8,7 +8,9 @@ import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
 
-export const updateTwitterV2Picker = procedure()
+export const updateTwitterV2Picker = procedure(
+  'x-picker-server/updateTwitterV2Picker'
+)
   .authorization({
     required: true
   })

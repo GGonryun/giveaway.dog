@@ -6,7 +6,7 @@ import { getUserQuery } from './shared';
 import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
 
-const getUser = procedure()
+const getUser = procedure('account-server/getUser')
   .authorization({ required: true })
   .input(
     z.union([

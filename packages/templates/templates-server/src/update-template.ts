@@ -8,7 +8,7 @@ import {
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
-export const updateTemplate = procedure()
+export const updateTemplate = procedure('templates-server/updateTemplate')
   .authorization({ required: true })
   .input(templateInputSchema)
   .output(z.object({ id: z.string() }))

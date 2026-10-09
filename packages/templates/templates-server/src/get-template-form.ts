@@ -9,7 +9,7 @@ import {
 import { ApplicationError } from '@giveaway/util-errors';
 import { STATIC_TEMPLATES } from '@giveaway/templates-model/data/static-templates';
 
-export const getTemplateForm = procedure()
+export const getTemplateForm = procedure('templates-server/getTemplateForm')
   .authorization({
     required: true
   })

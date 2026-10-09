@@ -8,7 +8,9 @@ import {
   calculateTwitterV2PickerStats
 } from '@giveaway/x-picker-model/schemas/details';
 
-export const getTwitterV2PublicPicker = procedure()
+export const getTwitterV2PublicPicker = procedure(
+  'x-picker-server/getTwitterV2PublicPicker'
+)
   .authorization({
     required: false
   })

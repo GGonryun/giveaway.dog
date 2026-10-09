@@ -16,7 +16,7 @@ import { userFingerprintSchema } from '@giveaway/request-context-model/fingerpri
 import { getUserMetricsFromServerCookies } from '@giveaway/request-context-model/user-metrics';
 import z from 'zod';
 
-const trackUser = procedure()
+const trackUser = procedure('audience-server/trackUser')
   .authorization({ required: true })
   .input(z.object({ type: z.nativeEnum(UserEventType) }))
   .output(userFingerprintSchema)

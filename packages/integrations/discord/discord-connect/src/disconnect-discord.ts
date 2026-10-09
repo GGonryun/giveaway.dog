@@ -6,7 +6,7 @@ import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { IntegrationProvider, TeamTier } from '@giveaway/db-model';
 import z from 'zod';
 
-export const disconnectDiscord = procedure()
+export const disconnectDiscord = procedure('discord-connect/disconnectDiscord')
   .authorization({ required: true })
   .input(z.object({ slug: z.string() }))
   .handler(async ({ input, user, db }) => {

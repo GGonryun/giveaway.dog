@@ -16,14 +16,15 @@ describe('strykerOptions', () => {
       vitest: { configFile: 'vitest.config.ts' },
       coverageAnalysis: 'perTest',
       mutate: ['src/a.ts:1-2'],
-      ignorers: ['console']
+      ignorers: ['console', 'procedure-name']
     });
   });
 
-  it('loads the Vitest runner and the console ignorer by file URL', () => {
+  it('loads the Vitest runner and the ignorers by file URL', () => {
     expect(defaultOptions().plugins).toEqual([
       expect.stringMatching(/^file:\/\/.*\/src\/vitest-runner\.ts$/),
-      expect.stringMatching(/^file:\/\/.*\/src\/ignore-console\.ts$/)
+      expect.stringMatching(/^file:\/\/.*\/src\/ignore-console\.ts$/),
+      expect.stringMatching(/^file:\/\/.*\/src\/ignore-procedure-name\.ts$/)
     ]);
   });
 

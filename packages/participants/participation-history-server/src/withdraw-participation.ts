@@ -5,7 +5,9 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { toDerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import z from 'zod';
 
-const withdrawParticipation = procedure()
+const withdrawParticipation = procedure(
+  'participation-history-server/withdrawParticipation'
+)
   .authorization({ required: true })
   .input(
     z.object({

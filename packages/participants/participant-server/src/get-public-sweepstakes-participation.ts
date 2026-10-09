@@ -7,7 +7,9 @@ import {
   publicSweepstakesParticipationSchema
 } from '@giveaway/participant-model/schemas';
 
-export const getPublicSweepstakesParticipation = procedure()
+export const getPublicSweepstakesParticipation = procedure(
+  'participant-server/getPublicSweepstakesParticipation'
+)
   .authorization({
     required: false
   })

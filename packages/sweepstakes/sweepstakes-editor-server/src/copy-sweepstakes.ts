@@ -10,7 +10,7 @@ import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { Prisma, TeamTier } from '@giveaway/db-model';
 import { TeamPermission } from '@giveaway/team-permissions';
 
-const copySweepstakes = procedure()
+const copySweepstakes = procedure('sweepstakes-editor-server/copySweepstakes')
   .authorization({ required: true })
   .input(
     z.object({

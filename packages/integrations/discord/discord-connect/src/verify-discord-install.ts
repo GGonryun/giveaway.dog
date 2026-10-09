@@ -11,7 +11,9 @@ import {
 } from '@giveaway/db-model';
 import z from 'zod';
 
-export const verifyDiscordInstall = procedure()
+export const verifyDiscordInstall = procedure(
+  'discord-connect/verifyDiscordInstall'
+)
   .authorization({ required: true })
   .input(z.object({ integrationId: z.string(), slug: z.string() }))
   .handler(async ({ input, user, db }) => {

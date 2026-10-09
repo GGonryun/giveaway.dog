@@ -3,7 +3,9 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 
-export const deleteTwitterV2PickerFromList = procedure()
+export const deleteTwitterV2PickerFromList = procedure(
+  'x-picker-server/deleteTwitterV2PickerFromList'
+)
   .authorization({
     required: true
   })

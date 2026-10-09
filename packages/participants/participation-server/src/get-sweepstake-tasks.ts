@@ -5,7 +5,9 @@ import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { taskSchema, toTaskSchema } from '@giveaway/task-model/schemas';
 
-export const getSweepstakesTasks = procedure()
+export const getSweepstakesTasks = procedure(
+  'participation-server/getSweepstakesTasks'
+)
   .authorization({
     required: true
   })

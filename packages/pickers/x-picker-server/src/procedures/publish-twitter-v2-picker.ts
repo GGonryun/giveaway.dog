@@ -9,7 +9,9 @@ import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
 import { environment } from '@giveaway/app-config/environment';
 
-export const publishTwitterV2Picker = procedure()
+export const publishTwitterV2Picker = procedure(
+  'x-picker-server/publishTwitterV2Picker'
+)
   .authorization({
     required: true
   })

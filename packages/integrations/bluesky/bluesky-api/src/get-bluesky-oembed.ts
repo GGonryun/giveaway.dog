@@ -24,7 +24,7 @@ const blueskyEmbedSchema = z.object({
 
 export type BlueskyEmbedData = z.infer<typeof blueskyEmbedSchema>;
 
-const getBlueskyOEmbed = procedure()
+const getBlueskyOEmbed = procedure('bluesky-api/getBlueskyOEmbed')
   .authorization({ required: false })
   .input(
     z.object({

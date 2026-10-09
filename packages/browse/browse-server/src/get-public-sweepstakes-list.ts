@@ -13,7 +13,9 @@ import {
   PAGE_SIZE
 } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 
-const getPublicSweepstakesList = procedure()
+const getPublicSweepstakesList = procedure(
+  'browse-server/getPublicSweepstakesList'
+)
   .authorization({
     required: false
   })

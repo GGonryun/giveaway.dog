@@ -18,7 +18,9 @@ import { replaceIdsDeep } from '@giveaway/util-collections/object';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { SWEEPSTAKE_ID_SIZE, toNewSweepstakesData } from './lifecycle';
 
-export const createSweepstakes = procedure()
+export const createSweepstakes = procedure(
+  'sweepstakes-editor-server/createSweepstakes'
+)
   .authorization({ required: true })
   .input(
     z.object({

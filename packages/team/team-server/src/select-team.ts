@@ -5,7 +5,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
-const selectTeam = procedure()
+const selectTeam = procedure('team-server/selectTeam')
   .authorization({ required: true })
   .input(z.object({ id: z.string() }))
   .output(z.object({ name: z.string(), slug: z.string() }))

@@ -13,7 +13,7 @@ import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 import { PrizeDrawResult } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
 
-export const rerollDraw = procedure()
+export const rerollDraw = procedure('winners-server/rerollDraw')
   .authorization({
     required: true
   })

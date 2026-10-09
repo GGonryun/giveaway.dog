@@ -20,6 +20,7 @@
     "./changed-lines": "./src/changed-lines.ts",
     "./gate": "./src/gate.ts",
     "./ignore-console": "./src/ignore-console.ts",
+    "./ignore-procedure-name": "./src/ignore-procedure-name.ts",
     "./pick-packages": "./src/pick-packages.ts",
     "./retry": "./src/retry.ts",
     "./stryker-options": "./src/stryker-options.ts",

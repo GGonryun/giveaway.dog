@@ -12,7 +12,9 @@ import { giveawayFiltersSchema } from '@giveaway/sweepstakes-model/filters/givea
 import { HISTORY_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { z } from 'zod';
 
-const getHistoricalSweepstakesList = procedure()
+const getHistoricalSweepstakesList = procedure(
+  'browse-server/getHistoricalSweepstakesList'
+)
   .authorization({
     required: false
   })

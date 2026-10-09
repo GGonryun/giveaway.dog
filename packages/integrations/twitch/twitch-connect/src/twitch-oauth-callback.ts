@@ -16,7 +16,9 @@ import { twitchStateSchema } from '@giveaway/twitch-api/schemas';
 
 export type TwitchStateSchema = z.infer<typeof twitchStateSchema>;
 
-export const twitchOAuthCallback = procedure()
+export const twitchOAuthCallback = procedure(
+  'twitch-connect/twitchOAuthCallback'
+)
   .authorization({
     required: true
   })

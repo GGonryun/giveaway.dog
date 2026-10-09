@@ -22,7 +22,7 @@ const inviteMembersSchema = z.object({
   )
 });
 
-const inviteMembers = procedure()
+const inviteMembers = procedure('team-invites-server/inviteMembers')
   .authorization({ required: true })
   .input(inviteMembersSchema)
   .output(

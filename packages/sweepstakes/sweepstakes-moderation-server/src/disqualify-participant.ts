@@ -7,7 +7,9 @@ import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
 
-export const disqualifyParticipant = procedure()
+export const disqualifyParticipant = procedure(
+  'sweepstakes-moderation-server/disqualifyParticipant'
+)
   .authorization({ required: true })
   .input(
     z.object({

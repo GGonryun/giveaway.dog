@@ -8,7 +8,9 @@ import {
 } from '@giveaway/automation-model/schemas';
 import { validateAutomatedPostRequest } from '@giveaway/automation-model/validation';
 
-export const scheduleAutomatedPostJob = procedure()
+export const scheduleAutomatedPostJob = procedure(
+  'automation-server/scheduleAutomatedPostJob'
+)
   .authorization({ required: true })
   .input(scheduleAutomatedPostSchema)
   .handler(async ({ user, db, input }) => {

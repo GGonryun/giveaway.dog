@@ -17,7 +17,7 @@ const engagementsSchema = z.object({
   quotes: z.number().int()
 });
 
-const getTotalEngagements = procedure()
+const getTotalEngagements = procedure('x-picker-server/getTotalEngagements')
   .authorization({ required: false })
   .output(engagementsSchema)
   .cache(() => ({

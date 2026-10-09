@@ -5,7 +5,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { TeamRole } from '@giveaway/db-model';
 import z from 'zod';
 
-const getInviteDetails = procedure()
+const getInviteDetails = procedure('team-invites-server/getInviteDetails')
   .authorization({ required: false })
   .input(
     z.object({

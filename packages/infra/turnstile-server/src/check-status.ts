@@ -10,7 +10,9 @@ import {
 import { verifyTurnstileToken } from './server';
 import { turnstileStatusSchema } from '@giveaway/turnstile-model/schemas';
 
-export const getLastTurnstileCheck = procedure()
+export const getLastTurnstileCheck = procedure(
+  'turnstile-server/getLastTurnstileCheck'
+)
   .authorization({
     required: false
   })

@@ -4,7 +4,9 @@ import {
   IdentityProvider,
   type Account
 } from '@giveaway/db-model';
-import disconnectAccount, { updateEmail } from '../disconnect-account';
+import disconnectAccountDefault, {
+  disconnectAccount
+} from '../disconnect-account';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
@@ -51,8 +53,8 @@ describe('disconnectAccount', () => {
     vi.restoreAllMocks();
   });
 
-  it('is exported under the name updateEmail as well as the default export', () => {
-    expect(updateEmail).toBe(disconnectAccount);
+  it('is exported under the name disconnectAccount as well as the default export', () => {
+    expect(disconnectAccount).toBe(disconnectAccountDefault);
   });
 
   describe('authorization', () => {

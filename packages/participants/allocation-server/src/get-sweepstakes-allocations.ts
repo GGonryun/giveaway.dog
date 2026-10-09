@@ -5,7 +5,9 @@ import { DEFAULT_SWEEPSTAKES_PRIZE_NAME } from '@giveaway/sweepstakes-model/defa
 import z from 'zod';
 import { allocationStatisticsSchema as allocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 
-export const getSweepstakesAllocations = procedure()
+export const getSweepstakesAllocations = procedure(
+  'allocation-server/getSweepstakesAllocations'
+)
   .authorization({
     required: false
   })

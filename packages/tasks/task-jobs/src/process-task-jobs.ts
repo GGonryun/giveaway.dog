@@ -9,7 +9,7 @@ import { isRetryableApplicationError } from '@giveaway/util-errors';
 
 const MAX_JOBS_PER_RUN = 5;
 
-export const processTaskJobs = procedure()
+export const processTaskJobs = procedure('task-jobs/processTaskJobs')
   .authorization({ required: false })
   .output(
     z.object({

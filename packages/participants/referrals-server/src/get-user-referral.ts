@@ -20,7 +20,7 @@ const getCacheConfig = ({ user, input }: any) => {
   };
 };
 
-export const getUserReferral = procedure()
+export const getUserReferral = procedure('referrals-server/getUserReferral')
   .authorization({ required: false })
   .input(createReferralSchema.omit({ taskId: true }))
   .output(userReferralSchema.optional())

@@ -9,7 +9,9 @@ import {
   selectRandomUnique
 } from '@giveaway/x-picker-model/picker-utils';
 
-export const drawTwitterV2Picker = procedure()
+export const drawTwitterV2Picker = procedure(
+  'x-picker-server/drawTwitterV2Picker'
+)
   .authorization({
     required: true
   })

@@ -6,7 +6,7 @@ import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { IntegrationProvider, TeamTier } from '@giveaway/db-model';
 import { TeamPermission } from '@giveaway/team-permissions';
 
-export const disconnectBluesky = procedure()
+export const disconnectBluesky = procedure('bluesky-connect/disconnectBluesky')
   .authorization({ required: true })
   .input(z.object({ slug: z.string() }))
   .handler(async ({ input, user, db }) => {

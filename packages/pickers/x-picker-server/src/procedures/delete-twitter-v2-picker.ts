@@ -3,7 +3,9 @@ import { getWorld } from 'workflow/runtime';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 
-export const deleteTwitterV2Picker = procedure()
+export const deleteTwitterV2Picker = procedure(
+  'x-picker-server/deleteTwitterV2Picker'
+)
   .authorization({
     required: true
   })

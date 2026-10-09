@@ -12,7 +12,7 @@ const toggleVisibilityInput = z.object({
   visibility: z.nativeEnum(VisibilityType)
 });
 
-const toggleVisibility = procedure()
+const toggleVisibility = procedure('sweepstakes-editor-server/toggleVisibility')
   .authorization({ required: true })
   .input(toggleVisibilityInput)
   .output(z.object({ visibility: z.nativeEnum(VisibilityType) }))

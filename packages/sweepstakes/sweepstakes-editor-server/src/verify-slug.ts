@@ -3,7 +3,7 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 
-export const verifySlug = procedure()
+export const verifySlug = procedure('sweepstakes-editor-server/verifySlug')
   .authorization({ required: true })
   .input(
     z.object({

@@ -12,7 +12,7 @@ import { saveTaskProof } from '@giveaway/task-validation-core/proof';
 import { validateReferral } from '@giveaway/task-validation-core/referral';
 import { validateSweepstakesState } from '@giveaway/task-validation-core/task-state';
 
-const submitTask = procedure()
+const submitTask = procedure('task-actions/submitTask')
   .authorization({ required: true })
   .input(
     z.object({

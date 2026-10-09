@@ -4,7 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { taskSchema, toTaskSchemaSafe } from '@giveaway/task-model/schemas';
 
-export const getTeamTasks = procedure()
+export const getTeamTasks = procedure('participant-server/getTeamTasks')
   .authorization({
     required: true
   })

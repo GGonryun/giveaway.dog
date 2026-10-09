@@ -12,7 +12,9 @@ import {
 } from '@giveaway/user-model/user';
 import { userEntriesSchema, toTaskSchema } from '@giveaway/task-model/schemas';
 
-const getSweepstakeTaskEntries = procedure()
+const getSweepstakeTaskEntries = procedure(
+  'sweepstakes-insights-server/getSweepstakeTaskEntries'
+)
   .authorization({
     required: false
   })

@@ -4,7 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
-export const deleteTemplate = procedure()
+export const deleteTemplate = procedure('templates-server/deleteTemplate')
   .authorization({ required: true })
   .input(
     z.object({

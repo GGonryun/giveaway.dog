@@ -9,7 +9,7 @@ import {
   TeamPermission
 } from '@giveaway/team-permissions';
 
-const updateMemberRole = procedure()
+const updateMemberRole = procedure('team-members-server/updateMemberRole')
   .authorization({ required: true })
   .input(
     z.object({

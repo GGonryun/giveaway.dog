@@ -10,7 +10,7 @@ const hostSchema = z.object({
   slug: z.string()
 });
 
-const getBrowseHosts = procedure()
+const getBrowseHosts = procedure('browse-server/getBrowseHosts')
   .authorization({
     required: false
   })

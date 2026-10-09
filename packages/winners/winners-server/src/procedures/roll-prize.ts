@@ -12,7 +12,7 @@ import {
 } from '@giveaway/winners-model/slots';
 import { getEligibleCompletions } from '../completions';
 
-export const rollPrize = procedure()
+export const rollPrize = procedure('winners-server/rollPrize')
   .authorization({
     required: true
   })

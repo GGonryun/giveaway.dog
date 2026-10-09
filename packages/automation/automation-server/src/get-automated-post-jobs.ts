@@ -7,7 +7,9 @@ import {
   toAutomatedPostJobSchema
 } from '@giveaway/automation-model/schemas';
 
-export const getAutomatedPostJobs = procedure()
+export const getAutomatedPostJobs = procedure(
+  'automation-server/getAutomatedPostJobs'
+)
   .authorization({ required: true })
   .input(
     z.object({

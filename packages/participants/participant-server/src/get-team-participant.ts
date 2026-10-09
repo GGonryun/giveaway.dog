@@ -11,7 +11,9 @@ import {
   toTeamParticipant
 } from '@giveaway/participant-model/db';
 
-export const getTeamParticipant = procedure()
+export const getTeamParticipant = procedure(
+  'participant-server/getTeamParticipant'
+)
   .authorization({
     required: true
   })

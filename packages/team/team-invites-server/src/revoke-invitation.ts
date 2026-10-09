@@ -8,7 +8,7 @@ import {
 } from '@giveaway/team-permissions';
 import z from 'zod';
 
-const revokeInvitation = procedure()
+const revokeInvitation = procedure('team-invites-server/revokeInvitation')
   .authorization({ required: true })
   .input(
     z.object({

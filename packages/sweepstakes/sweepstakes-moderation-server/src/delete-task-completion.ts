@@ -7,7 +7,9 @@ import { TeamTier } from '@giveaway/db-model';
 import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 
-export const deleteTaskCompletion = procedure()
+export const deleteTaskCompletion = procedure(
+  'sweepstakes-moderation-server/deleteTaskCompletion'
+)
   .authorization({ required: true })
   .input(
     z.object({

@@ -11,7 +11,7 @@ import {
 } from '@giveaway/integration-model/schemas';
 import { environment } from '@giveaway/app-config/environment';
 
-export const twitterOAuthCallback = procedure()
+export const twitterOAuthCallback = procedure('x-connect/twitterOAuthCallback')
   .authorization({
     required: true
   })

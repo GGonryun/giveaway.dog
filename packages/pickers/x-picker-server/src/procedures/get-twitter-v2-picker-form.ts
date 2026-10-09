@@ -5,7 +5,9 @@ import z from 'zod';
 import { twitterV2PickerUnvalidatedFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';
 
-export const getTwitterV2PickerForm = procedure()
+export const getTwitterV2PickerForm = procedure(
+  'x-picker-server/getTwitterV2PickerForm'
+)
   .authorization({
     required: true
   })

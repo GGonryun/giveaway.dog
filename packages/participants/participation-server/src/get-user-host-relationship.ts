@@ -18,7 +18,9 @@ const getCacheConfig = ({ user, input }: any) => {
   };
 };
 
-export const getUserHostRelationship = procedure()
+export const getUserHostRelationship = procedure(
+  'participation-server/getUserHostRelationship'
+)
   .authorization({ required: false })
   .input(z.object({ sweepstakesId: z.string() }))
   .output(userHostRelationshipSchema.optional())

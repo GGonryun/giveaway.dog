@@ -26,7 +26,9 @@ const updateWinnerCriteriaInput = z.object({
   externalPlatforms: allowedUserSourcesSchema.nullable().optional()
 });
 
-const updateWinnerCriteria = procedure()
+const updateWinnerCriteria = procedure(
+  'sweepstakes-moderation-server/updateWinnerCriteria'
+)
   .authorization({ required: true })
   .input(updateWinnerCriteriaInput)
   .output(sweepstakesWinnerCriteriaSchema)

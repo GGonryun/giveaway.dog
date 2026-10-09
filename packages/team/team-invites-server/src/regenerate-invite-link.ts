@@ -9,7 +9,9 @@ import {
 import { environment } from '@giveaway/app-config/environment';
 import z from 'zod';
 
-const regenerateInviteLink = procedure()
+const regenerateInviteLink = procedure(
+  'team-invites-server/regenerateInviteLink'
+)
   .authorization({ required: true })
   .input(
     z.object({

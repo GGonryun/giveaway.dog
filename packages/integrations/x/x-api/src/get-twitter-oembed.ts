@@ -27,7 +27,7 @@ const twitterEmbedSchema = z.object({
 
 export type TwitterEmbedData = z.infer<typeof twitterEmbedSchema>;
 
-const getTwitterOEmbed = procedure()
+const getTwitterOEmbed = procedure('x-api/getTwitterOEmbed')
   .authorization({ required: false })
   .input(
     z.object({

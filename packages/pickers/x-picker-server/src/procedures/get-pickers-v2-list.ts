@@ -7,7 +7,7 @@ import {
   listPickersV2FilterSchema
 } from '@giveaway/x-picker-model/schemas/list';
 
-export const getPickersV2List = procedure()
+export const getPickersV2List = procedure('x-picker-server/getPickersV2List')
   .authorization({
     required: true
   })

@@ -9,7 +9,7 @@ import {
 import { TeamRole } from '@giveaway/db-model';
 import z from 'zod';
 
-const removeMember = procedure()
+const removeMember = procedure('team-members-server/removeMember')
   .authorization({ required: true })
   .input(
     z.object({

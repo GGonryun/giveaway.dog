@@ -10,7 +10,9 @@ import {
   toDerivedSweepstakeStatus
 } from '@giveaway/sweepstakes-model/sweepstakes';
 
-const getSweepstakesStatus = procedure()
+const getSweepstakesStatus = procedure(
+  'sweepstakes-editor-server/getSweepstakesStatus'
+)
   .authorization({ required: true })
   .input(z.object({ id: z.string() }))
   .output(

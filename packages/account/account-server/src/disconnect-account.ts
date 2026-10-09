@@ -8,7 +8,7 @@ import {
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 
-export const updateEmail = procedure()
+export const disconnectAccount = procedure('account-server/disconnectAccount')
   .authorization({ required: true })
   .input(z.object({ type: identityProviderSchema }))
   .handler(async ({ input, user, db }) => {
@@ -62,4 +62,4 @@ export const updateEmail = procedure()
     });
   });
 
-export default updateEmail;
+export default disconnectAccount;

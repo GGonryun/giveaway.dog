@@ -4,7 +4,9 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 
-export const getPublishedSweepstakes = procedure()
+export const getPublishedSweepstakes = procedure(
+  'sweepstakes-editor-server/getPublishedSweepstakes'
+)
   .authorization({
     required: false
   })

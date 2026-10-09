@@ -10,7 +10,7 @@ import {
 } from '@giveaway/templates-model/schemas/template';
 import { STATIC_TEMPLATES } from '@giveaway/templates-model/data/static-templates';
 
-export const getTemplates = procedure()
+export const getTemplates = procedure('templates-server/getTemplates')
   .authorization({
     required: true
   })

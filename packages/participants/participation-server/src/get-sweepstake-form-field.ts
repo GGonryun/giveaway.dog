@@ -5,7 +5,9 @@ import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { sweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 
-export const getSweepstakesFormFields = procedure()
+export const getSweepstakesFormFields = procedure(
+  'participation-server/getSweepstakesFormFields'
+)
   .authorization({
     required: true
   })

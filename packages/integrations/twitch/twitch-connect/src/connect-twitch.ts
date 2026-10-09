@@ -12,7 +12,7 @@ import {
 } from '@giveaway/twitch-api/scopes';
 import { twitchFeatureSchema } from '@giveaway/integration-model/scopes';
 
-export const connectTwitch = procedure()
+export const connectTwitch = procedure('twitch-connect/connectTwitch')
   .authorization({
     required: true
   })

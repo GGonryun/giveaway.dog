@@ -5,7 +5,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { completeOnboardingSchema } from '@giveaway/user-model/onboarding';
 import z from 'zod';
 
-const completeOnboarding = procedure()
+const completeOnboarding = procedure('account-server/completeOnboarding')
   .authorization({ required: true })
   .input(completeOnboardingSchema)
   .output(

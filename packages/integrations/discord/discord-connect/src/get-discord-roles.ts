@@ -7,7 +7,7 @@ import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { IntegrationProvider, TeamTier } from '@giveaway/db-model';
 import z from 'zod';
 
-export const getDiscordRoles = procedure()
+export const getDiscordRoles = procedure('discord-connect/getDiscordRoles')
   .authorization({ required: true })
   .input(
     z.object({

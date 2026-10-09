@@ -20,7 +20,9 @@ import { toCompletionValue } from '@giveaway/task-model/entries';
 import { ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY } from '@giveaway/task-model/queries';
 import { toTaskSchema } from '@giveaway/task-model/schemas';
 
-const getParticipantSweepstake = procedure()
+const getParticipantSweepstake = procedure(
+  'participation-server/getParticipantSweepstake'
+)
   .authorization({
     required: false
   })

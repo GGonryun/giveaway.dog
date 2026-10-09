@@ -9,7 +9,7 @@ import {
 import { TeamRole } from '@giveaway/db-model';
 import z from 'zod';
 
-const getTeamInvitations = procedure()
+const getTeamInvitations = procedure('team-invites-server/getTeamInvitations')
   .authorization({ required: true })
   .input(
     z.object({
