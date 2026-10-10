@@ -12,6 +12,8 @@ on:
         required: false
       E2E_LOGIN_SECRET:
         required: false
+      TWITCH_EVENTSUB_SECRET:
+        required: false
   workflow_dispatch:
     inputs:
       url:
@@ -136,6 +138,7 @@ jobs:
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
           E2E_LOGIN_SECRET: ${{ secrets.E2E_LOGIN_SECRET }}
+          TWITCH_EVENTSUB_SECRET: ${{ secrets.TWITCH_EVENTSUB_SECRET }}
           DEPLOYMENT_URL: ${{ steps.target.outputs.url }}
         run: |
           case "$DEPLOYMENT_URL" in
