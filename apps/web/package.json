@@ -422,8 +422,5 @@
     "fast-check": "catalog:",
     "prisma": "catalog:",
     "tsx": "catalog:"
-  },
-  "prisma": {
-    "schema": "../../packages/infra/db-schema/src/schema.prisma"
   }
 }
