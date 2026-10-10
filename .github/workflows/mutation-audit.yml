@@ -12,7 +12,7 @@ on:
       count:
         description: How many packages to pick at random
         required: false
-        default: '3'
+        default: '5'
 
 permissions:
   contents: read
@@ -46,7 +46,7 @@ jobs:
         id: pick
         env:
           INPUT_PACKAGES: ${{ inputs.packages }}
-          INPUT_COUNT: ${{ inputs.count || '3' }}
+          INPUT_COUNT: ${{ inputs.count || '5' }}
         run: |
           if [ -n "$INPUT_PACKAGES" ]; then
             packages=$(node -e 'console.log(JSON.stringify(process.argv.slice(1)))' $INPUT_PACKAGES)
