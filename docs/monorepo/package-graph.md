@@ -765,13 +765,13 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### E2E
 
-3 packages, 11 source files, 11 test files.
+3 packages, 12 source files, 14 test files.
 
-| Package                | Type   | Files | Moves from                                                                                                      |
-| ---------------------- | ------ | ----- | --------------------------------------------------------------------------------------------------------------- |
-| `@giveaway/e2e-gate`   | server | 1 / 1 | New package: the environment and secret checks that the `e2e` provider and the seed API share                   |
-| `@giveaway/e2e-model`  | model  | 3 / 3 | New package: the personas, the namespaces and slugs, and the request schemas and limits of the seed API         |
-| `@giveaway/e2e-server` | server | 7 / 7 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways, rows, run cleanup, janitor |
+| Package                | Type   | Files | Moves from                                                                                                                        |
+| ---------------------- | ------ | ----- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `@giveaway/e2e-gate`   | server | 1 / 1 | New package: the environment and secret checks that the `e2e` provider and the seed API share                                     |
+| `@giveaway/e2e-model`  | model  | 3 / 5 | New package: the personas, the namespaces and slugs, and the request schemas and limits of the seed API                           |
+| `@giveaway/e2e-server` | server | 8 / 8 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways and their entries, rows, run cleanup, janitor |
 
 ### Apps and tools
 
