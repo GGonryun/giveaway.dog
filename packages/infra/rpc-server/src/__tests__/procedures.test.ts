@@ -183,6 +183,26 @@ describe('procedure', () => {
     });
   });
 
+  describe('when the authorization config has no boolean required flag', () => {
+    it.each([{}, { required: undefined }, { required: 'false' }])(
+      'fails the call for %o without running the handler',
+      async (config) => {
+        signIn();
+        const handler = vi.fn(async () => 'data');
+        const run = procedure()
+          .authorization(config as unknown as { required: boolean })
+          .handler(handler);
+
+        const result = await run();
+
+        expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+          'authorization requires a boolean `required` flag'
+        );
+        expect(handler).not.toHaveBeenCalled();
+      }
+    );
+  });
+
   describe('when authorization is optional', () => {
     it('passes a null user when there is no session', async () => {
       const handler = vi.fn(async () => 'data');
