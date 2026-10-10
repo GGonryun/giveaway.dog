@@ -9,7 +9,7 @@ import { Failure } from '@giveaway/rpc-model/types';
 import { cn } from '@giveaway/ui-utils/utils';
 import { CheckIcon, LucideIcon, SaveIcon } from 'lucide-react';
 import { useMemo } from 'react';
-import { TaskSchema } from '@giveaway/task-model/schemas';
+import { ParticipantTaskSchema } from '@giveaway/task-model/schemas';
 import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
@@ -24,12 +24,13 @@ export type TaskActionHandlers = {
   submission: UserTaskSubmissionSchema | undefined;
 };
 
-export type TaskActionProps<T extends TaskSchema = TaskSchema> =
-  TaskActionHandlers & {
-    task: T;
-    entrants: number;
-    loyalty: number;
-  };
+export type TaskActionProps<
+  T extends ParticipantTaskSchema = ParticipantTaskSchema
+> = TaskActionHandlers & {
+  task: T;
+  entrants: number;
+  loyalty: number;
+};
 
 export const TaskContent: React.PC<{ className?: string }> = ({
   children,

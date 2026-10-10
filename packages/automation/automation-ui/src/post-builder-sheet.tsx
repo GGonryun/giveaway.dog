@@ -10,7 +10,7 @@ import {
   SheetTitle
 } from '@giveaway/ui-primitives/sheet';
 import { Button } from '@giveaway/ui-primitives/button';
-import { GiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
+import { ParticipantGiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   IntegrationsSchema,
   hasFeature
@@ -45,7 +45,7 @@ import { useRouter } from 'next/navigation';
 interface PostBuilderSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  sweepstakes: GiveawaySchema;
+  sweepstakes: ParticipantGiveawaySchema;
   liveUrl: string;
   slug: string;
   integrations: IntegrationsSchema;
@@ -112,7 +112,7 @@ const SheetContentWrapper: React.FC<SheetContentWrapperProps> = ({
 
 interface BlueskyFormProps {
   integrations: IntegrationsSchema;
-  sweepstakes: GiveawaySchema;
+  sweepstakes: ParticipantGiveawaySchema;
   liveUrl: string;
   slug: string;
   onSuccess: () => void;
@@ -209,7 +209,7 @@ const BlueskyForm: React.FC<BlueskyFormProps> = ({
 
 interface DiscordFormProps {
   integrations: IntegrationsSchema;
-  sweepstakes: GiveawaySchema;
+  sweepstakes: ParticipantGiveawaySchema;
   liveUrl: string;
   slug: string;
   onSuccess: () => void;

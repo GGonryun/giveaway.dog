@@ -5,8 +5,8 @@ import {
 } from '@giveaway/task-entry-core/building-blocks';
 import { useMemo, useState } from 'react';
 import {
-  SecretCodeTaskSchema,
-  SecretCodeV2TaskSchema,
+  ParticipantSecretCodeTaskSchema,
+  ParticipantSecretCodeV2TaskSchema,
   TaskInput
 } from '@giveaway/task-model/schemas';
 import { Input } from '@giveaway/ui-primitives/input';
@@ -19,12 +19,14 @@ import {
 import { AlertCircleIcon } from 'lucide-react';
 
 export const SecretCodeTaskActionForm: React.FC<
-  TaskActionProps<SecretCodeTaskSchema | SecretCodeV2TaskSchema>
+  TaskActionProps<
+    ParticipantSecretCodeTaskSchema | ParticipantSecretCodeV2TaskSchema
+  >
 > = ({ onCancel, onSubmit, submission, isLoading, task, error }) => {
   const [code, setCode] = useState('');
 
   const handleSubmit = () => {
-    const data: TaskInput<SecretCodeTaskSchema> = {
+    const data: TaskInput<ParticipantSecretCodeTaskSchema> = {
       code
     };
     onSubmit(data);

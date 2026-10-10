@@ -15,13 +15,18 @@ export const getSweepstakesTasks = procedure()
     })
   )
   .output(taskSchema.array())
-  .handler(async ({ input, db }) => {
+  .handler(async ({ input, db, user }) => {
     const sweepstakes = await db.sweepstakes.findFirst({
       where: {
         OR: [
           { id: input.sweepstakesId },
           { visibility: { slug: input.sweepstakesId } }
-        ]
+        ],
+        team: {
+          members: {
+            some: { userId: user.id }
+          }
+        }
       },
       include: {
         team: true,

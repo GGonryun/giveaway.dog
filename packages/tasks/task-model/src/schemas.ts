@@ -697,6 +697,75 @@ export const taskSchema = z.discriminatedUnion('type', [
   linkedInFollowTaskSchema
 ]);
 
+export const participantSecretCodeTaskSchema = secretCodeTaskSchema.omit({
+  code: true
+});
+
+export type ParticipantSecretCodeTaskSchema = z.infer<
+  typeof participantSecretCodeTaskSchema
+>;
+
+export const participantSecretCodeV2TaskSchema = secretCodeV2TaskSchema.omit({
+  codes: true
+});
+
+export type ParticipantSecretCodeV2TaskSchema = z.infer<
+  typeof participantSecretCodeV2TaskSchema
+>;
+
+export const participantTaskSchema = z.discriminatedUnion(
+  taskSchema.discriminator,
+  [
+    bonusTaskSchema,
+    bonusTimedTaskSchema,
+    bonusLimitedTaskSchema,
+    bonusLoyaltyTaskSchema,
+    bonusCompleteProfileTaskSchema,
+    visitUrlTaskSchema,
+    askQuestionTaskSchema,
+    singleChoiceTaskSchema,
+    multipleChoiceTaskSchema,
+    submitMediaTaskSchema,
+    twitterConnectTaskSchema,
+    twitterFollowTaskSchema,
+    twitterRetweetTaskSchema,
+    twitterRetweetImportTaskSchema,
+    twitterRetweetV2ImportTaskSchema,
+    twitterLikeTaskSchema,
+    twitterLikeImportTaskSchema,
+    steamWishlistTaskSchema,
+    steamFollowTaskSchema,
+    discordJoinTaskSchema,
+    discordInteractionImportTaskSchema,
+    twitchFollowTaskSchema,
+    twitchChatImportTaskSchema,
+    kickFollowTaskSchema,
+    participantSecretCodeTaskSchema,
+    participantSecretCodeV2TaskSchema,
+    youtubeVisitTaskSchema,
+    instagramVisitTaskSchema,
+    instagramLikeTaskSchema,
+    instagramCommentTaskSchema,
+    facebookVisitPageTaskSchema,
+    facebookViewPostTaskSchema,
+    tiktokFollowTaskSchema,
+    tiktokLikeTaskSchema,
+    blueskyConnectTaskSchema,
+    blueskyFollowTaskSchema,
+    blueskyLikeTaskSchema,
+    blueskyRepostTaskSchema,
+    blueskyLikeImportTaskSchema,
+    blueskyRepostImportTaskSchema,
+    veloraConnectTaskSchema,
+    veloraFollowTaskSchema,
+    referralLinkTaskSchema,
+    linkedInConnectTaskSchema,
+    linkedInFollowTaskSchema
+  ]
+);
+
+export type ParticipantTaskSchema = z.infer<typeof participantTaskSchema>;
+
 export type TaskType = z.infer<typeof taskSchema>['type'];
 
 export const TASK_LABEL: Record<TaskType, string> = {
@@ -876,7 +945,9 @@ export const TASK_JOB_DATA_SCHEMA = {
   SUBMIT_MEDIA: z.object({})
 } as const satisfies Record<TaskType, z.ZodTypeAny>;
 
-export type TaskInput<T extends TaskSchema> = T extends { type: infer U }
+export type TaskInput<T extends ParticipantTaskSchema> = T extends {
+  type: infer U;
+}
   ? U extends TaskType
     ? z.infer<(typeof TASK_INPUT_SCHEMA)[U]>
     : never
