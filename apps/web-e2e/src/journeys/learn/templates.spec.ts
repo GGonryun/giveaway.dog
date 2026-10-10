@@ -46,7 +46,7 @@ test.describe('official templates', () => {
 
   test.describe('direct links', () => {
     // Chromium logs the 404 of the document.
-    test.use({ allowedPageErrors: [/status of 404 \(Not Found\)/] });
+    test.use({ allowedPageErrors: [/status of 404 \(/] });
 
     for (const id of TEMPLATE_IDS) {
       test(

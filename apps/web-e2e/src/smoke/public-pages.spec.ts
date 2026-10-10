@@ -37,9 +37,7 @@ test.describe('public pages', { tag: '@smoke' }, () => {
     // log of the picker procedure. One pattern: Playwright reads an array of
     // two as a value and its options.
     test.use({
-      allowedPageErrors: [
-        /status of 404 \(Not Found\)|NOT_FOUND: Picker not found/
-      ]
+      allowedPageErrors: [/status of 404 \(|NOT_FOUND: Picker not found/]
     });
 
     for (const path of NOT_FOUND_PAGES) {

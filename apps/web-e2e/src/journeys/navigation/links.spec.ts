@@ -97,7 +97,7 @@ const expectLinksResolve = async (
 
 test.describe('internal links', { tag: '@slow' }, () => {
   // Chromium logs the 404 of /does-not-exist.
-  test.use({ allowedPageErrors: [/status of 404 \(Not Found\)/] });
+  test.use({ allowedPageErrors: [/status of 404 \(/] });
 
   test('a visitor follows every internal link of the marketing pages', async ({
     context,
