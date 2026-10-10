@@ -14,6 +14,7 @@ import {
   giveawaySchema,
   gradientBackgroundSchema,
   minimumAgeRestrictionSchema,
+  participantGiveawaySchema,
   participantSweepstakeSchema,
   PREVIEW_GIVEAWAY_STATES,
   prizeSchema,
@@ -1334,6 +1335,84 @@ describe('participantSweepstakeSchema', () => {
     );
 
     expect(pathsOf(result)).toEqual([['prizes', 0, 'draws', 0, 'result']]);
+  });
+});
+
+describe('participantGiveawaySchema', () => {
+  const secretCodeTask = {
+    ...bonusTask({ id: 'task-code', title: 'Enter the code' }),
+    type: 'SECRET_CODE',
+    code: 'OPEN-SESAME-42',
+    caseSensitive: true,
+    hint: 'Said on stream'
+  };
+
+  const secretCodesTask = {
+    ...bonusTask({ id: 'task-codes', title: 'Enter a code' }),
+    type: 'SECRET_CODE_V2',
+    codes: ['FIRST-CODE-77', 'SECOND-CODE-88'],
+    caseSensitive: false,
+    hint: 'In the post'
+  };
+
+  const giveaway = (tasks: unknown[]) => ({
+    ...validForm({ tasks }),
+    status: 'RUNNING',
+    id: 'sweep-1'
+  });
+
+  it('drops the codes of the secret-code tasks', () => {
+    const parsed = participantGiveawaySchema.parse(
+      giveaway([secretCodeTask, secretCodesTask, bonusTask()])
+    );
+
+    expect(parsed.tasks).toEqual([
+      {
+        ...bonusTask({ id: 'task-code', title: 'Enter the code' }),
+        type: 'SECRET_CODE',
+        caseSensitive: true,
+        hint: 'Said on stream'
+      },
+      {
+        ...bonusTask({ id: 'task-codes', title: 'Enter a code' }),
+        type: 'SECRET_CODE_V2',
+        caseSensitive: false,
+        hint: 'In the post'
+      },
+      bonusTask()
+    ]);
+  });
+
+  it('keeps the codes in giveawaySchema, which the host reads', () => {
+    const parsed = giveawaySchema.parse(giveaway([secretCodeTask]));
+
+    expect(parsed.tasks).toEqual([secretCodeTask]);
+  });
+
+  it('requires at least one task', () => {
+    const result = participantGiveawaySchema.safeParse(giveaway([]));
+
+    expect(messagesOf(result)).toEqual([
+      'At least one entry method is required'
+    ]);
+  });
+
+  it('allows at most 25 tasks', () => {
+    const tasks = Array.from({ length: 26 }, (_, i) =>
+      bonusTask({ id: `task-${i}` })
+    );
+
+    const result = participantGiveawaySchema.safeParse(giveaway(tasks));
+
+    expect(messagesOf(result)).toEqual([
+      'Maximum of 25 entry methods are allowed'
+    ]);
+  });
+
+  it('is the giveaway of participantSweepstakeSchema', () => {
+    expect(participantSweepstakeSchema.shape.sweepstakes).toBe(
+      participantGiveawaySchema
+    );
   });
 });
 

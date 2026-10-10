@@ -1,8 +1,8 @@
 import { assertNever } from '@giveaway/util-errors';
 import { CompletionStatus } from '@giveaway/db-model';
-import { TaskSchema } from './schemas';
+import { ParticipantTaskSchema } from './schemas';
 
-export const computeTaskStatus = (task: TaskSchema) => {
+export const computeTaskStatus = (task: ParticipantTaskSchema) => {
   switch (task.type) {
     case 'BONUS_TASK':
     case 'BONUS_TIMED':

@@ -37,6 +37,15 @@ import { allowedUserSourcesSchema } from '@giveaway/user-source-model/schemas';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { DEFAULT_MINIMUM_AGE_FIELD } from '@giveaway/custom-fields-model/defaults';
 
+const stubRuntimeTimeZone = (timeZone: string) => {
+  const resolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
+  vi.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockImplementation(
+    function (this: Intl.DateTimeFormat) {
+      return { ...resolvedOptions.call(this), timeZone };
+    }
+  );
+};
+
 describe('scalar defaults', () => {
   it('exposes the default sweepstakes copy', () => {
     expect({
@@ -114,7 +123,7 @@ describe('DEFAULT_SWEEPSTAKES_DETAILS', () => {
 describe('DEFAULT_SWEEPSTAKES_TIMING', () => {
   afterEach(() => {
     vi.useRealTimers();
-    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
     vi.resetModules();
   });
 
@@ -148,13 +157,13 @@ describe('DEFAULT_SWEEPSTAKES_TIMING', () => {
   });
 
   it('uses the runtime time zone', async () => {
-    vi.stubEnv('TZ', 'America/New_York');
+    stubRuntimeTimeZone('America/New_York');
 
-    const timing = await loadAt(new Date('2026-10-01T15:30:00.000Z'));
+    const timing = await loadAt(new Date(2026, 9, 1, 15, 30));
 
     expect(timing).toEqual({
-      startDate: new Date('2026-10-02T04:00:00.000Z'),
-      endDate: new Date('2026-10-09T04:00:00.000Z'),
+      startDate: new Date(2026, 9, 2),
+      endDate: new Date(2026, 9, 9),
       timeZone: 'America/New_York'
     });
   });

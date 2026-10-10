@@ -2,7 +2,7 @@ import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-co
 
 import { TaskContent } from '@giveaway/task-entry-core/building-blocks';
 import { Button } from '@giveaway/ui-primitives/button';
-import { TaskSchema } from '@giveaway/task-model/schemas';
+import { ParticipantTaskSchema } from '@giveaway/task-model/schemas';
 import { TaskActionForm } from './form';
 import { FailureData } from '@giveaway/rpc-model/types';
 import { TaskLock } from './task-lock';
@@ -14,7 +14,7 @@ import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
 export const TaskAction: React.FC<{
   submission: UserTaskSubmissionSchema | undefined;
   isLoading: boolean;
-  task: TaskSchema;
+  task: ParticipantTaskSchema;
   onSubmit: (data?: unknown) => void;
   onUpdate: (data?: unknown) => void;
   onCancel: () => void;

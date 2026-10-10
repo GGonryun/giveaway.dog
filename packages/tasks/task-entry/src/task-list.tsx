@@ -4,7 +4,7 @@ import { cn } from '@giveaway/ui-utils/utils';
 import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { nanoid } from 'nanoid';
 import React, { useEffect } from 'react';
-import { TaskSchema } from '@giveaway/task-model/schemas';
+import { ParticipantTaskSchema } from '@giveaway/task-model/schemas';
 import { useGiveawayParticipation } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { TaskItem } from './task-item';
 import { UserTaskSubmissionSchema } from '@giveaway/sweepstakes-model/schemas';
@@ -46,7 +46,7 @@ export const TaskList: React.FC<{
     (task) => task.mandatory
   );
 
-  const handleSubmission = (task: TaskSchema) => () => {
+  const handleSubmission = (task: ParticipantTaskSchema) => () => {
     const status = computeTaskStatus(task);
     setSubmissions(
       uniqBy(
@@ -73,7 +73,7 @@ export const TaskList: React.FC<{
     0
   );
 
-  const mockOptionalTasks: TaskSchema[] = [
+  const mockOptionalTasks: ParticipantTaskSchema[] = [
     {
       ...toDefaultValues('VISIT_URL'),
       id: nanoid()

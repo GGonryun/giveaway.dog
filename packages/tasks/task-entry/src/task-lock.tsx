@@ -3,7 +3,7 @@ import {
   BonusLimitedTaskSchema,
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
-  TaskSchema
+  ParticipantTaskSchema
 } from '@giveaway/task-model/schemas';
 import pluralize from 'pluralize';
 import { formatDistance } from 'date-fns/formatDistance';
@@ -23,7 +23,7 @@ export type LockState = z.infer<typeof lockStateSchema>;
 export type TaskLock = { message: string; icon: LucideIcon } | null;
 
 export const getTaskLock = (args: {
-  task: TaskSchema;
+  task: ParticipantTaskSchema;
   loyalty: number;
   submissions: UserTaskSubmissionSchema[];
   entrants: number;

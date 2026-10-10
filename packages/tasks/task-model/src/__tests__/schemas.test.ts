@@ -28,6 +28,7 @@ import {
   linkedInFollowTaskSchema,
   MAX_ALLOWED_LOYALTY_TIERS,
   multipleChoiceTaskSchema,
+  participantTaskSchema,
   parseTwitterProofSchema,
   referralLinkTaskSchema,
   secretCodeTaskSchema,
@@ -1649,6 +1650,58 @@ describe('secret code task schemas', () => {
         withField('SECRET_CODE_V2', 'codes', ['WOOF', ''])
       )
     ).toEqual(['Secret code is required']);
+  });
+});
+
+describe('participantTaskSchema', () => {
+  it('has one option per task type', () => {
+    const types = participantTaskSchema.options.map(
+      (option) => option.shape.type.value
+    );
+
+    expect(sorted(types)).toEqual(sorted(TASK_TYPES));
+  });
+
+  it.each(
+    TASK_TYPES.filter(
+      (type) => type !== 'SECRET_CODE' && type !== 'SECRET_CODE_V2'
+    )
+  )('keeps every field of a valid %s task', (type) => {
+    expect(participantTaskSchema.parse(VALID_TASKS[type])).toEqual(
+      VALID_TASKS[type]
+    );
+  });
+
+  it('drops the code of a SECRET_CODE task', () => {
+    const parsed = participantTaskSchema.parse({
+      ...VALID_TASKS.SECRET_CODE,
+      code: 'OPEN-SESAME-42',
+      caseSensitive: true,
+      hint: 'Said on stream'
+    });
+
+    expect(parsed).not.toHaveProperty('code');
+    expect(parsed).toEqual({
+      ...withoutField('SECRET_CODE', 'code'),
+      caseSensitive: true,
+      hint: 'Said on stream'
+    });
+  });
+
+  it('drops the codes of a SECRET_CODE_V2 task', () => {
+    const parsed = participantTaskSchema.parse({
+      ...VALID_TASKS.SECRET_CODE_V2,
+      codes: ['FIRST-CODE-77', 'SECOND-CODE-88'],
+      caseSensitive: true,
+      hint: 'In the post'
+    });
+
+    expect(parsed).not.toHaveProperty('codes');
+    expect(parsed).toEqual({
+      ...withoutField('SECRET_CODE_V2', 'codes'),
+      caseSensitive: true,
+      hint: 'In the post'
+    });
   });
 });
 
