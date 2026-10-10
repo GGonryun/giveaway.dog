@@ -85,17 +85,25 @@ jobs:
           sparse-checkout-cone-mode: false
           persist-credentials: false
 
-      - name: Pick the deployment to test
-        id: target
+      - name: Start waiting for the deployment
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          dir="$RUNNER_TEMP/preview"
+          mkdir -p "$dir"
+          echo "PREVIEW_DIR=$dir" >> "$GITHUB_ENV"
           if [ -n "$DEPLOYMENT_URL" ]; then
-            url="$DEPLOYMENT_URL"
-          else
-            url=$(bash .e2e-workflow/.github/scripts/same-app-preview.sh "$SHA" 1200)
+            echo "$DEPLOYMENT_URL" > "$dir/url"
+            : > "$dir/log"
+            echo 0 > "$dir/status"
+            exit 0
           fi
-          echo "url=$url" >> "$GITHUB_OUTPUT"
+          (
+            status=0
+            bash .e2e-workflow/.github/scripts/same-app-preview.sh "$SHA" 1200 > "$dir/url" 2> "$dir/log" || status=$?
+            echo "$status" > "$dir/status.tmp"
+            mv "$dir/status.tmp" "$dir/status"
+          ) > /dev/null 2>&1 &
 
       - name: Set up the project
         uses: ./.github/actions/setup
@@ -107,6 +115,22 @@ jobs:
         run: |
           run_id=$(node -e 'const [id, attempt] = process.argv.slice(1).map(BigInt); console.log(((id * 100n + attempt) % 36n ** 6n).toString(36).padStart(6, "0"))' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT")
           echo "E2E_RUN_ID=$run_id" >> "$GITHUB_ENV"
+
+      - name: Pick the deployment to test
+        id: target
+        run: |
+          tail -n +1 -f "$PREVIEW_DIR/log" &
+          tail_pid=$!
+          while [ ! -f "$PREVIEW_DIR/status" ]; do
+            sleep 2
+          done
+          sleep 1
+          kill "$tail_pid"
+          status=$(cat "$PREVIEW_DIR/status")
+          if [ "$status" != 0 ]; then
+            exit "$status"
+          fi
+          echo "url=$(cat "$PREVIEW_DIR/url")" >> "$GITHUB_OUTPUT"
 
       - name: Playwright
         env:
