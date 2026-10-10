@@ -124,6 +124,47 @@ describe('GiveawayParticipationCard', () => {
       expect(container).toHaveTextContent('Starts in 10 seconds');
     });
 
+    it('hydrates a date range that the browser time zone puts on other days', async () => {
+      const props = buildParticipationProps({
+        sweepstakes: buildSweepstakes({
+          timing: {
+            startDate: new Date('2026-09-24T03:00:00Z'),
+            endDate: new Date('2026-10-08T03:00:00Z'),
+            timeZone: 'UTC'
+          }
+        })
+      });
+      const card = (
+        <GiveawayParticipationProvider {...props}>
+          <GiveawayParticipationCard>
+            <p>state content</p>
+          </GiveawayParticipationCard>
+        </GiveawayParticipationProvider>
+      );
+      const html = renderToString(card);
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      document.body.appendChild(container);
+      const onRecoverableError = vi.fn();
+      const serverTimeZone = process.env.TZ;
+      process.env.TZ = 'America/Los_Angeles';
+      onTestFinished(() => {
+        process.env.TZ = serverTimeZone;
+      });
+
+      const root = await act(async () =>
+        hydrateRoot(container, card, { onRecoverableError })
+      );
+      onTestFinished(() => {
+        act(() => root.unmount());
+        container.remove();
+      });
+
+      expect(html).toContain('Sep 24, 2026 - Oct 8, 2026');
+      expect(onRecoverableError).not.toHaveBeenCalled();
+      expect(container).toHaveTextContent('Sep 23, 2026 - Oct 7, 2026');
+    });
+
     it('hides the date range on the mobile preview', () => {
       renderCard({}, 'mobile');
       expect(
