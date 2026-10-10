@@ -3351,6 +3351,46 @@ importers:
         specifier: 'catalog:'
         version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
 
+  packages/e2e/e2e-fakes:
+    dependencies:
+      '@giveaway/cache':
+        specifier: workspace:*
+        version: link:../../infra/cache
+      '@giveaway/e2e-gate':
+        specifier: workspace:*
+        version: link:../e2e-gate
+      '@giveaway/e2e-model':
+        specifier: workspace:*
+        version: link:../e2e-model
+      nanoid:
+        specifier: 'catalog:'
+        version: 5.1.6
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
   packages/e2e/e2e-gate:
     dependencies:
       server-only:
@@ -3433,6 +3473,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../e2e-fakes
       '@giveaway/e2e-gate':
         specifier: workspace:*
         version: link:../e2e-gate
@@ -3562,6 +3605,9 @@ importers:
 
   packages/infra/content-moderation:
     dependencies:
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../../e2e/e2e-fakes
       '@google-cloud/vision':
         specifier: 'catalog:'
         version: 5.3.4
@@ -3676,6 +3722,12 @@ importers:
 
   packages/infra/email:
     dependencies:
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../../e2e/e2e-fakes
+      '@giveaway/e2e-model':
+        specifier: workspace:*
+        version: link:../../e2e/e2e-model
       inboundemail:
         specifier: 'catalog:'
         version: 0.20.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3854,6 +3906,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../db-model
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../../e2e/e2e-fakes
       '@giveaway/request-context-model':
         specifier: workspace:*
         version: link:../request-context-model
@@ -4161,6 +4216,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../../infra/db-model
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../../../e2e/e2e-fakes
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../core/integration-model
@@ -4826,6 +4884,9 @@ importers:
       '@giveaway/discord-model':
         specifier: workspace:*
         version: link:../discord-model
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../../../e2e/e2e-fakes
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../../../sweepstakes/sweepstakes-model
@@ -6560,6 +6621,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../../infra/db-model
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../../../e2e/e2e-fakes
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../core/integration-model
@@ -6716,6 +6780,12 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../../infra/db-model
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../../../e2e/e2e-fakes
+      '@giveaway/e2e-model':
+        specifier: workspace:*
+        version: link:../../../e2e/e2e-model
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../core/integration-model
@@ -11136,6 +11206,9 @@ importers:
       '@giveaway/discord-api':
         specifier: workspace:*
         version: link:../../integrations/discord/discord-api
+      '@giveaway/e2e-fakes':
+        specifier: workspace:*
+        version: link:../../e2e/e2e-fakes
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../sweepstakes-model

@@ -12,7 +12,7 @@ The graph comes from the code, not from a whiteboard. A script read every import
 
 ## Summary
 
-- **239 packages** in 20 groups, plus `apps/web`, `apps/web-e2e`, `tools/db-seed` and `tools/generators`.
+- **240 packages** in 20 groups, plus `apps/web`, `apps/web-e2e`, `tools/db-seed` and `tools/generators`.
 - **No dependency cycles and no boundary violations**, after 8 small refactors ([R1 to R8](#refactors-that-make-the-graph-valid)). Mapped onto these packages as it is today, the code has 4 dependency cycles and 4 imports that break the type rules.
 - **Small packages.** The median package has 3 source files, 4 internal dependencies and 2 npm dependencies. Today every CI job installs all 143 npm packages that the root `package.json` lists.
 - **Small blast radius.** A change to one package affects a median of 8 packages and a mean of 25, out of 240. Today every change affects the whole app.
@@ -36,7 +36,7 @@ packages/
   auth/  account/  team/  audience/  participants/
   tasks/  sweepstakes/  winners/  templates/  automation/
   pickers/  browse/  marketing/  shell/
-  e2e/                    e2e-gate, e2e-model, e2e-server: the gate and the seed API of the end-to-end tests
+  e2e/                    e2e-fakes, e2e-gate, e2e-model, e2e-server: the gate, the seed API and the fakes of the end-to-end tests
   integrations/
     core/                 integration-model, integration-icons, integration-ui, integration-server, platform-catalog
     x/  bluesky/  discord/  twitch/  youtube/  steam/  meta/  tiktok/  linkedin/  kick/  velora/
@@ -765,12 +765,13 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### E2E
 
-3 packages, 12 source files, 14 test files.
+4 packages, 18 source files, 17 test files.
 
 | Package                | Type   | Files | Moves from                                                                                                                        |
 | ---------------------- | ------ | ----- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `@giveaway/e2e-fakes`  | server | 5 / 2 | New package: the `E2E_FAKE_EXTERNALS` switch and the outbox in Redis of the fakes of the third-party services                     |
 | `@giveaway/e2e-gate`   | server | 1 / 1 | New package: the environment and secret checks that the `e2e` provider and the seed API share                                     |
-| `@giveaway/e2e-model`  | model  | 3 / 5 | New package: the personas, the namespaces and slugs, and the request schemas and limits of the seed API                           |
+| `@giveaway/e2e-model`  | model  | 4 / 6 | New package: the personas, the namespaces and slugs, the request schemas and limits of the seed API, and the fakes                |
 | `@giveaway/e2e-server` | server | 8 / 8 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways and their entries, rows, run cleanup, janitor |
 
 ### Apps and tools

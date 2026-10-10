@@ -17,8 +17,20 @@ import { toPostToDiscordResponseSchema } from '@giveaway/automation-model/schema
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 import { toSweepstakesEmbed } from '@giveaway/discord-api/embeds';
 import { toExpiredSweepstakeComponents } from '@giveaway/discord-api/util';
+import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
+import { recordE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 
 const MAX_JOBS_PER_RUN = 5;
+
+const recordE2eDiscordAlert =
+  (sweepstakesId: string) => async (url: string, init: { body: string }) => {
+    await recordE2eOutbox({
+      channel: 'discord-alert',
+      target: sweepstakesId,
+      payload: JSON.parse(init.body)
+    });
+    return new Response();
+  };
 
 export const processSweepstakesJobs = async () => {
   const now = new Date();
@@ -242,9 +254,10 @@ const processSweepstakesActivation = async ({
     return;
   }
 
+  const fakeAlert = isE2eFakeOn('discord');
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
-  if (!webhookUrl) {
+  if (!fakeAlert && !webhookUrl) {
     await db.sweepstakesJob.update({
       where: { id: job.id },
       data: { status: SweepstakesJobStatus.COMPLETED }
@@ -301,7 +314,9 @@ const processSweepstakesActivation = async ({
     embeds: [embed]
   };
 
-  const response = await fetch(webhookUrl, {
+  const send = fakeAlert ? recordE2eDiscordAlert(sweepstakes.id) : fetch;
+
+  const response = await send(webhookUrl!, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

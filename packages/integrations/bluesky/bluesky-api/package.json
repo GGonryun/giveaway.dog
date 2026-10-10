@@ -41,6 +41,7 @@
     "@giveaway/app-config": "workspace:*",
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/e2e-fakes": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",

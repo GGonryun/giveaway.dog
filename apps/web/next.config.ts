@@ -55,6 +55,7 @@ const nextConfig: NextConfig = {
     '@giveaway/discord-task-editor',
     '@giveaway/discord-task-entry',
     '@giveaway/discord-task-validation',
+    '@giveaway/e2e-fakes',
     '@giveaway/e2e-gate',
     '@giveaway/e2e-model',
     '@giveaway/e2e-server',

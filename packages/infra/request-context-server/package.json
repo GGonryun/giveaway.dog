@@ -27,6 +27,7 @@
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/e2e-fakes": "workspace:*",
     "@giveaway/request-context-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-types": "workspace:*",
