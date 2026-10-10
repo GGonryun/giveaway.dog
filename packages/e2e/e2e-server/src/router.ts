@@ -13,13 +13,17 @@ import { e2eRunIdSchema } from '@giveaway/e2e-model/naming';
 import { readE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 import { getE2eFakeServices } from '@giveaway/e2e-fakes/switch';
 import {
+  e2eJobsQuerySchema,
+  e2eJobsRunRequestSchema,
   e2eRowsQuerySchema,
   e2eSweepstakesRequestSchema,
-  e2eTeamRequestSchema
+  e2eTeamRequestSchema,
+  e2eUserJobsRequestSchema
 } from '@giveaway/e2e-model/requests';
 import { ApplicationError, codeToStatus } from '@giveaway/util-errors';
 import { ZodError } from 'zod';
 import { deleteE2eRun, sweepE2eData } from './cleanup';
+import { readE2eJobs, runE2eJobs, runE2eUserJobs } from './jobs';
 import { readE2eRows } from './rows';
 import { seedE2eSweepstakes } from './sweepstakes';
 import { seedE2eTeam } from './teams';
@@ -92,6 +96,27 @@ const ROUTES: E2eRoute[] = [
         e2eOutboxQuerySchema.parse(Object.fromEntries(query))
       )
     })
+  },
+  {
+    method: 'GET',
+    path: ['jobs'],
+    write: false,
+    handle: ({ db, query }) =>
+      readE2eJobs(db, e2eJobsQuerySchema.parse(Object.fromEntries(query)).id)
+  },
+  {
+    method: 'POST',
+    path: ['jobs', 'run'],
+    write: true,
+    handle: ({ db, body }) =>
+      runE2eJobs({ db, request: e2eJobsRunRequestSchema.parse(body) })
+  },
+  {
+    method: 'POST',
+    path: ['jobs', 'user'],
+    write: true,
+    handle: ({ db, body }) =>
+      runE2eUserJobs({ db, request: e2eUserJobsRequestSchema.parse(body) })
   },
   {
     method: 'DELETE',

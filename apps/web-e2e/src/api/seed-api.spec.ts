@@ -8,6 +8,9 @@ const PATHS = [
   ['POST', 'teams'],
   ['POST', 'sweepstakes'],
   ['POST', 'janitor'],
+  ['GET', 'jobs?id=nope'],
+  ['POST', 'jobs/run'],
+  ['POST', 'jobs/user'],
   ['DELETE', `runs/${RUN_ID}`],
   ['GET', 'does-not-exist']
 ] as const;

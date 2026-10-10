@@ -7,9 +7,12 @@ import {
   E2E_MAX_TEAM_MEMBERS,
   E2E_PRESET_STATUS,
   E2E_TASK_TYPES,
+  e2eJobsQuerySchema,
+  e2eJobsRunRequestSchema,
   e2eRowsQuerySchema,
   e2eSweepstakesRequestSchema,
   e2eTeamRequestSchema,
+  e2eUserJobsRequestSchema,
   toE2eSweepstakesTiming
 } from '../requests';
 
@@ -542,5 +545,41 @@ describe('e2eRowsQuerySchema details', () => {
     {}
   ])('rejects %j', (query) => {
     expect(e2eRowsQuerySchema.safeParse(query).success).toBe(false);
+  });
+});
+
+describe('the jobs requests', () => {
+  it('accepts the id of a giveaway', () => {
+    expect(e2eJobsRunRequestSchema.parse({ sweepstakesId: 'sw_1-A' })).toEqual({
+      sweepstakesId: 'sw_1-A'
+    });
+    expect(e2eJobsQuerySchema.parse({ id: 'sw_1-A' })).toEqual({
+      id: 'sw_1-A'
+    });
+  });
+
+  it.each([
+    ['no id', {}],
+    ['an empty id', { sweepstakesId: '' }],
+    ['an id with a slash', { sweepstakesId: '../teams' }],
+    ['an id that is too long', { sweepstakesId: 'x'.repeat(33) }],
+    ['an unknown field', { sweepstakesId: 'sw-1', all: true }]
+  ])('refuses a run with %s', (_, body) => {
+    expect(e2eJobsRunRequestSchema.safeParse(body).success).toBe(false);
+  });
+
+  it('accepts a persona and a namespace', () => {
+    expect(
+      e2eUserJobsRequestSchema.parse({ persona: 'participant', ns: 'abc123' })
+    ).toEqual({ persona: 'participant', ns: 'abc123' });
+  });
+
+  it.each([
+    ['an unknown persona', { persona: 'root', ns: 'abc123' }],
+    ['no namespace', { persona: 'participant' }],
+    ['a namespace with capitals', { persona: 'participant', ns: 'ABC123' }],
+    ['a user id', { persona: 'participant', ns: 'abc123', userId: 'u-1' }]
+  ])('refuses a user run with %s', (_, body) => {
+    expect(e2eUserJobsRequestSchema.safeParse(body).success).toBe(false);
   });
 });

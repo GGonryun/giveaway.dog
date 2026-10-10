@@ -8,7 +8,7 @@ import {
   getStateDisplayLabel
 } from '@giveaway/sweepstakes-model/schemas';
 import { Eye, Smartphone, Monitor } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { useIsMobile } from '@giveaway/ui-hooks/use-mobile';
 import { QRCodeModal } from '@giveaway/ui-qr/qr-code-modal';
 import {
@@ -46,6 +46,15 @@ import {
   getPreviewRelationship
 } from '@giveaway/sweepstakes-editor-preview/sweepstakes-editor-preview';
 
+const subscribe = () => () => {};
+
+const useIsClient = () =>
+  useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
+
 export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   props
 ) => {
@@ -54,10 +63,13 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   const detailsPage = useSweepstakesDetailsPage();
   const router = useRouter();
   const { activeTeam } = useTeams();
-  const liveUrl = browse.url({
-    sweepstakesId: sweepstakes.id,
-    slug: sweepstakes.visibility.slug
-  });
+  const isClient = useIsClient();
+  const liveUrl = isClient
+    ? browse.url({
+        sweepstakesId: sweepstakes.id,
+        slug: sweepstakes.visibility.slug
+      })
+    : '';
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   const { run: runCompleteSweepstakes, isLoading: isCompleting } = useProcedure(

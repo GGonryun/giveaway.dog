@@ -717,6 +717,22 @@ export type E2eSweepstakesRequestInput = z.input<
 
 const e2eSweepstakesIdSchema = z.string().regex(/^[A-Za-z0-9_-]{1,32}$/);
 
+export const e2eJobsRunRequestSchema = z
+  .object({ sweepstakesId: e2eSweepstakesIdSchema })
+  .strict();
+
+export type E2eJobsRunRequest = z.infer<typeof e2eJobsRunRequestSchema>;
+
+export const e2eJobsQuerySchema = z
+  .object({ id: e2eSweepstakesIdSchema })
+  .strict();
+
+export const e2eUserJobsRequestSchema = z
+  .object({ persona: e2ePersonaSchema, ns: e2eNamespaceSchema })
+  .strict();
+
+export type E2eUserJobsRequest = z.infer<typeof e2eUserJobsRequestSchema>;
+
 export const e2eRowsQuerySchema = z.union([
   z.object({ view: z.literal('team'), slug: e2eTeamSlugSchema }).strict(),
   z

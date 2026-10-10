@@ -16,7 +16,8 @@
     }
   },
   "exports": {
-    "./util": "./src/util.ts"
+    "./util": "./src/util.ts",
+    "./scope": "./src/scope.ts"
   },
   "scripts": {
     "test": "vitest run",

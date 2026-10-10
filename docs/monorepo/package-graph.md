@@ -416,7 +416,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### Server infrastructure
 
-18 packages, 30 source files, 23 test files.
+18 packages, 31 source files, 24 test files.
 
 | Package                            | Type    | Files | Moves from                                                                                                                                 |
 | ---------------------------------- | ------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -428,7 +428,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 | `@giveaway/db-schema`              | server  | 0 / 0 | `prisma/schema.prisma`<br>`prisma/migrations/`                                                                                             |
 | `@giveaway/email`                  | server  | 2 / 2 | `lib/email/`                                                                                                                               |
 | `@giveaway/feature-flags`          | model   | 1 / 1 | `schemas/feature-flags.ts`                                                                                                                 |
-| `@giveaway/jobs`                   | server  | 1 / 1 | `lib/jobs/`                                                                                                                                |
+| `@giveaway/jobs`                   | server  | 2 / 2 | `lib/jobs/`<br>New: `scope.ts`, the filter by giveaway of the job runners                                                                  |
 | `@giveaway/ratelimit`              | server  | 1 / 1 | `lib/ratelimit.ts`                                                                                                                         |
 | `@giveaway/request-context-model`  | model   | 3 / 3 | `lib/user-metrics.ts`<br>`schemas/fingerprint.ts`<br>`schemas/user-agent.ts`                                                               |
 | `@giveaway/request-context-server` | server  | 2 / 2 | `lib/devices.ts`<br>`lib/ip.ts`                                                                                                            |
@@ -523,7 +523,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### Participants
 
-20 packages, 53 source files, 48 test files.
+20 packages, 54 source files, 49 test files.
 
 | Package                                  | Type    | Files | Moves from                                                                                                                                                                                                              |
 | ---------------------------------------- | ------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -541,7 +541,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 | `@giveaway/referrals-model`              | model   | 2 / 2 | `lib/referrals/cookies.ts`<br>`lib/referrals/schemas.ts`                                                                                                                                                                |
 | `@giveaway/referrals-server`             | server  | 3 / 3 | `lib/referrals/procedures/`                                                                                                                                                                                             |
 | `@giveaway/scoring-model`                | model   | 3 / 3 | `lib/scoring/schemas/`<br>`schemas/user-scoring.ts`                                                                                                                                                                     |
-| `@giveaway/scoring-server`               | server  | 3 / 3 | `lib/scoring/imported.ts`<br>`lib/scoring/index.ts`<br>`lib/scoring/signup.ts`                                                                                                                                          |
+| `@giveaway/scoring-server`               | server  | 4 / 4 | `lib/scoring/imported.ts`<br>`lib/scoring/index.ts`<br>`lib/scoring/signup.ts`<br>`app/api/user/tracking/route.ts`                                                                                                      |
 | `@giveaway/scoring-ui`                   | feature | 1 / 1 | `lib/scoring/signal-display.ts`                                                                                                                                                                                         |
 | `@giveaway/user-quality-model`           | model   | 2 / 2 | `lib/user-quality/enforcement-levels.ts`<br>`schemas/quality.ts`                                                                                                                                                        |
 | `@giveaway/user-quality-ui`              | ui      | 2 / 1 | `lib/user-quality/bot-enforcement-field.tsx`, `lib/user-quality/display.ts`                                                                                                                                             |
@@ -765,14 +765,14 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### E2E
 
-4 packages, 18 source files, 17 test files.
+4 packages, 19 source files, 18 test files.
 
-| Package                | Type   | Files | Moves from                                                                                                                        |
-| ---------------------- | ------ | ----- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `@giveaway/e2e-fakes`  | server | 5 / 2 | New package: the `E2E_FAKE_EXTERNALS` switch and the outbox in Redis of the fakes of the third-party services                     |
-| `@giveaway/e2e-gate`   | server | 1 / 1 | New package: the environment and secret checks that the `e2e` provider and the seed API share                                     |
-| `@giveaway/e2e-model`  | model  | 4 / 6 | New package: the personas, the namespaces and slugs, the request schemas and limits of the seed API, and the fakes                |
-| `@giveaway/e2e-server` | server | 8 / 8 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways and their entries, rows, run cleanup, janitor |
+| Package                | Type   | Files | Moves from                                                                                                                              |
+| ---------------------- | ------ | ----- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `@giveaway/e2e-fakes`  | server | 5 / 2 | New package: the `E2E_FAKE_EXTERNALS` switch and the outbox in Redis of the fakes of the third-party services                           |
+| `@giveaway/e2e-gate`   | server | 1 / 1 | New package: the environment and secret checks that the `e2e` provider and the seed API share                                           |
+| `@giveaway/e2e-model`  | model  | 4 / 6 | New package: the personas, the namespaces and slugs, the request schemas and limits of the seed API, and the fakes                      |
+| `@giveaway/e2e-server` | server | 9 / 9 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways and their entries, rows, jobs, run cleanup, janitor |
 
 ### Apps and tools
 

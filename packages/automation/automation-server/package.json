@@ -32,12 +32,14 @@
     "@giveaway/bluesky-api": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-connect": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/x-api": "workspace:*",
     "nanoid": "catalog:",
+    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

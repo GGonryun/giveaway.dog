@@ -1,7 +1,17 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
 import type { ComponentProps } from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi
+} from 'vitest';
 import { TeamsProvider } from '@giveaway/team-context/team-provider';
 import { QRCodeModal } from '@giveaway/ui-qr/qr-code-modal';
 import {
@@ -137,6 +147,35 @@ describe('SweepstakesPreview', () => {
         hasAllWinnersSelected: false,
         isCompleting: false
       });
+    });
+
+    it('adds the public url only after hydration, as the server has none', async () => {
+      const preview = (
+        <TeamsProvider value={{ activeTeam: team, teams: [team] }}>
+          <SweepstakesPreview
+            sweepstakes={sweepstakes}
+            host={buildHost()}
+            prizes={oneWinner}
+            participation={buildParticipation()}
+          />
+        </TeamsProvider>
+      );
+      const container = document.createElement('div');
+      container.innerHTML = renderToString(preview);
+      document.body.appendChild(container);
+      onTestFinished(() => container.remove());
+      expect(statusProps().sweepstakesUrl).toBe('');
+      const onRecoverableError = vi.fn();
+
+      const root = await act(async () =>
+        hydrateRoot(container, preview, { onRecoverableError })
+      );
+      onTestFinished(() => act(() => root.unmount()));
+
+      expect(onRecoverableError).not.toHaveBeenCalled();
+      expect(statusProps().sweepstakesUrl).toBe(
+        `${window.location.origin}/browse/summer-giveaway`
+      );
     });
 
     it('knows when every prize slot has a winner', () => {

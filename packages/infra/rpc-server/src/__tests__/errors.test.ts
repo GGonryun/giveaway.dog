@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Prisma } from '@giveaway/db-model';
-import { isPrismaError, prismaErrorBoundary } from '../errors';
+import { ApplicationError } from '@giveaway/util-errors';
+import {
+  isPrismaError,
+  prismaErrorBoundary,
+  settle,
+  toFailure
+} from '../errors';
 import { knownRequestError } from '@giveaway/testing-server/prisma';
 
 const nanoidMock = vi.hoisted(() => vi.fn());
@@ -127,5 +133,84 @@ describe('prismaErrorBoundary', () => {
         err as unknown as Prisma.PrismaClientKnownRequestError
       )
     ).toThrow('Unexpected value: Error: not prisma');
+  });
+});
+
+describe('toFailure', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('keeps the code, message, cause and data of an ApplicationError', () => {
+    const error = new ApplicationError({
+      code: 'CONFLICT',
+      message: 'taken',
+      data: { field: 'slug' }
+    });
+
+    expect(toFailure(error)).toEqual({
+      ok: false,
+      data: {
+        code: 'CONFLICT',
+        message: 'taken',
+        cause: error.cause,
+        data: { field: 'slug' }
+      }
+    });
+  });
+
+  it('turns any other error into INTERNAL_SERVER_ERROR with its message', () => {
+    expect(toFailure(new Error('db down'))).toEqual({
+      ok: false,
+      data: {
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'db down',
+        cause: undefined,
+        data: undefined
+      }
+    });
+  });
+
+  it('uses a default message for a value that is not an error', () => {
+    expect(toFailure(undefined).data).toEqual(
+      expect.objectContaining({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'An unexpected error occurred'
+      })
+    );
+  });
+
+  it('applies the Prisma boundary to a Prisma error', () => {
+    expect(toFailure(validationError()).data.code).toBe('BAD_REQUEST');
+  });
+});
+
+describe('settle', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('wraps the value of a fulfilled promise in a success', async () => {
+    await expect(settle(Promise.resolve({ processed: 2 }))).resolves.toEqual({
+      ok: true,
+      data: { processed: 2 }
+    });
+  });
+
+  it('turns a rejection into a failure instead of throwing', async () => {
+    await expect(settle(Promise.reject(new Error('down')))).resolves.toEqual(
+      expect.objectContaining({
+        ok: false,
+        data: expect.objectContaining({ message: 'down' })
+      })
+    );
   });
 });

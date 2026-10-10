@@ -2982,6 +2982,9 @@ importers:
       '@giveaway/discord-connect':
         specifier: workspace:*
         version: link:../../integrations/discord/discord-connect
+      '@giveaway/jobs':
+        specifier: workspace:*
+        version: link:../../infra/jobs
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server
@@ -3000,6 +3003,9 @@ importers:
       nanoid:
         specifier: 'catalog:'
         version: 5.1.6
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -3467,6 +3473,9 @@ importers:
 
   packages/e2e/e2e-server:
     dependencies:
+      '@giveaway/automation-server':
+        specifier: workspace:*
+        version: link:../../automation/automation-server
       '@giveaway/db-client':
         specifier: workspace:*
         version: link:../../infra/db-client
@@ -3485,15 +3494,24 @@ importers:
       '@giveaway/referrals-server':
         specifier: workspace:*
         version: link:../../participants/referrals-server
+      '@giveaway/scoring-server':
+        specifier: workspace:*
+        version: link:../../participants/scoring-server
       '@giveaway/sweepstakes-access':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-access
       '@giveaway/sweepstakes-editor-server':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-editor-server
+      '@giveaway/sweepstakes-jobs':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-jobs
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-model
+      '@giveaway/task-jobs':
+        specifier: workspace:*
+        version: link:../../tasks/task-jobs
       '@giveaway/team-model':
         specifier: workspace:*
         version: link:../../team/team-model
@@ -8169,6 +8187,12 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/request-context-model':
+        specifier: workspace:*
+        version: link:../../infra/request-context-model
+      '@giveaway/request-context-server':
+        specifier: workspace:*
+        version: link:../../infra/request-context-server
       '@giveaway/scoring-model':
         specifier: workspace:*
         version: link:../scoring-model
@@ -8181,6 +8205,9 @@ importers:
       '@giveaway/util-time':
         specifier: workspace:*
         version: link:../../shared/util-time
+      '@giveaway/util-types':
+        specifier: workspace:*
+        version: link:../../shared/util-types
       lodash:
         specifier: 'catalog:'
         version: 4.17.23
@@ -10122,6 +10149,12 @@ importers:
       '@types/react':
         specifier: 19.2.10
         version: 19.2.10
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.10)
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
       sonner:
         specifier: 'catalog:'
         version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -10665,6 +10698,12 @@ importers:
       '@types/react':
         specifier: 19.2.10
         version: 19.2.10
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.10)
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
       sonner:
         specifier: 'catalog:'
         version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -11197,9 +11236,6 @@ importers:
       '@giveaway/automation-model':
         specifier: workspace:*
         version: link:../../automation/automation-model
-      '@giveaway/db-client':
-        specifier: workspace:*
-        version: link:../../infra/db-client
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
@@ -11209,6 +11245,9 @@ importers:
       '@giveaway/e2e-fakes':
         specifier: workspace:*
         version: link:../../e2e/e2e-fakes
+      '@giveaway/jobs':
+        specifier: workspace:*
+        version: link:../../infra/jobs
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../sweepstakes-model
@@ -11221,6 +11260,9 @@ importers:
       '@giveaway/util-html':
         specifier: workspace:*
         version: link:../../shared/util-html
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
     devDependencies:
       '@giveaway/eslint-config':
         specifier: workspace:*
@@ -12590,9 +12632,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
-      '@giveaway/rpc-server':
+      '@giveaway/jobs':
         specifier: workspace:*
-        version: link:../../infra/rpc-server
+        version: link:../../infra/jobs
       '@giveaway/task-jobs-core':
         specifier: workspace:*
         version: link:../task-jobs-core
@@ -12608,9 +12650,6 @@ importers:
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
-      zod:
-        specifier: 'catalog:'
-        version: 3.25.76
     devDependencies:
       '@giveaway/bluesky-api':
         specifier: workspace:*
@@ -29383,7 +29422,7 @@ snapshots:
       eslint: 9.39.5(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-react-hooks: 7.1.1(eslint@9.39.5(jiti@2.6.1))
@@ -29416,7 +29455,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.12.2
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -29431,7 +29470,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@5.7.2))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.2.0

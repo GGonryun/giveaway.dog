@@ -298,7 +298,9 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
         <div className="flex items-center gap-3">
           <ClockIcon className="h-5 w-5 text-primary" />
           <div>
-            <div className="text-sm font-medium">{timeInfo}</div>
+            <div className="text-sm font-medium" suppressHydrationWarning>
+              {timeInfo}
+            </div>
             <div className="text-xs text-muted-foreground">
               {datetime.toTimeZoneDisplay(timeZone)}
             </div>

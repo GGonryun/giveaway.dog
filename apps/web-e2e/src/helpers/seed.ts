@@ -1,4 +1,5 @@
 import type { APIRequestContext, TestInfo } from '@playwright/test';
+import type { E2ePersona } from '@giveaway/e2e-model/personas';
 import type {
   E2eFakeService,
   E2eOutboxEntry,
@@ -52,7 +53,33 @@ export type DeletedRun = {
   more: boolean;
 };
 
+export type SeededJobs = {
+  sweepstakes: {
+    type: string;
+    status: string;
+    runAt: string;
+    error: unknown;
+  }[];
+  posts: { type: string; status: string; runAt: string }[];
+  tasks: { taskId: string; status: string; runAt: string | null }[];
+};
+
+export type JobsRun = {
+  processed: { tasks: number; sweepstakes: number; posts: number };
+  rounds: number;
+  jobs: SeededJobs;
+};
+
+export type UserJobsRun = {
+  userId: string;
+  tracking: { processed: number; errors: number; total: number };
+  scoring: { processed: number };
+  score: number | null;
+};
+
 const MAX_CLEANUP_CALLS = 20;
+
+export const TIME_MARGIN_SECONDS = 60;
 
 const call = async <T>(
   request: APIRequestContext,
@@ -110,6 +137,16 @@ export const seedApi = (request: APIRequestContext) => ({
         `outbox?${new URLSearchParams({ channel, target })}`
       )
     ).entries,
+  jobs: (sweepstakesId: string) =>
+    call<SeededJobs>(
+      request,
+      'GET',
+      `jobs?id=${encodeURIComponent(sweepstakesId)}`
+    ),
+  runJobs: (sweepstakesId: string) =>
+    call<JobsRun>(request, 'POST', 'jobs/run', { sweepstakesId }),
+  runUserJobs: (persona: E2ePersona, ns: string = RUN_ID) =>
+    call<UserJobsRun>(request, 'POST', 'jobs/user', { persona, ns }),
   deleteRun: (runId: string) =>
     repeatWhileMore(() => call<DeletedRun>(request, 'DELETE', `runs/${runId}`)),
   janitor: () =>
@@ -123,3 +160,23 @@ export const seedWorkerTeam = (
   testInfo: TestInfo
 ) =>
   seedApi(request).team({ ns: RUN_ID, suffix: `w${testInfo.parallelIndex}` });
+
+export const runJobs = (request: APIRequestContext, sweepstakesId: string) =>
+  seedApi(request).runJobs(sweepstakesId);
+
+const assertMargin = (name: string, seconds: number | undefined) => {
+  if (seconds !== undefined && Math.abs(seconds) < TIME_MARGIN_SECONDS) {
+    throw new Error(
+      `${name} must be at least ${TIME_MARGIN_SECONDS} seconds from now, not ${seconds}: the clocks of the runner and the deployment differ`
+    );
+  }
+};
+
+export const seedSweepstakes = (
+  request: APIRequestContext,
+  body: E2eSweepstakesRequestInput
+) => {
+  assertMargin('startsIn', body.startsIn);
+  assertMargin('endsIn', body.endsIn);
+  return seedApi(request).sweepstakes(body);
+};

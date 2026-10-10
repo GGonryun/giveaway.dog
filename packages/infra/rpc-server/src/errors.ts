@@ -2,8 +2,8 @@ import 'server-only';
 
 import { Prisma } from '@giveaway/db-model';
 import { nanoid } from 'nanoid';
-import { Failure } from '@giveaway/rpc-model/types';
-import { assertNever } from '@giveaway/util-errors';
+import { Failure, Result } from '@giveaway/rpc-model/types';
+import { ApplicationError, assertNever } from '@giveaway/util-errors';
 
 export const isPrismaError = (
   err: any
@@ -84,4 +84,47 @@ const prismaValidationErrorBoundary = (
       message: `Invalid data provided. Please check your input and try again. If the problem persists, contact support.`
     }
   };
+};
+
+export const toFailure = (err: unknown): Failure => {
+  if (isPrismaError(err)) {
+    return prismaErrorBoundary(err);
+  }
+
+  if (err instanceof ApplicationError) {
+    if (!err.silent) {
+      console.error('Application error:', err);
+    }
+    return {
+      ok: false,
+      data: {
+        code: err.code,
+        message: err.message,
+        cause: err.cause,
+        data: err.data
+      }
+    };
+  }
+
+  const error = err as
+    | { message?: string; cause?: unknown; data?: unknown }
+    | null
+    | undefined;
+  return {
+    ok: false,
+    data: {
+      code: 'INTERNAL_SERVER_ERROR',
+      message: error?.message ?? 'An unexpected error occurred',
+      cause: error?.cause,
+      data: error?.data
+    }
+  };
+};
+
+export const settle = async <T>(work: Promise<T>): Promise<Result<T>> => {
+  try {
+    return { ok: true, data: await work };
+  } catch (err) {
+    return toFailure(err);
+  }
 };

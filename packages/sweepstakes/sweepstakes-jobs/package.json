@@ -27,14 +27,15 @@
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
     "@giveaway/automation-model": "workspace:*",
-    "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-api": "workspace:*",
     "@giveaway/e2e-fakes": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/team-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
-    "@giveaway/util-html": "workspace:*"
+    "@giveaway/util-html": "workspace:*",
+    "server-only": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",

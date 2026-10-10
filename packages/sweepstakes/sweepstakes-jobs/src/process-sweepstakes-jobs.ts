@@ -1,4 +1,4 @@
-'use server';
+import 'server-only';
 
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { html } from '@giveaway/util-html/html';
@@ -11,7 +11,6 @@ import {
   VisibilityType
 } from '@giveaway/db-model';
 import { toSweepstakesUrl } from '@giveaway/sweepstakes-model/util';
-import db from '@giveaway/db-client/prisma';
 import { updateDiscordMessage } from '@giveaway/discord-api/update-discord-message';
 import { toPostToDiscordResponseSchema } from '@giveaway/automation-model/schemas';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
@@ -19,8 +18,11 @@ import { toSweepstakesEmbed } from '@giveaway/discord-api/embeds';
 import { toExpiredSweepstakeComponents } from '@giveaway/discord-api/util';
 import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
 import { recordE2eOutbox } from '@giveaway/e2e-fakes/outbox';
-
-const MAX_JOBS_PER_RUN = 5;
+import {
+  JobScope,
+  MAX_JOBS_PER_RUN,
+  toSweepstakesJobScope
+} from '@giveaway/jobs/scope';
 
 const recordE2eDiscordAlert =
   (sweepstakesId: string) => async (url: string, init: { body: string }) => {
@@ -32,11 +34,15 @@ const recordE2eDiscordAlert =
     return new Response();
   };
 
-export const processSweepstakesJobs = async () => {
+export const runSweepstakesJobs = async (
+  db: PrismaClient,
+  scope: JobScope = {}
+) => {
   const now = new Date();
 
   const pending = await db.sweepstakesJob.findMany({
     where: {
+      ...toSweepstakesJobScope(scope),
       runAt: {
         lte: now
       },

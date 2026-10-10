@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TaskType } from '@giveaway/task-model/schemas';
-import { prismaMock } from '@giveaway/testing-server/prisma';
-import { expectOk } from '@giveaway/testing-server/result';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   FAULTS,
   type Fault,
@@ -14,7 +13,7 @@ import {
   settleWithin
 } from '@giveaway/testing-server/faults';
 import { buildTaskJob } from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
-import { processTaskJobs } from '../process-task-jobs';
+import { runTaskJobs } from '../process-task-jobs';
 
 const m = vi.hoisted(() => ({ restore: vi.fn() }));
 
@@ -172,7 +171,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe('processTaskJobs with a failing third-party call', () => {
+describe('runTaskJobs with a failing third-party call', () => {
   describe.each(CALLS)(
     'when $call fails',
     ({ type, inject, reached, bugs, refreshesSession }) => {
@@ -191,9 +190,9 @@ describe('processTaskJobs with a failing third-party call', () => {
       });
 
       it('completes the job and schedules its next run when nothing fails', async () => {
-        const result = await settleWithin(processTaskJobs());
+        const result = await settleWithin(runTaskJobs(asPrismaClient()));
 
-        expect(expectOk(result)).toEqual({ processed: 2 });
+        expect(result).toEqual({ processed: 2 });
         expect(reached(network)).toBe(true);
         expect(lastUpdateOf('job-1')).toEqual({
           where: { id: 'job-1' },
@@ -211,9 +210,9 @@ describe('processTaskJobs with a failing third-party call', () => {
           async () => {
             inject(network, fault);
 
-            const result = await settleWithin(processTaskJobs());
+            const result = await settleWithin(runTaskJobs(asPrismaClient()));
 
-            expect(expectOk(result)).toEqual({ processed: 2 });
+            expect(result).toEqual({ processed: 2 });
             expect(reached(network)).toBe(true);
             expect(lastUpdateOf('job-1')?.data.status).toMatch(
               /^(FAILED|PENDING)$/
@@ -240,7 +239,7 @@ describe('processTaskJobs with a failing third-party call', () => {
             const retryAt = retryAfterTime();
             inject(network, fault);
 
-            await settleWithin(processTaskJobs());
+            await settleWithin(runTaskJobs(asPrismaClient()));
 
             const outcome = lastUpdateOf('job-1');
             expect(outcome?.data.status).toBe('PENDING');
@@ -264,7 +263,7 @@ describe('processTaskJobs with a failing third-party call', () => {
           async () => {
             inject(network, fault);
 
-            await settleWithin(processTaskJobs());
+            await settleWithin(runTaskJobs(asPrismaClient()));
 
             expect(prismaMock.integration.update).not.toHaveBeenCalled();
           }

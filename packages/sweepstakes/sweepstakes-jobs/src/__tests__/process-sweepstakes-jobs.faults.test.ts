@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SweepstakesJobType } from '@giveaway/db-model';
-import { prismaMock } from '@giveaway/testing-server/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   FAULTS,
   type Fault,
@@ -11,7 +11,7 @@ import {
   retryAfterTime,
   settleWithin
 } from '@giveaway/testing-server/faults';
-import { processSweepstakesJobs } from '../process-sweepstakes-jobs';
+import { runSweepstakesJobs } from '../process-sweepstakes-jobs';
 
 const NOW = new Date('2026-03-01T12:00:00.000Z');
 const WEBHOOK = 'POST https://discord.com/api/webhooks/1/secret';
@@ -129,7 +129,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe('processSweepstakesJobs with a failing third-party call', () => {
+describe('runSweepstakesJobs with a failing third-party call', () => {
   describe.each(CALLS)(
     'when $call fails',
     ({ type, match, status, bugs, faults = FAULTS }) => {
@@ -147,7 +147,7 @@ describe('processSweepstakesJobs with a failing third-party call', () => {
       });
 
       it('completes the job when nothing fails', async () => {
-        await settleWithin(processSweepstakesJobs());
+        await settleWithin(runSweepstakesJobs(asPrismaClient()));
 
         expect(network.requests(match)).not.toHaveLength(0);
         expect(updatesOf('job-1').at(-1)).toEqual({
@@ -166,7 +166,7 @@ describe('processSweepstakesJobs with a failing third-party call', () => {
             network.fault(match, fault);
 
             await expect(
-              settleWithin(processSweepstakesJobs())
+              settleWithin(runSweepstakesJobs(asPrismaClient()))
             ).resolves.toEqual({ processed: 2 });
 
             expect(network.requests(match)).not.toHaveLength(0);
@@ -195,7 +195,7 @@ describe('processSweepstakesJobs with a failing third-party call', () => {
             const retryAt = retryAfterTime();
             network.fault(match, fault);
 
-            await settleWithin(processSweepstakesJobs());
+            await settleWithin(runSweepstakesJobs(asPrismaClient()));
 
             const outcome = updatesOf('job-1').at(-1);
             expect(outcome?.data.status).toBe('PENDING');
@@ -218,7 +218,7 @@ describe('processSweepstakesJobs with a failing third-party call', () => {
     ]);
     prismaMock.sweepstakes.findUnique.mockResolvedValue(giveaway('ACTIVE'));
 
-    await settleWithin(processSweepstakesJobs());
+    await settleWithin(runSweepstakesJobs(asPrismaClient()));
 
     expect(updatesOf('job-1')).toEqual([
       { where: { id: 'job-1' }, data: { status: 'COMPLETED' } }

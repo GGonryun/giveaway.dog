@@ -18,7 +18,8 @@
   "exports": {
     "./imported": "./src/imported.ts",
     "./scoring": "./src/scoring.ts",
-    "./signup": "./src/signup.ts"
+    "./signup": "./src/signup.ts",
+    "./tracking": "./src/tracking.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -28,10 +29,13 @@
   "dependencies": {
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/request-context-model": "workspace:*",
+    "@giveaway/request-context-server": "workspace:*",
     "@giveaway/scoring-model": "workspace:*",
     "@giveaway/user-quality-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-time": "workspace:*",
+    "@giveaway/util-types": "workspace:*",
     "lodash": "catalog:",
     "server-only": "catalog:"
   },

@@ -51,13 +51,20 @@ const WRITES: [string, string, string?][] = [
     JSON.stringify({ ns: 'abc123', team: 'e2e-abc123-w0' })
   ],
   ['DELETE', 'runs/abc123'],
-  ['POST', 'janitor']
+  ['POST', 'janitor'],
+  ['POST', 'jobs/run', JSON.stringify({ sweepstakesId: 'sw-1' })],
+  [
+    'POST',
+    'jobs/user',
+    JSON.stringify({ persona: 'participant', ns: 'abc123' })
+  ]
 ];
 
 const READS: [string, string][] = [
   ['GET', 'health'],
   ['GET', 'rows?view=team&slug=e2e-abc123-w0'],
-  ['GET', 'outbox?channel=email&target=e2e-host-abc123@example.com']
+  ['GET', 'outbox?channel=email&target=e2e-host-abc123@example.com'],
+  ['GET', 'jobs?id=sw-1']
 ];
 
 beforeEach(() => {
@@ -73,6 +80,10 @@ beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
   prismaMock.team.findUnique.mockResolvedValue(teamRow());
   prismaMock.team.findMany.mockResolvedValue([]);
+  prismaMock.sweepstakes.findUnique.mockResolvedValue({
+    id: 'sw-1',
+    team: teamRow()
+  });
   prismaMock.user.findMany.mockResolvedValue([]);
   prismaMock.team.upsert.mockResolvedValue({ id: 'team-1' });
   prismaMock.user.upsert.mockResolvedValue({
@@ -90,7 +101,12 @@ const expectNothingTouched = () => {
   for (const model of [
     prismaMock.team,
     prismaMock.user,
-    prismaMock.sweepstakes
+    prismaMock.sweepstakes,
+    prismaMock.sweepstakesJob,
+    prismaMock.automatedPostJob,
+    prismaMock.taskJob,
+    prismaMock.userEvent,
+    prismaMock.userScoringRequest
   ]) {
     for (const method of Object.values(model)) {
       expect(method).not.toHaveBeenCalled();
@@ -193,6 +209,43 @@ describe('handleE2eRequest', () => {
           }
         })
       );
+    });
+
+    it('runs the jobs of the giveaway in the body', async () => {
+      prismaMock.sweepstakesJob.findMany.mockResolvedValue([]);
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
+      prismaMock.taskJob.findMany.mockResolvedValue([]);
+
+      const response = await call('POST', 'jobs/run', {
+        body: JSON.stringify({ sweepstakesId: 'sw-1' })
+      });
+
+      expect(response.status).toBe(200);
+      expect(await response.json()).toMatchObject({
+        processed: { tasks: 0, sweepstakes: 0, posts: 0 },
+        rounds: 1
+      });
+      expect(prismaMock.sweepstakesJob.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ sweepstakesId: 'sw-1' })
+        })
+      );
+    });
+
+    it('refuses to run the jobs of a giveaway outside e2e', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue({
+        id: 'sw-real',
+        team: teamRow({ slug: 'acme' })
+      });
+
+      const response = await call('POST', 'jobs/run', {
+        body: JSON.stringify({ sweepstakesId: 'sw-real' })
+      });
+
+      expect(response.status).toBe(404);
+      expect(prismaMock.sweepstakesJob.findMany).not.toHaveBeenCalled();
+      expect(prismaMock.taskJob.findMany).not.toHaveBeenCalled();
+      expect(prismaMock.automatedPostJob.findMany).not.toHaveBeenCalled();
     });
 
     it('ignores a body on a DELETE', async () => {

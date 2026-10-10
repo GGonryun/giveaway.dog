@@ -7,7 +7,7 @@ import { Session, User } from 'next-auth';
 import { Result, Success, isNextRedirect } from '@giveaway/rpc-model/types';
 import prisma from '@giveaway/db-client/prisma';
 import { PrismaClient } from '@giveaway/db-model';
-import { isPrismaError, prismaErrorBoundary } from './errors';
+import { toFailure } from './errors';
 import { environment } from '@giveaway/app-config/environment';
 import { isE2eGateOpen } from '@giveaway/e2e-gate/gate';
 import { simulateNetworkDelay } from '@giveaway/util-random/simulate';
@@ -241,34 +241,7 @@ class ProcedureBuilder<
           throw err; // Re-throw Next.js redirect errors
         }
 
-        if (isPrismaError(err)) {
-          return prismaErrorBoundary(err);
-        }
-
-        if (err instanceof ApplicationError) {
-          if (!err.silent) {
-            console.error('Application error:', err);
-          }
-          return {
-            ok: false,
-            data: {
-              code: err.code,
-              message: err.message,
-              cause: err.cause,
-              data: err.data
-            }
-          };
-        }
-
-        return {
-          ok: false,
-          data: {
-            code: 'INTERNAL_SERVER_ERROR',
-            message: err?.message ?? 'An unexpected error occurred',
-            cause: err.cause,
-            data: err?.data
-          }
-        };
+        return toFailure(err);
       }
     };
   }

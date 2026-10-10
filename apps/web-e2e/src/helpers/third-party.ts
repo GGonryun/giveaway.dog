@@ -12,6 +12,10 @@ const VERCEL_INSIGHTS_PATH = '/_vercel/insights/';
 
 const AVATAR_HOST = 'avatar.vercel.sh';
 
+const BLOB_HOST_SUFFIX = '.public.blob.vercel-storage.com';
+
+const NEXT_IMAGE_PATH = '/_next/image';
+
 const PIXEL_PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
   'base64'
@@ -23,6 +27,19 @@ export const isEmptiedThirdParty = (url: URL) =>
 
 export const isStubbedAvatar = (url: URL) => url.hostname === AVATAR_HOST;
 
+const isBlobUrl = (value: string | null) => {
+  if (!value) return false;
+  try {
+    return new URL(value).hostname.endsWith(BLOB_HOST_SUFFIX);
+  } catch {
+    return false;
+  }
+};
+
+export const isStubbedBlobImage = (url: URL) =>
+  url.hostname.endsWith(BLOB_HOST_SUFFIX) ||
+  (url.pathname === NEXT_IMAGE_PATH && isBlobUrl(url.searchParams.get('url')));
+
 export const blockThirdParties = async (context: BrowserContext) => {
   await context.route(isEmptiedThirdParty, (route) =>
     route.fulfill({
@@ -32,6 +49,9 @@ export const blockThirdParties = async (context: BrowserContext) => {
     })
   );
   await context.route(isStubbedAvatar, (route) =>
+    route.fulfill({ status: 200, contentType: 'image/png', body: PIXEL_PNG })
+  );
+  await context.route(isStubbedBlobImage, (route) =>
     route.fulfill({ status: 200, contentType: 'image/png', body: PIXEL_PNG })
   );
 };

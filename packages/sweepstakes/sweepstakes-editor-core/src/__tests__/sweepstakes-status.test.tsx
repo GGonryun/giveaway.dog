@@ -2,7 +2,17 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { toast } from 'sonner';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi
+} from 'vitest';
 import toggleVisibility from '@giveaway/sweepstakes-editor-server/toggle-visibility';
 import { SweepstakesStatusComponent } from '../sweepstakes-status';
 import { FIXED_NOW } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
@@ -76,6 +86,37 @@ describe('SweepstakesStatusComponent', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  it('hydrates a time since the end that changed since the server rendered it', async () => {
+    const card = (
+      <SweepstakesStatusComponent
+        sweepstakesId="sweepstakes-1"
+        status="EXPIRED"
+        startDate={new Date(FIXED_NOW.getTime() - 3_600_000)}
+        endDate={new Date(FIXED_NOW.getTime() - 5_000)}
+        timeZone="UTC"
+        isCompleting={false}
+        onCompleteSweepstakes={vi.fn()}
+      />
+    );
+    const html = renderToString(card);
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    document.body.appendChild(container);
+    const onRecoverableError = vi.fn();
+    vi.setSystemTime(FIXED_NOW.getTime() + 2_000);
+
+    const root = await act(async () =>
+      hydrateRoot(container, card, { onRecoverableError })
+    );
+    onTestFinished(() => {
+      act(() => root.unmount());
+      container.remove();
+    });
+
+    expect(html).toContain('Finished 5 seconds ago');
+    expect(onRecoverableError).not.toHaveBeenCalled();
   });
 
   describe('status', () => {

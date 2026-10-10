@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { processSweepstakesJobs } from '../process-sweepstakes-jobs';
-import { prismaMock } from '@giveaway/testing-server/prisma';
+import { runSweepstakesJobs } from '../process-sweepstakes-jobs';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 
 const NOW = new Date('2026-03-01T12:00:00.000Z');
@@ -76,12 +76,12 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('processSweepstakesJobs', () => {
+describe('runSweepstakesJobs', () => {
   describe('job selection', () => {
     it('queries up to five due pending jobs ordered by creation time', async () => {
       givenJobs();
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakesJob.findMany).toHaveBeenCalledWith({
         where: {
@@ -93,10 +93,26 @@ describe('processSweepstakesJobs', () => {
       });
     });
 
+    it('queries only the jobs of one giveaway when given its id', async () => {
+      givenJobs();
+
+      await runSweepstakesJobs(asPrismaClient(), { sweepstakesId: 'sweep-9' });
+
+      expect(prismaMock.sweepstakesJob.findMany).toHaveBeenCalledWith({
+        where: {
+          sweepstakesId: 'sweep-9',
+          runAt: { lte: NOW },
+          status: { in: ['PENDING'] }
+        },
+        orderBy: { createdAt: 'asc' },
+        take: 5
+      });
+    });
+
     it('returns zero processed and performs no updates when nothing is due', async () => {
       givenJobs();
 
-      await expect(processSweepstakesJobs()).resolves.toEqual({
+      await expect(runSweepstakesJobs(asPrismaClient())).resolves.toEqual({
         processed: 0
       });
       expect(prismaMock.sweepstakesJob.update).not.toHaveBeenCalled();
@@ -108,7 +124,7 @@ describe('processSweepstakesJobs', () => {
     it('reports every fetched job as processed even when some fail', async () => {
       givenJobs(job('PROCESS_MODIFICATION'), job('UNKNOWN_TYPE'));
 
-      await expect(processSweepstakesJobs()).resolves.toEqual({
+      await expect(runSweepstakesJobs(asPrismaClient())).resolves.toEqual({
         processed: 2
       });
     });
@@ -116,7 +132,7 @@ describe('processSweepstakesJobs', () => {
     it('propagates a findMany failure', async () => {
       prismaMock.sweepstakesJob.findMany.mockRejectedValue(new Error('db'));
 
-      await expect(processSweepstakesJobs()).rejects.toThrow('db');
+      await expect(runSweepstakesJobs(asPrismaClient())).rejects.toThrow('db');
     });
   });
 
@@ -124,7 +140,7 @@ describe('processSweepstakesJobs', () => {
     it('marks a job with an unknown type as failed with a generic message', async () => {
       givenJobs(job('UNKNOWN_TYPE'));
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed('job-UNKNOWN_TYPE', 'An unknown error occurred...')
@@ -138,7 +154,7 @@ describe('processSweepstakesJobs', () => {
     it('keeps processing later jobs after one fails', async () => {
       givenJobs(job('UNKNOWN_TYPE'), job('PROCESS_MODIFICATION'));
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed('job-UNKNOWN_TYPE', 'An unknown error occurred...'),
@@ -152,7 +168,7 @@ describe('processSweepstakesJobs', () => {
         new Error('connection lost')
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed('job-PROCESS_ACTIVATION', 'An unknown error occurred...')
@@ -165,7 +181,9 @@ describe('processSweepstakesJobs', () => {
         new Error('update failed')
       );
 
-      await expect(processSweepstakesJobs()).rejects.toThrow('update failed');
+      await expect(runSweepstakesJobs(asPrismaClient())).rejects.toThrow(
+        'update failed'
+      );
     });
   });
 
@@ -173,7 +191,7 @@ describe('processSweepstakesJobs', () => {
     it('marks the job completed without loading the sweepstakes', async () => {
       givenJobs(job('PROCESS_MODIFICATION'));
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed('job-PROCESS_MODIFICATION')]);
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
@@ -190,7 +208,7 @@ describe('processSweepstakesJobs', () => {
     it('loads the sweepstakes criteria and prize ids', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
         where: { id: 'sw-1' },
@@ -201,7 +219,7 @@ describe('processSweepstakesJobs', () => {
     it('fails the job when the sweepstakes does not exist', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Sweepstakes with id sw-1 not found')
@@ -214,7 +232,7 @@ describe('processSweepstakesJobs', () => {
         prizes: [{ id: 'p-1' }]
       });
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(prismaMock.sweepstakesParticipant.findMany).not.toHaveBeenCalled();
@@ -229,7 +247,7 @@ describe('processSweepstakesJobs', () => {
         prizes: [{ id: 'p-1' }]
       });
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(
@@ -243,7 +261,7 @@ describe('processSweepstakesJobs', () => {
         prizes: []
       });
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(prismaMock.sweepstakesParticipant.findMany).not.toHaveBeenCalled();
@@ -256,7 +274,7 @@ describe('processSweepstakesJobs', () => {
       });
       prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakesParticipant.findMany).toHaveBeenCalledWith({
         where: { sweepstakesId: 'sw-1', allocations: null },
@@ -271,7 +289,7 @@ describe('processSweepstakesJobs', () => {
       });
       prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(
@@ -297,7 +315,7 @@ describe('processSweepstakesJobs', () => {
         .mockReturnValueOnce(0.5)
         .mockReturnValueOnce(0.99);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakesAllocation.createMany).toHaveBeenCalledWith({
         data: [
@@ -319,7 +337,7 @@ describe('processSweepstakesJobs', () => {
         { id: 'part-2' }
       ]);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(console.info).toHaveBeenCalledWith(
@@ -339,7 +357,7 @@ describe('processSweepstakesJobs', () => {
         new Error('constraint')
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'An unknown error occurred...')
@@ -376,7 +394,7 @@ describe('processSweepstakesJobs', () => {
     it('loads the sweepstakes with details, timing, visibility and team', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
         where: { id: 'sw-1' },
@@ -387,7 +405,7 @@ describe('processSweepstakesJobs', () => {
     it('fails the job when the sweepstakes does not exist', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Sweepstakes with id sw-1 not found')
@@ -401,7 +419,7 @@ describe('processSweepstakesJobs', () => {
           activationSweepstakes({ visibility: { visibility, slug: 'x' } })
         );
 
-        await processSweepstakesJobs();
+        await runSweepstakesJobs(asPrismaClient());
 
         expect(updateCalls()).toEqual([completed(JOB_ID)]);
         expect(fetchMock).not.toHaveBeenCalled();
@@ -416,7 +434,7 @@ describe('processSweepstakesJobs', () => {
         activationSweepstakes({ visibility: null })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(fetchMock).not.toHaveBeenCalled();
@@ -432,7 +450,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(fetchMock).not.toHaveBeenCalled();
@@ -446,7 +464,7 @@ describe('processSweepstakesJobs', () => {
         activationSweepstakes({ timing: { startDate: null, endDate: NOW } })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(fetchMock).not.toHaveBeenCalled();
@@ -460,7 +478,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         {
@@ -479,7 +497,7 @@ describe('processSweepstakesJobs', () => {
         activationSweepstakes({ timing: { startDate: NOW, endDate: null } })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
@@ -489,7 +507,7 @@ describe('processSweepstakesJobs', () => {
         activationSweepstakes()
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(fetchMock).toHaveBeenCalledWith(WEBHOOK_URL, {
         method: 'POST',
@@ -525,7 +543,7 @@ describe('processSweepstakesJobs', () => {
         activationSweepstakes()
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(console.info).toHaveBeenCalledWith(
@@ -543,7 +561,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       const [embed] = lastFetchBody().embeds;
       expect(embed).toEqual({
@@ -567,7 +585,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       const [embed] = lastFetchBody().embeds;
       expect(embed.title).toBe('Untitled Sweepstakes');
@@ -583,7 +601,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(lastFetchBody().embeds[0].description).toBe('a'.repeat(4096));
     });
@@ -596,7 +614,7 @@ describe('processSweepstakesJobs', () => {
         new Response('nope', { status: 429, statusText: 'Too Many Requests' })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Failed to send Discord webhook: 429 Too Many Requests')
@@ -612,7 +630,7 @@ describe('processSweepstakesJobs', () => {
       it('fails the job when the sweepstakes does not exist', async () => {
         prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-        await processSweepstakesJobs();
+        await runSweepstakesJobs(asPrismaClient());
 
         expect(updateCalls()).toEqual([
           failed(JOB_ID, 'Sweepstakes with id sw-1 not found')
@@ -626,7 +644,7 @@ describe('processSweepstakesJobs', () => {
           })
         );
 
-        await processSweepstakesJobs();
+        await runSweepstakesJobs(asPrismaClient());
 
         expect(updateCalls()).toEqual([completed(JOB_ID)]);
         expect(fetchMock).not.toHaveBeenCalled();
@@ -640,7 +658,7 @@ describe('processSweepstakesJobs', () => {
           activationSweepstakes({ timing: { startDate: null, endDate: NOW } })
         );
 
-        await processSweepstakesJobs();
+        await runSweepstakesJobs(asPrismaClient());
 
         expect(updateCalls()).toEqual([completed(JOB_ID)]);
         expect(fetchMock).not.toHaveBeenCalled();
@@ -657,7 +675,7 @@ describe('processSweepstakesJobs', () => {
           })
         );
 
-        await processSweepstakesJobs();
+        await runSweepstakesJobs(asPrismaClient());
 
         expect(updateCalls()).toEqual([
           {
@@ -676,7 +694,7 @@ describe('processSweepstakesJobs', () => {
             activationSweepstakes()
           );
 
-          await processSweepstakesJobs();
+          await runSweepstakesJobs(asPrismaClient());
 
           expect(updateCalls()).toEqual([completed(JOB_ID)]);
           expect(fetchMock).not.toHaveBeenCalled();
@@ -749,7 +767,7 @@ describe('processSweepstakesJobs', () => {
     it('loads the sweepstakes with the discord post selection', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
         where: { id: 'sw-1' },
@@ -760,7 +778,7 @@ describe('processSweepstakesJobs', () => {
     it('fails the job when the sweepstakes does not exist', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Sweepstakes with id sw-1 not found')
@@ -772,7 +790,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ status: 'COMPLETED' })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Sweepstakes sw-1 is already expired')
@@ -784,7 +802,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ status: 'DRAFT' })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(
@@ -801,7 +819,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(fetchMock).not.toHaveBeenCalled();
@@ -814,7 +832,7 @@ describe('processSweepstakesJobs', () => {
           discordSweepstakes({ posts: [discordPost({ status })] })
         );
 
-        await processSweepstakesJobs();
+        await runSweepstakesJobs(asPrismaClient());
 
         expect(updateCalls()).toEqual([completed(JOB_ID)]);
         expect(fetchMock).not.toHaveBeenCalled();
@@ -828,7 +846,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(
@@ -846,7 +864,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(
@@ -861,7 +879,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ posts: [discordPost({ response: null })] })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Invalid Post to Discord response data')
@@ -873,7 +891,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ posts: [discordPost()] })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(fetchMock).toHaveBeenCalledWith(
         'https://discord.com/api/v10/channels/chan-1/messages/msg-1',
@@ -913,7 +931,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ posts: [discordPost()] })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(console.info).toHaveBeenCalledWith(
@@ -927,7 +945,7 @@ describe('processSweepstakesJobs', () => {
       );
       fetchMock.mockResolvedValue(new Response('{}', { status: 404 }));
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Message or channel not found')
@@ -940,7 +958,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ posts: [discordPost()] })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         failed(JOB_ID, 'Discord bot token is not configured')
@@ -961,7 +979,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ status: 'COMPLETED' })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       const updateOrder =
         prismaMock.sweepstakesJob.update.mock.invocationCallOrder[0];
@@ -976,7 +994,7 @@ describe('processSweepstakesJobs', () => {
     it('loads the sweepstakes with the discord post selection', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
         where: { id: 'sw-1' },
@@ -987,7 +1005,7 @@ describe('processSweepstakesJobs', () => {
     it('completes then fails the job when the sweepstakes does not exist', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         completed(JOB_ID),
@@ -1000,7 +1018,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ status: 'ACTIVE' })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         completed(JOB_ID),
@@ -1013,7 +1031,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ status: 'COMPLETED' })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
       expect(fetchMock).not.toHaveBeenCalled();
@@ -1027,7 +1045,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(fetchMock).not.toHaveBeenCalled();
       expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
@@ -1044,7 +1062,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(fetchMock).toHaveBeenCalledWith(
         'https://discord.com/api/v10/channels/chan-1/messages/msg-1',
@@ -1060,7 +1078,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(fetchMock).not.toHaveBeenCalled();
       expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
@@ -1074,7 +1092,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         completed(JOB_ID),
@@ -1093,7 +1111,7 @@ describe('processSweepstakesJobs', () => {
         })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         completed(JOB_ID),
@@ -1109,7 +1127,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ status: 'COMPLETED', posts: [discordPost()] })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(fetchMock).toHaveBeenCalledWith(
         'https://discord.com/api/v10/channels/chan-1/messages/msg-1',
@@ -1130,7 +1148,7 @@ describe('processSweepstakesJobs', () => {
         discordSweepstakes({ status: 'COMPLETED', posts: [discordPost()] })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
     });
@@ -1141,7 +1159,7 @@ describe('processSweepstakesJobs', () => {
       );
       fetchMock.mockResolvedValue(new Response('{}', { status: 401 }));
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(asPrismaClient());
 
       expect(updateCalls()).toEqual([
         completed(JOB_ID),

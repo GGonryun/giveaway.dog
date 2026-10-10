@@ -1,14 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SweepstakesJobType, SweepstakesStatus } from '@giveaway/db-model';
+import type {
+  SweepstakesJobType,
+  SweepstakesStatus,
+  PrismaClient
+} from '@giveaway/db-model';
 import { db, holdTableWrites } from '@giveaway/testing-integration/database';
 import {
   createEntries,
   createHost,
   createSweepstakes
 } from '@giveaway/testing-integration/fixtures';
-import { crashAtEveryWrite } from '@giveaway/testing-integration/faults';
+import {
+  crashAtEveryWrite,
+  crashableDb
+} from '@giveaway/testing-integration/faults';
 import { fakeNetwork, type FakeNetwork } from '@giveaway/testing-server/faults';
-import { processSweepstakesJobs } from '../process-sweepstakes-jobs';
+import { runSweepstakesJobs } from '../process-sweepstakes-jobs';
+
+const jobsDb = crashableDb as unknown as PrismaClient;
 
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 const MINUTE = 60_000;
@@ -136,7 +145,29 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe('processSweepstakesJobs', () => {
+describe('runSweepstakesJobs', () => {
+  it('runs only the jobs of the giveaway that the scope names', async () => {
+    const mine = await createGiveaway();
+    const other = await createGiveaway();
+    await createJob(mine.id, 'PROCESS_MODIFICATION');
+    await createJob(other.id, 'PROCESS_MODIFICATION');
+
+    await expect(
+      runSweepstakesJobs(jobsDb, { sweepstakesId: mine.id })
+    ).resolves.toEqual({ processed: 1 });
+
+    const statuses = await db.sweepstakesJob.findMany({
+      select: { sweepstakesId: true, status: true }
+    });
+    expect(statuses).toHaveLength(2);
+    expect(statuses).toEqual(
+      expect.arrayContaining([
+        { sweepstakesId: mine.id, status: 'COMPLETED' },
+        { sweepstakesId: other.id, status: 'PENDING' }
+      ])
+    );
+  });
+
   describe('when the function stops after a write and the job runs again', () => {
     beforeEach(() => {
       vi.useFakeTimers({ toFake: ['Date'] });
@@ -146,7 +177,7 @@ describe('processSweepstakesJobs', () => {
     it('announces the giveaway once a clean run completes the activation job', async () => {
       const scenario = await setupActivation();
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(jobsDb);
 
       expect(await jobState(scenario)).toEqual({
         jobs: [
@@ -172,7 +203,7 @@ describe('processSweepstakesJobs', () => {
       async (_, setup) => {
         const { writes, mismatches } = await crashAtEveryWrite({
           setup,
-          run: () => processSweepstakesJobs(),
+          run: () => runSweepstakesJobs(jobsDb),
           recover: releaseStoppedJobs,
           state: jobState
         });
@@ -187,7 +218,7 @@ describe('processSweepstakesJobs', () => {
       async () => {
         const { mismatches } = await crashAtEveryWrite({
           setup: () => setupDiscordUpdate('PROCESS_COMPLETION'),
-          run: () => processSweepstakesJobs(),
+          run: () => runSweepstakesJobs(jobsDb),
           recover: releaseStoppedJobs,
           state: jobState
         });
@@ -204,7 +235,7 @@ describe('processSweepstakesJobs', () => {
         await setupActivation();
 
         await holdTableWrites('SweepstakesJob', { writers: 2 }, () =>
-          Promise.all([processSweepstakesJobs(), processSweepstakesJobs()])
+          Promise.all([runSweepstakesJobs(jobsDb), runSweepstakesJobs(jobsDb)])
         );
 
         expect(network.requests(`POST ${WEBHOOK_URL}`)).toHaveLength(1);
@@ -215,7 +246,7 @@ describe('processSweepstakesJobs', () => {
       const { sweepstakes } = await setupPrizeAssignment();
 
       await holdTableWrites('SweepstakesAllocation', { writers: 2 }, () =>
-        Promise.all([processSweepstakesJobs(), processSweepstakesJobs()])
+        Promise.all([runSweepstakesJobs(jobsDb), runSweepstakesJobs(jobsDb)])
       );
 
       expect(
@@ -236,7 +267,7 @@ describe('processSweepstakesJobs', () => {
         { status: 500 }
       );
 
-      await expect(processSweepstakesJobs()).resolves.toEqual({
+      await expect(runSweepstakesJobs(jobsDb)).resolves.toEqual({
         processed: 2
       });
 
@@ -260,7 +291,7 @@ describe('processSweepstakesJobs', () => {
           return new Response(null, { status: 500 });
         });
 
-        await expect(processSweepstakesJobs()).resolves.toEqual({
+        await expect(runSweepstakesJobs(jobsDb)).resolves.toEqual({
           processed: 2
         });
 

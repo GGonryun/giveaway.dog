@@ -1,10 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { AutomatedPostJob } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
-import { processAutomatedPostJobs } from '../process-automated-post-jobs';
-import { prismaMock } from '@giveaway/testing-server/prisma';
-import { signIn } from '@giveaway/testing-server/session';
-import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { runAutomatedPostJobs } from '../process-automated-post-jobs';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 
 const mocks = vi.hoisted(() => ({
   createTweet: vi.fn(),
@@ -87,7 +85,7 @@ const failedUpdate = (id: string, error: string) => ({
   data: { status: 'FAILED', response: { error } }
 });
 
-describe('processAutomatedPostJobs', () => {
+describe('runAutomatedPostJobs', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
@@ -110,15 +108,15 @@ describe('processAutomatedPostJobs', () => {
     it('runs without a session and reports zero processed jobs', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
 
-      const result = await processAutomatedPostJobs();
+      const result = await runAutomatedPostJobs(asPrismaClient());
 
-      expect(expectOk(result)).toEqual({ processed: 0 });
+      expect(result).toEqual({ processed: 0 });
     });
 
     it('fetches at most five due pending jobs, oldest first', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalledWith({
         where: { runAt: { lte: NOW }, status: { in: ['PENDING'] } },
@@ -127,33 +125,40 @@ describe('processAutomatedPostJobs', () => {
       });
     });
 
+    it('fetches only the jobs of one giveaway when given its id', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
+
+      await runAutomatedPostJobs(asPrismaClient(), {
+        sweepstakesId: 'sweep-9'
+      });
+
+      expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalledWith({
+        where: {
+          sweepstakesId: 'sweep-9',
+          runAt: { lte: NOW },
+          status: { in: ['PENDING'] }
+        },
+        orderBy: { createdAt: 'asc' },
+        take: 5
+      });
+    });
+
     it('logs how many jobs were found', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(console.info).toHaveBeenCalledWith(
         'Found 0 automated post jobs to process'
       );
     });
 
-    it('also runs for a signed in caller', async () => {
-      signIn();
-      prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
-
-      const result = await processAutomatedPostJobs();
-
-      expect(expectOk(result)).toEqual({ processed: 0 });
-    });
-
-    it('returns INTERNAL_SERVER_ERROR when loading jobs fails', async () => {
+    it('throws when loading jobs fails', async () => {
       prismaMock.automatedPostJob.findMany.mockRejectedValue(
         new Error('connection lost')
       );
 
-      const result = await processAutomatedPostJobs();
-
-      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+      await expect(runAutomatedPostJobs(asPrismaClient())).rejects.toThrow(
         'connection lost'
       );
     });
@@ -170,7 +175,7 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('loads the sweepstakes tasks and team', async () => {
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
         where: { id: 'sweep-1' },
@@ -179,7 +184,7 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('requires an active twitter integration on the sweepstakes team', async () => {
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.integration.findFirst).toHaveBeenCalledWith({
         where: {
@@ -193,7 +198,7 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('creates the tweet with the job text and image', async () => {
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(mocks.createTweet).toHaveBeenCalledWith(prismaMock, {
         teamId: 'team-1',
@@ -204,7 +209,7 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('appends repost and like import tasks after the existing tasks', async () => {
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith({
         where: { id: 'sweep-1' },
@@ -246,9 +251,9 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('marks the job completed with the tweet id and url', async () => {
-      const result = await processAutomatedPostJobs();
+      const result = await runAutomatedPostJobs(asPrismaClient());
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(prismaMock.automatedPostJob.update).toHaveBeenCalledTimes(1);
       expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
         where: { id: 'job-1' },
@@ -267,7 +272,7 @@ describe('processAutomatedPostJobs', () => {
         twitterJob(['LIKE'])
       ]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       const call = prismaMock.sweepstakes.update.mock.calls[0][0];
       expect(call.data.tasks.create).toEqual([
@@ -284,7 +289,7 @@ describe('processAutomatedPostJobs', () => {
         twitterJob(['REPOST'])
       ]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       const call = prismaMock.sweepstakes.update.mock.calls[0][0];
       expect(call.data.tasks.create).toEqual([
@@ -298,7 +303,7 @@ describe('processAutomatedPostJobs', () => {
     it('still updates the sweepstakes with no tasks when none are requested', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([twitterJob([])]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith({
         where: { id: 'sweep-1' },
@@ -310,9 +315,9 @@ describe('processAutomatedPostJobs', () => {
     it('marks the job failed twice when the sweepstakes is missing', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      const result = await processAutomatedPostJobs();
+      const result = await runAutomatedPostJobs(asPrismaClient());
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(prismaMock.automatedPostJob.update.mock.calls).toEqual([
         [failedUpdate('job-1', 'Sweepstakes not found')],
         [failedUpdate('job-1', 'Sweepstakes not found')]
@@ -323,7 +328,7 @@ describe('processAutomatedPostJobs', () => {
     it('marks the job failed when the sweepstakes has no team', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(sweepstakesRow(null));
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update).toHaveBeenLastCalledWith(
         failedUpdate('job-1', 'Sweepstakes team not found')
@@ -334,7 +339,7 @@ describe('processAutomatedPostJobs', () => {
     it('marks the job failed when the twitter integration is missing', async () => {
       prismaMock.integration.findFirst.mockResolvedValue(null);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update).toHaveBeenLastCalledWith(
         failedUpdate('job-1', 'Twitter integration not found')
@@ -345,7 +350,7 @@ describe('processAutomatedPostJobs', () => {
     it('overwrites a plain error message with a generic one in the final update', async () => {
       mocks.createTweet.mockRejectedValue(new Error('rate limited'));
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update.mock.calls).toEqual([
         [failedUpdate('job-1', 'rate limited')],
@@ -357,7 +362,7 @@ describe('processAutomatedPostJobs', () => {
     it('records an unknown error message when a non-error value is thrown', async () => {
       mocks.createTweet.mockRejectedValue('boom');
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update).toHaveBeenNthCalledWith(
         1,
@@ -369,7 +374,7 @@ describe('processAutomatedPostJobs', () => {
       const error = new ApplicationError({ code: 'NOT_FOUND', message: 'x' });
       mocks.createTweet.mockRejectedValue(error);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(console.error).toHaveBeenCalledWith(
         'Failed to process automated post job job-1',
@@ -393,7 +398,7 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('loads the sweepstakes of the bluesky job', async () => {
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
         where: { id: 'sweep-1' },
@@ -402,7 +407,7 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('requires an active bluesky integration and selects its account id', async () => {
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.integration.findFirst).toHaveBeenCalledWith({
         where: {
@@ -416,7 +421,7 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('creates the skeet for the team without passing the integration id', async () => {
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(mocks.createSkeet).toHaveBeenCalledWith(prismaMock, {
         teamId: 'team-1',
@@ -439,7 +444,7 @@ describe('processAutomatedPostJobs', () => {
         })
       ]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(mocks.createSkeet).toHaveBeenCalledWith(prismaMock, {
         teamId: 'team-1',
@@ -449,7 +454,7 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('appends repost and like import tasks pointing to the new post', async () => {
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       const postUrl = 'https://bsky.app/profile/did:plc:abc123/post/3kpost';
       expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith({
@@ -492,9 +497,9 @@ describe('processAutomatedPostJobs', () => {
     });
 
     it('marks the job completed with the post uri and url', async () => {
-      const result = await processAutomatedPostJobs();
+      const result = await runAutomatedPostJobs(asPrismaClient());
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
         where: { id: 'job-2' },
         data: {
@@ -512,7 +517,7 @@ describe('processAutomatedPostJobs', () => {
         blueskyJob(['LIKE'])
       ]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       const call = prismaMock.sweepstakes.update.mock.calls[0][0];
       expect(call.data.tasks.create).toEqual([
@@ -528,7 +533,7 @@ describe('processAutomatedPostJobs', () => {
         blueskyJob(['REPOST'])
       ]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       const call = prismaMock.sweepstakes.update.mock.calls[0][0];
       expect(call.data.tasks.create).toEqual([
@@ -543,7 +548,7 @@ describe('processAutomatedPostJobs', () => {
     it('adds no tasks when none are requested', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([blueskyJob([])]);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith({
         where: { id: 'sweep-1' },
@@ -554,7 +559,7 @@ describe('processAutomatedPostJobs', () => {
     it('marks the job failed when the sweepstakes is missing', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update.mock.calls).toEqual([
         [failedUpdate('job-2', 'Sweepstakes not found')],
@@ -565,7 +570,7 @@ describe('processAutomatedPostJobs', () => {
     it('marks the job failed when the sweepstakes has no team', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(sweepstakesRow(null));
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update).toHaveBeenLastCalledWith(
         failedUpdate('job-2', 'Sweepstakes team not found')
@@ -575,7 +580,7 @@ describe('processAutomatedPostJobs', () => {
     it('marks the job failed when the bluesky integration is missing', async () => {
       prismaMock.integration.findFirst.mockResolvedValue(null);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update).toHaveBeenLastCalledWith(
         failedUpdate('job-2', 'Bluesky integration not found')
@@ -586,7 +591,7 @@ describe('processAutomatedPostJobs', () => {
     it('records an unknown error message when a non-error value is thrown', async () => {
       mocks.createSkeet.mockRejectedValue(42);
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update.mock.calls).toEqual([
         [failedUpdate('job-2', 'Unknown error occurred')],
@@ -603,9 +608,9 @@ describe('processAutomatedPostJobs', () => {
     it('delegates to the discord processor with the parsed job', async () => {
       mocks.processPostToDiscord.mockResolvedValue(undefined);
 
-      const result = await processAutomatedPostJobs();
+      const result = await runAutomatedPostJobs(asPrismaClient());
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(mocks.processPostToDiscord).toHaveBeenCalledWith({
         db: prismaMock,
         job: {
@@ -633,7 +638,7 @@ describe('processAutomatedPostJobs', () => {
         new ApplicationError({ code: 'NOT_FOUND', message: 'Channel gone' })
       );
 
-      await processAutomatedPostJobs();
+      await runAutomatedPostJobs(asPrismaClient());
 
       expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith(
         failedUpdate('job-3', 'Channel gone')
@@ -647,9 +652,9 @@ describe('processAutomatedPostJobs', () => {
         jobRow({ id: 'bad-job', request: null })
       ]);
 
-      const result = await processAutomatedPostJobs();
+      const result = await runAutomatedPostJobs(asPrismaClient());
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       const [call] = prismaMock.automatedPostJob.update.mock.calls;
       expect(call[0].where).toEqual({ id: 'bad-job' });
       expect(call[0].data.status).toBe('FAILED');
@@ -672,14 +677,14 @@ describe('processAutomatedPostJobs', () => {
         )
         .mockResolvedValueOnce(undefined);
 
-      const result = await processAutomatedPostJobs();
+      const result = await runAutomatedPostJobs(asPrismaClient());
 
-      expect(expectOk(result)).toEqual({ processed: 3 });
+      expect(result).toEqual({ processed: 3 });
       expect(mocks.processPostToDiscord).toHaveBeenCalledTimes(2);
       expect(prismaMock.automatedPostJob.update).toHaveBeenCalledTimes(2);
     });
 
-    it('returns a failure when recording a job failure itself fails', async () => {
+    it('throws when recording a job failure itself fails', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([
         discordJob(),
         discordJob()
@@ -691,9 +696,7 @@ describe('processAutomatedPostJobs', () => {
         new Error('db down')
       );
 
-      const result = await processAutomatedPostJobs();
-
-      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+      await expect(runAutomatedPostJobs(asPrismaClient())).rejects.toThrow(
         'db down'
       );
       expect(mocks.processPostToDiscord).toHaveBeenCalledTimes(1);

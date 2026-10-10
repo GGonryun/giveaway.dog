@@ -28,13 +28,12 @@
   "dependencies": {
     "@giveaway/bluesky-task-jobs": "workspace:*",
     "@giveaway/db-model": "workspace:*",
-    "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
     "@giveaway/task-jobs-core": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/x-task-jobs": "workspace:*",
-    "server-only": "catalog:",
-    "zod": "catalog:"
+    "server-only": "catalog:"
   },
   "devDependencies": {
     "@giveaway/bluesky-api": "workspace:*",
