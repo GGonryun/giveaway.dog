@@ -71,7 +71,7 @@ export const LoggedInNavigationBar: React.FC<{ user: UserSchema }> = ({
       </div>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild className="lg:hidden">
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" aria-label="Open menu">
             <MenuIcon className="h-4 w-4" />
           </Button>
         </SheetTrigger>
