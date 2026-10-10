@@ -124,6 +124,27 @@ describe('the activation alert with the discord fake', () => {
   );
 
   it.each(E2E_CLOSED_GATES)(
+    'fails the job on %s when the webhook fails',
+    async (environment) => {
+      stubE2eFakeEnvironment(environment, 'discord');
+      vi.stubEnv('DISCORD_WEBHOOK_URL', WEBHOOK_URL);
+      fetchMock.mockResolvedValue(
+        new Response(null, { status: 500, statusText: 'Server Error' })
+      );
+
+      await processSweepstakesJobs();
+
+      expect(prismaMock.sweepstakesJob.update).toHaveBeenCalledWith({
+        where: { id: JOB_ID },
+        data: {
+          status: 'FAILED',
+          error: 'Failed to send Discord webhook: 500 Server Error'
+        }
+      });
+    }
+  );
+
+  it.each(E2E_CLOSED_GATES)(
     'sends nothing on %s without DISCORD_WEBHOOK_URL',
     async (environment) => {
       stubE2eFakeEnvironment(environment, 'discord');

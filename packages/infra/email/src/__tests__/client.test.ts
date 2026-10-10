@@ -135,6 +135,7 @@ describe('newEmailClient with the email fake', () => {
 
     const result = await newEmailClient({}).send(e2eParams);
 
+    expect(result).toEqual({ id: expect.any(String), status: 'sent' });
     const entries = await readE2eOutbox({
       channel: 'email',
       target: E2E_RECIPIENT
@@ -185,6 +186,19 @@ describe('newEmailClient with the email fake', () => {
     await newEmailClient({ secret: 'sk_preview' }).send({
       ...e2eParams,
       to: [E2E_RECIPIENT, 'someone@example.com']
+    });
+
+    expect(inbound.send).toHaveBeenCalledTimes(1);
+    expect(memoryOutbox.redis.rpush).not.toHaveBeenCalled();
+  });
+
+  it('sends through Inbound when there is no recipient', async () => {
+    stubE2eFakeEnvironment('preview', 'email');
+    inbound.send.mockResolvedValue({ id: 'email-1' });
+
+    await newEmailClient({ secret: 'sk_preview' }).send({
+      ...e2eParams,
+      to: []
     });
 
     expect(inbound.send).toHaveBeenCalledTimes(1);

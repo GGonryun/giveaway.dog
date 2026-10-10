@@ -4,6 +4,12 @@ import { createE2eOutbox } from './store';
 
 export { toE2eFakeId } from './store';
 
-export const { recordE2eOutbox, readE2eOutbox } = createE2eOutbox(
+const outbox = createE2eOutbox(
   async () => (await import('@giveaway/cache/redis')).redis
 );
+
+export const recordE2eOutbox: typeof outbox.recordE2eOutbox = (record) =>
+  outbox.recordE2eOutbox(record);
+
+export const readE2eOutbox: typeof outbox.readE2eOutbox = (query) =>
+  outbox.readE2eOutbox(query);

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  E2E_FAKE_ID_PREFIX,
   E2E_FAKE_SERVICES,
+  E2E_OUTBOX_TTL_SECONDS,
   e2eOutboxQuerySchema,
   parseE2eFakeServices,
   toE2eOutboxKey,
@@ -75,6 +77,16 @@ describe('e2eOutboxQuerySchema', () => {
         target: 'a'.repeat(200)
       }).success
     ).toBe(true);
+  });
+});
+
+describe('the outbox limits', () => {
+  it('keeps the entries for one hour', () => {
+    expect(E2E_OUTBOX_TTL_SECONDS).toBe(3600);
+  });
+
+  it('starts each fake id with e2e-fake-', () => {
+    expect(E2E_FAKE_ID_PREFIX).toBe('e2e-fake-');
   });
 });
 
