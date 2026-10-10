@@ -13,7 +13,7 @@ export async function updateDiscordMessage(
   options: UpdateDiscordMessageOptions
 ): Promise<DiscordMessageResponseSchema> {
   if (isE2eFakeOn('discord')) {
-    const entry = await recordE2eOutbox({
+    await recordE2eOutbox({
       channel: 'discord',
       target: options.channelId,
       payload: {
