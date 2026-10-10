@@ -1,5 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type Inbound from 'inboundemail';
+import {
+  E2E_CLOSED_GATES,
+  stubE2eFakeEnvironment
+} from '@giveaway/e2e-fakes/testing/env';
+import {
+  clearMemoryOutbox,
+  memoryOutbox
+} from '@giveaway/e2e-fakes/testing/outbox';
+import { readE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 import { newEmailClient, NO_REPLY_EMAIL } from '../client';
 
 const inbound = vi.hoisted(() => {
@@ -15,6 +24,11 @@ const inbound = vi.hoisted(() => {
 });
 
 vi.mock('inboundemail', () => ({ default: inbound.InboundMock }));
+
+vi.mock(
+  '@giveaway/e2e-fakes/outbox',
+  () => import('@giveaway/e2e-fakes/testing/outbox')
+);
 
 const sendParams = {
   from: NO_REPLY_EMAIL,
@@ -94,4 +108,117 @@ describe('newEmailClient', () => {
       await expect(client.send(sendParams)).rejects.toThrow('rate limited');
     });
   });
+});
+
+describe('newEmailClient with the email fake', () => {
+  const E2E_RECIPIENT = 'e2e-invitee-abcd12@example.com';
+  const e2eParams = {
+    from: NO_REPLY_EMAIL,
+    to: E2E_RECIPIENT,
+    subject: 'Sign in',
+    html: '<a href="https://preview.example/link">Sign in</a>',
+    text: 'https://preview.example/link'
+  } as unknown as Inbound.Emails.EmailSendParams;
+
+  beforeEach(() => {
+    inbound.send.mockReset();
+    inbound.constructed.length = 0;
+    clearMemoryOutbox();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('records an email to an e2e recipient in the outbox', async () => {
+    stubE2eFakeEnvironment('preview', 'email');
+
+    const result = await newEmailClient({}).send(e2eParams);
+
+    const entries = await readE2eOutbox({
+      channel: 'email',
+      target: E2E_RECIPIENT
+    });
+    expect(entries).toEqual([
+      expect.objectContaining({
+        id: result.id,
+        payload: {
+          from: NO_REPLY_EMAIL,
+          to: E2E_RECIPIENT,
+          subject: 'Sign in',
+          html: '<a href="https://preview.example/link">Sign in</a>',
+          text: 'https://preview.example/link'
+        }
+      })
+    ]);
+  });
+
+  it('never calls Inbound for an e2e recipient', async () => {
+    stubE2eFakeEnvironment('preview', 'email');
+
+    await newEmailClient({ secret: 'sk_preview' }).send(e2eParams);
+
+    expect(inbound.constructed).toEqual([]);
+    expect(inbound.send).not.toHaveBeenCalled();
+  });
+
+  it('records one entry for each e2e recipient', async () => {
+    stubE2eFakeEnvironment('preview', 'email');
+    const second = 'e2e-member-abcd12@example.com';
+
+    await newEmailClient({}).send({
+      ...e2eParams,
+      to: [E2E_RECIPIENT, second]
+    });
+
+    for (const target of [E2E_RECIPIENT, second]) {
+      await expect(
+        readE2eOutbox({ channel: 'email', target })
+      ).resolves.toHaveLength(1);
+    }
+  });
+
+  it('sends through Inbound when one recipient is not an e2e user', async () => {
+    stubE2eFakeEnvironment('preview', 'email');
+    inbound.send.mockResolvedValue({ id: 'email-1' });
+
+    await newEmailClient({ secret: 'sk_preview' }).send({
+      ...e2eParams,
+      to: [E2E_RECIPIENT, 'someone@example.com']
+    });
+
+    expect(inbound.send).toHaveBeenCalledTimes(1);
+    expect(memoryOutbox.redis.rpush).not.toHaveBeenCalled();
+  });
+
+  it('fails for a real recipient when no secret is set', async () => {
+    stubE2eFakeEnvironment('preview', 'email');
+
+    await expect(
+      newEmailClient({}).send({ ...e2eParams, to: 'someone@example.com' })
+    ).rejects.toThrow('InboundEmailProvider requires a secret');
+  });
+
+  it('sends through Inbound when only other fakes are on', async () => {
+    stubE2eFakeEnvironment('preview', 'geo');
+    inbound.send.mockResolvedValue({ id: 'email-1' });
+
+    await newEmailClient({ secret: 'sk_preview' }).send(e2eParams);
+
+    expect(inbound.send).toHaveBeenCalledWith(e2eParams);
+    expect(memoryOutbox.redis.rpush).not.toHaveBeenCalled();
+  });
+
+  it.each(E2E_CLOSED_GATES)(
+    'sends an e2e recipient through Inbound on %s',
+    async (environment) => {
+      stubE2eFakeEnvironment(environment, 'all');
+      inbound.send.mockResolvedValue({ id: 'email-1' });
+
+      await newEmailClient({ secret: 'sk_live_123' }).send(e2eParams);
+
+      expect(inbound.send).toHaveBeenCalledWith(e2eParams);
+      expect(memoryOutbox.redis.rpush).not.toHaveBeenCalled();
+    }
+  );
 });

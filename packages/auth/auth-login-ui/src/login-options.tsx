@@ -194,6 +194,7 @@ export function LoginOptions({
           <div className="grid gap-3">
             <Label htmlFor="email">Email</Label>
             <Input
+              id="email"
               name="email"
               type="email"
               placeholder="player@giveaway.dog"

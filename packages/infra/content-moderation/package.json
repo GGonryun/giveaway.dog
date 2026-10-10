@@ -24,6 +24,7 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/e2e-fakes": "workspace:*",
     "@google-cloud/vision": "catalog:",
     "server-only": "catalog:"
   },

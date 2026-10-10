@@ -4,6 +4,8 @@ import { Tx } from '@giveaway/db-client/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestTeamBlueskyCredentials } from './bluesky/get-latest-team-bluesky-agent';
 import { RichText } from '@atproto/api';
+import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
+import { recordE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 
 interface CreateSkeetInput {
   teamId: string;
@@ -25,6 +27,18 @@ export const createSkeet = async (
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Missing required parameter teamId'
     });
+  }
+
+  if (isE2eFakeOn('bluesky')) {
+    const entry = await recordE2eOutbox({
+      channel: 'bluesky',
+      target: input.teamId,
+      payload: { text: input.text, imageUrl: input.imageUrl ?? null }
+    });
+    return {
+      uri: `at://${entry.id}/app.bsky.feed.post/${entry.id}`,
+      cid: entry.id
+    };
   }
 
   const { agent } = await getLatestTeamBlueskyCredentials(tx, input.teamId);

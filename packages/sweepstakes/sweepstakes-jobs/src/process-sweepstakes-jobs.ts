@@ -17,6 +17,8 @@ import { toPostToDiscordResponseSchema } from '@giveaway/automation-model/schema
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
 import { toSweepstakesEmbed } from '@giveaway/discord-api/embeds';
 import { toExpiredSweepstakeComponents } from '@giveaway/discord-api/util';
+import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
+import { recordE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 
 const MAX_JOBS_PER_RUN = 5;
 
@@ -242,9 +244,10 @@ const processSweepstakesActivation = async ({
     return;
   }
 
+  const fakeAlert = isE2eFakeOn('discord');
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
-  if (!webhookUrl) {
+  if (!fakeAlert && !webhookUrl) {
     await db.sweepstakesJob.update({
       where: { id: job.id },
       data: { status: SweepstakesJobStatus.COMPLETED }
@@ -301,19 +304,27 @@ const processSweepstakesActivation = async ({
     embeds: [embed]
   };
 
-  const response = await fetch(webhookUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    throw new ApplicationError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: `Failed to send Discord webhook: ${response.status} ${response.statusText}`
+  if (fakeAlert) {
+    await recordE2eOutbox({
+      channel: 'discord-alert',
+      target: sweepstakes.id,
+      payload
     });
+  } else {
+    const response = await fetch(webhookUrl!, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new ApplicationError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Failed to send Discord webhook: ${response.status} ${response.statusText}`
+      });
+    }
   }
 
   await db.sweepstakesJob.update({

@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  E2E_CLOSED_GATES,
+  stubE2eFakeEnvironment
+} from '@giveaway/e2e-fakes/testing/env';
+import { E2E_X_FIXTURES } from '@giveaway/e2e-model/fakes';
 import { getScrapeBadgerClient } from '../client';
 
 const m = vi.hoisted(() => ({
@@ -8,7 +13,8 @@ const m = vi.hoisted(() => ({
   })
 }));
 
-vi.mock('scrapebadger', () => ({
+vi.mock('scrapebadger', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('scrapebadger')>()),
   ScrapeBadger: m.ScrapeBadger
 }));
 
@@ -67,5 +73,46 @@ describe('getScrapeBadgerClient', () => {
         expect(m.ScrapeBadger).not.toHaveBeenCalled();
       }
     );
+  });
+});
+
+describe('getScrapeBadgerClient with the scrapebadger fake', () => {
+  beforeEach(() => {
+    m.ScrapeBadger.mockClear();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('returns the fixture client without SCRAPEBADGER_API_KEY', async () => {
+    stubE2eFakeEnvironment('preview', 'scrapebadger');
+    vi.stubEnv('SCRAPEBADGER_API_KEY', undefined);
+
+    const client = getScrapeBadgerClient();
+
+    await expect(
+      client.twitter.tweets.getById(E2E_X_FIXTURES.tweet)
+    ).resolves.toMatchObject({ id: E2E_X_FIXTURES.tweet });
+    expect(m.ScrapeBadger).not.toHaveBeenCalled();
+  });
+
+  it('never creates the real client, even with SCRAPEBADGER_API_KEY', () => {
+    stubE2eFakeEnvironment('preview', 'scrapebadger');
+    vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');
+
+    getScrapeBadgerClient();
+
+    expect(m.ScrapeBadger).not.toHaveBeenCalled();
+  });
+
+  it.each(E2E_CLOSED_GATES)('creates the real client on %s', (environment) => {
+    stubE2eFakeEnvironment(environment, 'scrapebadger');
+    vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');
+
+    const client = getScrapeBadgerClient();
+
+    expect(m.ScrapeBadger).toHaveBeenCalledWith({ apiKey: 'sb-key' });
+    expect(client).toBe(m.ScrapeBadger.mock.instances[0]);
   });
 });

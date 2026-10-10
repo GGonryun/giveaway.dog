@@ -6,6 +6,7 @@ import { DEVELOPMENT_GEO } from '@giveaway/request-context-model/fingerprint';
 import { Prisma } from '@giveaway/db-model';
 import { Nil } from '@giveaway/util-types/types';
 import https from 'https';
+import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
 
 const httpsGet = (url: string): Promise<unknown> =>
   new Promise((resolve, reject) => {
@@ -108,6 +109,7 @@ export namespace ip {
     try {
       if (
         process.env.NODE_ENV === 'development' ||
+        isE2eFakeOn('geo') ||
         !ip ||
         ip === DEVELOPMENT_GEO.ip
       ) {

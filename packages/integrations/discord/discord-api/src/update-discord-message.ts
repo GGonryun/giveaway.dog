@@ -6,10 +6,29 @@ import {
   UpdateDiscordMessageOptions,
   type DiscordMessageResponseSchema
 } from '@giveaway/discord-model/schemas';
+import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
+import { recordE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 
 export async function updateDiscordMessage(
   options: UpdateDiscordMessageOptions
 ): Promise<DiscordMessageResponseSchema> {
+  if (isE2eFakeOn('discord')) {
+    const entry = await recordE2eOutbox({
+      channel: 'discord',
+      target: options.channelId,
+      payload: {
+        action: 'update',
+        messageId: options.messageId,
+        embeds: [options.embed],
+        components: options.components
+      }
+    });
+    return {
+      id: options.messageId,
+      channel_id: options.channelId
+    };
+  }
+
   if (!process.env.DISCORD_BOT_TOKEN) {
     throw new ApplicationError({
       code: 'INTERNAL_SERVER_ERROR',

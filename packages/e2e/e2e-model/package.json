@@ -16,6 +16,7 @@
     }
   },
   "exports": {
+    "./fakes": "./src/fakes.ts",
     "./naming": "./src/naming.ts",
     "./personas": "./src/personas.ts",
     "./requests": "./src/requests.ts"
