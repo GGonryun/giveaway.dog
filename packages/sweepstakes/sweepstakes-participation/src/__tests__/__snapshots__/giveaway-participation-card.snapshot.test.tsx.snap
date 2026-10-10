@@ -49,9 +49,7 @@ exports[`GiveawayParticipationCard > matches the snapshot 1`] = `
           <div
             class="text-xs text-muted-foreground font-semibold"
           >
-            Sep 24, 2026
-             - 
-            Oct 8, 2026
+            Sep 24, 2026 - Oct 8, 2026
           </div>
         </div>
         <div
