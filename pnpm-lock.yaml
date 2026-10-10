@@ -3381,6 +3381,9 @@ importers:
 
   packages/e2e/e2e-model:
     dependencies:
+      '@giveaway/custom-fields-model':
+        specifier: workspace:*
+        version: link:../../participants/custom-fields-model
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
@@ -3436,6 +3439,9 @@ importers:
       '@giveaway/e2e-model':
         specifier: workspace:*
         version: link:../e2e-model
+      '@giveaway/referrals-server':
+        specifier: workspace:*
+        version: link:../../participants/referrals-server
       '@giveaway/sweepstakes-access':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-access

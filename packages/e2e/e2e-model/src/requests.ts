@@ -1,16 +1,25 @@
 import { z } from 'zod';
 import { omit } from 'lodash';
 import {
+  CompletionStatus,
+  IdentityProvider,
+  PrizeDrawResult,
   SweepstakesStatus,
   TeamRole,
   TeamTier,
   VisibilityType
 } from '@giveaway/db-model';
+import { sweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import {
   DEFAULT_SWEEPSTAKES_PRIZE_NAME,
   DEFAULT_SWEEPSTAKES_PRIZE_QUOTA
 } from '@giveaway/sweepstakes-model/defaults';
-import { prizeSchema } from '@giveaway/sweepstakes-model/schemas';
+import {
+  prizeSchema,
+  regionalRestrictionFilterSchema,
+  sweepstakesWinnerCriteriaSchema,
+  termsTemplateSchema
+} from '@giveaway/sweepstakes-model/schemas';
 import { toDefaultValues } from '@giveaway/task-model/defaults';
 import {
   askQuestionTaskSchema,
@@ -43,6 +52,15 @@ export const E2E_MAX_DESCRIPTION_LENGTH = 10_000;
 export const E2E_MAX_TASKS = 10;
 export const E2E_MAX_PRIZES = 10;
 export const E2E_MAX_OFFSET_SECONDS = 366 * 24 * 60 * 60;
+export const E2E_MAX_TERMS_LENGTH = 10_000;
+export const E2E_MAX_FORM_FIELDS = 10;
+export const E2E_MAX_REGIONS = 20;
+export const E2E_MAX_ENTRIES = 50;
+export const E2E_MAX_DRAWS = 50;
+export const E2E_MAX_REFERRALS = 50;
+export const E2E_MAX_FORM_VALUE_LENGTH = 200;
+export const E2E_MAX_REASON_LENGTH = 500;
+export const E2E_RUN_ID_LENGTH = 6;
 
 const HOUR = 60 * 60;
 const DAY = 24 * HOUR;
@@ -233,6 +251,386 @@ export const e2ePrizeRequestSchema = prizeSchema
 
 export type E2ePrizeRequest = z.infer<typeof e2ePrizeRequestSchema>;
 
+export const e2eTermsRequestSchema = z.discriminatedUnion('type', [
+  z
+    .object({
+      type: z.literal('CUSTOM'),
+      text: z.string().min(1).max(E2E_MAX_TERMS_LENGTH)
+    })
+    .strict(),
+  termsTemplateSchema
+    .partial()
+    .extend({
+      type: z.literal('TEMPLATE'),
+      additionalTerms: z.string().max(E2E_MAX_TERMS_LENGTH).nullish()
+    })
+    .strict()
+]);
+
+export type E2eTermsRequest = z.infer<typeof e2eTermsRequestSchema>;
+
+export const e2eCriteriaRequestSchema = sweepstakesWinnerCriteriaSchema
+  .omit({ externalPlatforms: true })
+  .partial()
+  .strict();
+
+export type E2eCriteriaRequest = z.infer<typeof e2eCriteriaRequestSchema>;
+
+const [
+  usernameFieldSchema,
+  ageFieldSchema,
+  emailFieldSchema,
+  twitterFieldSchema
+] = sweepstakesFormFieldSchema.options;
+
+export const e2eFormFieldRequestSchema = z.discriminatedUnion('type', [
+  usernameFieldSchema.omit({ id: true }).strict(),
+  ageFieldSchema.omit({ id: true }).strict(),
+  emailFieldSchema.omit({ id: true }).strict(),
+  twitterFieldSchema.omit({ id: true }).strict()
+]);
+
+export type E2eFormFieldRequest = z.infer<typeof e2eFormFieldRequestSchema>;
+
+export const e2eAudienceRequestSchema = z
+  .object({
+    allowedIdentities: z
+      .array(z.nativeEnum(IdentityProvider))
+      .min(1)
+      .max(Object.keys(IdentityProvider).length)
+      .optional(),
+    requirePreEntryLogin: z.boolean().optional(),
+    regionalRestriction: z
+      .object({
+        regions: z
+          .array(z.string().regex(/^(country|continent):[A-Z]{2}$/))
+          .min(1)
+          .max(E2E_MAX_REGIONS),
+        filter: regionalRestrictionFilterSchema
+      })
+      .strict()
+      .nullable()
+      .optional(),
+    formFields: z
+      .array(e2eFormFieldRequestSchema)
+      .max(E2E_MAX_FORM_FIELDS)
+      .optional()
+  })
+  .strict();
+
+export type E2eAudienceRequest = z.infer<typeof e2eAudienceRequestSchema>;
+
+const indexSchema = z.number().int().min(0);
+
+const reasonSchema = z.string().max(E2E_MAX_REASON_LENGTH);
+
+export const e2eEntryRequestSchema = z
+  .object({
+    persona: e2ePersonaSchema,
+    ns: e2eNamespaceSchema.optional(),
+    completions: z
+      .array(
+        z
+          .object({
+            task: indexSchema,
+            status: z
+              .nativeEnum(CompletionStatus)
+              .default(CompletionStatus.COMPLETED),
+            proof: z.record(z.string(), z.unknown()).optional(),
+            reason: reasonSchema.optional()
+          })
+          .strict()
+      )
+      .max(E2E_MAX_TASKS)
+      .default([]),
+    formValues: z
+      .array(
+        z
+          .object({
+            field: indexSchema,
+            value: z.string().max(E2E_MAX_FORM_VALUE_LENGTH)
+          })
+          .strict()
+      )
+      .max(E2E_MAX_FORM_FIELDS)
+      .default([]),
+    quality: z.number().int().min(0).max(100).optional(),
+    prize: indexSchema.optional()
+  })
+  .strict();
+
+export type E2eEntryRequest = z.infer<typeof e2eEntryRequestSchema>;
+
+export const e2eDrawRequestSchema = z
+  .object({
+    entry: indexSchema,
+    prize: indexSchema,
+    task: indexSchema.optional(),
+    result: z.nativeEnum(PrizeDrawResult).default(PrizeDrawResult.WINNER),
+    reason: reasonSchema.optional(),
+    previous: indexSchema.optional()
+  })
+  .strict();
+
+export type E2eDrawRequest = z.infer<typeof e2eDrawRequestSchema>;
+
+export const e2eReferralRequestSchema = z
+  .object({
+    entry: indexSchema,
+    task: indexSchema,
+    referred: z.array(indexSchema).max(E2E_MAX_ENTRIES).default([])
+  })
+  .strict();
+
+export type E2eReferralRequest = z.infer<typeof e2eReferralRequestSchema>;
+
+type Ctx = z.RefinementCtx;
+
+const issue = (ctx: Ctx, path: (string | number)[], message: string) =>
+  ctx.addIssue({ code: z.ZodIssueCode.custom, path, message });
+
+const checkIndex = (
+  ctx: Ctx,
+  path: (string | number)[],
+  index: number,
+  length: number,
+  name: string
+) => {
+  if (index < length) return true;
+  issue(ctx, path, `There is no ${name} at index ${index}`);
+  return false;
+};
+
+const findDuplicate = <T>(values: T[]) => {
+  const seen = new Set<T>();
+  for (const [index, value] of values.entries()) {
+    if (seen.has(value)) return index;
+    seen.add(value);
+  }
+  return undefined;
+};
+
+export const toE2eEntryNamespace = (
+  request: { ns: string },
+  entry: { ns?: string }
+) => entry.ns ?? request.ns;
+
+type E2eSweepstakesData = {
+  ns: string;
+  tasks: E2eTaskRequest[];
+  prizes: E2ePrizeRequest[];
+  criteria?: E2eCriteriaRequest;
+  audience?: E2eAudienceRequest;
+  entries: E2eEntryRequest[];
+  draws: E2eDrawRequest[];
+  referrals: E2eReferralRequest[];
+};
+
+const refineEntries = (value: E2eSweepstakesData, ctx: Ctx) => {
+  const runId = value.ns.slice(0, E2E_RUN_ID_LENGTH);
+  const fields = value.audience?.formFields?.length ?? 0;
+  const users = value.entries.map(
+    (entry) => `${entry.persona}-${toE2eEntryNamespace(value, entry)}`
+  );
+  const duplicate = findDuplicate(users);
+  if (duplicate !== undefined) {
+    issue(
+      ctx,
+      ['entries', duplicate],
+      'Each persona and namespace enters the giveaway at most once'
+    );
+  }
+
+  value.entries.forEach((entry, index) => {
+    const path = ['entries', index];
+    if (entry.ns && !entry.ns.startsWith(runId)) {
+      issue(ctx, [...path, 'ns'], `The namespace must start with ${runId}`);
+    }
+
+    entry.completions.forEach((completion, position) =>
+      checkIndex(
+        ctx,
+        [...path, 'completions', position, 'task'],
+        completion.task,
+        value.tasks.length,
+        'task'
+      )
+    );
+    const task = findDuplicate(entry.completions.map((c) => c.task));
+    if (task !== undefined) {
+      issue(
+        ctx,
+        [...path, 'completions', task],
+        'Each task has at most one completion for each entry'
+      );
+    }
+
+    entry.formValues.forEach((formValue, position) =>
+      checkIndex(
+        ctx,
+        [...path, 'formValues', position, 'field'],
+        formValue.field,
+        fields,
+        'form field'
+      )
+    );
+    const field = findDuplicate(entry.formValues.map((v) => v.field));
+    if (field !== undefined) {
+      issue(
+        ctx,
+        [...path, 'formValues', field],
+        'Each form field has at most one value for each entry'
+      );
+    }
+
+    if (entry.prize !== undefined) {
+      checkIndex(
+        ctx,
+        [...path, 'prize'],
+        entry.prize,
+        value.prizes.length,
+        'prize'
+      );
+      if (!value.criteria?.allowUserSelection) {
+        issue(
+          ctx,
+          [...path, 'prize'],
+          'A prize allocation needs criteria.allowUserSelection'
+        );
+      }
+    }
+  });
+};
+
+const refineDraws = (value: E2eSweepstakesData, ctx: Ctx) => {
+  const previous = value.draws.flatMap((draw) =>
+    draw.previous === undefined ? [] : [draw.previous]
+  );
+  const rerolled = findDuplicate(previous);
+  if (rerolled !== undefined) {
+    issue(ctx, ['draws'], 'Each draw is the previous draw of at most one draw');
+  }
+
+  value.draws.forEach((draw, index) => {
+    const path = ['draws', index];
+    checkIndex(
+      ctx,
+      [...path, 'prize'],
+      draw.prize,
+      value.prizes.length,
+      'prize'
+    );
+    if (
+      checkIndex(
+        ctx,
+        [...path, 'entry'],
+        draw.entry,
+        value.entries.length,
+        'entry'
+      )
+    ) {
+      const tasks = value.entries[draw.entry].completions.map((c) => c.task);
+      if (
+        draw.task === undefined
+          ? tasks.length === 0
+          : !tasks.includes(draw.task)
+      ) {
+        issue(ctx, [...path, 'task'], 'A draw needs a completion of its entry');
+      }
+    }
+
+    if (draw.previous === undefined) return;
+    if (draw.previous >= index) {
+      issue(ctx, [...path, 'previous'], 'The previous draw must come first');
+      return;
+    }
+    const before = value.draws[draw.previous];
+    if (before.result !== PrizeDrawResult.DISQUALIFIED) {
+      issue(
+        ctx,
+        [...path, 'previous'],
+        'The previous draw of a re-roll must be DISQUALIFIED'
+      );
+    }
+    if (before.prize !== draw.prize) {
+      issue(
+        ctx,
+        [...path, 'prize'],
+        'A re-roll draws the prize of its previous draw'
+      );
+    }
+  });
+};
+
+const refineReferrals = (value: E2eSweepstakesData, ctx: Ctx) => {
+  const pairs = value.referrals.map((r) => `${r.entry}-${r.task}`);
+  const duplicate = findDuplicate(pairs);
+  if (duplicate !== undefined) {
+    issue(
+      ctx,
+      ['referrals', duplicate],
+      'Each entry has at most one referral for each task'
+    );
+  }
+
+  value.referrals.forEach((referral, index) => {
+    const path = ['referrals', index];
+    checkIndex(
+      ctx,
+      [...path, 'entry'],
+      referral.entry,
+      value.entries.length,
+      'entry'
+    );
+    if (
+      checkIndex(
+        ctx,
+        [...path, 'task'],
+        referral.task,
+        value.tasks.length,
+        'task'
+      ) &&
+      value.tasks[referral.task].type !== 'REFERRAL_LINK'
+    ) {
+      issue(ctx, [...path, 'task'], 'A referral needs a REFERRAL_LINK task');
+    }
+
+    referral.referred.forEach((referred, position) => {
+      checkIndex(
+        ctx,
+        [...path, 'referred', position],
+        referred,
+        value.entries.length,
+        'entry'
+      );
+      if (referred === referral.entry) {
+        issue(
+          ctx,
+          [...path, 'referred', position],
+          'An entry cannot refer itself'
+        );
+      }
+    });
+    const twice = findDuplicate(referral.referred);
+    if (twice !== undefined) {
+      issue(
+        ctx,
+        [...path, 'referred', twice],
+        'Each entry is referred at most once by a referral'
+      );
+    }
+  });
+};
+
+export const refineE2eSweepstakesData = (
+  value: E2eSweepstakesData,
+  ctx: Ctx
+) => {
+  refineEntries(value, ctx);
+  refineDraws(value, ctx);
+  refineReferrals(value, ctx);
+};
+
 export const e2eSweepstakesRequestSchema = z
   .object({
     ns: e2eNamespaceSchema,
@@ -266,10 +664,21 @@ export const e2eSweepstakesRequestSchema = z
       .array(e2ePrizeRequestSchema)
       .min(1)
       .max(E2E_MAX_PRIZES)
-      .default([{ name: DEFAULT_SWEEPSTAKES_PRIZE_NAME }])
+      .default([{ name: DEFAULT_SWEEPSTAKES_PRIZE_NAME }]),
+    terms: e2eTermsRequestSchema.optional(),
+    criteria: e2eCriteriaRequestSchema.optional(),
+    audience: e2eAudienceRequestSchema.optional(),
+    entries: z.array(e2eEntryRequestSchema).max(E2E_MAX_ENTRIES).default([]),
+    draws: z.array(e2eDrawRequestSchema).max(E2E_MAX_DRAWS).default([]),
+    referrals: z
+      .array(e2eReferralRequestSchema)
+      .max(E2E_MAX_REFERRALS)
+      .default([])
   })
   .strict()
   .superRefine((value, ctx) => {
+    refineE2eSweepstakesData(value, ctx);
+
     if (
       value.slug &&
       !value.slug.startsWith(toE2eGiveawaySlugPrefix(value.ns))

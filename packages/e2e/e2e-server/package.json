@@ -29,6 +29,7 @@
     "@giveaway/db-model": "workspace:*",
     "@giveaway/e2e-gate": "workspace:*",
     "@giveaway/e2e-model": "workspace:*",
+    "@giveaway/referrals-server": "workspace:*",
     "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-editor-server": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",

@@ -25,7 +25,14 @@ const formRecord = () => ({
     description: 'Enter to win a prize!',
     banner: null
   },
-  terms: null,
+  terms: {
+    type: 'TEMPLATE',
+    sponsorName: 'e2e-abc123-w0',
+    winnerSelectionMethod: 'Random draw',
+    notificationTimeframeDays: 3,
+    claimDeadlineDays: 14,
+    governingLawCountry: 'US'
+  },
   audience: null,
   timing: null,
   prizes: [],
@@ -374,9 +381,215 @@ describe('seedE2eSweepstakes', () => {
       startDate: new Date(NOW.getTime() - HOUR),
       endDate: new Date(NOW.getTime() + 7 * DAY),
       tasks: appliedInput().tasks,
-      prizes: appliedInput().prizes
+      prizes: appliedInput().prizes,
+      formFields: [],
+      entries: [],
+      draws: [],
+      referrals: []
     });
     expect(result.tasks).toHaveLength(1);
     expect(result.prizes).toHaveLength(1);
+  });
+});
+
+describe('seedE2eSweepstakes options', () => {
+  it('keeps the terms, the audience and the criteria of the editor by default', async () => {
+    await seed({});
+
+    expect(appliedInput()).toMatchObject({
+      terms: {
+        type: 'TEMPLATE',
+        sponsorName: 'e2e-abc123-w0',
+        claimDeadlineDays: 14
+      },
+      audience: {
+        allowedIdentities: [
+          'TWITTER',
+          'GOOGLE',
+          'DISCORD',
+          'EMAIL',
+          'TWITCH',
+          'KICK',
+          'TIKTOK',
+          'STEAM'
+        ],
+        requirePreEntryLogin: false,
+        regionalRestriction: undefined,
+        formFields: []
+      },
+      criteria: {
+        minQualityScore: 50,
+        minTasksCompleted: 1,
+        allowMultipleWins: false,
+        allowUserSelection: false
+      }
+    });
+  });
+
+  it('replaces the terms with custom terms', async () => {
+    await seed({
+      terms: { type: 'CUSTOM', text: '<script>alert(1)</script>' }
+    });
+
+    expect(appliedInput().terms).toEqual({
+      type: 'CUSTOM',
+      text: '<script>alert(1)</script>'
+    });
+  });
+
+  it('changes only the given fields of the template terms', async () => {
+    await seed({ terms: { type: 'TEMPLATE', claimDeadlineDays: 2 } });
+
+    expect(appliedInput().terms).toMatchObject({
+      type: 'TEMPLATE',
+      sponsorName: 'e2e-abc123-w0',
+      winnerSelectionMethod: 'Random draw',
+      claimDeadlineDays: 2
+    });
+  });
+
+  it('changes only the given winner criteria', async () => {
+    await seed({ criteria: { minQualityScore: 20, allowUserSelection: true } });
+
+    expect(appliedInput().criteria).toEqual({
+      minQualityScore: 20,
+      minTasksCompleted: 1,
+      allowMultipleWins: false,
+      allowUserSelection: true,
+      externalPlatforms: null
+    });
+  });
+
+  it('sets the audience and gives each form field a new id', async () => {
+    const result = await seed({
+      audience: {
+        allowedIdentities: ['ANONYMOUS'],
+        requirePreEntryLogin: true,
+        regionalRestriction: { regions: ['country:DE'], filter: 'EXCLUDE' },
+        formFields: [
+          { type: 'AGE', label: 'Age', minimum: 18 },
+          { type: 'EMAIL', label: 'Email' }
+        ]
+      }
+    });
+
+    expect(appliedInput().audience).toEqual({
+      allowedIdentities: ['ANONYMOUS'],
+      requirePreEntryLogin: true,
+      regionalRestriction: { regions: ['country:DE'], filter: 'EXCLUDE' },
+      formFields: [
+        {
+          id: expect.stringMatching(/^[\w-]{21}$/),
+          type: 'AGE',
+          label: 'Age',
+          minimum: 18,
+          required: false
+        },
+        {
+          id: expect.stringMatching(/^[\w-]{21}$/),
+          type: 'EMAIL',
+          label: 'Email'
+        }
+      ]
+    });
+    expect(result.formFields).toEqual(appliedInput().audience?.formFields);
+  });
+
+  it('keeps the parts of the audience that the request leaves out', async () => {
+    prismaMock.sweepstakes.findUniqueOrThrow.mockResolvedValue({
+      ...formRecord(),
+      audience: {
+        allowedIdentities: ['EMAIL'],
+        requirePreEntryLogin: true,
+        regionalRestriction: { regions: ['country:FR'], filter: 'INCLUDE' },
+        formFields: [{ id: 'f-1', label: 'Email', type: 'EMAIL', index: 0 }]
+      }
+    });
+
+    await seed({ audience: { allowedIdentities: ['GOOGLE'] } });
+
+    expect(appliedInput().audience).toMatchObject({
+      allowedIdentities: ['GOOGLE'],
+      requirePreEntryLogin: true,
+      regionalRestriction: { regions: ['country:FR'], filter: 'INCLUDE' },
+      formFields: [{ id: 'f-1', label: 'Email' }]
+    });
+  });
+
+  it('removes the regional restriction when the request sends null', async () => {
+    prismaMock.sweepstakes.findUniqueOrThrow.mockResolvedValue({
+      ...formRecord(),
+      audience: {
+        allowedIdentities: ['EMAIL'],
+        requirePreEntryLogin: false,
+        regionalRestriction: { regions: ['country:FR'], filter: 'INCLUDE' },
+        formFields: []
+      }
+    });
+
+    await seed({ audience: { regionalRestriction: null } });
+
+    expect(appliedInput().audience).toMatchObject({
+      allowedIdentities: ['EMAIL'],
+      regionalRestriction: undefined
+    });
+  });
+
+  it('writes the entries after the giveaway, with the ids it gave the tasks, the prizes and the form fields', async () => {
+    prismaMock.user.upsert.mockResolvedValue({
+      id: 'user-participant',
+      email: 'e2e-participant-abc123@example.com'
+    });
+
+    const result = await seed({
+      preset: 'completed',
+      tasks: [{ type: 'BONUS_TASK' }],
+      audience: { formFields: [{ type: 'EMAIL', label: 'Email' }] },
+      entries: [
+        {
+          persona: 'participant',
+          completions: [{ task: 0 }],
+          formValues: [{ field: 0, value: 'a@b.test' }]
+        }
+      ],
+      draws: [{ entry: 0, prize: 0 }]
+    });
+
+    const { tasks, prizes, audience } = appliedInput();
+    expect(prismaMock.taskCompletion.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ taskId: tasks?.[0]?.id })]
+    });
+    expect(prismaMock.sweepstakesFormValue.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          fieldId: audience?.formFields?.[0]?.id,
+          value: 'a@b.test'
+        })
+      ]
+    });
+    expect(prismaMock.prizeDraw.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ prizeId: prizes?.[0]?.id })]
+    });
+    expect(prismaMock.sweepstakesParticipant.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ sweepstakesId: ID })]
+    });
+
+    const order = (mock: { mock: { invocationCallOrder: number[] } }) =>
+      mock.mock.invocationCallOrder[0];
+    expect(order(vi.mocked(applySweepstakesChanges))).toBeLessThan(
+      order(prismaMock.sweepstakesParticipant.createMany)
+    );
+    expect(order(prismaMock.sweepstakes.update)).toBeLessThan(
+      order(prismaMock.sweepstakesParticipant.createMany)
+    );
+    expect(order(prismaMock.sweepstakesParticipant.createMany)).toBeLessThan(
+      order(nextCacheMock.revalidateTag)
+    );
+    expect(result.entries).toEqual([
+      expect.objectContaining({ userId: 'user-participant' })
+    ]);
+    expect(result.draws).toEqual([
+      expect.objectContaining({ prizeId: prizes?.[0]?.id })
+    ]);
   });
 });

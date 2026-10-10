@@ -12,7 +12,9 @@ import {
 import { toE2eGiveawayName } from '@giveaway/e2e-model/naming';
 import {
   E2E_PRESET_STATUS,
+  E2eAudienceRequest,
   E2eSweepstakesRequest,
+  E2eTermsRequest,
   toE2eSweepstakesTiming
 } from '@giveaway/e2e-model/requests';
 import { applySweepstakesChanges } from '@giveaway/sweepstakes-access/shared';
@@ -21,6 +23,7 @@ import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { toSweepstakesInput } from '@giveaway/sweepstakes-model/input';
 import { ApplicationError } from '@giveaway/util-errors';
 import { expireE2eSweepstakesTags } from './cache';
+import { seedE2eEntries } from './entries';
 import { E2eTeam, findE2eTeam } from './ownership';
 
 const E2E_TIME_ZONE = 'UTC';
@@ -67,6 +70,34 @@ const assertSlugIsFree = async (db: PrismaClient, slug: string | undefined) => {
       message: `The giveaway slug ${slug} is already taken`
     });
   }
+};
+
+type SweepstakesInput = ReturnType<typeof toSweepstakesInput>;
+
+const toTerms = (
+  terms: SweepstakesInput['terms'],
+  request: E2eTermsRequest | undefined
+): SweepstakesInput['terms'] => {
+  if (!request) return terms;
+  if (request.type === 'CUSTOM') return request;
+  return { ...terms, ...request };
+};
+
+const toAudience = (
+  audience: SweepstakesInput['audience'],
+  request: E2eAudienceRequest | undefined,
+  formFields: { id: string }[]
+): SweepstakesInput['audience'] => {
+  if (!request) return audience;
+  const { regionalRestriction, ...rest } = request;
+  return {
+    ...audience,
+    ...rest,
+    ...(regionalRestriction !== undefined && {
+      regionalRestriction: regionalRestriction ?? undefined
+    }),
+    ...(request.formFields && { formFields })
+  };
 };
 
 const markCompleted = async (db: PrismaClient, id: string, now: Date) => {
@@ -135,6 +166,10 @@ export const seedE2eSweepstakes = async ({
   const name = toE2eGiveawayName(request.ns, request.name);
   const tasks = request.tasks.map((task) => ({ ...task, id: nanoid() }));
   const prizes = request.prizes.map((prize) => ({ ...prize, id: nanoid() }));
+  const formFields = (request.audience?.formFields ?? []).map((field) => ({
+    ...field,
+    id: nanoid()
+  }));
 
   await applySweepstakesChanges({
     db,
@@ -151,6 +186,9 @@ export const seedE2eSweepstakes = async ({
         })
       },
       timing: { ...timing, timeZone: E2E_TIME_ZONE },
+      terms: toTerms(input.terms, request.terms),
+      audience: toAudience(input.audience, request.audience, formFields),
+      criteria: { ...input.criteria, ...request.criteria },
       tasks,
       prizes,
       visibility: {
@@ -168,6 +206,16 @@ export const seedE2eSweepstakes = async ({
     await markCompleted(db, id, now);
   }
 
+  const seeded = await seedE2eEntries({
+    db,
+    request,
+    sweepstakesId: id,
+    tasks,
+    prizes,
+    formFields,
+    now
+  });
+
   expireE2eSweepstakesTags([id], { lists: isPublic });
 
   return {
@@ -181,6 +229,8 @@ export const seedE2eSweepstakes = async ({
     slug: request.slug ?? null,
     ...timing,
     tasks,
-    prizes
+    prizes,
+    formFields,
+    ...seeded
   };
 };

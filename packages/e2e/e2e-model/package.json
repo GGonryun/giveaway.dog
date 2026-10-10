@@ -26,6 +26,7 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/custom-fields-model": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
