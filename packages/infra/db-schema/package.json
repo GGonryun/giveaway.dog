@@ -32,8 +32,5 @@
     "prisma": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
-  },
-  "prisma": {
-    "schema": "src/schema.prisma"
   }
 }
