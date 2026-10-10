@@ -17,9 +17,8 @@ export const E2E_FAKE_ALL = 'all';
 export const parseE2eFakeServices = (
   value: string | null | undefined
 ): E2eFakeService[] => {
-  const names = value
-    ? value.split(',').map((name) => name.trim().toLowerCase())
-    : [];
+  if (!value) return [];
+  const names = value.split(',').map((name) => name.trim().toLowerCase());
   if (names.includes(E2E_FAKE_ALL)) return [...E2E_FAKE_SERVICES];
   return E2E_FAKE_SERVICES.filter((service) => names.includes(service));
 };

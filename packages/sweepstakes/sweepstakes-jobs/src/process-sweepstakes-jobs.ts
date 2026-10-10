@@ -22,6 +22,16 @@ import { recordE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 
 const MAX_JOBS_PER_RUN = 5;
 
+const recordE2eDiscordAlert =
+  (sweepstakesId: string) => async (url: string, init: { body: string }) => {
+    await recordE2eOutbox({
+      channel: 'discord-alert',
+      target: sweepstakesId,
+      payload: JSON.parse(init.body)
+    });
+    return new Response();
+  };
+
 export const processSweepstakesJobs = async () => {
   const now = new Date();
 
@@ -304,27 +314,21 @@ const processSweepstakesActivation = async ({
     embeds: [embed]
   };
 
-  if (fakeAlert) {
-    await recordE2eOutbox({
-      channel: 'discord-alert',
-      target: sweepstakes.id,
-      payload
-    });
-  } else {
-    const response = await fetch(webhookUrl!, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
+  const send = fakeAlert ? recordE2eDiscordAlert(sweepstakes.id) : fetch;
 
-    if (!response.ok) {
-      throw new ApplicationError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: `Failed to send Discord webhook: ${response.status} ${response.statusText}`
-      });
-    }
+  const response = await send(webhookUrl!, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new ApplicationError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: `Failed to send Discord webhook: ${response.status} ${response.statusText}`
+    });
   }
 
   await db.sweepstakesJob.update({
