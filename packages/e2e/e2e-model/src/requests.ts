@@ -725,7 +725,18 @@ export const e2eRowsQuerySchema = z.union([
   z
     .object({ view: z.literal('participants'), id: e2eSweepstakesIdSchema })
     .strict(),
-  z.object({ view: z.literal('jobs'), id: e2eSweepstakesIdSchema }).strict()
+  z.object({ view: z.literal('jobs'), id: e2eSweepstakesIdSchema }).strict(),
+  z
+    .object({ view: z.literal('completions'), id: e2eSweepstakesIdSchema })
+    .strict(),
+  z.object({ view: z.literal('draws'), id: e2eSweepstakesIdSchema }).strict(),
+  z
+    .object({
+      view: z.literal('accounts'),
+      persona: e2ePersonaSchema,
+      ns: e2eNamespaceSchema
+    })
+    .strict()
 ]);
 
 export type E2eRowsQuery = z.infer<typeof e2eRowsQuerySchema>;

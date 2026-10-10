@@ -13,6 +13,7 @@ import {
 } from '@giveaway/e2e-model/personas';
 import { expireE2eSweepstakesTags } from './cache';
 import { isE2eOnlyTeam } from './ownership';
+import { deleteOrphanE2eIpAddresses } from './users';
 
 export const E2E_TEAM_BATCH = 100;
 export const E2E_USER_BATCH = 200;
@@ -89,6 +90,7 @@ const deleteE2eUsers = async (
     await db.user.deleteMany({
       where: { id: { in: owned.map((user) => user.id) } }
     });
+    await deleteOrphanE2eIpAddresses(db);
   }
 
   return {

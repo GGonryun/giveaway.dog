@@ -123,6 +123,12 @@ describe('deleteE2eRun', () => {
 
     const result = await deleteE2eRun({ db, runId: 'abc123' });
 
+    expect(prismaMock.ipAddress.deleteMany).toHaveBeenCalledWith({
+      where: { ip: { startsWith: '2001:db8:e2e:' }, users: { none: {} } }
+    });
+    expect(
+      prismaMock.ipAddress.deleteMany.mock.invocationCallOrder[0]
+    ).toBeGreaterThan(prismaMock.user.deleteMany.mock.invocationCallOrder[0]);
     expect(prismaMock.user.deleteMany).toHaveBeenCalledWith({
       where: {
         id: {
@@ -158,6 +164,7 @@ describe('deleteE2eRun', () => {
 
     expect(prismaMock.team.deleteMany).not.toHaveBeenCalled();
     expect(prismaMock.user.deleteMany).not.toHaveBeenCalled();
+    expect(prismaMock.ipAddress.deleteMany).not.toHaveBeenCalled();
     expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
     expect(result).toEqual({
       runId: 'abc123',

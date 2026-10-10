@@ -765,14 +765,14 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### E2E
 
-4 packages, 18 source files, 17 test files.
+4 packages, 23 source files, 23 test files.
 
-| Package                | Type   | Files | Moves from                                                                                                                        |
-| ---------------------- | ------ | ----- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `@giveaway/e2e-fakes`  | server | 5 / 2 | New package: the `E2E_FAKE_EXTERNALS` switch and the outbox in Redis of the fakes of the third-party services                     |
-| `@giveaway/e2e-gate`   | server | 1 / 1 | New package: the environment and secret checks that the `e2e` provider and the seed API share                                     |
-| `@giveaway/e2e-model`  | model  | 4 / 6 | New package: the personas, the namespaces and slugs, the request schemas and limits of the seed API, and the fakes                |
-| `@giveaway/e2e-server` | server | 8 / 8 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways and their entries, rows, run cleanup, janitor |
+| Package                | Type   | Files   | Moves from                                                                                                                                                                     |
+| ---------------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@giveaway/e2e-fakes`  | server | 5 / 2   | New package: the `E2E_FAKE_EXTERNALS` switch and the outbox in Redis of the fakes of the third-party services                                                                  |
+| `@giveaway/e2e-gate`   | server | 1 / 1   | New package: the environment and secret checks that the `e2e` provider and the seed API share                                                                                  |
+| `@giveaway/e2e-model`  | model  | 5 / 7   | New package: the personas, the namespaces and slugs, the request schemas and limits of the seed API, and the fakes                                                             |
+| `@giveaway/e2e-server` | server | 12 / 13 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways and their entries, user extras, integrations, invites, pickers, rows, run cleanup, janitor |
 
 ### Apps and tools
 

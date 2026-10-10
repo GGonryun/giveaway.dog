@@ -418,7 +418,10 @@ describe('e2eRowsQuerySchema', () => {
     { view: 'team', slug: 'e2e-abc123-w0' },
     { view: 'sweepstakes', id: 'aB3_-x' },
     { view: 'participants', id: 'aB3_-x' },
-    { view: 'jobs', id: 'aB3_-x' }
+    { view: 'jobs', id: 'aB3_-x' },
+    { view: 'completions', id: 'aB3_-x' },
+    { view: 'draws', id: 'aB3_-x' },
+    { view: 'accounts', persona: 'participant', ns: 'abc123' }
   ])('accepts %j', (query) => {
     expect(e2eRowsQuerySchema.parse(query)).toEqual(query);
   });
@@ -428,7 +431,13 @@ describe('e2eRowsQuerySchema', () => {
     { view: 'team', slug: 'acme' },
     { view: 'sweepstakes', id: 'a b' },
     { view: 'sweepstakes', id: 'x'.repeat(33) },
-    { view: 'jobs', id: 'aB3_-x', where: '1=1' }
+    { view: 'jobs', id: 'aB3_-x', where: '1=1' },
+    { view: 'completions', id: 'a b' },
+    { view: 'draws', id: 'x'.repeat(33) },
+    { view: 'accounts', persona: 'root', ns: 'abc123' },
+    { view: 'accounts', persona: 'participant', ns: 'ab' },
+    { view: 'accounts', persona: 'participant', ns: 'abc123', id: 'x' },
+    { view: 'accounts', email: 'someone@gmail.com' }
   ])('rejects %j', (query) => {
     expect(e2eRowsQuerySchema.safeParse(query).success).toBe(false);
   });
