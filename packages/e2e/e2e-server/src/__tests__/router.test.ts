@@ -2,10 +2,21 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
 import { E2E_MAX_BODY_BYTES, handleE2eRequest } from '../router';
+import { seedE2eIntegrations } from '../integrations';
+import { seedE2eInvites } from '../invites';
+import { seedE2ePicker } from '../pickers';
 import { seedE2eSweepstakes } from '../sweepstakes';
+import { seedE2eUserExtras } from '../users';
 import { teamRow } from './fixtures';
 
 vi.mock('../sweepstakes', () => ({ seedE2eSweepstakes: vi.fn() }));
+vi.mock('../users', () => ({
+  seedE2eUserExtras: vi.fn(),
+  deleteOrphanE2eIpAddresses: vi.fn()
+}));
+vi.mock('../integrations', () => ({ seedE2eIntegrations: vi.fn() }));
+vi.mock('../invites', () => ({ seedE2eInvites: vi.fn() }));
+vi.mock('../pickers', () => ({ seedE2ePicker: vi.fn() }));
 
 const SECRET = 'e2e-secret-with-at-least-32-chars';
 
@@ -42,6 +53,21 @@ const WRITES: [string, string, string?][] = [
     'sweepstakes',
     JSON.stringify({ ns: 'abc123', team: 'e2e-abc123-w0' })
   ],
+  [
+    'POST',
+    'users/extras',
+    JSON.stringify({ ns: 'abc123', users: [{ persona: 'participant' }] })
+  ],
+  [
+    'POST',
+    'integrations',
+    JSON.stringify({
+      team: 'e2e-abc123-w0',
+      integrations: [{ provider: 'TWITTER' }]
+    })
+  ],
+  ['POST', 'invites', JSON.stringify({ ns: 'abc123', team: 'e2e-abc123-w0' })],
+  ['POST', 'pickers', JSON.stringify({ team: 'e2e-abc123-w0' })],
   ['DELETE', 'runs/abc123'],
   ['POST', 'janitor']
 ];
@@ -49,6 +75,12 @@ const WRITES: [string, string, string?][] = [
 const READS: [string, string][] = [
   ['GET', 'health'],
   ['GET', 'rows?view=team&slug=e2e-abc123-w0']
+];
+
+const ROW_VIEWS: [string, string][] = [
+  ['GET', 'rows?view=completions&id=sw-1'],
+  ['GET', 'rows?view=draws&id=sw-1'],
+  ['GET', 'rows?view=accounts&persona=participant&ns=abc123']
 ];
 
 beforeEach(() => {
@@ -89,7 +121,7 @@ const expectNothingTouched = () => {
 
 describe('handleE2eRequest', () => {
   describe('the gate', () => {
-    it.each([...READS, ...WRITES])(
+    it.each([...READS, ...ROW_VIEWS, ...WRITES])(
       '%s %s returns a bare 404 without the secret',
       async (method, path, body) => {
         const response = await call(method, path, { secret: null, body });
@@ -188,6 +220,101 @@ describe('handleE2eRequest', () => {
       const response = await call('DELETE', 'runs/abc123', { body: '{ns:' });
 
       expect(response.status).toBe(200);
+    });
+
+    it('passes the parsed user extras to the builder', async () => {
+      vi.mocked(seedE2eUserExtras).mockResolvedValue({ users: [] } as never);
+
+      const response = await call('POST', 'users/extras', {
+        body: JSON.stringify({
+          ns: 'abc123',
+          users: [
+            { persona: 'participant', accounts: [{ identity: 'GOOGLE' }] }
+          ]
+        })
+      });
+
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({ users: [] });
+      expect(seedE2eUserExtras).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: {
+          ns: 'abc123',
+          users: [
+            {
+              persona: 'participant',
+              accounts: [{ identity: 'GOOGLE', status: 'ACTIVE', scopes: [] }]
+            }
+          ]
+        },
+        now: expect.any(Date)
+      });
+    });
+
+    it('passes the parsed integrations to the builder', async () => {
+      vi.mocked(seedE2eIntegrations).mockResolvedValue({ ok: 1 } as never);
+
+      const response = await call('POST', 'integrations', {
+        body: JSON.stringify({
+          team: 'e2e-abc123-w0',
+          integrations: [{ provider: 'DISCORD' }]
+        })
+      });
+
+      expect(await response.json()).toEqual({ ok: 1 });
+      expect(seedE2eIntegrations).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: {
+          team: 'e2e-abc123-w0',
+          integrations: [{ provider: 'DISCORD', status: 'ACTIVE' }]
+        }
+      });
+    });
+
+    it('passes the parsed invites to the builder', async () => {
+      vi.mocked(seedE2eInvites).mockResolvedValue({ ok: 1 } as never);
+
+      const response = await call('POST', 'invites', {
+        body: JSON.stringify({
+          ns: 'abc123',
+          team: 'e2e-abc123-w0',
+          link: {}
+        })
+      });
+
+      expect(await response.json()).toEqual({ ok: 1 });
+      expect(seedE2eInvites).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: {
+          ns: 'abc123',
+          team: 'e2e-abc123-w0',
+          emails: [],
+          link: { expiresIn: null }
+        },
+        now: expect.any(Date)
+      });
+    });
+
+    it('passes the parsed picker to the builder', async () => {
+      vi.mocked(seedE2ePicker).mockResolvedValue({ ok: 1 } as never);
+
+      const response = await call('POST', 'pickers', {
+        body: JSON.stringify({ team: 'e2e-abc123-w0', status: 'FAILED' })
+      });
+
+      expect(await response.json()).toEqual({ ok: 1 });
+      expect(seedE2ePicker).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: {
+          team: 'e2e-abc123-w0',
+          status: 'FAILED',
+          winners: 1,
+          users: [],
+          posts: [],
+          draws: []
+        },
+        now: expect.any(Date)
+      });
     });
 
     it.each([

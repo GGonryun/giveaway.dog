@@ -1,3 +1,6 @@
 {
-  "extends": "@giveaway/tsconfig/library.json"
+  "extends": "@giveaway/tsconfig/library.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
 }

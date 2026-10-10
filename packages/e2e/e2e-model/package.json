@@ -16,6 +16,7 @@
     }
   },
   "exports": {
+    "./extras": "./src/extras.ts",
     "./naming": "./src/naming.ts",
     "./personas": "./src/personas.ts",
     "./requests": "./src/requests.ts"
@@ -30,6 +31,7 @@
     "@giveaway/db-model": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
+    "@giveaway/twitch-model": "workspace:*",
     "lodash": "catalog:",
     "zod": "catalog:"
   },

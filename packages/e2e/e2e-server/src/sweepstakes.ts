@@ -6,7 +6,6 @@ import {
   SweepstakesJobStatus,
   SweepstakesJobType,
   SweepstakesStatus,
-  TeamRole,
   VisibilityType
 } from '@giveaway/db-model';
 import { toE2eGiveawayName } from '@giveaway/e2e-model/naming';
@@ -24,7 +23,7 @@ import { toSweepstakesInput } from '@giveaway/sweepstakes-model/input';
 import { ApplicationError } from '@giveaway/util-errors';
 import { expireE2eSweepstakesTags } from './cache';
 import { seedE2eEntries } from './entries';
-import { E2eTeam, findE2eTeam } from './ownership';
+import { E2eTeam, findE2eTeam, findE2eTeamOwner } from './ownership';
 
 const E2E_TIME_ZONE = 'UTC';
 
@@ -45,17 +44,6 @@ const toSessionUser = (
     accountType: user.accountType
   };
   return session;
-};
-
-const findOwner = (team: E2eTeam) => {
-  const owner = team.members.find((member) => member.role === TeamRole.OWNER);
-  if (!owner) {
-    throw new ApplicationError({
-      code: 'PRECONDITION_FAILED',
-      message: `Team ${team.slug} has no owner`
-    });
-  }
-  return owner.user;
 };
 
 const assertSlugIsFree = async (db: PrismaClient, slug: string | undefined) => {
@@ -144,7 +132,7 @@ export const seedE2eSweepstakes = async ({
   }
 
   const team = await findE2eTeam(db, request.team);
-  const owner = findOwner(team);
+  const owner = findE2eTeamOwner(team);
   await assertSlugIsFree(db, request.slug);
 
   const { id } = await db.sweepstakes.create({

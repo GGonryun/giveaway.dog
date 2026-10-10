@@ -29,6 +29,7 @@
     "@giveaway/db-model": "workspace:*",
     "@giveaway/e2e-gate": "workspace:*",
     "@giveaway/e2e-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
     "@giveaway/referrals-server": "workspace:*",
     "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-editor-server": "workspace:*",
@@ -41,12 +42,15 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/integration-server": "workspace:*",
     "@giveaway/participation-server": "workspace:*",
+    "@giveaway/team-invites-server": "workspace:*",
     "@giveaway/testing-integration": "workspace:*",
     "@giveaway/testing-postgres": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
+    "@giveaway/x-picker-server": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
