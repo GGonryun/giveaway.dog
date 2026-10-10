@@ -224,7 +224,10 @@ describe('handleE2eRequest', () => {
                 tasksRequired: 0
               }
             ],
-            prizes: [{ name: 'My Custom Prize', quota: 1 }]
+            prizes: [{ name: 'My Custom Prize', quota: 1 }],
+            entries: [],
+            draws: [],
+            referrals: []
           },
           now: expect.any(Date),
           allowPublic: expected

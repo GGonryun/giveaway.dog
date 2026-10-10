@@ -273,7 +273,7 @@ const { positionals, values } = parseArgs({
   options: {
     base: { type: 'string' },
     incremental: { type: 'boolean', default: false },
-    count: { type: 'string', default: '3' },
+    count: { type: 'string', default: '5' },
     seed: { type: 'string', default: new Date().toISOString().slice(0, 10) }
   }
 });
