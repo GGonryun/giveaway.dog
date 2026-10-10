@@ -8,7 +8,10 @@ import {
   getE2eEnvironment,
   verifyE2eSecret
 } from '@giveaway/e2e-gate/gate';
+import { e2eOutboxQuerySchema } from '@giveaway/e2e-model/fakes';
 import { e2eRunIdSchema } from '@giveaway/e2e-model/naming';
+import { readE2eOutbox } from '@giveaway/e2e-fakes/outbox';
+import { getE2eFakeServices } from '@giveaway/e2e-fakes/switch';
 import {
   e2eRowsQuerySchema,
   e2eSweepstakesRequestSchema,
@@ -47,7 +50,8 @@ const ROUTES: E2eRoute[] = [
     handle: async () => ({
       environment: getE2eEnvironment(),
       writes: areE2eWritesAllowed(),
-      allowPublic: arePublicE2eGiveawaysAllowed()
+      allowPublic: arePublicE2eGiveawaysAllowed(),
+      fakes: getE2eFakeServices()
     })
   },
   {
@@ -78,6 +82,16 @@ const ROUTES: E2eRoute[] = [
         db,
         query: e2eRowsQuerySchema.parse(Object.fromEntries(query))
       })
+  },
+  {
+    method: 'GET',
+    path: ['outbox'],
+    write: false,
+    handle: async ({ query }) => ({
+      entries: await readE2eOutbox(
+        e2eOutboxQuerySchema.parse(Object.fromEntries(query))
+      )
+    })
   },
   {
     method: 'DELETE',

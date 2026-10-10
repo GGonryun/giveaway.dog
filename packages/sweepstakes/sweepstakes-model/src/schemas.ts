@@ -10,7 +10,11 @@ import { userProfileSchema, userSchema } from '@giveaway/user-model/user';
 import { derivedSweepstakesStatusSchema } from './sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@giveaway/app-config/settings';
 import { timingSchema } from './timing';
-import { taskSchema, baseTaskSchema } from '@giveaway/task-model/schemas';
+import {
+  taskSchema,
+  baseTaskSchema,
+  participantTaskSchema
+} from '@giveaway/task-model/schemas';
 import { allowedUserSourcesSchema } from '@giveaway/user-source-model/schemas';
 import { refineSweepstakeTasks } from './form';
 import { identityProviderSchema } from '@giveaway/integration-model/providers';
@@ -197,10 +201,13 @@ const giveawayAudienceSchema = z.object({
 
 export type GiveawayFormAudience = z.infer<typeof giveawayAudienceSchema>;
 
-export const giveawayFormTaskSchema = z
-  .array(taskSchema)
-  .min(1, 'At least one entry method is required')
-  .max(25, 'Maximum of 25 entry methods are allowed');
+const toTaskListSchema = <T extends z.ZodTypeAny>(task: T) =>
+  z
+    .array(task)
+    .min(1, 'At least one entry method is required')
+    .max(25, 'Maximum of 25 entry methods are allowed');
+
+export const giveawayFormTaskSchema = toTaskListSchema(taskSchema);
 
 export type GiveawayFormTaskSchema = z.infer<typeof giveawayFormTaskSchema>;
 
@@ -422,8 +429,16 @@ export const getStateDisplayLabel = (state: GiveawayState): string => {
   }
 };
 
+export const participantGiveawaySchema = giveawaySchema.extend({
+  tasks: toTaskListSchema(participantTaskSchema)
+});
+
+export type ParticipantGiveawaySchema = z.infer<
+  typeof participantGiveawaySchema
+>;
+
 export const participantSweepstakeSchema = z.object({
-  sweepstakes: giveawaySchema,
+  sweepstakes: participantGiveawaySchema,
   host: giveawayHostSchema,
   prizes: giveawayPrizeSchema.array(),
   participation: giveawayParticipationSchema

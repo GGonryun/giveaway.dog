@@ -135,7 +135,7 @@ class ProcedureBuilder<
         const session = await noProviderAuth.auth();
         let user: any = null;
 
-        if (this.authConfig.required) {
+        if (this.authConfig.required === true) {
           if (!isValidSession(session)) {
             throw new ApplicationError({
               code: 'UNAUTHORIZED',
@@ -143,8 +143,10 @@ class ProcedureBuilder<
             });
           }
           user = session.user;
-        } else {
+        } else if (this.authConfig.required === false) {
           user = isValidSession(session) ? session.user : null;
+        } else {
+          throw new Error('authorization requires a boolean `required` flag');
         }
 
         // --- Input validation ---

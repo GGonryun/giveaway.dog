@@ -1,9 +1,9 @@
 import { assertNever } from '@giveaway/util-errors';
 import { TaskCompletionSchema } from './completions';
-import { parseTwitterProofSchema, TaskSchema } from './schemas';
+import { parseTwitterProofSchema, ParticipantTaskSchema } from './schemas';
 
 export type CompletionValueArgs = {
-  task: TaskSchema;
+  task: ParticipantTaskSchema;
   proof: unknown;
 };
 

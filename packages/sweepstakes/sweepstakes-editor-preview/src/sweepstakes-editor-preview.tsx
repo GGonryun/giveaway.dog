@@ -11,6 +11,7 @@ import {
   GiveawayFormSchema,
   GiveawayPrizeSchema,
   GiveawaySchema,
+  ParticipantGiveawaySchema,
   GiveawayState,
   Prize
 } from '@giveaway/sweepstakes-model/schemas';
@@ -241,7 +242,7 @@ const toMockFormFields = (fields?: DeepNil<SweepstakesFormFieldSchema>[]) => {
 };
 
 export const getPreviewParticipant = (
-  sweepstakes: GiveawaySchema,
+  sweepstakes: ParticipantGiveawaySchema,
   prizes: GiveawayPrizeSchema[],
   previewState: GiveawayState
 ): SweepstakesParticipantSchema | undefined => {

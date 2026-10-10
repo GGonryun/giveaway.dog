@@ -6,7 +6,7 @@ import {
   GiveawayState,
   GiveawayHostSchema,
   GiveawayPrizeSchema,
-  GiveawaySchema,
+  ParticipantGiveawaySchema,
   DeviceType,
   SweepstakesAllocationSchema
 } from '@giveaway/sweepstakes-model/schemas';
@@ -23,7 +23,7 @@ import { TaskEntryProvider } from '@giveaway/task-entry-core/task-entry-context'
 export interface GiveawayParticipationProps {
   device?: DeviceType;
   className?: string;
-  sweepstakes: GiveawaySchema;
+  sweepstakes: ParticipantGiveawaySchema;
   host: GiveawayHostSchema;
   participation: GiveawayParticipationSchema;
   prizes: GiveawayPrizeSchema[];

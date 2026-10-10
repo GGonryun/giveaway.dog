@@ -97,7 +97,12 @@ export default defineConfig({
       },
       dependencies: ['personas']
     },
-    { name: PROD_SMOKE_PROJECT, testMatch: specsIn('prod'), ...prodSmoke },
+    {
+      name: PROD_SMOKE_PROJECT,
+      testMatch: specsIn('prod', 'api', 'security'),
+      grep: new RegExp(TAGS.prodSafe),
+      ...prodSmoke
+    },
     {
       name: 'teardown',
       testMatch: /\/src\/setup\/run\.teardown\.ts$/,

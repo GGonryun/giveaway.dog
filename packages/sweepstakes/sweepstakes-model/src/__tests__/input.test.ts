@@ -6,6 +6,15 @@ import { DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND } from '../defaults';
 import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
 import { ApplicationError } from '@giveaway/util-errors';
 
+const stubRuntimeTimeZone = (timeZone: string) => {
+  const resolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
+  vi.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockImplementation(
+    function (this: Intl.DateTimeFormat) {
+      return { ...resolvedOptions.call(this), timeZone };
+    }
+  );
+};
+
 type Payload = FormSweepstakesGetPayload;
 type Task = Payload['tasks'][number];
 type Design = NonNullable<Payload['design']>;
@@ -151,7 +160,7 @@ const fullPayload = (): Payload =>
 describe('toSweepstakesInput', () => {
   afterEach(() => {
     vi.useRealTimers();
-    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
   });
 
   describe('when every relation is stored', () => {
@@ -237,9 +246,9 @@ describe('toSweepstakesInput', () => {
 
   describe('when no relation is stored', () => {
     it('falls back to empty and default values', () => {
-      vi.stubEnv('TZ', 'Asia/Tokyo');
+      stubRuntimeTimeZone('Asia/Tokyo');
       vi.useFakeTimers({ toFake: ['Date'] });
-      vi.setSystemTime(new Date('2026-10-01T06:30:00.000Z'));
+      vi.setSystemTime(new Date(2026, 9, 1, 15, 30));
 
       expect(toSweepstakesInput(emptyPayload())).toEqual({
         setup: { name: undefined, banner: undefined, description: undefined },
@@ -263,8 +272,8 @@ describe('toSweepstakesInput', () => {
           formFields: []
         },
         timing: {
-          startDate: new Date('2026-10-01T15:00:00.000Z'),
-          endDate: new Date('2026-10-08T15:00:00.000Z'),
+          startDate: new Date(2026, 9, 2),
+          endDate: new Date(2026, 9, 9),
           timeZone: 'Asia/Tokyo'
         },
         prizes: [],
@@ -531,7 +540,7 @@ describe('toSweepstakesInput', () => {
     });
 
     it('uses the runtime time zone when the stored time zone is empty', () => {
-      vi.stubEnv('TZ', 'America/Chicago');
+      stubRuntimeTimeZone('America/Chicago');
 
       const input = toSweepstakesInput(
         emptyPayload({ timing: timing({ timeZone: '' }) })
