@@ -352,6 +352,17 @@ describe('SteamProvider', () => {
         ).rejects.toThrow('Authentication failed: Unable to verify Steam ID');
       });
 
+      it('fails when the claimed identifier has characters before the steam url', async () => {
+        assertionResolves({
+          authenticated: true,
+          claimedIdentifier: `https://evil.example.com/?next=${CLAIMED_ID}`
+        });
+
+        await expect(
+          tokenEndpoint(callbackRequest()).conform()
+        ).rejects.toThrow('Authentication failed: Unable to verify Steam ID');
+      });
+
       it('fails when the claimed identifier is on another host', async () => {
         assertionResolves({
           authenticated: true,
