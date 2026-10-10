@@ -21,14 +21,14 @@ import {
 } from '@giveaway/integration-model/providers';
 import { TaskTheme, useTaskTheme } from '@giveaway/task-ui/theme';
 import {
-  TaskSchema,
+  ParticipantTaskSchema,
   TASK_REQUIRED_SCOPES,
   TASK_IDENTITY_PROVIDER
 } from '@giveaway/task-model/schemas';
 import { LoginOptions } from '@giveaway/auth-login-ui/login-options';
 import { AccountStatusAlert } from '@giveaway/auth-login-ui/account-status-alert';
 
-const useProviderConnection = ({ task }: { task: TaskSchema }) => {
+const useProviderConnection = ({ task }: { task: ParticipantTaskSchema }) => {
   const { providers } = useTaskEntry();
   const pathname = usePathname();
 
@@ -70,7 +70,10 @@ const useProviderConnection = ({ task }: { task: TaskSchema }) => {
 };
 
 export const WithProviderConnection: React.FC<
-  Omit<TaskActionProps<TaskSchema>, 'entrants' | 'loyalty' | 'onUpdate'> &
+  Omit<
+    TaskActionProps<ParticipantTaskSchema>,
+    'entrants' | 'loyalty' | 'onUpdate'
+  > &
     Pick<TaskControlsProps, 'submit' | 'cancel' | 'disabled'> & {
       hidden?: boolean;
       hideControls?: boolean;

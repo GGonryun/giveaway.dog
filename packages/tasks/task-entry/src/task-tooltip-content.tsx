@@ -7,14 +7,14 @@ import {
   SUBMISSION_TOOLTIP_COLOR_MAP,
   SUBMISSION_TOOLTIP_CONTENT
 } from '@giveaway/task-actions/submission';
-import { TaskSchema } from '@giveaway/task-model/schemas';
+import { ParticipantTaskSchema } from '@giveaway/task-model/schemas';
 import pluralize from 'pluralize';
 import { assertNever } from '@giveaway/util-errors';
 
 export const TaskTooltipContent: React.FC<{
   status: CompletionStatus | undefined;
   entries: number;
-  task: TaskSchema;
+  task: ParticipantTaskSchema;
   lock: TaskLock;
 }> = ({ status, entries, task, lock }) => {
   const { theme } = useTaskTheme();
@@ -42,7 +42,7 @@ export const TaskTooltipContent: React.FC<{
   );
 };
 
-const toEntriesText = ({ task }: { task: TaskSchema }) => {
+const toEntriesText = ({ task }: { task: ParticipantTaskSchema }) => {
   switch (task.type) {
     case 'REFERRAL_LINK':
       return `Every referral earns ${task.value} ${pluralize('entry', task.value)}.`;

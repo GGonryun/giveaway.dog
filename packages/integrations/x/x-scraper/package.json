@@ -19,6 +19,7 @@
   "exports": {
     "./client": "./src/client.ts",
     "./credits": "./src/credits.ts",
+    "./fixtures": "./src/fixtures.ts",
     "./procedures/get-retweeters": "./src/procedures/get-retweeters.ts",
     "./procedures/get-retweeters-cached": "./src/procedures/get-retweeters-cached.ts",
     "./procedures/get-tweet": "./src/procedures/get-tweet.ts",
@@ -37,6 +38,8 @@
   "dependencies": {
     "@giveaway/cache": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/e2e-fakes": "workspace:*",
+    "@giveaway/e2e-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@upstash/ratelimit": "catalog:",

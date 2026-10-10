@@ -7,6 +7,10 @@ import { seedE2eInvites } from '../invites';
 import { seedE2ePicker } from '../pickers';
 import { seedE2eSweepstakes } from '../sweepstakes';
 import { seedE2eUserExtras } from '../users';
+import {
+  clearMemoryOutbox,
+  recordE2eOutbox
+} from '@giveaway/e2e-fakes/testing/outbox';
 import { teamRow } from './fixtures';
 
 vi.mock('../sweepstakes', () => ({ seedE2eSweepstakes: vi.fn() }));
@@ -17,6 +21,10 @@ vi.mock('../users', () => ({
 vi.mock('../integrations', () => ({ seedE2eIntegrations: vi.fn() }));
 vi.mock('../invites', () => ({ seedE2eInvites: vi.fn() }));
 vi.mock('../pickers', () => ({ seedE2ePicker: vi.fn() }));
+vi.mock(
+  '@giveaway/e2e-fakes/outbox',
+  () => import('@giveaway/e2e-fakes/testing/outbox')
+);
 
 const SECRET = 'e2e-secret-with-at-least-32-chars';
 
@@ -74,7 +82,8 @@ const WRITES: [string, string, string?][] = [
 
 const READS: [string, string][] = [
   ['GET', 'health'],
-  ['GET', 'rows?view=team&slug=e2e-abc123-w0']
+  ['GET', 'rows?view=team&slug=e2e-abc123-w0'],
+  ['GET', 'outbox?channel=email&target=e2e-host-abc123@example.com']
 ];
 
 const ROW_VIEWS: [string, string][] = [
@@ -90,6 +99,8 @@ beforeEach(() => {
   vi.stubEnv('E2E_LOGIN_SECRET', SECRET);
   vi.stubEnv('E2E_ALLOW_WRITES', '1');
   vi.stubEnv('E2E_ALLOW_PUBLIC', undefined);
+  vi.stubEnv('E2E_FAKE_EXTERNALS', undefined);
+  clearMemoryOutbox();
   vi.spyOn(console, 'info').mockImplementation(() => undefined);
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
   prismaMock.team.findUnique.mockResolvedValue(teamRow());
@@ -372,7 +383,16 @@ describe('handleE2eRequest', () => {
       expect(await response.json()).toEqual({
         environment: 'preview',
         writes: true,
-        allowPublic: false
+        allowPublic: false,
+        fakes: []
+      });
+    });
+
+    it('reports the fakes that are on', async () => {
+      vi.stubEnv('E2E_FAKE_EXTERNALS', 'email,scrapebadger');
+
+      expect(await (await call('GET', 'health')).json()).toMatchObject({
+        fakes: ['email', 'scrapebadger']
       });
     });
 
@@ -382,6 +402,52 @@ describe('handleE2eRequest', () => {
       expect(await (await call('GET', 'health')).json()).toMatchObject({
         writes: false
       });
+    });
+  });
+
+  describe('outbox', () => {
+    const EMAIL = 'e2e-host-abc123@example.com';
+
+    it('returns the entries of one channel and target', async () => {
+      const entry = await recordE2eOutbox({
+        channel: 'email',
+        target: EMAIL,
+        payload: { subject: 'Sign in' }
+      });
+      await recordE2eOutbox({
+        channel: 'email',
+        target: 'e2e-host-zzz999@example.com',
+        payload: {}
+      });
+
+      const response = await call(
+        'GET',
+        `outbox?channel=email&target=${encodeURIComponent(EMAIL)}`
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get('cache-control')).toBe('no-store');
+      expect(await response.json()).toEqual({ entries: [entry] });
+    });
+
+    it('reads the outbox when writes are off', async () => {
+      vi.stubEnv('E2E_ALLOW_WRITES', undefined);
+
+      const response = await call('GET', `outbox?channel=x&target=team-1`);
+
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({ entries: [] });
+    });
+
+    it.each([
+      ['an unknown channel', 'channel=sms&target=team-1'],
+      ['no target', 'channel=email'],
+      ['a target with other characters', 'channel=x&target=a%3Ab'],
+      ['an unknown field', 'channel=x&target=team-1&limit=5']
+    ])('refuses %s with 400', async (_, query) => {
+      const response = await call('GET', `outbox?${query}`);
+
+      expect(response.status).toBe(400);
     });
   });
 

@@ -79,7 +79,8 @@ const boundaries = [
             '{projectRoot}/vitest.config.ts',
             '{projectRoot}/vitest.visual.config.ts',
             '{projectRoot}/vitest.integration.config.ts',
-            '{projectRoot}/eslint.config.mjs'
+            '{projectRoot}/eslint.config.mjs',
+            '{projectRoot}/prisma.config.ts'
           ]
         }
       ]

@@ -10,7 +10,7 @@ import {
   BonusLoyaltyTaskSchema,
   BonusTimedTaskSchema,
   ReferralLinkTaskSchema,
-  TaskSchema,
+  ParticipantTaskSchema,
   TwitterLikeImportTaskSchema,
   TwitterRetweetImportTaskSchema
 } from '@giveaway/task-model/schemas';
@@ -141,7 +141,7 @@ const ReferralLinkContent: React.FC<{
   );
 };
 
-type TaskBadgeProps<T extends TaskSchema = TaskSchema> = {
+type TaskBadgeProps<T extends ParticipantTaskSchema = ParticipantTaskSchema> = {
   open: boolean;
   status: CompletionStatus | undefined;
   entrants: number;

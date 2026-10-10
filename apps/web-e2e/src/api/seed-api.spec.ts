@@ -44,7 +44,8 @@ test.describe('seed API', { tag: '@security' }, () => {
     expect(await seedApi(request).health()).toEqual({
       environment: expect.stringMatching(/^(preview|development)$/),
       writes: expect.any(Boolean),
-      allowPublic: expect.any(Boolean)
+      allowPublic: expect.any(Boolean),
+      fakes: expect.any(Array)
     });
   });
 

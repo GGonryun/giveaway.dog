@@ -1,5 +1,5 @@
 import { Button } from '@giveaway/ui-primitives/button';
-import { TaskSchema } from '@giveaway/task-model/schemas';
+import { ParticipantTaskSchema } from '@giveaway/task-model/schemas';
 import { useTaskTheme } from '@giveaway/task-ui/theme';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { ChevronDownIcon } from 'lucide-react';
@@ -14,7 +14,7 @@ import { CompletionStatus } from '@giveaway/db-model';
 
 export const TaskButton: React.FC<{
   open: boolean;
-  task: TaskSchema;
+  task: ParticipantTaskSchema;
   isLoading: boolean;
   lock: TaskLock;
   status: CompletionStatus | undefined;

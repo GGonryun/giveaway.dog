@@ -1,0 +1,45 @@
+{
+  "name": "@giveaway/e2e-fakes",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:e2e"
+    ],
+    "targets": {
+      "lint": {
+        "executor": "@giveaway/eslint-config:lint"
+      },
+      "type-check": {}
+    }
+  },
+  "exports": {
+    "./outbox": "./src/outbox.ts",
+    "./switch": "./src/switch.ts",
+    "./testing/env": "./src/testing/env.ts",
+    "./testing/outbox": "./src/testing/outbox.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
+  },
+  "dependencies": {
+    "@giveaway/cache": "workspace:*",
+    "@giveaway/e2e-gate": "workspace:*",
+    "@giveaway/e2e-model": "workspace:*",
+    "nanoid": "catalog:",
+    "server-only": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

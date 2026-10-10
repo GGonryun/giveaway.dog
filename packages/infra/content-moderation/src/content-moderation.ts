@@ -2,6 +2,7 @@ import 'server-only';
 
 import vision from '@google-cloud/vision';
 import type { google } from '@google-cloud/vision/build/protos/protos';
+import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
 
 type Likelihood = google.cloud.vision.v1.Likelihood;
 
@@ -71,6 +72,13 @@ export interface ContentModerationResult {
 export async function isImageSafe(
   imageUrl: string
 ): Promise<ContentModerationResult> {
+  if (isE2eFakeOn('moderation')) {
+    return {
+      isSafe: true,
+      reason: 'The e2e moderation fake allows every image'
+    };
+  }
+
   try {
     const [result] = await client.safeSearchDetection(imageUrl);
     const detections = result.safeSearchAnnotation;

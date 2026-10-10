@@ -1,6 +1,7 @@
 import { expect, type APIRequestContext } from '@playwright/test';
 import type { E2ePersona } from '@giveaway/e2e-model/personas';
 import { E2E_SECRET, RUN_ID } from '../env';
+import { postCredentials } from './credentials';
 
 export const PERSONAS = Object.keys({
   host: true,
@@ -29,13 +30,10 @@ export const signInAs = async (
   persona: E2ePersona,
   ns = RUN_ID
 ): Promise<SignedInPersona> => {
-  const csrf = await request.get('/api/auth/csrf');
-  expect(csrf.ok(), `GET /api/auth/csrf returned ${csrf.status()}`).toBe(true);
-  const { csrfToken } = await csrf.json();
-
-  const signIn = await request.post('/api/auth/callback/e2e', {
-    form: { csrfToken, secret: E2E_SECRET, persona, ns, callbackUrl: '/' },
-    maxRedirects: 0
+  const signIn = await postCredentials(request, 'e2e', {
+    secret: E2E_SECRET,
+    persona,
+    ns
   });
 
   expect(signIn.status()).toBe(302);

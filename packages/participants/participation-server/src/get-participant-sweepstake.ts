@@ -31,7 +31,7 @@ const getParticipantSweepstake = procedure()
   )
   .output(participantSweepstakeSchema)
   .cache(({ input }) => ({
-    keyParts: [`participant-sweepstake-${input.sweepstakesId}`],
+    keyParts: [`participant-sweepstake-v2-${input.sweepstakesId}`],
     tags: [`sweepstakes-${input.sweepstakesId}`, 'participant-sweepstake'],
     revalidate: 600 // Cache for 10 minutes
   }))

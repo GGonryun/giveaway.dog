@@ -6,6 +6,11 @@ import type {
   E2eUserExtrasRequestInput
 } from '@giveaway/e2e-model/extras';
 import type {
+  E2eFakeService,
+  E2eOutboxEntry,
+  E2eOutboxQuery
+} from '@giveaway/e2e-model/fakes';
+import type {
   E2ePrizeRequest,
   E2eSweepstakesRequestInput,
   E2eTaskRequest,
@@ -17,6 +22,12 @@ export type SeedHealth = {
   environment: 'preview' | 'development';
   writes: boolean;
   allowPublic: boolean;
+  fakes: E2eFakeService[];
+};
+
+export type SeededTeamRows = {
+  team: { id: string; slug: string };
+  members: { userId: string; email: string | null; role: string }[];
 };
 
 export type SeededTeam = {
@@ -156,6 +167,20 @@ export const seedApi = (request: APIRequestContext) => ({
     call<SeededPicker>(request, 'POST', 'pickers', body),
   rows: <T = unknown>(query: Record<string, string>) =>
     call<T>(request, 'GET', `rows?${new URLSearchParams(query)}`),
+  teamRows: (slug: string) =>
+    call<SeededTeamRows>(
+      request,
+      'GET',
+      `rows?${new URLSearchParams({ view: 'team', slug })}`
+    ),
+  outbox: async ({ channel, target }: E2eOutboxQuery) =>
+    (
+      await call<{ entries: E2eOutboxEntry[] }>(
+        request,
+        'GET',
+        `outbox?${new URLSearchParams({ channel, target })}`
+      )
+    ).entries,
   deleteRun: (runId: string) =>
     repeatWhileMore(() => call<DeletedRun>(request, 'DELETE', `runs/${runId}`)),
   janitor: () =>

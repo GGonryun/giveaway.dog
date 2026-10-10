@@ -247,7 +247,7 @@ describe('getParticipantSweepstake', () => {
 
       expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
         expect.any(Function),
-        ['participant-sweepstake-sw-1'],
+        ['participant-sweepstake-v2-sw-1'],
         {
           tags: ['sweepstakes-sw-1', 'participant-sweepstake'],
           revalidate: 600
@@ -281,6 +281,75 @@ describe('getParticipantSweepstake', () => {
         'Sweepstakes with ID sw-1 not found'
       );
       expect(prismaMock.taskCompletion.findMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when the sweepstakes has secret-code tasks', () => {
+    const secretCodeTasks = [
+      taskRow('task-code', {
+        type: 'SECRET_CODE',
+        title: 'Enter the code',
+        value: 1,
+        mandatory: false,
+        tasksRequired: 0,
+        code: 'OPEN-SESAME-42',
+        caseSensitive: true,
+        hint: 'Said on stream'
+      }),
+      taskRow('task-codes', {
+        type: 'SECRET_CODE_V2',
+        title: 'Enter a code',
+        value: 3,
+        mandatory: false,
+        tasksRequired: 0,
+        codes: ['FIRST-CODE-77', 'SECOND-CODE-88'],
+        caseSensitive: false,
+        hint: 'In the post'
+      })
+    ];
+
+    it('returns each task without its codes, and keeps the hint and the case rule', async () => {
+      givenSweepstakes(sweepstakesRow({ tasks: secretCodeTasks }));
+
+      const result = await getParticipantSweepstake({ sweepstakesId: 'sw-1' });
+
+      expect(expectOk(result).sweepstakes.tasks).toEqual([
+        {
+          id: 'task-code',
+          type: 'SECRET_CODE',
+          title: 'Enter the code',
+          value: 1,
+          mandatory: false,
+          tasksRequired: 0,
+          caseSensitive: true,
+          hint: 'Said on stream'
+        },
+        {
+          id: 'task-codes',
+          type: 'SECRET_CODE_V2',
+          title: 'Enter a code',
+          value: 3,
+          mandatory: false,
+          tasksRequired: 0,
+          caseSensitive: false,
+          hint: 'In the post'
+        }
+      ]);
+    });
+
+    it('sends none of the codes anywhere in the result', async () => {
+      givenSweepstakes(sweepstakesRow({ tasks: secretCodeTasks }));
+
+      const result = await getParticipantSweepstake({ sweepstakesId: 'sw-1' });
+
+      const serialized = JSON.stringify(expectOk(result));
+      for (const code of [
+        'OPEN-SESAME-42',
+        'FIRST-CODE-77',
+        'SECOND-CODE-88'
+      ]) {
+        expect(serialized).not.toContain(code);
+      }
     });
   });
 

@@ -34,14 +34,17 @@ describe('getSweepstakesTasks', () => {
   });
 
   describe('when the caller is signed in', () => {
-    it('looks the sweepstakes up by id or slug including team and tasks', async () => {
-      signIn();
+    it('looks the sweepstakes up by id or slug in a team of the caller', async () => {
+      signIn({ id: 'user-7' });
       prismaMock.sweepstakes.findFirst.mockResolvedValue(sweepstakesWith([]));
 
       await getSweepstakesTasks({ sweepstakesId: 'promo' });
 
       expect(prismaMock.sweepstakes.findFirst).toHaveBeenCalledWith({
-        where: { OR: [{ id: 'promo' }, { visibility: { slug: 'promo' } }] },
+        where: {
+          OR: [{ id: 'promo' }, { visibility: { slug: 'promo' } }],
+          team: { members: { some: { userId: 'user-7' } } }
+        },
         include: { team: true, tasks: true }
       });
     });

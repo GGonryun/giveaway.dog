@@ -728,6 +728,7 @@ jobs:
     secrets:
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
       E2E_LOGIN_SECRET: ${{ secrets.E2E_LOGIN_SECRET }}
+      TWITCH_EVENTSUB_SECRET: ${{ secrets.TWITCH_EVENTSUB_SECRET }}
 
   checks:
     name: Checks

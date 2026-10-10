@@ -74,6 +74,13 @@ const call = async (method: string, path: string, body?: unknown) => {
   return response.json();
 };
 
+const SECRET_CODE_FIELDS = ['code', 'codes'];
+
+const withoutSecretCodes = (task: Record<string, unknown>) =>
+  Object.fromEntries(
+    Object.entries(task).filter(([key]) => !SECRET_CODE_FIELDS.includes(key))
+  );
+
 const seedRun = async (runId: string) => {
   const team = `e2e-${runId}-w0`;
   await call('POST', 'teams', {
@@ -344,7 +351,7 @@ describe('the e2e seed API against a real database', () => {
 
       const { sweepstakes, prizes } = await loadGiveawayPage(seeded.id);
 
-      expect(sweepstakes.tasks).toEqual(seeded.tasks);
+      expect(sweepstakes.tasks).toEqual(seeded.tasks.map(withoutSecretCodes));
       expect(sweepstakes.tasks.map((task) => task.type)).toEqual(types);
       expect(sweepstakes.prizes).toEqual(seeded.prizes);
       expect(prizes.map(({ prizeName, quota }) => [prizeName, quota])).toEqual([

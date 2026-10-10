@@ -25,6 +25,8 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/e2e-fakes": "workspace:*",
+    "@giveaway/e2e-model": "workspace:*",
     "inboundemail": "catalog:",
     "server-only": "catalog:"
   },

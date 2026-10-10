@@ -1,11 +1,11 @@
-import { GiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
+import { ParticipantGiveawaySchema } from '@giveaway/sweepstakes-model/schemas';
 import { date } from '@giveaway/util-time/date';
 
 export const generateSkeetText = ({
   sweepstakes,
   liveUrl
 }: {
-  sweepstakes: GiveawaySchema;
+  sweepstakes: ParticipantGiveawaySchema;
   liveUrl: string;
 }) => {
   // Get first prize name
