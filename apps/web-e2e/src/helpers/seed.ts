@@ -1,9 +1,11 @@
-import type { APIRequestContext } from '@playwright/test';
+import type { APIRequestContext, TestInfo } from '@playwright/test';
 import type {
+  E2ePrizeRequest,
   E2eSweepstakesRequestInput,
+  E2eTaskRequest,
   E2eTeamRequestInput
 } from '@giveaway/e2e-model/requests';
-import { E2E_SECRET } from '../env';
+import { E2E_SECRET, RUN_ID } from '../env';
 
 export type SeedHealth = {
   environment: 'preview' | 'development';
@@ -28,6 +30,8 @@ export type SeededSweepstakes = {
   slug: string | null;
   startDate: string;
   endDate: string;
+  tasks: (E2eTaskRequest & { id: string })[];
+  prizes: (E2ePrizeRequest & { id: string })[];
 };
 
 export type DeletedRun = {
@@ -88,3 +92,9 @@ export const seedApi = (request: APIRequestContext) => ({
       call<DeletedRun & { before: string }>(request, 'POST', 'janitor')
     )
 });
+
+export const seedWorkerTeam = (
+  request: APIRequestContext,
+  testInfo: TestInfo
+) =>
+  seedApi(request).team({ ns: RUN_ID, suffix: `w${testInfo.parallelIndex}` });

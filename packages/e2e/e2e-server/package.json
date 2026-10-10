@@ -34,11 +34,13 @@
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/team-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
+    "nanoid": "catalog:",
     "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/participation-server": "workspace:*",
     "@giveaway/testing-integration": "workspace:*",
     "@giveaway/testing-postgres": "workspace:*",
     "@giveaway/testing-server": "workspace:*",

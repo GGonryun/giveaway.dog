@@ -2,8 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   E2E_MAX_DESCRIPTION_LENGTH,
   E2E_MAX_OFFSET_SECONDS,
+  E2E_MAX_PRIZES,
+  E2E_MAX_TASKS,
   E2E_MAX_TEAM_MEMBERS,
   E2E_PRESET_STATUS,
+  E2E_TASK_TYPES,
   e2eRowsQuerySchema,
   e2eSweepstakesRequestSchema,
   e2eTeamRequestSchema,
@@ -120,7 +123,17 @@ describe('e2eSweepstakesRequestSchema', () => {
       ...base,
       preset: 'running',
       name: 'Giveaway',
-      visibility: 'UNLISTED'
+      visibility: 'UNLISTED',
+      tasks: [
+        {
+          type: 'BONUS_TASK',
+          title: 'Click for a bonus entry',
+          value: 1,
+          mandatory: false,
+          tasksRequired: 0
+        }
+      ],
+      prizes: [{ name: 'My Custom Prize', quota: 1 }]
     });
   });
 
@@ -186,6 +199,8 @@ describe('e2eSweepstakesRequestSchema', () => {
     ['a start too far away', { startsIn: E2E_MAX_OFFSET_SECONDS + 1 }],
     ['an empty name', { name: ' ' }],
     ['a name that is too long', { name: 'x'.repeat(81) }],
+    ['an empty description', { description: '' }],
+    ['a description shorter than 3 characters', { description: 'ab' }],
     [
       'a description that is too long',
       { description: 'x'.repeat(E2E_MAX_DESCRIPTION_LENGTH + 1) }
@@ -195,6 +210,152 @@ describe('e2eSweepstakesRequestSchema', () => {
     expect(
       e2eSweepstakesRequestSchema.safeParse({ ...base, ...extra }).success
     ).toBe(false);
+  });
+});
+
+describe('e2eSweepstakesRequestSchema tasks', () => {
+  const base = { ns: 'abc123', team: 'e2e-abc123-w0' };
+  const REQUIRED_FIELDS: Record<string, object> = {
+    VISIT_URL: { href: 'https://example.com/' },
+    ASK_QUESTION: { question: 'Why?' },
+    SINGLE_CHOICE: { question: 'Which one?' },
+    MULTIPLE_CHOICE: { question: 'Which ones?' }
+  };
+
+  const parseTasks = (tasks: unknown[]) =>
+    e2eSweepstakesRequestSchema.safeParse({ ...base, tasks });
+
+  it.each(E2E_TASK_TYPES)(
+    'accepts a %s task with the defaults of the editor',
+    (type) => {
+      const result = parseTasks([{ type, ...REQUIRED_FIELDS[type] }]);
+
+      expect(result.error?.issues).toBeUndefined();
+      expect(result.data?.tasks).toEqual([
+        expect.objectContaining({
+          type,
+          value: 1,
+          mandatory: false,
+          tasksRequired: 0,
+          ...REQUIRED_FIELDS[type]
+        })
+      ]);
+    }
+  );
+
+  it('fills in the fields that the request leaves out', () => {
+    expect(
+      parseTasks([{ type: 'SECRET_CODE', code: 'OPEN-SESAME' }]).data?.tasks
+    ).toEqual([
+      {
+        type: 'SECRET_CODE',
+        title: 'Enter the secret code',
+        code: 'OPEN-SESAME',
+        hint: 'Check our announcement channel for the code!',
+        caseSensitive: false,
+        value: 1,
+        mandatory: false,
+        tasksRequired: 0
+      }
+    ]);
+  });
+
+  it('keeps the order of the tasks', () => {
+    expect(
+      parseTasks([
+        { type: 'BONUS_TASK', title: 'First', value: 3 },
+        { type: 'REFERRAL_LINK', maximum: 5 }
+      ]).data?.tasks
+    ).toEqual([
+      expect.objectContaining({ type: 'BONUS_TASK', title: 'First', value: 3 }),
+      expect.objectContaining({ type: 'REFERRAL_LINK', maximum: 5 })
+    ]);
+  });
+
+  it.each([
+    ['a task of a platform', [{ type: 'TWITTER_FOLLOW' }], 'tasks.0.type'],
+    ['a task without a type', [{ title: 'Bonus' }], 'tasks.0.type'],
+    ['an id', [{ type: 'BONUS_TASK', id: 'task-1' }], 'tasks.0'],
+    ['an unknown field', [{ type: 'BONUS_TASK', userId: 'x' }], 'tasks.0'],
+    ['a visit without a URL', [{ type: 'VISIT_URL' }], 'tasks.0.href'],
+    [
+      'a question without a question',
+      [{ type: 'ASK_QUESTION' }],
+      'tasks.0.question'
+    ],
+    ['a value below 1', [{ type: 'BONUS_TASK', value: 0 }], 'tasks.0.value'],
+    ['no task', [], 'tasks'],
+    [
+      `more than ${E2E_MAX_TASKS} tasks`,
+      Array.from({ length: E2E_MAX_TASKS + 1 }, () => ({ type: 'BONUS_TASK' })),
+      'tasks'
+    ]
+  ])('rejects %s', (_, tasks, path) => {
+    expect(issuesOf(parseTasks(tasks))).toEqual([path]);
+  });
+
+  it('names the task types it accepts when it rejects one', () => {
+    expect(messagesOf(parseTasks([{ type: 'TWITTER_FOLLOW' }]))).toEqual([
+      `Invalid enum value. Expected ${E2E_TASK_TYPES.map((type) => `'${type}'`).join(' | ')}, received 'TWITTER_FOLLOW'`
+    ]);
+  });
+
+  it(`accepts ${E2E_MAX_TASKS} tasks`, () => {
+    expect(
+      parseTasks(
+        Array.from({ length: E2E_MAX_TASKS }, () => ({ type: 'BONUS_TASK' }))
+      ).success
+    ).toBe(true);
+  });
+});
+
+describe('e2eSweepstakesRequestSchema prizes', () => {
+  const base = { ns: 'abc123', team: 'e2e-abc123-w0' };
+
+  const parsePrizes = (prizes: unknown[]) =>
+    e2eSweepstakesRequestSchema.safeParse({ ...base, prizes });
+
+  it('gives a prize a quota of 1 by default', () => {
+    expect(parsePrizes([{ name: 'A mug' }]).data?.prizes).toEqual([
+      { name: 'A mug', quota: 1 }
+    ]);
+  });
+
+  it('keeps the order and the quotas of the prizes', () => {
+    const prizes = [
+      { name: 'A mug', quota: 10 },
+      { name: 'A hat', quota: 2 }
+    ];
+
+    expect(parsePrizes(prizes).data?.prizes).toEqual(prizes);
+  });
+
+  it.each([
+    ['a name shorter than 3 characters', [{ name: 'ab' }], 'prizes.0.name'],
+    ['a quota of 0', [{ name: 'A mug', quota: 0 }], 'prizes.0.quota'],
+    ['a quota above 10', [{ name: 'A mug', quota: 11 }], 'prizes.0.quota'],
+    [
+      'a quota that is not an integer',
+      [{ name: 'A mug', quota: 1.5 }],
+      'prizes.0.quota'
+    ],
+    ['an id', [{ id: 'prize-1', name: 'A mug' }], 'prizes.0'],
+    ['no prize', [], 'prizes'],
+    [
+      `more than ${E2E_MAX_PRIZES} prizes`,
+      Array.from({ length: E2E_MAX_PRIZES + 1 }, () => ({ name: 'A mug' })),
+      'prizes'
+    ]
+  ])('rejects %s', (_, prizes, path) => {
+    expect(issuesOf(parsePrizes(prizes))).toEqual([path]);
+  });
+
+  it(`accepts ${E2E_MAX_PRIZES} prizes`, () => {
+    expect(
+      parsePrizes(
+        Array.from({ length: E2E_MAX_PRIZES }, () => ({ name: 'A mug' }))
+      ).success
+    ).toBe(true);
   });
 });
 

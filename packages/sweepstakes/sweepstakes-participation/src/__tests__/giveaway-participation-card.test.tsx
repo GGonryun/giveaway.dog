@@ -1,7 +1,20 @@
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { GiveawayParticipationProps } from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi
+} from 'vitest';
+import {
+  GiveawayParticipationProvider,
+  type GiveawayParticipationProps
+} from '@giveaway/sweepstakes-participation-core/giveaway-participation-context';
 import { GiveawayParticipationCard } from '../giveaway-participation-card';
 import {
   NOW,
@@ -9,7 +22,10 @@ import {
   buildParticipation,
   buildSweepstakes
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
-import { renderWithParticipation } from '@giveaway/sweepstakes-participation-core/testing/participation-fixtures';
+import {
+  buildParticipationProps,
+  renderWithParticipation
+} from '@giveaway/sweepstakes-participation-core/testing/participation-fixtures';
 import { DEFAULT_DESIGN_DATA } from '@giveaway/sweepstakes-model/defaults';
 import type { DeviceType } from '@giveaway/sweepstakes-model/schemas';
 
@@ -68,6 +84,44 @@ describe('GiveawayParticipationCard', () => {
         })
       });
       expect(screen.getByText('Starts in 3 days')).toBeInTheDocument();
+    });
+
+    it('hydrates a countdown that changed since the server rendered it', async () => {
+      const props = buildParticipationProps({
+        sweepstakes: buildSweepstakes({
+          status: 'SCHEDULED',
+          timing: {
+            startDate: new Date(NOW.getTime() + 10_000),
+            endDate: new Date(NOW.getTime() + 7 * 24 * 3600_000),
+            timeZone: 'UTC'
+          }
+        })
+      });
+      const card = (
+        <GiveawayParticipationProvider {...props}>
+          <GiveawayParticipationCard>
+            <p>state content</p>
+          </GiveawayParticipationCard>
+        </GiveawayParticipationProvider>
+      );
+      const html = renderToString(card);
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      document.body.appendChild(container);
+      const onRecoverableError = vi.fn();
+      vi.setSystemTime(NOW.getTime() + 2_000);
+
+      const root = await act(async () =>
+        hydrateRoot(container, card, { onRecoverableError })
+      );
+      onTestFinished(() => {
+        act(() => root.unmount());
+        container.remove();
+      });
+
+      expect(html).toContain('Starts in 10 seconds');
+      expect(onRecoverableError).not.toHaveBeenCalled();
+      expect(container).toHaveTextContent('Starts in 10 seconds');
     });
 
     it('hides the date range on the mobile preview', () => {

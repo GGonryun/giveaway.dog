@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { nanoid } from 'nanoid';
 import {
   PrismaClient,
   SweepstakesJobStatus,
@@ -23,6 +24,8 @@ import { expireE2eSweepstakesTags } from './cache';
 import { E2eTeam, findE2eTeam } from './ownership';
 
 const E2E_TIME_ZONE = 'UTC';
+
+export const E2E_GIVEAWAY_BANNER = '/images/demo-sweepstakes-banner-2.jpg';
 
 type SessionUser = Parameters<typeof applySweepstakesChanges>[0]['user'];
 
@@ -130,6 +133,8 @@ export const seedE2eSweepstakes = async ({
   const timing = toE2eSweepstakesTiming(request, now);
   const status = E2E_PRESET_STATUS[request.preset];
   const name = toE2eGiveawayName(request.ns, request.name);
+  const tasks = request.tasks.map((task) => ({ ...task, id: nanoid() }));
+  const prizes = request.prizes.map((prize) => ({ ...prize, id: nanoid() }));
 
   await applySweepstakesChanges({
     db,
@@ -140,11 +145,14 @@ export const seedE2eSweepstakes = async ({
       setup: {
         ...input.setup,
         name,
+        banner: E2E_GIVEAWAY_BANNER,
         ...(request.description !== undefined && {
           description: request.description
         })
       },
       timing: { ...timing, timeZone: E2E_TIME_ZONE },
+      tasks,
+      prizes,
       visibility: {
         visibility: request.visibility,
         slug: request.slug ?? null
@@ -171,6 +179,8 @@ export const seedE2eSweepstakes = async ({
     owner: owner.email,
     visibility: request.visibility,
     slug: request.slug ?? null,
-    ...timing
+    ...timing,
+    tasks,
+    prizes
   };
 };

@@ -214,7 +214,17 @@ describe('handleE2eRequest', () => {
             team: 'e2e-abc123-w0',
             preset: 'running',
             name: 'Giveaway',
-            visibility: 'UNLISTED'
+            visibility: 'UNLISTED',
+            tasks: [
+              {
+                type: 'BONUS_TASK',
+                title: 'Click for a bonus entry',
+                value: 1,
+                mandatory: false,
+                tasksRequired: 0
+              }
+            ],
+            prizes: [{ name: 'My Custom Prize', quota: 1 }]
           },
           now: expect.any(Date),
           allowPublic: expected

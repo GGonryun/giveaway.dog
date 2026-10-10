@@ -27,6 +27,9 @@
   },
   "dependencies": {
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/task-model": "workspace:*",
+    "lodash": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -34,6 +37,7 @@
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
+    "@types/lodash": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
