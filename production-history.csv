@@ -1,2 +1,3 @@
 date,commit,url,target,trigger,result,run
 2026-10-19T04:18:29Z,c8f55bab17642821477905e0e0cc5e88f1e66cd1,https://giveaway-5cjcwxh7r-charity-games.vercel.app,deployment,deployment,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/39198688970
+2026-10-19T04:21:13Z,c6be7df48d29236157a52a73ca6d717ff375b3e7,https://www.giveaway.dog,domain,promotion,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/39198878944
