@@ -373,6 +373,21 @@ describe('twitterV2PickerFormSchema', () => {
       });
     });
 
+    describe('when the timing option is left out', () => {
+      it('validates the run date', () => {
+        const result = twitterV2PickerFormSchema({}).safeParse(
+          minimalForm(timing(new Date(NOW.getTime() - 1)))
+        );
+
+        expect(issuesOf(result.error)).toEqual([
+          {
+            path: ['timing', 'runAt'],
+            message: 'Run date must be in the future'
+          }
+        ]);
+      });
+    });
+
     describe('when timing validation is disabled', () => {
       it('accepts a run date in the past', () => {
         expect(

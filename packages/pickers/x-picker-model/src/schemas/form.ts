@@ -63,9 +63,9 @@ const timingSchema = ({
 
 // New form schema mapping directly to TwitterPicker fields
 export const twitterV2PickerFormSchema = ({
-  validateTiming
+  validateTiming = true
 }: {
-  validateTiming: boolean;
+  validateTiming?: boolean;
 }) =>
   z.object({
     setup: z.object({

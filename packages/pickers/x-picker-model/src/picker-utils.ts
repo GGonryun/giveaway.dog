@@ -29,39 +29,20 @@ export function getDisqualificationReason(
     requireBio?: boolean | null;
   }
 ): string | undefined {
-  if (
-    picker.minPostCount !== null &&
-    picker.minPostCount !== undefined &&
-    (user.tweetCount ?? 0) < picker.minPostCount
-  ) {
+  if ((user.tweetCount ?? 0) < (picker.minPostCount ?? 0)) {
     return `Minimum ${picker.minPostCount} posts required`;
   }
 
-  if (
-    picker.minFollowersCount !== null &&
-    picker.minFollowersCount !== undefined &&
-    (user.followersCount ?? 0) < picker.minFollowersCount
-  ) {
+  if ((user.followersCount ?? 0) < (picker.minFollowersCount ?? 0)) {
     return `Minimum ${picker.minFollowersCount} followers required`;
   }
 
-  if (
-    picker.minFollowingCount !== null &&
-    picker.minFollowingCount !== undefined &&
-    (user.followingCount ?? 0) < picker.minFollowingCount
-  ) {
+  if ((user.followingCount ?? 0) < (picker.minFollowingCount ?? 0)) {
     return `Minimum ${picker.minFollowingCount} following required`;
   }
 
-  if (
-    picker.minAccountAgeDays !== null &&
-    picker.minAccountAgeDays !== undefined &&
-    user.createdAt
-  ) {
-    const createdAtDate =
-      typeof user.createdAt === 'string'
-        ? new Date(user.createdAt)
-        : user.createdAt;
+  if (typeof picker.minAccountAgeDays === 'number' && user.createdAt) {
+    const createdAtDate = new Date(user.createdAt);
     const accountAgeDays = Math.floor(
       (Date.now() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24)
     );
