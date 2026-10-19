@@ -25,7 +25,7 @@ const setup = async (
 };
 
 describe('rollPrizes', () => {
-  it('fills every prize up to its quota with different users', async () => {
+  it('[DRAW-002] [DRAW-004] fills every prize up to its quota with different users', async () => {
     const { input, first, second } = await setup({
       quotas: [1, 2],
       entries: 5
@@ -49,7 +49,7 @@ describe('rollPrizes', () => {
   });
 
   it.fails(
-    'never creates more winners than the quota when two rolls run at the same time (fails until #135 is fixed)',
+    '[DRAW-004] never creates more winners than the quota when two rolls run at the same time (fails until #135 is fixed)',
     async () => {
       const { input, first, second } = await setup({
         quotas: [1, 2],
@@ -68,7 +68,7 @@ describe('rollPrizes', () => {
   );
 
   it.fails(
-    'never creates more winners than the quota when rollPrize and rollPrizes run at the same time (fails until #135 is fixed)',
+    '[DRAW-004] never creates more winners than the quota when rollPrize and rollPrizes run at the same time (fails until #135 is fixed)',
     async () => {
       const { input, first, second } = await setup({
         quotas: [1, 2],
@@ -90,7 +90,7 @@ describe('rollPrizes', () => {
   );
 
   it.fails(
-    'lets a user win at most one prize when two rolls run at the same time and multiple wins are off (fails until #135 is fixed)',
+    '[DRAW-002] lets a user win at most one prize when two rolls run at the same time and multiple wins are off (fails until #135 is fixed)',
     async () => {
       const { input } = await setup({ quotas: [1, 2], entries: 3 });
 
