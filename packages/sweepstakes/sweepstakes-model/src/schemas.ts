@@ -343,6 +343,13 @@ export const giveawayHostSchema = z.object({
 
 export type GiveawayHostSchema = z.infer<typeof giveawayHostSchema>;
 
+export const giveawayDrawUserSchema = z.object({
+  id: z.string(),
+  name: z.string().nullable()
+});
+
+export type GiveawayDrawUserSchema = z.infer<typeof giveawayDrawUserSchema>;
+
 // Winner Information Schema
 const giveawayPrizeSchema = z.object({
   prizeId: z.string(),
@@ -360,7 +367,7 @@ const giveawayPrizeSchema = z.object({
         type: true,
         title: true
       }),
-      user: userProfileSchema
+      user: giveawayDrawUserSchema
     })
   )
 });

@@ -22,6 +22,7 @@ import type {
   E2eTeamRequestInput
 } from '@giveaway/e2e-model/requests';
 import { E2E_SECRET, RUN_ID } from '../env';
+import { freshNamespace } from '../fixtures/personas';
 
 export type SeedHealth = {
   environment: 'preview' | 'development';
@@ -236,3 +237,6 @@ export const seedWorkerTeam = (
   testInfo: TestInfo
 ) =>
   seedApi(request).team({ ns: RUN_ID, suffix: `w${testInfo.parallelIndex}` });
+
+export const freshSlug = (testInfo: TestInfo) =>
+  `e2e-${RUN_ID}-${freshNamespace(testInfo.workerIndex).slice(RUN_ID.length)}`;

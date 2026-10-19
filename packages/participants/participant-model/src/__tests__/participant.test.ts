@@ -197,7 +197,7 @@ describe('toSweepstakesPrizes', () => {
     );
   });
 
-  it('maps each draw with the parsed task and the winning user', () => {
+  it('maps each draw with the parsed task and only the id and name of its user', () => {
     const [mapped] = toSweepstakesPrizes([
       prize([draw(BONUS_CONFIG, { disqualificationReason: 'Fake account' })])
     ]);
@@ -209,25 +209,7 @@ describe('toSweepstakesPrizes', () => {
         disqualificationReason: 'Fake account',
         createdAt: CREATED_AT,
         updatedAt: UPDATED_AT,
-        user: {
-          id: 'user-1',
-          email: 'jane@example.com',
-          name: 'Jane',
-          image: 'https://example.com/jane.png',
-          source: 'SIGNUP',
-          birthday: null,
-          createdAt: CREATED_AT,
-          countryCode: 'XX',
-          userAgent: 'unknown',
-          qualityScore: 0,
-          emailVerified: false,
-          providers: [],
-          onboarded: true,
-          accountType: 'PARTICIPANT',
-          username: 'jane',
-          preferredContactMethod: null,
-          isAnonymous: true
-        },
+        user: { id: 'user-1', name: 'Jane' },
         task: { id: 'task-1', ...BONUS_CONFIG }
       }
     ]);

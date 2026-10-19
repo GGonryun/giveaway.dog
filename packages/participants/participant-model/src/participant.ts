@@ -2,7 +2,7 @@ import { DeepNullable } from '@giveaway/util-types/types';
 import { ParticipantSweepstakesGetPayload } from '@giveaway/sweepstakes-model/db';
 import { GiveawayPrizeSchema } from '@giveaway/sweepstakes-model/schemas';
 import z from 'zod';
-import { toUserSchema, UserSchema } from '@giveaway/user-model/user';
+import { UserSchema } from '@giveaway/user-model/user';
 import { toTaskInput } from '@giveaway/sweepstakes-model/input';
 import { Prisma } from '@giveaway/db-model';
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
@@ -59,7 +59,10 @@ const toPrizeDraws = (
       disqualificationReason: draw.disqualificationReason,
       createdAt: draw.createdAt,
       updatedAt: draw.updatedAt,
-      user: toUserSchema(draw.taskCompletion.participant.user),
+      user: {
+        id: draw.taskCompletion.participant.user.id,
+        name: draw.taskCompletion.participant.user.name
+      },
       task: task.data
     };
   });

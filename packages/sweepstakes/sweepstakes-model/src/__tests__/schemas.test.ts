@@ -1321,12 +1321,13 @@ describe('participantSweepstakeSchema', () => {
     });
   });
 
-  it('nulls out a draw user image that is not a url', () => {
-    const parsed = participantSweepstakeSchema.parse(
-      participantSweepstake({ user: userProfile({ image: 'not-a-url' }) })
-    );
+  it('keeps only the id and name of a draw user', () => {
+    const parsed = participantSweepstakeSchema.parse(participantSweepstake());
 
-    expect(parsed.prizes[0].draws[0].user.image).toBeNull();
+    expect(parsed.prizes[0].draws[0].user).toEqual({
+      id: userProfile().id,
+      name: userProfile().name
+    });
   });
 
   it('rejects an unknown draw result', () => {

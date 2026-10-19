@@ -599,7 +599,7 @@ describe('getParticipantSweepstake', () => {
   });
 
   describe('prize draws', () => {
-    it('maps each draw with its task summary and the winner profile', async () => {
+    it('maps each draw with its task summary and only the id and name of the winner', async () => {
       const task = taskRow('task-1', bonusConfig('Say hi', 2));
       givenSweepstakes(
         sweepstakesRow({
@@ -617,23 +617,7 @@ describe('getParticipantSweepstake', () => {
           createdAt: daysFromFixedNow(-1),
           updatedAt: daysFromFixedNow(-1),
           task: { id: 'task-1', type: 'BONUS_TASK', title: 'Say hi' },
-          user: {
-            id: 'winner-1',
-            name: 'Winner',
-            email: 'test@example.com',
-            emailVerified: false,
-            image: 'https://example.com/avatar.png',
-            countryCode: 'XX',
-            userAgent: 'unknown',
-            birthday: null,
-            qualityScore: 0,
-            providers: [],
-            source: 'SIGNUP',
-            username: null,
-            onboarded: true,
-            accountType: 'PARTICIPANT',
-            preferredContactMethod: null
-          }
+          user: { id: 'winner-1', name: 'Winner' }
         }
       ]);
     });
