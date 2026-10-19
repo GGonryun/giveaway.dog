@@ -112,7 +112,7 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
   for (const hidden of HIDDEN) {
     test.describe(`a ${hidden.kind} giveaway`, () => {
       test(
-        'is not found for a visitor',
+        '[VIS-001] is not found for a visitor',
         hidden.pageBug ? knownBug(hidden.pageBug) : {},
         async ({ request }, testInfo) => {
           const giveaway = await seedHidden(
@@ -126,7 +126,7 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
       );
 
       test(
-        'gives a bot no metadata',
+        '[VIS-003] gives a bot no metadata',
         hidden.metadataBug ? knownBug(hidden.metadataBug) : {},
         async ({ request }, testInfo) => {
           const giveaway = await seedHidden(
@@ -143,7 +143,7 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
         test.use({ storageState: personaState('participant') });
 
         test(
-          'is not found',
+          '[VIS-001] is not found',
           hidden.pageBug ? knownBug(hidden.pageBug) : {},
           async ({ request }, testInfo) => {
             const giveaway = await seedHidden(
@@ -162,7 +162,7 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
   test.describe('as the host', () => {
     test.use({ storageState: personaState('host') });
 
-    test('a private giveaway opens for a member of its team', async ({
+    test('[VIS-002] a private giveaway opens for a member of its team', async ({
       request
     }, testInfo) => {
       const giveaway = await seedHidden(
@@ -199,7 +199,7 @@ test.describe('opening a giveaway page', { tag: '@security' }, () => {
 
   for (const closed of CLOSED) {
     test(
-      `makes no participant of a visitor of a ${closed.kind} giveaway`,
+      `[VIS-004] makes no participant of a visitor of a ${closed.kind} giveaway`,
       knownBug(445),
       async ({ page, request, freshPersona }, testInfo) => {
         const { email } = await freshPersona('participant');

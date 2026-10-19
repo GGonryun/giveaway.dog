@@ -1,6 +1,9 @@
 import { toE2ePersonaEmail } from '@giveaway/e2e-model/personas';
 import { expect, test } from '../../fixtures/test';
+import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET } from '../../env';
+import { noRedirect } from '../../helpers/http';
+import { knownBug } from '../../helpers/known-bug';
 import { fakesOf, linkInEmail, waitForEmail } from '../../helpers/outbox';
 import { signInAs } from '../../helpers/personas';
 import { seedApi } from '../../helpers/seed';
@@ -8,7 +11,7 @@ import { seedApi } from '../../helpers/seed';
 test.describe('team invites', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
 
-  test('a member joins with the link from the invite email', async ({
+  test('[INVITE-001] a member joins with the link from the invite email', async ({
     page,
     request,
     freshPersona
@@ -39,4 +42,26 @@ test.describe('team invites', () => {
       expect.objectContaining({ email: invitee, role: 'MEMBER' })
     );
   });
+
+  test(
+    '[INVITE-002] the page of an expired invite link is not found',
+    knownBug(455),
+    async ({ page, request }, testInfo) => {
+      const seed = seedApi(request);
+      const ns = freshNamespace(testInfo.workerIndex);
+      const { team } = await seed.team({ ns, suffix: 'exp' });
+      const { link } = await seed.invites({
+        ns,
+        team: team.slug,
+        link: { expiresIn: -3600 }
+      });
+      await signInAs(page.request, 'member', ns);
+
+      const response = await page.request.get(
+        `/invites/${link!.id}`,
+        noRedirect
+      );
+      expect(response.status()).toBe(404);
+    }
+  );
 });

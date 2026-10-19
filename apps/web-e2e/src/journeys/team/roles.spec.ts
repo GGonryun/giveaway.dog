@@ -63,7 +63,7 @@ test.describe('team roles', () => {
     });
 
     for (const persona of ['guest', 'member'] as const) {
-      test(`a ${persona} cannot change the team profile, socials or members`, async ({
+      test(`[ROLE-002] a ${persona} cannot change the team profile, socials or members`, async ({
         page,
         request,
         browser
@@ -107,7 +107,7 @@ test.describe('team roles', () => {
     }
   });
 
-  test('an admin manages invites and members, but not roles or the team name', async ({
+  test('[ROLE-003][ROLE-004] an admin manages invites and members, but not roles or the team name', async ({
     page,
     request
   }, testInfo) => {
@@ -169,7 +169,7 @@ test.describe('team roles', () => {
   });
 
   test(
-    'an admin cannot make someone an owner through an email invite',
+    '[ROLE-005] an admin cannot make someone an owner through an email invite',
     knownBug(434),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
@@ -204,7 +204,7 @@ test.describe('team roles', () => {
   );
 
   test(
-    'a guest cannot disconnect the team Twitch channel',
+    '[ROLE-006] a guest cannot disconnect the team Twitch channel',
     knownBug(435),
     async ({ page, request, browser }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
@@ -236,7 +236,7 @@ test.describe('team roles', () => {
     }
   );
 
-  test('a guest cannot install the Discord bot or disconnect Discord', async ({
+  test('[ROLE-006] a guest cannot install the Discord bot or disconnect Discord', async ({
     page,
     request
   }, testInfo) => {
@@ -273,7 +273,7 @@ test.describe('roles that check only membership', () => {
   });
 
   test(
-    'a guest or a blocked member cannot complete a giveaway',
+    '[ROLE-007] a guest or a blocked member cannot complete a giveaway',
     knownBug(436),
     async ({ page, request, browser }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
@@ -305,7 +305,7 @@ test.describe('roles that check only membership', () => {
   );
 
   test(
-    'a guest cannot draw winners',
+    '[ROLE-008] a guest cannot draw winners',
     knownBug(436),
     async ({ page, request, browser }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);

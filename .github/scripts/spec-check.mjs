@@ -14,6 +14,7 @@ const TEST_CALL =
 const PENDING = new Set(['todo', 'fixme']);
 const SKIPPED = new Set(['skip']);
 const KNOWN_BUG = new Set(['fails', 'fail']);
+const KNOWN_BUG_DETAILS = /^\s*,\s*(?:(?!=>)[^,])*?\bknownBug\(/;
 
 const readRules = () => {
   const rules = new Map();
@@ -67,7 +68,7 @@ const listTestFiles = () =>
     .split('\n')
     .filter((file) => TEST_FILE.test(file) && fs.existsSync(file));
 
-const kindOf = (modifiers) => {
+const kindOf = (modifiers, rest) => {
   const names = modifiers.split('.').filter(Boolean);
   if (names.some((name) => PENDING.has(name))) {
     return 'pending';
@@ -75,7 +76,10 @@ const kindOf = (modifiers) => {
   if (names.some((name) => SKIPPED.has(name))) {
     return 'skipped';
   }
-  if (names.some((name) => KNOWN_BUG.has(name))) {
+  if (
+    names.some((name) => KNOWN_BUG.has(name)) ||
+    KNOWN_BUG_DETAILS.test(rest)
+  ) {
     return 'knownBug';
   }
   return 'test';
@@ -88,10 +92,12 @@ const readTests = () => {
     for (const match of source.matchAll(TEST_CALL)) {
       const [, , modifiers, , title] = match;
       const line = source.slice(0, match.index).split('\n').length;
+      const end = match.index + match[0].length;
+      const rest = source.slice(end, end + 200);
       for (const [, id] of title.matchAll(TITLE_ID)) {
         tests.push({
           id,
-          kind: kindOf(modifiers),
+          kind: kindOf(modifiers, rest),
           location: `${file}:${line}`,
           title
         });

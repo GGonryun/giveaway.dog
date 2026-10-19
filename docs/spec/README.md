@@ -10,13 +10,16 @@ One file for each domain. Each rule is a list item that starts with its ID in ba
 - `DRAW-001` An entry with a weight of 0 or less never wins.
 ```
 
-| File                               | Rules                                                                         |
-| ---------------------------------- | ----------------------------------------------------------------------------- |
-| [`draws.md`](draws.md)             | `DRAW`: how the winners are picked, `SLOT`: prize quotas, `RNG`: randomness   |
-| [`eligibility.md`](eligibility.md) | `ELIG`: which participants can win                                            |
-| [`entries.md`](entries.md)         | `ENTRY`: task completions and the entries they are worth                      |
-| [`security.md`](security.md)       | `CRON`, `DISCORD`, `TWITCH`, `UPLOAD`, `HTML`: requests and input not trusted |
-| [`inputs.md`](inputs.md)           | `TWEET`, `USERS`: values that people type or paste                            |
+| File                               | Rules                                                                                           |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [`draws.md`](draws.md)             | `DRAW`: how the winners are picked, `SLOT`: prize quotas, `RNG`: randomness                     |
+| [`eligibility.md`](eligibility.md) | `ELIG`: which participants can win                                                              |
+| [`entries.md`](entries.md)         | `ENTRY`: task completions, the entries they are worth and the rules the server enforces on them |
+| [`security.md`](security.md)       | `CRON`, `DISCORD`, `TWITCH`, `UPLOAD`, `HTML`: requests and input not trusted                   |
+| [`inputs.md`](inputs.md)           | `TWEET`, `USERS`: values that people type or paste                                              |
+| [`auth.md`](auth.md)               | `AUTH`: sign-in and sign-out, `ROUTE`: route protection, `LINK`: account linking                |
+| [`teams.md`](teams.md)             | `TEAM`: isolation between teams, `ROLE`: what each team role may do, `INVITE`: team invites     |
+| [`public-data.md`](public-data.md) | `LEAK`: what a public page may send, `VIS`: giveaway visibility, `TRACK`: visitor tracking      |
 
 - **IDs**: a prefix of capital letters, a dash and three digits. An ID never changes and is never used again for another rule. To remove a rule, delete its line and its ID with it
 - **A rule**: one sentence about what the product does, written from the product rule and not from the current code. It names no function or file
@@ -26,7 +29,7 @@ One file for each domain. Each rule is a list item that starts with its ID in ba
 
 - **The ID in the title**: each test of a rule names its ID in brackets in its title, for example `it('[DRAW-001] a zero-weight item never wins', ...)`. A test can name several IDs. Property tests are the preferred form, because one property covers the whole rule (see Property Tests in `CLAUDE.md`). Server, integration and E2E tests can name IDs too
 - **A pending rule**: a rule that the app does not follow yet has an `it.todo('[ID] ...')` test (or `test.fixme` in Playwright). The check lists it as pending
-- **A known bug**: a test of a rule that fails because of an open bug uses `it.fails` and names the issue (see A known bug in `CLAUDE.md`). The check lists it as a known bug
+- **A known bug**: a test of a rule that fails because of an open bug uses `it.fails` and names the issue (see A known bug in `CLAUDE.md`), or `knownBug(<issue>)` in Playwright (see Known bugs in E2E Tests in `CLAUDE.md`). The check lists it as a known bug
 - **A test that contradicts the spec** is a bug in the code or in the test, never a reason to change the spec. Fix the code, or mark the test `it.fails` and open a bug issue
 
 ## The check

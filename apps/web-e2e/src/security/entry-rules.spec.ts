@@ -117,7 +117,7 @@ test.describe('entry rules on the server', { tag: '@security' }, () => {
 
   for (const blocked of BLOCKED) {
     test(
-      `a participant cannot enter ${blocked.name} with a direct call`,
+      `[ENTRY-004] a participant cannot enter ${blocked.name} with a direct call`,
       blocked.bug ? knownBug(blocked.bug) : {},
       async ({ page, request, freshPersona }, testInfo) => {
         const { ns } = await freshPersona('participant');

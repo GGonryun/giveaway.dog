@@ -61,7 +61,7 @@ test.describe('host-written HTML', { tag: '@security' }, () => {
     });
   };
 
-  test('a visitor runs no script from the description or the terms', async ({
+  test('[HTML-005] a visitor runs no script from the description or the terms', async ({
     page,
     request
   }, testInfo) => {
@@ -78,7 +78,7 @@ test.describe('host-written HTML', { tag: '@security' }, () => {
   test.describe('as a participant', () => {
     test.use({ storageState: personaState('participant') });
 
-    test('a participant runs no script from a task description', async ({
+    test('[HTML-005] a participant runs no script from a task description', async ({
       page,
       request
     }, testInfo) => {

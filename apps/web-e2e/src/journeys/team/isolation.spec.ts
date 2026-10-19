@@ -55,7 +55,7 @@ test.describe('cross-team isolation', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
   test.use({ allowedPageErrors: [ABORTED_ACTION] });
 
-  test("a host cannot read another team's entrants by putting its giveaway id under their own slug", async ({
+  test("[TEAM-002] a host cannot read another team's entrants by putting its giveaway id under their own slug", async ({
     page,
     request
   }, testInfo) => {
@@ -87,7 +87,7 @@ test.describe('cross-team isolation', () => {
   });
 
   test(
-    "the preview and promotion tabs do not show another team's giveaway",
+    "[TEAM-002] the preview and promotion tabs do not show another team's giveaway",
     knownBug(441),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
@@ -128,7 +128,7 @@ test.describe('cross-team isolation', () => {
       ]
     });
 
-    test('a host cannot open the profile of someone who never entered their team giveaways', async ({
+    test('[TEAM-003] a host cannot open the profile of someone who never entered their team giveaways', async ({
       page,
       request
     }, testInfo) => {
@@ -161,7 +161,7 @@ test.describe('cross-team isolation', () => {
     });
   });
 
-  test("a host's Users list contains only people who entered the team giveaways", async ({
+  test("[TEAM-003] a host's Users list contains only people who entered the team giveaways", async ({
     page,
     request
   }, testInfo) => {
@@ -202,7 +202,7 @@ test.describe('cross-team isolation', () => {
   });
 
   test(
-    "a user's Entries tab lists only the entries of the current team",
+    "[TEAM-004] a user's Entries tab lists only the entries of the current team",
     knownBug(437),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
@@ -238,7 +238,7 @@ test.describe('cross-team isolation', () => {
     });
 
     test(
-      "a host cannot draw or delete another team's X picker",
+      "[TEAM-005] a host cannot draw or delete another team's X picker",
       knownBug(425),
       async ({ page, request, browser }, testInfo) => {
         const ns = freshNamespace(testInfo.workerIndex);
@@ -305,7 +305,7 @@ test.describe('cross-team isolation', () => {
   });
 
   test(
-    "a host cannot disqualify or re-roll another team's prize winner",
+    "[TEAM-005] a host cannot disqualify or re-roll another team's prize winner",
     knownBug(425),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
@@ -366,7 +366,7 @@ test.describe('cross-team isolation', () => {
     }
   );
 
-  test('a visitor or a non-member cannot run a host procedure', async ({
+  test('[TEAM-006] a visitor or a non-member cannot run a host procedure', async ({
     page,
     request,
     browser
