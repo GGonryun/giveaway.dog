@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ZodError } from 'zod';
 import { processChatMessage } from '../chat-message';
 import { sendChatMessage } from '@giveaway/twitch-api/send-chat-message';
 import { ApplicationError } from '@giveaway/util-errors';
@@ -142,10 +141,16 @@ describe('processChatMessage', () => {
   });
 
   describe('when the event is invalid', () => {
-    it('throws a ZodError without touching the cache', async () => {
-      await expect(processChatMessage({ message: {} })).rejects.toThrow(
-        ZodError
+    it('throws a bad request error without touching the cache', async () => {
+      const error = await processChatMessage({ message: {} }).catch(
+        (thrown: unknown) => thrown
       );
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Invalid Twitch chat message event'
+      });
       expect(redisMock.get).not.toHaveBeenCalled();
     });
   });

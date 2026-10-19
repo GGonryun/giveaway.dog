@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
-import { ZodError } from 'zod';
 import { POST } from '../handler';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
@@ -99,7 +98,7 @@ describe('twitch webhook POST handler', () => {
       await expect(response.text()).resolves.toBe('challenge-123');
     });
 
-    it('responds 500 when the verification body has no challenge', async () => {
+    it('responds 400 when the verification body has no challenge', async () => {
       const response = await POST(
         webhookRequest({
           messageType: 'webhook_callback_verification',
@@ -107,10 +106,8 @@ describe('twitch webhook POST handler', () => {
         })
       );
 
-      expect(response.status).toBe(500);
-      await expect(response.json()).resolves.toEqual({
-        error: 'Internal server error'
-      });
+      expect(response.status).toBe(400);
+      await expect(response.json()).resolves.toEqual({ error: 'Bad request' });
     });
   });
 
@@ -152,26 +149,24 @@ describe('twitch webhook POST handler', () => {
       expect(redisMock.get).not.toHaveBeenCalled();
     });
 
-    it('rejects instead of responding 500 when the chat event is invalid', async () => {
-      await expect(
-        POST(
-          webhookRequest({
-            messageType: 'notification',
-            body: { subscription: subscriptionPayload(), event: { nope: true } }
-          })
-        )
-      ).rejects.toThrow(ZodError);
-    });
-
-    it('does not log a webhook error when the chat processor rejects', async () => {
-      await POST(
+    it('responds 400 when the chat event is invalid', async () => {
+      const response = await POST(
         webhookRequest({
           messageType: 'notification',
           body: { subscription: subscriptionPayload(), event: { nope: true } }
         })
-      ).catch(() => undefined);
+      );
 
-      expect(console.error).not.toHaveBeenCalled();
+      expect(response.status).toBe(400);
+      await expect(response.json()).resolves.toEqual({ error: 'Bad request' });
+    });
+
+    it('responds 400 when the notification has no subscription', async () => {
+      const response = await POST(
+        webhookRequest({ messageType: 'notification', body: { event: {} } })
+      );
+
+      expect(response.status).toBe(400);
     });
   });
 
@@ -196,19 +191,33 @@ describe('twitch webhook POST handler', () => {
       });
     });
 
-    it('rejects instead of responding 500 when the database fails', async () => {
+    it('responds 500 when the database fails', async () => {
       prismaMock.eventSubSubscription.findUnique.mockRejectedValue(
         new Error('db down')
       );
 
-      await expect(
-        POST(
-          webhookRequest({
-            messageType: 'revocation',
-            body: { subscription: subscriptionPayload() }
-          })
-        )
-      ).rejects.toThrow('db down');
+      const response = await POST(
+        webhookRequest({
+          messageType: 'revocation',
+          body: { subscription: subscriptionPayload() }
+        })
+      );
+
+      expect(response.status).toBe(500);
+      await expect(response.json()).resolves.toEqual({
+        error: 'Internal server error'
+      });
+    });
+
+    it('responds 400 when the revocation body is invalid', async () => {
+      const response = await POST(
+        webhookRequest({
+          messageType: 'revocation',
+          body: { subscription: {} }
+        })
+      );
+
+      expect(response.status).toBe(400);
     });
   });
 

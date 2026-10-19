@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import crypto from 'crypto';
-import { ZodError } from 'zod';
 import { POST } from '../route';
 import { POST as handlerPOST } from '@giveaway/twitch-bot/handler';
 import { prismaMock } from '@giveaway/testing-server/prisma';
@@ -213,7 +212,7 @@ describe('POST /api/twitch/webhooks', () => {
       expect(await res.text()).toBe('challenge-abc');
     });
 
-    it('returns 500 when the verification payload is invalid', async () => {
+    it('returns 400 when the verification payload is invalid', async () => {
       const res = await POST(
         twitchRequest({
           payload: { challenge: 'challenge-abc' },
@@ -221,8 +220,8 @@ describe('POST /api/twitch/webhooks', () => {
         })
       );
 
-      expect(res.status).toBe(500);
-      expect(await res.json()).toEqual({ error: 'Internal server error' });
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({ error: 'Bad request' });
     });
   });
 
@@ -267,10 +266,13 @@ describe('POST /api/twitch/webhooks', () => {
       expect(m.redisGet).not.toHaveBeenCalled();
     });
 
-    it('rejects instead of returning 500 when the notification payload is invalid', async () => {
-      await expect(
-        POST(twitchRequest({ payload: {}, messageType: 'notification' }))
-      ).rejects.toBeInstanceOf(ZodError);
+    it('returns 400 when the notification payload is invalid', async () => {
+      const res = await POST(
+        twitchRequest({ payload: {}, messageType: 'notification' })
+      );
+
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({ error: 'Bad request' });
     });
   });
 
@@ -336,12 +338,15 @@ describe('POST /api/twitch/webhooks', () => {
       }
     );
 
-    it('rejects instead of returning 500 when the database fails', async () => {
+    it('returns 500 when the database fails', async () => {
       prismaMock.eventSubSubscription.findUnique.mockRejectedValue(
         new Error('db down')
       );
 
-      await expect(POST(revocationRequest())).rejects.toThrow('db down');
+      const res = await POST(revocationRequest());
+
+      expect(res.status).toBe(500);
+      expect(await res.json()).toEqual({ error: 'Internal server error' });
     });
   });
 });

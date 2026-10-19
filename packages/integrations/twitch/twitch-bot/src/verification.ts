@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { ApplicationError } from '@giveaway/util-errors';
 import { NextResponse } from 'next/server';
 import {
   TwitchSubscriptionVerification,
@@ -7,9 +8,16 @@ import {
 } from '@giveaway/twitch-model/schema';
 
 export const handleSubscriptionVerification = (body: unknown) => {
-  const data = twitchSubscriptionVerificationSchema.parse(
-    body
-  ) as TwitchSubscriptionVerification;
+  const parsed = twitchSubscriptionVerificationSchema.safeParse(body);
+
+  if (!parsed.success) {
+    throw new ApplicationError({
+      code: 'BAD_REQUEST',
+      message: 'Invalid Twitch subscription verification'
+    });
+  }
+
+  const data: TwitchSubscriptionVerification = parsed.data;
 
   console.info(
     'Handling Twitch subscription verification for challenge:',

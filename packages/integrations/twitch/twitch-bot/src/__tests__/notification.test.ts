@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ZodError } from 'zod';
+import { ApplicationError } from '@giveaway/util-errors';
 import { handleNotification } from '../notification';
 import { processChatMessage } from '../chat-message';
 import {
@@ -81,8 +81,16 @@ describe('handleNotification', () => {
   });
 
   describe('when the body is invalid', () => {
-    it('throws a ZodError without processing', async () => {
-      await expect(handleNotification({ event: {} })).rejects.toThrow(ZodError);
+    it('throws a bad request error without processing', async () => {
+      const error = await handleNotification({ event: {} }).catch(
+        (thrown: unknown) => thrown
+      );
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Invalid Twitch notification'
+      });
       expect(processChatMessageMock).not.toHaveBeenCalled();
     });
   });

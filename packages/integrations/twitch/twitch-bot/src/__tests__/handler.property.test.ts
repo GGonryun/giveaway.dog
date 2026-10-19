@@ -165,4 +165,80 @@ describe('twitch webhook POST handler properties', () => {
       )
     );
   });
+
+  it('responds 200 or 400 to any correctly signed JSON body, never 5xx', async () => {
+    const maybe = <T>(valid: fc.Arbitrary<T>) =>
+      fc.oneof(valid, fc.jsonValue());
+
+    const subscription = fc.record({
+      id: maybe(fc.string()),
+      type: maybe(fc.oneof(fc.constant('channel.chat.message'), fc.string())),
+      version: maybe(fc.string()),
+      status: maybe(fc.string()),
+      condition: maybe(fc.dictionary(fc.string(), fc.string())),
+      transport: maybe(
+        fc.record(
+          { method: maybe(fc.string()), callback: maybe(fc.string()) },
+          { requiredKeys: ['method'] }
+        )
+      ),
+      created_at: maybe(fc.string())
+    });
+
+    const chatEvent = fc.record({
+      broadcaster_user_id: maybe(fc.string()),
+      broadcaster_user_login: maybe(fc.string()),
+      broadcaster_user_name: maybe(fc.string()),
+      chatter_user_id: maybe(fc.string()),
+      chatter_user_login: maybe(fc.string()),
+      chatter_user_name: maybe(fc.string()),
+      message_id: maybe(fc.string()),
+      message: maybe(fc.record({ text: maybe(fc.string()) }))
+    });
+
+    const payload = fc.oneof(
+      fc.jsonValue(),
+      fc.record(
+        {
+          subscription: maybe(subscription),
+          event: maybe(chatEvent),
+          challenge: maybe(fc.string())
+        },
+        { requiredKeys: [] }
+      )
+    );
+
+    await assertAsyncProperty(
+      fc.asyncProperty(
+        headerValue,
+        fc.constantFrom(
+          'webhook_callback_verification',
+          'notification',
+          'revocation'
+        ),
+        payload,
+        async (messageId, type, value) => {
+          const timestamp = NOW.toISOString();
+          const raw = JSON.stringify(value) ?? 'null';
+
+          const response = await POST(
+            webhookRequest(
+              [
+                ['Twitch-Eventsub-Message-Id', messageId],
+                ['Twitch-Eventsub-Message-Timestamp', timestamp],
+                ['Twitch-Eventsub-Message-Type', type],
+                [
+                  'Twitch-Eventsub-Message-Signature',
+                  sign(messageId, timestamp, raw)
+                ]
+              ],
+              raw
+            )
+          );
+
+          expect([200, 400]).toContain(response.status);
+        }
+      )
+    );
+  });
 });
