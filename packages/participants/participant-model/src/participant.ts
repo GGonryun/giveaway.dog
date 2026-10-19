@@ -124,7 +124,7 @@ const toFieldValue = (
     case 'AGE':
       if (
         user?.birthday &&
-        field?.minimum &&
+        field.minimum &&
         user.birthday < datetime.yearsAgo(field.minimum)
       ) {
         return { value: true, isCustom: false };
@@ -147,7 +147,7 @@ const toFieldValue = (
       return { value, isCustom: true };
 
     case 'TWITTER':
-      const link = user?.providers?.find(
+      const link = user?.providers.find(
         (provider) => provider.type === 'TWITTER'
       )?.link;
 
@@ -170,15 +170,9 @@ export const isProfileComplete = (
     return false;
   }
 
-  const profile = toParticipantForm(formFields, user, values);
-  const required = formFields.filter(isRequired);
-
-  return required.every((field) => {
-    const profileField = profile.find((pf) => pf.id === field.id);
-    return (
-      profileField && profileField.value !== null && profileField.value !== ''
-    );
-  });
+  return toParticipantForm(formFields.filter(isRequired), user, values).every(
+    (field) => field.value !== null
+  );
 };
 
 export const isFormFilled = (
@@ -190,14 +184,9 @@ export const isFormFilled = (
     return false;
   }
 
-  const profile = toParticipantForm(formFields, user, values);
-
-  return formFields.every((field) => {
-    const profileField = profile.find((pf) => pf.id === field.id);
-    return (
-      profileField && profileField.value !== null && profileField.value !== ''
-    );
-  });
+  return toParticipantForm(formFields, user, values).every(
+    (field) => field.value !== null
+  );
 };
 
 const isRequired = (field: SweepstakesFormFieldSchema) => {

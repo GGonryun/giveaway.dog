@@ -636,6 +636,15 @@ describe('sortParticipantsByMostRecentCompletion', () => {
     ).toBe(-1 * 24 * 60 * 60 * 1000);
   });
 
+  it('compares against the latest completion of the second participant', () => {
+    expect(
+      sortParticipantsByMostRecentCompletion(
+        withCompletionsOn('a', [3]),
+        withCompletionsOn('b', [1, 4, 2])
+      )
+    ).toBe(1 * 24 * 60 * 60 * 1000);
+  });
+
   it('sorts participants by most recent activity with inactive ones last', () => {
     const sorted = [
       withCompletionsOn('inactive', []),
