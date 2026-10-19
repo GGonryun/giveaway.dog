@@ -185,6 +185,7 @@ const PrizeDrawRow = ({
                 variant="ghost"
                 size="sm"
                 disabled={isRolling || !isEditable}
+                aria-label="Winner actions"
               >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -203,7 +204,11 @@ const PrizeDrawRow = ({
         ) : (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-label="Disqualified winner actions"
+              >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>

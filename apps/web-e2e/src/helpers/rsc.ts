@@ -70,6 +70,21 @@ export const replayServerAction = (
 ): Promise<ServerActionResponse> =>
   sendServerActionBody(page, action, JSON.stringify(args));
 
+export const replaceInArgs = (
+  args: unknown[],
+  replacements: Record<string, string>
+): unknown[] => {
+  let json = JSON.stringify(args);
+  for (const [from, to] of Object.entries(replacements)) {
+    const value = JSON.stringify(from);
+    if (!json.includes(value)) {
+      throw new Error(`The arguments do not contain ${value}: ${json}`);
+    }
+    json = json.replaceAll(value, JSON.stringify(to));
+  }
+  return JSON.parse(json);
+};
+
 export const sendServerActionBody = (
   page: Page,
   action: ServerAction,
