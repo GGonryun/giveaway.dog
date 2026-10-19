@@ -10,7 +10,11 @@ const EMPTY_SCRIPT_HOSTS = [
 
 const VERCEL_INSIGHTS_PATH = '/_vercel/insights/';
 
-const AVATAR_HOST = 'avatar.vercel.sh';
+const AVATAR_HOSTS = [
+  'avatar.vercel.sh',
+  'pbs.twimg.com',
+  'cdn.discordapp.com'
+];
 
 const PIXEL_PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
@@ -21,7 +25,8 @@ export const isEmptiedThirdParty = (url: URL) =>
   EMPTY_SCRIPT_HOSTS.includes(url.hostname) ||
   url.pathname.startsWith(VERCEL_INSIGHTS_PATH);
 
-export const isStubbedAvatar = (url: URL) => url.hostname === AVATAR_HOST;
+export const isStubbedAvatar = (url: URL) =>
+  AVATAR_HOSTS.includes(url.hostname);
 
 export const blockThirdParties = async (context: BrowserContext) => {
   await context.route(isEmptiedThirdParty, (route) =>

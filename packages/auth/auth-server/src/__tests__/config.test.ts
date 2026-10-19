@@ -29,7 +29,7 @@ type BuiltConfig = Omit<AuthConfig, 'providers'> & {
   providers: RawProvider[];
 };
 
-type ConfigFactory = (request: Request | undefined) => BuiltConfig;
+type ConfigFactory = (request: Request | undefined) => Promise<BuiltConfig>;
 
 const mocks = vi.hoisted(() => {
   const instance = {
@@ -50,7 +50,10 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('next-auth', () => ({ default: mocks.NextAuth }));
+vi.mock('next-auth', () => ({
+  default: mocks.NextAuth,
+  customFetch: Symbol('customFetch')
+}));
 
 vi.mock('@giveaway/auth-core/config-runtime', async (importOriginal) => {
   const actual =
@@ -98,15 +101,16 @@ const buildConfig = (request?: Request) => factory()(request);
 const providerId = (provider: RawProvider) =>
   provider.options?.id ?? provider.id;
 
-const findProvider = (id: string, request?: Request) => {
-  const provider = buildConfig(request).providers.find(
+const findProvider = async (id: string, request?: Request) => {
+  const provider = (await buildConfig(request)).providers.find(
     (p) => providerId(p) === id
   );
   if (!provider) throw new Error(`Provider ${id} not found`);
   return provider;
 };
 
-const optionsOf = (id: string) => findProvider(id).options as ProviderOptions;
+const optionsOf = async (id: string) =>
+  (await findProvider(id)).options as ProviderOptions;
 
 const fetchMock = vi.fn();
 
@@ -146,8 +150,8 @@ describe('auth config', () => {
   });
 
   describe('config factory', () => {
-    it('spreads the runtime config', () => {
-      const config = buildConfig();
+    it('spreads the runtime config', async () => {
+      const config = await buildConfig();
 
       expect(config.callbacks).toBe(authConfig().callbacks);
       expect(config.events).toBe(authConfig().events);
@@ -156,9 +160,9 @@ describe('auth config', () => {
       expect(config.session).toBe(authConfig().session);
     });
 
-    it('builds the runtime config once', () => {
-      buildConfig();
-      buildConfig();
+    it('builds the runtime config once', async () => {
+      await buildConfig();
+      await buildConfig();
 
       expect(createAuthConfigMock).toHaveBeenCalledTimes(1);
     });
@@ -171,8 +175,8 @@ describe('auth config', () => {
       expect(mocks.instance.auth).toHaveBeenCalledWith();
     });
 
-    it('registers the providers in order', () => {
-      expect(buildConfig().providers.map(providerId)).toEqual([
+    it('registers the providers in order', async () => {
+      expect((await buildConfig()).providers.map(providerId)).toEqual([
         'tiktok',
         'anonymous',
         'bluesky-direct',
@@ -188,25 +192,59 @@ describe('auth config', () => {
       ]);
     });
 
-    it('registers the e2e provider last when an e2e login secret is set', () => {
+    it('registers the e2e provider last when an e2e login secret is set', async () => {
       vi.stubEnv('E2E_LOGIN_SECRET', 'e2e-secret-with-at-least-32-chars');
       vi.stubEnv('VERCEL_ENV', 'preview');
 
-      expect(buildConfig().providers.map(providerId).at(-1)).toBe('e2e');
+      expect((await buildConfig()).providers.map(providerId).at(-1)).toBe(
+        'e2e'
+      );
     });
 
-    it('throws when the steam secret is missing', () => {
+    it('replaces the discord endpoints for a request that opts in to the mock OAuth provider', async () => {
+      const secret = 'e2e-secret-with-at-least-32-chars';
+      vi.stubEnv('E2E_LOGIN_SECRET', secret);
+      vi.stubEnv('VERCEL_ENV', 'preview');
+      const cookies: Record<string, string> = {
+        'e2e-oauth': secret,
+        'e2e-oauth-discord': JSON.stringify({
+          id: '1234567890',
+          username: 'e2e_user',
+          email: 'e2e-newbie-abc123@example.com'
+        })
+      };
+      const request = Object.assign(new Request('https://giveaway.dog'), {
+        cookies: {
+          get: (name: string) =>
+            name in cookies ? { value: cookies[name] } : undefined
+        }
+      });
+
+      const discord = await findProvider('discord', request);
+
+      expect(discord.options).toMatchObject({
+        clientId: 'e2e',
+        authorization:
+          'https://giveaway.dog/api/e2e/oauth/authorize?scope=identify+email',
+        token: 'https://e2e-oauth.invalid/token'
+      });
+      expect((await optionsOf('discord')).clientId).toBe('discord-id');
+    });
+
+    it('throws when the steam secret is missing', async () => {
       vi.stubEnv('STEAM_SECRET', '');
 
-      expect(() => buildConfig()).toThrow('Missing `clientSecret` parameter');
+      await expect(buildConfig()).rejects.toThrow(
+        'Missing `clientSecret` parameter'
+      );
     });
 
-    it('builds the steam callback on the deployment URL when NEXT_PUBLIC_APP_URL is missing', () => {
+    it('builds the steam callback on the deployment URL when NEXT_PUBLIC_APP_URL is missing', async () => {
       vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
       vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
       vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
 
-      expect(findProvider('steam').authorization).toMatchObject({
+      expect((await findProvider('steam')).authorization).toMatchObject({
         params: {
           'openid.return_to':
             'https://giveaway-abc123-team.vercel.app/api/auth/steam-callback',
@@ -228,8 +266,8 @@ describe('auth config', () => {
       ['linkedin', 'linkedin-id', 'linkedin-secret']
     ])(
       'configures %s with env credentials and dangerous email linking',
-      (id, clientId, clientSecret) => {
-        expect(optionsOf(id)).toMatchObject({
+      async (id, clientId, clientSecret) => {
+        expect(await optionsOf(id)).toMatchObject({
           allowDangerousEmailAccountLinking: true,
           clientId,
           clientSecret
@@ -237,8 +275,8 @@ describe('auth config', () => {
       }
     );
 
-    it('asks google for offline consent', () => {
-      expect(optionsOf('google').authorization).toEqual({
+    it('asks google for offline consent', async () => {
+      expect((await optionsOf('google')).authorization).toEqual({
         params: {
           prompt: 'consent',
           access_type: 'offline',
@@ -247,14 +285,14 @@ describe('auth config', () => {
       });
     });
 
-    it('requests the discord scopes joined with plus signs', () => {
-      expect(optionsOf('discord').authorization).toBe(
+    it('requests the discord scopes joined with plus signs', async () => {
+      expect((await optionsOf('discord')).authorization).toBe(
         'https://discord.com/api/oauth2/authorize?scope=identify+email+guilds+guilds.members.read'
       );
     });
 
-    it('requests the twitch scopes and id token claims', () => {
-      expect(optionsOf('twitch').authorization).toEqual({
+    it('requests the twitch scopes and id token claims', async () => {
+      expect((await optionsOf('twitch')).authorization).toEqual({
         params: {
           scope: 'openid user:read:email user:read:follows',
           claims: {
@@ -264,14 +302,17 @@ describe('auth config', () => {
       });
     });
 
-    it.each(['kick', 'velora'])('requests the user:read scope for %s', (id) => {
-      expect(optionsOf(id).authorization).toEqual({
-        params: { scope: 'user:read' }
-      });
-    });
+    it.each(['kick', 'velora'])(
+      'requests the user:read scope for %s',
+      async (id) => {
+        expect((await optionsOf(id)).authorization).toEqual({
+          params: { scope: 'user:read' }
+        });
+      }
+    );
 
-    it('requests the linkedin scopes', () => {
-      expect(optionsOf('linkedin').authorization).toEqual({
+    it('requests the linkedin scopes', async () => {
+      expect((await optionsOf('linkedin')).authorization).toEqual({
         params: { scope: 'openid profile email r_profile_basicinfo' }
       });
     });
@@ -288,12 +329,12 @@ describe('auth config', () => {
       }
     });
 
-    const mapProfile = (user: Record<string, unknown>) =>
-      optionsOf('tiktok').profile?.(tiktokUser(user), {});
+    const mapProfile = async (user: Record<string, unknown>) =>
+      (await optionsOf('tiktok')).profile?.(tiktokUser(user), {});
 
-    it('maps the tiktok user with display name and email', () => {
+    it('maps the tiktok user with display name and email', async () => {
       expect(
-        mapProfile({
+        await mapProfile({
           display_name: 'Display',
           username: 'user',
           email: 't@example.com'
@@ -306,15 +347,15 @@ describe('auth config', () => {
       });
     });
 
-    it('falls back to the username for the name and email', () => {
-      expect(mapProfile({ username: 'user' })).toMatchObject({
+    it('falls back to the username for the name and email', async () => {
+      expect(await mapProfile({ username: 'user' })).toMatchObject({
         name: 'user',
         email: 'user'
       });
     });
 
-    it('returns a null email when there is no email or username', () => {
-      expect(mapProfile({ display_name: 'Display' })).toMatchObject({
+    it('returns a null email when there is no email or username', async () => {
+      expect(await mapProfile({ display_name: 'Display' })).toMatchObject({
         name: 'Display',
         email: null
       });
@@ -322,12 +363,12 @@ describe('auth config', () => {
   });
 
   describe('twitter profile', () => {
-    const mapProfile = (profile: Record<string, unknown>) =>
-      optionsOf('twitter').profile?.(profile, {});
+    const mapProfile = async (profile: Record<string, unknown>) =>
+      (await optionsOf('twitter')).profile?.(profile, {});
 
-    it('reads the fields from the nested data object', () => {
+    it('reads the fields from the nested data object', async () => {
       expect(
-        mapProfile({
+        await mapProfile({
           data: {
             id: 'tw-1',
             name: 'Jack',
@@ -345,9 +386,9 @@ describe('auth config', () => {
       });
     });
 
-    it('falls back to the top level fields when there is no data object', () => {
+    it('falls back to the top level fields when there is no data object', async () => {
       expect(
-        mapProfile({
+        await mapProfile({
           id: 'tw-2',
           name: 'Top',
           email: 'top@example.com',
@@ -363,9 +404,13 @@ describe('auth config', () => {
       });
     });
 
-    it('falls back field by field when the data object is partial', () => {
+    it('falls back field by field when the data object is partial', async () => {
       expect(
-        mapProfile({ data: { id: 'nested' }, name: 'Outer', username: 'outer' })
+        await mapProfile({
+          data: { id: 'nested' },
+          name: 'Outer',
+          username: 'outer'
+        })
       ).toEqual({
         id: 'nested',
         name: 'Outer',
@@ -377,8 +422,8 @@ describe('auth config', () => {
   });
 
   describe('anonymous credentials provider', () => {
-    it('is named Anonymous and takes no credentials', () => {
-      expect(optionsOf('anonymous')).toMatchObject({
+    it('is named Anonymous and takes no credentials', async () => {
+      expect(await optionsOf('anonymous')).toMatchObject({
         id: 'anonymous',
         name: 'Anonymous',
         credentials: {}
@@ -390,7 +435,7 @@ describe('auth config', () => {
       const created = { id: 'cuid-1', name: 'Anonymous', source: 'ANONYMOUS' };
       prismaMock.user.create.mockResolvedValue(created);
 
-      const user = await optionsOf('anonymous').authorize?.({});
+      const user = await (await optionsOf('anonymous')).authorize?.({});
 
       expect(user).toBe(created);
       expect(prismaMock.user.create).toHaveBeenCalledWith({
@@ -402,7 +447,9 @@ describe('auth config', () => {
       const error = new Error('db down');
       prismaMock.user.create.mockRejectedValue(error);
 
-      await expect(optionsOf('anonymous').authorize?.({})).rejects.toBe(error);
+      await expect((await optionsOf('anonymous')).authorize?.({})).rejects.toBe(
+        error
+      );
       expect(console.error).toHaveBeenCalledWith(
         'Error creating anonymous user:',
         error
@@ -411,8 +458,8 @@ describe('auth config', () => {
   });
 
   describe('bluesky direct credentials provider', () => {
-    const authorize = (credentials: unknown) =>
-      optionsOf('bluesky-direct').authorize?.(credentials);
+    const authorize = async (credentials: unknown) =>
+      (await optionsOf('bluesky-direct')).authorize?.(credentials);
 
     const storedToken = (token: string, expires: Date) => ({
       identifier: 'bluesky-direct:u-1',
@@ -422,15 +469,15 @@ describe('auth config', () => {
 
     const FUTURE = new Date(Date.now() + 60_000);
 
-    it('accepts only a login token credential', () => {
-      expect(optionsOf('bluesky-direct')).toMatchObject({
+    it('accepts only a login token credential', async () => {
+      expect(await optionsOf('bluesky-direct')).toMatchObject({
         id: 'bluesky-direct',
         name: 'Bluesky Direct',
         credentials: { token: { label: 'Login Token', type: 'text' } }
       });
-      expect(optionsOf('bluesky-direct').credentials).not.toHaveProperty(
-        'userId'
-      );
+      expect(
+        (await optionsOf('bluesky-direct')).credentials
+      ).not.toHaveProperty('userId');
     });
 
     it('returns null for a bare user id without a valid token', async () => {
@@ -483,8 +530,8 @@ describe('auth config', () => {
   });
 
   describe('steam provider', () => {
-    it('uses the steam secret and the steam callback url', () => {
-      const steam = findProvider('steam');
+    it('uses the steam secret and the steam callback url', async () => {
+      const steam = await findProvider('steam');
 
       expect(steam.clientSecret).toBe('steam-secret');
       expect(steam.authorization).toMatchObject({
@@ -496,7 +543,7 @@ describe('auth config', () => {
     });
 
     it('verifies against the request passed to the factory', async () => {
-      const steam = findProvider(
+      const steam = await findProvider(
         'steam',
         new Request('https://giveaway.dog/api/auth/steam-callback?x=1')
       );
@@ -507,7 +554,7 @@ describe('auth config', () => {
     });
 
     it('fails verification when the factory receives no request', async () => {
-      const steam = findProvider('steam');
+      const steam = await findProvider('steam');
 
       await expect(steam.token?.conform()).rejects.toThrow(
         'No URL found in request object'
@@ -519,7 +566,9 @@ describe('auth config', () => {
     it('sends magic links with the inbound secret', async () => {
       mocks.send.mockResolvedValue({ id: 'email-1' });
 
-      await findProvider('email').sendVerificationRequest?.({
+      await (
+        await findProvider('email')
+      ).sendVerificationRequest?.({
         identifier: 'u@example.com',
         url: 'https://giveaway.dog/magic'
       });
@@ -539,8 +588,8 @@ describe('auth config', () => {
       picture: 'https://linkedin.com/jane.png'
     };
 
-    const mapProfile = () =>
-      optionsOf('linkedin').profile?.(linkedInProfile, {
+    const mapProfile = async () =>
+      (await optionsOf('linkedin')).profile?.(linkedInProfile, {
         access_token: 'li-token'
       }) as Promise<Record<string, unknown>>;
 

@@ -33,6 +33,7 @@ import { seedE2eIntegrations } from './integrations';
 import { seedE2eInvites } from './invites';
 import { seedE2ePicker } from './pickers';
 import { seedE2eUserExtras } from './users';
+import { authorizeE2eOAuth } from './oauth';
 
 export const E2E_SECRET_HEADER = 'x-e2e-secret';
 export const E2E_MAX_BODY_BYTES = 64 * 1024;
@@ -231,7 +232,12 @@ const toErrorResponse = (error: unknown) => {
   );
 };
 
+const isOAuthAuthorize = (request: Request, path: string[]) =>
+  request.method === 'GET' && path.join('/') === 'oauth/authorize';
+
 const respond = async (request: Request, path: string[]) => {
+  if (isOAuthAuthorize(request, path)) return authorizeE2eOAuth(request);
+
   if (!verifyE2eSecret(request.headers.get(E2E_SECRET_HEADER))) {
     return notFound();
   }

@@ -19,6 +19,7 @@
     "./extras": "./src/extras.ts",
     "./fakes": "./src/fakes.ts",
     "./naming": "./src/naming.ts",
+    "./oauth": "./src/oauth.ts",
     "./personas": "./src/personas.ts",
     "./requests": "./src/requests.ts"
   },

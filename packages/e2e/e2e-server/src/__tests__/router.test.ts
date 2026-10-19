@@ -683,3 +683,57 @@ describe('handleE2eRequest', () => {
     });
   });
 });
+
+describe('the OAuth authorize route', () => {
+  const authorize = (method: string, cookie?: string) =>
+    handleE2eRequest(
+      new Request(
+        'https://preview.giveaway.dog/api/e2e/oauth/authorize?redirect_uri=https%3A%2F%2Fpreview.giveaway.dog%2Fapi%2Fauth%2Fcallback%2Fdiscord',
+        { method, headers: cookie ? { cookie } : {} }
+      ),
+      ['oauth', 'authorize']
+    );
+
+  beforeEach(() => {
+    vi.stubEnv('E2E_LOGIN_SECRET', SECRET);
+    vi.stubEnv('VERCEL_ENV', 'preview');
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('answers a browser that has the secret cookie and no secret header', async () => {
+    const response = await authorize('GET', `e2e-oauth=${SECRET}`);
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toContain(
+      'https://preview.giveaway.dog/api/auth/callback/discord?code=e2e-oauth-code'
+    );
+  });
+
+  it('returns 404 without the secret cookie', async () => {
+    expect((await authorize('GET')).status).toBe(404);
+  });
+
+  it.each(['POST', 'DELETE'])('returns 404 for %s', async (method) => {
+    expect((await authorize(method, `e2e-oauth=${SECRET}`)).status).toBe(404);
+  });
+
+  it.each([
+    ['oauth', 'token'],
+    ['other', 'authorize'],
+    ['oauth', 'authorize', 'x'],
+    ['oauth']
+  ])('serves only the authorize step, not %j', async (...path) => {
+    const response = await handleE2eRequest(
+      new Request(
+        'https://preview.giveaway.dog/api/e2e/oauth/authorize?redirect_uri=https%3A%2F%2Fpreview.giveaway.dog%2Fapi%2Fauth%2Fcallback%2Fdiscord',
+        { headers: { cookie: `e2e-oauth=${SECRET}` } }
+      ),
+      path
+    );
+
+    expect(response.status).toBe(404);
+  });
+});

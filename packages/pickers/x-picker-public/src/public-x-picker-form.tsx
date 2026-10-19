@@ -191,9 +191,11 @@ export const PublicXPickerForm: React.FC = () => {
           setTweetData(result.data);
           setCurrentStep(2);
         } else {
-          toast.error(
-            result.error || 'Failed to load tweet. Please try again.'
-          );
+          const message =
+            typeof result.error === 'string'
+              ? result.error
+              : result.error?.message;
+          toast.error(message || 'Failed to load tweet. Please try again.');
         }
       } catch (error) {
         toast.error('An error occurred. Please try again.');

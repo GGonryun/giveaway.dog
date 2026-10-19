@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
   E2E_CLOSED_GATES,
-  stubE2eFakeEnvironment
+  stubE2eFakeEnvironment,
+  type E2eFakeEnvironment
 } from '@giveaway/e2e-fakes/testing/env';
 import { E2E_X_FIXTURES } from '@giveaway/e2e-model/fakes';
 import { getScrapeBadgerClient } from '../client';
@@ -105,6 +106,23 @@ describe('getScrapeBadgerClient with the scrapebadger fake', () => {
 
     expect(m.ScrapeBadger).not.toHaveBeenCalled();
   });
+
+  it.each<E2eFakeEnvironment>(['preview', 'development'])(
+    'never creates the real client on %s when the fake is off, even with SCRAPEBADGER_API_KEY',
+    (environment) => {
+      stubE2eFakeEnvironment(environment, 'email');
+      vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');
+
+      const error = captureError(() => getScrapeBadgerClient());
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error.code).toBe('INTERNAL_SERVER_ERROR');
+      expect(error.message).toBe(
+        'ScrapeBadger is off where the e2e gate is open. Add scrapebadger to E2E_FAKE_EXTERNALS'
+      );
+      expect(m.ScrapeBadger).not.toHaveBeenCalled();
+    }
+  );
 
   it.each(E2E_CLOSED_GATES)('creates the real client on %s', (environment) => {
     stubE2eFakeEnvironment(environment, 'scrapebadger');
