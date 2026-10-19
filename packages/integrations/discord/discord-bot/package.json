@@ -50,6 +50,7 @@
     "@giveaway/discord-api": "workspace:*",
     "@giveaway/discord-model": "workspace:*",
     "@giveaway/jobs": "workspace:*",
+    "@giveaway/scoring-jobs": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "server-only": "catalog:",

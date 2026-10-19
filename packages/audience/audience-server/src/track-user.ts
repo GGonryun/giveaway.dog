@@ -15,6 +15,7 @@ import {
 import { userFingerprintSchema } from '@giveaway/request-context-model/fingerprint';
 import { getUserMetricsFromServerCookies } from '@giveaway/request-context-model/user-metrics';
 import z from 'zod';
+import { ensureTrackingDrain } from '@giveaway/scoring-jobs/tracking-drain/ensure';
 
 const trackUser = procedure()
   .authorization({ required: true })
@@ -55,7 +56,7 @@ const trackUser = procedure()
       geo
     });
 
-    return await db.$transaction(async (tx) => {
+    const fingerprint = await db.$transaction(async (tx) => {
       await tx.userEvent.create({
         data: {
           userId: user.id,
@@ -74,6 +75,10 @@ const trackUser = procedure()
         countryCode
       };
     });
+
+    await ensureTrackingDrain();
+
+    return fingerprint;
   });
 
 export default trackUser;

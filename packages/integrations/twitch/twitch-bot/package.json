@@ -36,6 +36,7 @@
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/ratelimit": "workspace:*",
+    "@giveaway/scoring-jobs": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/twitch-api": "workspace:*",
     "@giveaway/twitch-model": "workspace:*",

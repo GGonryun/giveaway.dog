@@ -1,6 +1,7 @@
 import 'server-only';
 
 import db from '@giveaway/db-client/prisma';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
 import type {
   DiscordButtonInteractionSchema,
   DiscordMemberSchema
@@ -59,6 +60,7 @@ export async function commitEntry({
     await db.userScoringRequest.create({
       data: { userId: user.id }
     });
+    await ensureScoringDrain();
 
     userId = user.id;
   }

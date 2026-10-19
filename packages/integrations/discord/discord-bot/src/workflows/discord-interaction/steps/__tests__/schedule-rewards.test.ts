@@ -1,11 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { scheduleRewards } from '../schedule-rewards';
 import { prismaMock } from '@giveaway/testing-server/prisma';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
+
+vi.mock('@giveaway/scoring-jobs/scoring-drain/ensure', () => ({
+  ensureScoringDrain: vi.fn()
+}));
 
 const NOW = new Date('2026-06-01T12:00:00.000Z');
 
 describe('scheduleRewards', () => {
   beforeEach(() => {
+    vi.mocked(ensureScoringDrain).mockReset();
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
   });
@@ -47,6 +53,16 @@ describe('scheduleRewards', () => {
     });
   });
 
+  it('starts the scoring drain after the scoring request is written', async () => {
+    await scheduleRewards({ sweepstakesId: 'sweep-1', userId: 'user-9' });
+
+    expect(ensureScoringDrain).toHaveBeenCalledTimes(1);
+    const [write] =
+      prismaMock.userScoringRequest.upsert.mock.invocationCallOrder;
+    const [drain] = vi.mocked(ensureScoringDrain).mock.invocationCallOrder;
+    expect(write).toBeLessThan(drain);
+  });
+
   it('schedules the prize job before the scoring request', async () => {
     await scheduleRewards({ sweepstakesId: 'sweep-1', userId: 'user-9' });
 
@@ -70,6 +86,7 @@ describe('scheduleRewards', () => {
       scheduleRewards({ sweepstakesId: 'sweep-1', userId: 'user-9' })
     ).rejects.toThrow('db down');
     expect(prismaMock.userScoringRequest.upsert).not.toHaveBeenCalled();
+    expect(ensureScoringDrain).not.toHaveBeenCalled();
   });
 
   it('propagates a failure of the scoring request', async () => {

@@ -33,6 +33,7 @@
     "@giveaway/request-context-model": "workspace:*",
     "@giveaway/request-context-server": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/scoring-jobs": "workspace:*",
     "@giveaway/scoring-model": "workspace:*",
     "@giveaway/user-model": "workspace:*",
     "@giveaway/util-time": "workspace:*",

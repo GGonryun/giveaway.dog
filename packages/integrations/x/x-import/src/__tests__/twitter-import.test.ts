@@ -2,11 +2,15 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { UserSource } from '@giveaway/db-model';
 import { importTwitterUsers } from '../twitter-import';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
 import type { TwitterUserSchema } from '@giveaway/integration-model/api';
 
 const nanoidMock = vi.hoisted(() => vi.fn());
 
 vi.mock('nanoid', () => ({ nanoid: nanoidMock }));
+vi.mock('@giveaway/scoring-jobs/scoring-drain/ensure', () => ({
+  ensureScoringDrain: vi.fn()
+}));
 
 const NOW = new Date('2026-03-01T12:00:00.000Z');
 
@@ -302,6 +306,49 @@ describe('importTwitterUsers', () => {
 
       expect(result.existing).toHaveLength(1);
       expect(console.error).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('the scoring drain', () => {
+    beforeEach(() => {
+      vi.mocked(ensureScoringDrain).mockReset();
+    });
+
+    it('is not started when no users are given', async () => {
+      await run([]);
+
+      expect(ensureScoringDrain).not.toHaveBeenCalled();
+    });
+
+    it('is started once after an import of an existing user', async () => {
+      prismaMock.account.findUnique.mockResolvedValue({
+        userId: 'existing-user'
+      });
+
+      await run([twitterUser()]);
+
+      expect(ensureScoringDrain).toHaveBeenCalledTimes(1);
+    });
+
+    it('is started once for a whole batch of new users, after their requests are written', async () => {
+      prismaMock.account.findUnique.mockResolvedValue(null);
+
+      await run([twitterUser(), twitterUser({ id: 'tw-2', username: 'bob' })]);
+
+      expect(ensureScoringDrain).toHaveBeenCalledTimes(1);
+      const [drain] = vi.mocked(ensureScoringDrain).mock.invocationCallOrder;
+      const writes =
+        prismaMock.userScoringRequest.create.mock.invocationCallOrder;
+      expect(writes).toHaveLength(2);
+      expect(Math.max(...writes)).toBeLessThan(drain);
+    });
+
+    it('is not started when every user fails to import', async () => {
+      prismaMock.account.findUnique.mockRejectedValue(new Error('db down'));
+
+      await run([twitterUser()]);
+
+      expect(ensureScoringDrain).not.toHaveBeenCalled();
     });
   });
 });

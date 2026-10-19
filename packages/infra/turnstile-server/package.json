@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/scoring-jobs": "workspace:*",
     "@giveaway/turnstile-model": "workspace:*",
     "zod": "catalog:"
   },

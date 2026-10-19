@@ -7,6 +7,11 @@ import { DEVELOPMENT_GEO } from '@giveaway/request-context-model/fingerprint';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { ensureTrackingDrain } from '@giveaway/scoring-jobs/tracking-drain/ensure';
+
+vi.mock('@giveaway/scoring-jobs/tracking-drain/ensure', () => ({
+  ensureTrackingDrain: vi.fn()
+}));
 
 const nextHeaders = vi.hoisted(() => ({
   headers: vi.fn(),
@@ -52,6 +57,7 @@ describe('trackUser', () => {
   let consoleInfo: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
+    vi.mocked(ensureTrackingDrain).mockReset();
     nextHeaders.headers.mockReset();
     nextHeaders.cookies.mockReset();
     useRequest();
@@ -74,6 +80,7 @@ describe('trackUser', () => {
       );
       expect(nextHeaders.headers).not.toHaveBeenCalled();
       expect(prismaMock.userEvent.create).not.toHaveBeenCalled();
+      expect(ensureTrackingDrain).not.toHaveBeenCalled();
     });
   });
 
@@ -148,6 +155,17 @@ describe('trackUser', () => {
       await trackUser({ type: UserEventType.TRACKING });
 
       expect(createdEvent().type).toBe(UserEventType.TRACKING);
+    });
+
+    it('starts the tracking drain after the event is committed', async () => {
+      await trackUser({ type: UserEventType.TRACKING });
+
+      expect(ensureTrackingDrain).toHaveBeenCalledTimes(1);
+      const [transaction] = prismaMock.$transaction.mock.invocationCallOrder;
+      const [create] = prismaMock.userEvent.create.mock.invocationCallOrder;
+      const [drain] = vi.mocked(ensureTrackingDrain).mock.invocationCallOrder;
+      expect(transaction).toBeLessThan(drain);
+      expect(create).toBeLessThan(drain);
     });
 
     it('returns the ip reported by the geolocation rather than the forwarded header', async () => {
@@ -299,6 +317,7 @@ describe('trackUser', () => {
       expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
         'db offline'
       );
+      expect(ensureTrackingDrain).not.toHaveBeenCalled();
     });
   });
 
@@ -318,6 +337,7 @@ describe('trackUser', () => {
         "Couldn't determine your IP address"
       );
       expect(prismaMock.userEvent.create).not.toHaveBeenCalled();
+      expect(ensureTrackingDrain).not.toHaveBeenCalled();
     });
 
     it('rejects a malformed client ip with BAD_GATEWAY using the real geolocation', async () => {
@@ -330,6 +350,7 @@ describe('trackUser', () => {
         "Couldn't determine your IP address"
       );
       expect(prismaMock.userEvent.create).not.toHaveBeenCalled();
+      expect(ensureTrackingDrain).not.toHaveBeenCalled();
     });
   });
 

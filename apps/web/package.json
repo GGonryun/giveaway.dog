@@ -152,6 +152,7 @@
     "@giveaway/rpc-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/scoring-model": "workspace:*",
+    "@giveaway/scoring-jobs": "workspace:*",
     "@giveaway/scoring-server": "workspace:*",
     "@giveaway/scoring-ui": "workspace:*",
     "@giveaway/shell-footer": "workspace:*",

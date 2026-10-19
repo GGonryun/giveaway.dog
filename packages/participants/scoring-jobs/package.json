@@ -1,0 +1,52 @@
+{
+  "name": "@giveaway/scoring-jobs",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:server",
+      "runtime:server",
+      "scope:participants"
+    ],
+    "targets": {
+      "lint": {
+        "executor": "@giveaway/eslint-config:lint"
+      },
+      "type-check": {}
+    }
+  },
+  "exports": {
+    "./queue-drain": "./src/queue-drain.ts",
+    "./queue-drain-config": "./src/queue-drain-config.ts",
+    "./queue-drain-steps": "./src/queue-drain-steps.ts",
+    "./scoring-drain/ensure": "./src/scoring-drain/ensure.ts",
+    "./scoring-drain/steps": "./src/scoring-drain/steps.ts",
+    "./scoring-drain/workflow": "./src/scoring-drain/workflow.ts",
+    "./tracking-drain/ensure": "./src/tracking-drain/ensure.ts",
+    "./tracking-drain/steps": "./src/tracking-drain/steps.ts",
+    "./tracking-drain/workflow": "./src/tracking-drain/workflow.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
+  },
+  "dependencies": {
+    "@giveaway/db-client": "workspace:*",
+    "@giveaway/scoring-server": "workspace:*",
+    "server-only": "catalog:",
+    "workflow": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-integration": "workspace:*",
+    "@giveaway/testing-postgres": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

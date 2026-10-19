@@ -28,7 +28,11 @@ beforeEach(() => {
     errors: 0,
     total: 0
   });
-  vi.mocked(runUserScoring).mockResolvedValue({ processed: 1 });
+  vi.mocked(runUserScoring).mockResolvedValue({
+    processed: 1,
+    errors: 0,
+    total: 1
+  });
 });
 
 describe('scoreE2eUser', () => {
@@ -41,7 +45,7 @@ describe('scoreE2eUser', () => {
       userId: 'user-1',
       email: 'e2e-participant-abc123@example.com',
       tracking: { processed: 2, errors: 1 },
-      scoring: { processed: 1 },
+      scoring: { processed: 1, errors: 0, total: 1 },
       quality: { score: 72, createdAt: NOW }
     });
     expect(prismaMock.user.findUnique).toHaveBeenCalledWith({

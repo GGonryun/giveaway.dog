@@ -828,6 +828,9 @@ importers:
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../packages/infra/rpc-server
+      '@giveaway/scoring-jobs':
+        specifier: workspace:*
+        version: link:../../packages/participants/scoring-jobs
       '@giveaway/scoring-model':
         specifier: workspace:*
         version: link:../../packages/participants/scoring-model
@@ -2247,6 +2250,9 @@ importers:
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server
+      '@giveaway/scoring-jobs':
+        specifier: workspace:*
+        version: link:../../participants/scoring-jobs
       '@giveaway/scoring-model':
         specifier: workspace:*
         version: link:../../participants/scoring-model
@@ -4148,6 +4154,9 @@ importers:
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../rpc-server
+      '@giveaway/scoring-jobs':
+        specifier: workspace:*
+        version: link:../../participants/scoring-jobs
       '@giveaway/turnstile-model':
         specifier: workspace:*
         version: link:../turnstile-model
@@ -4414,6 +4423,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../../infra/db-model
+      '@giveaway/scoring-jobs':
+        specifier: workspace:*
+        version: link:../../../participants/scoring-jobs
       nanoid:
         specifier: 'catalog:'
         version: 5.1.6
@@ -4984,6 +4996,9 @@ importers:
       '@giveaway/jobs':
         specifier: workspace:*
         version: link:../../../infra/jobs
+      '@giveaway/scoring-jobs':
+        specifier: workspace:*
+        version: link:../../../participants/scoring-jobs
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../../tasks/task-model
@@ -6063,6 +6078,9 @@ importers:
       '@giveaway/ratelimit':
         specifier: workspace:*
         version: link:../../../infra/ratelimit
+      '@giveaway/scoring-jobs':
+        specifier: workspace:*
+        version: link:../../../participants/scoring-jobs
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../../tasks/task-model
@@ -6752,6 +6770,9 @@ importers:
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../core/integration-model
+      '@giveaway/scoring-jobs':
+        specifier: workspace:*
+        version: link:../../../participants/scoring-jobs
       nanoid:
         specifier: 'catalog:'
         version: 5.1.6
@@ -8144,6 +8165,49 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@giveaway/testing-server':
+        specifier: workspace:*
+        version: link:../../tooling/testing-server
+      '@giveaway/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.17.6
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.18(@types/node@20.17.6)(@vitest/browser-playwright@4.0.18)(@vitest/ui@4.0.18)(jiti@2.6.1)(jsdom@30.1.1(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.9.0)
+
+  packages/participants/scoring-jobs:
+    dependencies:
+      '@giveaway/db-client':
+        specifier: workspace:*
+        version: link:../../infra/db-client
+      '@giveaway/scoring-server':
+        specifier: workspace:*
+        version: link:../scoring-server
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
+      workflow:
+        specifier: 'catalog:'
+        version: 4.0.1-beta.50(@aws-sdk/client-sts@3.981.0)(@playwright/test@1.63.0)(magicast@0.5.5)(next@16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@6.0.3)
+    devDependencies:
+      '@giveaway/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@giveaway/testing-integration':
+        specifier: workspace:*
+        version: link:../../tooling/testing-integration
+      '@giveaway/testing-postgres':
+        specifier: workspace:*
+        version: link:../../tooling/testing-postgres
       '@giveaway/testing-server':
         specifier: workspace:*
         version: link:../../tooling/testing-server
@@ -25717,7 +25781,7 @@ snapshots:
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
       '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/gen-mapping@0.4.0-beta.0':
@@ -25739,7 +25803,7 @@ snapshots:
   '@jridgewell/trace-mapping@0.3.31':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
 
   '@js-sdsl/ordered-map@4.4.2': {}
 

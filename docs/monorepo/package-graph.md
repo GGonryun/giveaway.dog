@@ -523,7 +523,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### Participants
 
-20 packages, 53 source files, 48 test files.
+21 packages, 61 source files, 56 test files.
 
 | Package                                  | Type    | Files | Moves from                                                                                                                                                                                                              |
 | ---------------------------------------- | ------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -540,6 +540,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 | `@giveaway/participation-server`         | server  | 7 / 7 | `procedures/browse/get-participant-sweepstake.ts`<br>`procedures/browse/get-sweepstake-form-field.ts`<br>`procedures/browse/get-sweepstake-participant.ts`<br>`procedures/browse/get-sweepstake-tasks.ts`<br>and 3 more |
 | `@giveaway/referrals-model`              | model   | 2 / 2 | `lib/referrals/cookies.ts`<br>`lib/referrals/schemas.ts`                                                                                                                                                                |
 | `@giveaway/referrals-server`             | server  | 3 / 3 | `lib/referrals/procedures/`                                                                                                                                                                                             |
+| `@giveaway/scoring-jobs`                 | server  | 8 / 8 | New package: the tracking and scoring queue drain workflows and `ensureQueueDrain`, which replace the `/api/user/tracking` and `/api/user/scoring` crons (#175)                                                         |
 | `@giveaway/scoring-model`                | model   | 3 / 3 | `lib/scoring/schemas/`<br>`schemas/user-scoring.ts`                                                                                                                                                                     |
 | `@giveaway/scoring-server`               | server  | 3 / 3 | `lib/scoring/imported.ts`<br>`lib/scoring/index.ts`<br>`lib/scoring/signup.ts`                                                                                                                                          |
 | `@giveaway/scoring-ui`                   | feature | 1 / 1 | `lib/scoring/signal-display.ts`                                                                                                                                                                                         |

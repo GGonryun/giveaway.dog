@@ -65,6 +65,15 @@ model UserScoringRequest {
   updatedAt DateTime @updatedAt
 }
 
+model QueueDrain {
+  name        String   @id
+  runId       String?
+  running     Boolean  @default(false)
+  requests    Int      @default(0)
+  requestedAt DateTime @default(now())
+  heartbeatAt DateTime @default(now())
+}
+
 model UserQuality {
   id        String   @id @default(cuid())
   userId    String

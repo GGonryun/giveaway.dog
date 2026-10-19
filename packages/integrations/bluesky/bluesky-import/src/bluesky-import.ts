@@ -3,6 +3,7 @@ import 'server-only';
 import { PrismaClient, UserSource } from '@giveaway/db-model';
 import { nanoid } from 'nanoid';
 import { BlueskyUserSchema } from '@giveaway/bluesky-api/get-bluesky-likes';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
 
 export interface ImportBlueskyParticipantsInput {
   sweepstakesId: string;
@@ -100,6 +101,8 @@ export async function importBlueskyUsers(
       console.error('Error importing Bluesky user', blueskyUser, error);
     }
   }
+
+  if (imported.length + existing.length > 0) await ensureScoringDrain();
 
   return {
     imported,
