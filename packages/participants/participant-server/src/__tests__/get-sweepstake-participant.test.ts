@@ -10,10 +10,28 @@ import {
   buildParticipant,
   buildParticipantRow
 } from '@giveaway/participant-model/testing/fixtures-participant-referrals-automation';
+import {
+  SWEEPSTAKES_ID,
+  TEAM_SLUG
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
+import {
+  describeTeamAccess,
+  teamSweepstakes,
+  teamSweepstakesQuery
+} from '@giveaway/sweepstakes-access/testing/team-sweepstakes';
 
-const input = { slug: 'acme', sweepstakesId: 'sweep-1', userId: 'user-2' };
+const input = {
+  slug: TEAM_SLUG,
+  sweepstakesId: SWEEPSTAKES_ID,
+  userId: 'user-2'
+};
 
 describe('getSweepstakesParticipant', () => {
+  describeTeamAccess(
+    () => getSweepstakesParticipant(input),
+    () => [prismaMock.sweepstakesParticipant.findUnique]
+  );
+
   describe('when the caller is not signed in', () => {
     it('returns UNAUTHORIZED without querying', async () => {
       const result = await getSweepstakesParticipant(input);
@@ -30,6 +48,9 @@ describe('getSweepstakesParticipant', () => {
   describe('when the caller is signed in', () => {
     beforeEach(() => {
       signIn();
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes() as never
+      );
     });
 
     it.each(['slug', 'sweepstakesId', 'userId'])(
@@ -61,22 +82,26 @@ describe('getSweepstakesParticipant', () => {
       expect(prismaMock.sweepstakesParticipant.findUnique).toHaveBeenCalledWith(
         {
           where: {
-            userId_sweepstakesId: { userId: 'user-2', sweepstakesId: 'sweep-1' }
+            userId_sweepstakesId: {
+              userId: 'user-2',
+              sweepstakesId: SWEEPSTAKES_ID
+            }
           },
           include: SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY
         }
       );
     });
 
-    it('does not scope the lookup to the team slug', async () => {
+    it('loads the sweepstakes through the membership of the caller in the team of the slug', async () => {
       prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(
         buildParticipantRow()
       );
 
-      await getSweepstakesParticipant({ ...input, slug: 'other-team' });
+      await getSweepstakesParticipant(input);
 
-      const [args] = prismaMock.sweepstakesParticipant.findUnique.mock.calls[0];
-      expect(JSON.stringify(args)).not.toContain('other-team');
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith(
+        teamSweepstakesQuery(TEAM_SLUG)
+      );
     });
 
     it('returns the mapped participant', async () => {

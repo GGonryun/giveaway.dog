@@ -1,4 +1,4 @@
-'use server';
+import 'server-only';
 
 import db from '@giveaway/db-client/prisma';
 import { datetime } from '@giveaway/util-time/date';

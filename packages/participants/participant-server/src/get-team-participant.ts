@@ -10,6 +10,9 @@ import {
   TEAM_PARTICIPANT_USER_SELECT_QUERY,
   toTeamParticipant
 } from '@giveaway/participant-model/db';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
+import { TeamPermission } from '@giveaway/team-permissions';
+import { TeamTier } from '@giveaway/db-model';
 
 export const getTeamParticipant = procedure()
   .authorization({
@@ -22,10 +25,27 @@ export const getTeamParticipant = procedure()
     })
   )
   .output(sweepstakesParticipantSchema)
-  .handler(async ({ db, input }) => {
+  .handler(async ({ db, input, user: caller }) => {
+    await findUserTeam({
+      db,
+      user: caller,
+      slug: input.slug,
+      permission: TeamPermission.VIEW_SWEEPSTAKES,
+      tier: TeamTier.FREE
+    });
+
     const user = await db.user.findFirst({
       where: {
-        id: input.userId
+        id: input.userId,
+        participation: {
+          some: {
+            sweepstakes: {
+              team: {
+                slug: input.slug
+              }
+            }
+          }
+        }
       },
       select: TEAM_PARTICIPANT_USER_SELECT_QUERY(input)
     });

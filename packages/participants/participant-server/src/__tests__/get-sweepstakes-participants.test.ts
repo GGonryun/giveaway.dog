@@ -9,8 +9,17 @@ import {
   buildParticipantRow,
   daysAfterBase
 } from '@giveaway/participant-model/testing/fixtures-participant-referrals-automation';
+import {
+  SWEEPSTAKES_ID,
+  TEAM_SLUG
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
+import {
+  describeTeamAccess,
+  teamSweepstakes,
+  teamSweepstakesQuery
+} from '@giveaway/sweepstakes-access/testing/team-sweepstakes';
 
-const input = { slug: 'acme', sweepstakesId: 'sweep-1' };
+const input = { slug: TEAM_SLUG, sweepstakesId: SWEEPSTAKES_ID };
 
 const participantWithCompletionsOn = (id: string, days: number[]) =>
   buildParticipantRow({
@@ -21,6 +30,11 @@ const participantWithCompletionsOn = (id: string, days: number[]) =>
   });
 
 describe('getSweepstakesParticipants', () => {
+  describeTeamAccess(
+    () => getSweepstakesParticipants(input),
+    () => [prismaMock.sweepstakesParticipant.findMany]
+  );
+
   describe('when the caller is not signed in', () => {
     it('returns UNAUTHORIZED without querying', async () => {
       const result = await getSweepstakesParticipants(input);
@@ -35,6 +49,9 @@ describe('getSweepstakesParticipants', () => {
   describe('when the caller is signed in', () => {
     beforeEach(() => {
       signIn();
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes() as never
+      );
     });
 
     it.each(['slug', 'sweepstakesId'])(
@@ -56,13 +73,23 @@ describe('getSweepstakesParticipants', () => {
       }
     );
 
-    it('lists participants of the sweepstakes without filtering by team', async () => {
+    it('loads the sweepstakes through the membership of the caller', async () => {
+      prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
+
+      await getSweepstakesParticipants(input);
+
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith(
+        teamSweepstakesQuery(TEAM_SLUG)
+      );
+    });
+
+    it('lists the participants of the sweepstakes that the membership found', async () => {
       prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
 
       await getSweepstakesParticipants(input);
 
       expect(prismaMock.sweepstakesParticipant.findMany).toHaveBeenCalledWith({
-        where: { sweepstakesId: 'sweep-1' },
+        where: { sweepstakesId: SWEEPSTAKES_ID },
         include: SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY
       });
     });

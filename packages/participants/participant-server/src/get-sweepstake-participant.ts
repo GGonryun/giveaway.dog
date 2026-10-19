@@ -6,6 +6,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { findSweepstakesParticipant } from '@giveaway/participant-model/db';
 import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
+import { findTeamSweepstakes } from '@giveaway/sweepstakes-access/team-sweepstakes';
 
 export const getSweepstakesParticipant = procedure()
   .authorization({
@@ -19,11 +20,18 @@ export const getSweepstakesParticipant = procedure()
     })
   )
   .output(sweepstakesParticipantSchema)
-  .handler(async ({ db, input }) => {
+  .handler(async ({ db, input, user }) => {
+    const sweepstakes = await findTeamSweepstakes({
+      db,
+      userId: user.id,
+      sweepstakesId: input.sweepstakesId,
+      slug: input.slug
+    });
+
     const participant = await findSweepstakesParticipant({
       db,
       userId: input.userId,
-      sweepstakesId: input.sweepstakesId
+      sweepstakesId: sweepstakes.id
     });
 
     if (!participant) {
