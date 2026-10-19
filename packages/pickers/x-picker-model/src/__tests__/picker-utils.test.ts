@@ -289,6 +289,18 @@ describe('getDisqualificationReason', () => {
       ).toBeUndefined();
     });
 
+    it.each([null, undefined])(
+      'skips the check for an account created in the future when the minimum is %s',
+      (minAccountAgeDays) => {
+        expect(
+          getDisqualificationReason(
+            { createdAt: daysAgo(-2) },
+            { minAccountAgeDays }
+          )
+        ).toBeUndefined();
+      }
+    );
+
     it('disqualifies an account created in the future even when the minimum is zero', () => {
       expect(
         getDisqualificationReason(
