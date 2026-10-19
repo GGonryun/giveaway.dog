@@ -18,6 +18,7 @@ describe('hasRuntimeCode', () => {
       'a declared constant',
       'declare const a: string;\nexport type A = typeof a;'
     ],
+    ['only a comment', '// TODO: add the types.'],
     ['nothing', '']
   ])('is false for %s', (_, source) => {
     expect(hasRuntimeCode(source)).toBe(false);

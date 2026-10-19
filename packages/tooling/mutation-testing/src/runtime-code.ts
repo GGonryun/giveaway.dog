@@ -1,6 +1,7 @@
 import ts from 'typescript';
 
 const EMPTY_MODULE_MARKER = /^export\s*\{\s*\};?$/gm;
+const USE_STRICT_DIRECTIVE = /^"use strict";$/gm;
 
 export const hasRuntimeCode = (source: string): boolean =>
   ts
@@ -12,4 +13,5 @@ export const hasRuntimeCode = (source: string): boolean =>
       }
     })
     .outputText.replace(EMPTY_MODULE_MARKER, '')
+    .replace(USE_STRICT_DIRECTIVE, '')
     .trim() !== '';
