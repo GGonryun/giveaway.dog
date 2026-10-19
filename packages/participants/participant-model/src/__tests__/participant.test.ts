@@ -551,6 +551,14 @@ describe('toParticipantForm', () => {
         })[0]
       ).toMatchObject({ value: 'typed@example.com', isCustom: true });
     });
+
+    it('uses the submitted value when there is no user', () => {
+      expect(
+        toParticipantForm([emailField()], undefined, {
+          email: 'typed@example.com'
+        })[0]
+      ).toMatchObject({ value: 'typed@example.com', isCustom: true });
+    });
   });
 
   describe('twitter fields', () => {
@@ -609,6 +617,14 @@ describe('toParticipantForm', () => {
           })
         )[0]
       ).toMatchObject({ value: null, isCustom: true });
+    });
+
+    it('uses the submitted value when there is no user', () => {
+      expect(
+        toParticipantForm([twitterField()], undefined, {
+          twitter: 'https://x.com/typed'
+        })[0]
+      ).toMatchObject({ value: 'https://x.com/typed', isCustom: true });
     });
   });
 
@@ -701,6 +717,22 @@ describe('isProfileComplete', () => {
         twitter: 'https://x.com/jane'
       })
     ).toBe(true);
+  });
+
+  it('throws for an unknown field type', () => {
+    expect(() =>
+      isProfileComplete(
+        [
+          {
+            id: 'phone',
+            label: 'Phone',
+            type: 'PHONE'
+          } as unknown as SweepstakesFormFieldSchema
+        ],
+        user(),
+        { phone: '123' }
+      )
+    ).toThrow('Unexpected value: [object Object]');
   });
 });
 

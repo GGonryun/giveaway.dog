@@ -21,7 +21,7 @@ import {
   toParticipantFormFields
 } from './participant';
 import { ApplicationError } from '@giveaway/util-errors';
-import { toTaskSchema } from '@giveaway/task-model/schemas';
+import { toTaskSchemaSafe } from '@giveaway/task-model/schemas';
 import { SweepstakesAllocationSchema } from '@giveaway/sweepstakes-model/schemas';
 
 const PRIZE_ALLOCATION_SELECT_QUERY = {
@@ -107,7 +107,7 @@ export const findOrCreateSweepstakesParticipant = async ({
   const values = toParticipantForm(participantFormFields, userSchema, {});
 
   const data = values
-    .filter((fv) => fv.value !== null && fv.value !== undefined)
+    .filter((fv) => fv.value !== null)
     .map((fv) => ({ fieldId: fv.id, value: String(fv.value) }));
 
   const isComplete = isProfileComplete(participantFormFields, userSchema, {});
@@ -134,14 +134,9 @@ export const findOrCreateSweepstakesParticipant = async ({
     });
 
     // Find the BONUS_COMPLETE_PROFILE task by parsing its config
-    const profileCompletionTask = allTasks.find((task) => {
-      try {
-        const taskConfig = toTaskSchema(task);
-        return taskConfig.type === 'BONUS_COMPLETE_PROFILE';
-      } catch {
-        return false;
-      }
-    });
+    const profileCompletionTask = allTasks.find(
+      (task) => toTaskSchemaSafe(task).type === 'BONUS_COMPLETE_PROFILE'
+    );
 
     if (profileCompletionTask) {
       // Check if already completed
@@ -196,25 +191,17 @@ export const sortCompletionsByMostRecent = (
   b: TaskCompletionSchema
 ) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime();
 
+const toMostRecentCompletionTime = (completions: TaskCompletionSchema[]) =>
+  completions.length > 0
+    ? Math.max(...completions.map((tc) => new Date(tc.completedAt).getTime()))
+    : null;
+
 export const sortParticipantsByMostRecentCompletion = (
   a: SweepstakesParticipantSchema,
   b: SweepstakesParticipantSchema
 ) => {
-  const mostRecentA =
-    a.completions.length > 0
-      ? a.completions.reduce((latest, tc) => {
-          const tcDate = new Date(tc.completedAt).getTime();
-          return tcDate > latest ? tcDate : latest;
-        }, 0)
-      : null;
-
-  const mostRecentB =
-    b.completions.length > 0
-      ? b.completions.reduce((latest, tc) => {
-          const tcDate = new Date(tc.completedAt).getTime();
-          return tcDate > latest ? tcDate : latest;
-        }, 0)
-      : null;
+  const mostRecentA = toMostRecentCompletionTime(a.completions);
+  const mostRecentB = toMostRecentCompletionTime(b.completions);
 
   if (mostRecentA === null && mostRecentB === null) return 0;
   if (mostRecentA === null) return 1;
@@ -289,7 +276,7 @@ const toAllocationSchema = (
     return null;
   }
 
-  if (!allocation.prize?.name || !allocation.prize?.id) {
+  if (!allocation.prize.name || !allocation.prize.id) {
     return null;
   }
 

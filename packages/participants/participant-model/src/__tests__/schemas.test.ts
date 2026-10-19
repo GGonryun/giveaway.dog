@@ -2,7 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
   publicSweepstakesParticipationSchema,
   resolvedFormFieldSchema,
-  sweepstakesParticipantSchema
+  sweepstakesParticipantSchema,
+  teamParticipantsQuerySchema,
+  teamParticipantsSortBySchema,
+  teamParticipantsSortDirectionSchema
 } from '../schemas';
 import {
   buildCompletion,
@@ -152,5 +155,94 @@ describe('publicSweepstakesParticipationSchema', () => {
     });
 
     expect(result.error?.issues[0].path).toEqual(['sweep-1', 'completed']);
+  });
+});
+
+describe('teamParticipantsSortBySchema', () => {
+  it.each(['lastEntry', 'qualityScore', 'name'])('accepts %s', (value) => {
+    expect(teamParticipantsSortBySchema.parse(value)).toBe(value);
+  });
+
+  it('rejects any other sort key', () => {
+    expect(teamParticipantsSortBySchema.safeParse('email').success).toBe(false);
+  });
+});
+
+describe('teamParticipantsSortDirectionSchema', () => {
+  it.each(['asc', 'desc'])('accepts %s', (value) => {
+    expect(teamParticipantsSortDirectionSchema.parse(value)).toBe(value);
+  });
+
+  it('rejects any other direction', () => {
+    expect(teamParticipantsSortDirectionSchema.safeParse('up').success).toBe(
+      false
+    );
+  });
+});
+
+describe('teamParticipantsQuerySchema', () => {
+  const pathOfFirstIssue = (value: object) =>
+    teamParticipantsQuerySchema.safeParse({ slug: 'team', ...value }).error
+      ?.issues[0].path;
+
+  it('fills the paging and sorting defaults', () => {
+    expect(teamParticipantsQuerySchema.parse({ slug: 'team' })).toEqual({
+      slug: 'team',
+      page: 1,
+      pageSize: 50,
+      sortBy: 'lastEntry',
+      sortDirection: 'desc'
+    });
+  });
+
+  it('keeps every given filter', () => {
+    const query = {
+      slug: 'team',
+      page: 3,
+      pageSize: 100,
+      search: 'jane',
+      sources: ['SIGNUP'],
+      minQualityScore: 0,
+      maxQualityScore: 100,
+      sortBy: 'name',
+      sortDirection: 'asc'
+    };
+
+    expect(teamParticipantsQuerySchema.parse(query)).toEqual(query);
+  });
+
+  it('requires the team slug', () => {
+    expect(
+      teamParticipantsQuerySchema.safeParse({}).error?.issues[0].path
+    ).toEqual(['slug']);
+  });
+
+  it.each([
+    ['page', 1],
+    ['page', 2],
+    ['pageSize', 1],
+    ['pageSize', 100],
+    ['minQualityScore', 0],
+    ['minQualityScore', 100],
+    ['maxQualityScore', 0],
+    ['maxQualityScore', 100]
+  ])('accepts %s %d', (key, value) => {
+    expect(pathOfFirstIssue({ [key]: value })).toBeUndefined();
+  });
+
+  it.each([
+    ['page', 0],
+    ['pageSize', 0],
+    ['pageSize', 101],
+    ['minQualityScore', -1],
+    ['minQualityScore', 101],
+    ['maxQualityScore', -1],
+    ['maxQualityScore', 101]
+  ])('rejects %s %d', (key, value) => {
+    expect(pathOfFirstIssue({ [key]: value })).toEqual([key]);
+  });
+
+  it('rejects an unknown user source', () => {
+    expect(pathOfFirstIssue({ sources: ['FRIEND'] })).toEqual(['sources', 0]);
   });
 });
