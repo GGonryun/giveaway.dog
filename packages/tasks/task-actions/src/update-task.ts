@@ -68,14 +68,6 @@ const submitTask = procedure()
       }
     });
 
-    if (completions.length === 0) {
-      throw new ApplicationError({
-        code: 'CONFLICT',
-        silent: true,
-        message: 'You have not completed this task yet.'
-      });
-    }
-
     if (completions.length > 1) {
       throw new ApplicationError({
         code: 'INTERNAL_SERVER_ERROR',
