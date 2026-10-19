@@ -11,7 +11,7 @@ import { blockThirdParties } from '../../helpers/third-party';
 test.describe('magic-link sign-in', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to read the outbox');
 
-  test('signs in with the link from the email', async ({
+  test('[AUTH-001] signs in with the link from the email', async ({
     page,
     request
   }, testInfo) => {
@@ -28,7 +28,7 @@ test.describe('magic-link sign-in', () => {
   });
 
   test(
-    'shows that the email was sent',
+    '[AUTH-004] shows that the email was sent',
     knownBug(446),
     async ({ page, request }, testInfo) => {
       await skipWithoutEmailFake(request);
@@ -42,7 +42,7 @@ test.describe('magic-link sign-in', () => {
     }
   );
 
-  test('refuses an empty email address', async ({ page }) => {
+  test('[AUTH-003] refuses an empty email address', async ({ page }) => {
     await page.goto('/login');
     await page.getByRole('button', { name: 'More ways to sign in' }).click();
     await page.getByRole('button', { name: 'Login with Email' }).click();
@@ -54,7 +54,7 @@ test.describe('magic-link sign-in', () => {
     await expect(page).toHaveURL(/\/login$/);
   });
 
-  test('the link works only once', async ({
+  test('[AUTH-002] the link works only once', async ({
     page,
     browser,
     request

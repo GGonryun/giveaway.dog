@@ -105,7 +105,9 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
 
   for (const hidden of HIDDEN) {
     test.describe(`a ${hidden.kind} giveaway`, () => {
-      test('is not found for a visitor', async ({ request }, testInfo) => {
+      test('[VIS-001] is not found for a visitor', async ({
+        request
+      }, testInfo) => {
         const giveaway = await seedHidden(
           request,
           testInfo,
@@ -115,7 +117,9 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
         await expectNotFound(request, giveaway);
       });
 
-      test('gives a bot no metadata', async ({ request }, testInfo) => {
+      test('[VIS-003] gives a bot no metadata', async ({
+        request
+      }, testInfo) => {
         const giveaway = await seedHidden(
           request,
           testInfo,
@@ -128,7 +132,7 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
       test.describe('as a participant who is not a member', () => {
         test.use({ storageState: personaState('participant') });
 
-        test('is not found', async ({ request }, testInfo) => {
+        test('[VIS-001] is not found', async ({ request }, testInfo) => {
           const giveaway = await seedHidden(
             request,
             testInfo,
@@ -144,7 +148,7 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
   test.describe('as the host', () => {
     test.use({ storageState: personaState('host') });
 
-    test('a private giveaway opens for a member of its team', async ({
+    test('[VIS-002] a private giveaway opens for a member of its team', async ({
       request
     }, testInfo) => {
       const giveaway = await seedHidden(
@@ -180,7 +184,7 @@ test.describe('opening a giveaway page', { tag: '@security' }, () => {
   ];
 
   for (const closed of CLOSED) {
-    test(`makes no participant of a visitor of a ${closed.kind} giveaway`, async ({
+    test(`[VIS-004] makes no participant of a visitor of a ${closed.kind} giveaway`, async ({
       page,
       request,
       freshPersona

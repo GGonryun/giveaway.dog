@@ -48,3 +48,4 @@ What the app accepts from requests that it does not trust: the cron routes, the 
 - `HTML-002` Sanitizing sanitized HTML changes nothing.
 - `HTML-003` Converting HTML to Markdown never fails, and emits no raw HTML outside code.
 - `HTML-004` Converting HTML to Markdown never emits a link to a `javascript:`, `vbscript:` or `data:` URL.
+- `HTML-005` A giveaway page runs no script from the HTML that a host wrote in its description, its terms or a task description.

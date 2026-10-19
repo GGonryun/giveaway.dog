@@ -50,15 +50,15 @@ describe('Bluesky likes contract', () => {
         {
           did: 'did:plc:blueskyactor00000000000001',
           handle: 'actor-1.bsky.social',
-          displayName: 'Actor 1',
-          avatar:
-            'https://cdn.bsky.app/img/avatar/plain/did:plc:blueskyactor00000000000001/bafkreiavatar1@jpeg'
+          displayName: undefined,
+          avatar: undefined
         },
         {
           did: 'did:plc:blueskyactor00000000000002',
           handle: 'actor-2.bsky.social',
-          displayName: '',
-          avatar: undefined
+          displayName: 'Actor 2',
+          avatar:
+            'https://cdn.bsky.app/img/avatar/plain/did:plc:blueskyactor00000000000002/bafkreiavatar2@jpeg'
         }
       ],
       cursor: '1767225600000::bafyreilikescursor'

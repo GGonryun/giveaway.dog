@@ -12,7 +12,7 @@ test.describe('return after sign-in', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
   test(
-    'a visitor returns to the page they asked for after signing in',
+    '[AUTH-007] a visitor returns to the page they asked for after signing in',
     knownBug(429),
     async ({ page, request }, testInfo) => {
       await skipWithoutEmailFake(request);

@@ -114,7 +114,7 @@ test.describe('entry rules on the server', { tag: '@security' }, () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
 
   for (const blocked of BLOCKED) {
-    test(`a participant cannot enter ${blocked.name} with a direct call`, async ({
+    test(`[ENTRY-004] a participant cannot enter ${blocked.name} with a direct call`, async ({
       page,
       request,
       freshPersona
