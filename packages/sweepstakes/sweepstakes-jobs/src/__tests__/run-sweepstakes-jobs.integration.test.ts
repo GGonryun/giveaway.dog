@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SweepstakesJobType, SweepstakesStatus } from '@giveaway/db-model';
+import prisma from '@giveaway/db-client/prisma';
 import { db, holdTableWrites } from '@giveaway/testing-integration/database';
 import {
   createEntries,
@@ -8,7 +9,7 @@ import {
 } from '@giveaway/testing-integration/fixtures';
 import { crashAtEveryWrite } from '@giveaway/testing-integration/faults';
 import { fakeNetwork, type FakeNetwork } from '@giveaway/testing-server/faults';
-import { processSweepstakesJobs } from '../process-sweepstakes-jobs';
+import { runSweepstakesJobs } from '../run-sweepstakes-jobs';
 
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 const MINUTE = 60_000;
@@ -136,7 +137,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe('processSweepstakesJobs', () => {
+describe('runSweepstakesJobs', () => {
   describe('when the function stops after a write and the job runs again', () => {
     beforeEach(() => {
       vi.useFakeTimers({ toFake: ['Date'] });
@@ -146,7 +147,7 @@ describe('processSweepstakesJobs', () => {
     it('announces the giveaway once a clean run completes the activation job', async () => {
       const scenario = await setupActivation();
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(prisma);
 
       expect(await jobState(scenario)).toEqual({
         jobs: [
@@ -172,7 +173,7 @@ describe('processSweepstakesJobs', () => {
       async (_, setup) => {
         const { writes, mismatches } = await crashAtEveryWrite({
           setup,
-          run: () => processSweepstakesJobs(),
+          run: () => runSweepstakesJobs(prisma),
           recover: releaseStoppedJobs,
           state: jobState
         });
@@ -187,7 +188,7 @@ describe('processSweepstakesJobs', () => {
       async () => {
         const { mismatches } = await crashAtEveryWrite({
           setup: () => setupDiscordUpdate('PROCESS_COMPLETION'),
-          run: () => processSweepstakesJobs(),
+          run: () => runSweepstakesJobs(prisma),
           recover: releaseStoppedJobs,
           state: jobState
         });
@@ -197,6 +198,26 @@ describe('processSweepstakesJobs', () => {
     );
   });
 
+  describe('when the run names one giveaway', () => {
+    it('processes only the due jobs of that giveaway', async () => {
+      const named = await createGiveaway();
+      const other = await createGiveaway();
+      const namedJob = await createJob(named.id, 'PROCESS_MODIFICATION');
+      const otherJob = await createJob(other.id, 'PROCESS_MODIFICATION');
+
+      await expect(
+        runSweepstakesJobs(prisma, { sweepstakesId: named.id })
+      ).resolves.toEqual({ processed: 1 });
+
+      expect(
+        await db.sweepstakesJob.findUnique({ where: { id: namedJob.id } })
+      ).toMatchObject({ status: 'COMPLETED' });
+      expect(
+        await db.sweepstakesJob.findUnique({ where: { id: otherJob.id } })
+      ).toMatchObject({ status: 'PENDING' });
+    });
+  });
+
   describe('when two runs overlap', () => {
     it.fails(
       'announces a giveaway once (fails until #299 is fixed)',
@@ -204,7 +225,7 @@ describe('processSweepstakesJobs', () => {
         await setupActivation();
 
         await holdTableWrites('SweepstakesJob', { writers: 2 }, () =>
-          Promise.all([processSweepstakesJobs(), processSweepstakesJobs()])
+          Promise.all([runSweepstakesJobs(prisma), runSweepstakesJobs(prisma)])
         );
 
         expect(network.requests(`POST ${WEBHOOK_URL}`)).toHaveLength(1);
@@ -215,7 +236,7 @@ describe('processSweepstakesJobs', () => {
       const { sweepstakes } = await setupPrizeAssignment();
 
       await holdTableWrites('SweepstakesAllocation', { writers: 2 }, () =>
-        Promise.all([processSweepstakesJobs(), processSweepstakesJobs()])
+        Promise.all([runSweepstakesJobs(prisma), runSweepstakesJobs(prisma)])
       );
 
       expect(
@@ -236,7 +257,7 @@ describe('processSweepstakesJobs', () => {
         { status: 500 }
       );
 
-      await expect(processSweepstakesJobs()).resolves.toEqual({
+      await expect(runSweepstakesJobs(prisma)).resolves.toEqual({
         processed: 2
       });
 
@@ -260,7 +281,7 @@ describe('processSweepstakesJobs', () => {
           return new Response(null, { status: 500 });
         });
 
-        await expect(processSweepstakesJobs()).resolves.toEqual({
+        await expect(runSweepstakesJobs(prisma)).resolves.toEqual({
           processed: 2
         });
 

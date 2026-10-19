@@ -15,6 +15,10 @@ import {
   e2eUserExtrasRequestSchema
 } from '@giveaway/e2e-model/extras';
 import { e2eOutboxQuerySchema } from '@giveaway/e2e-model/fakes';
+import {
+  e2eJobsRequestSchema,
+  e2eUserScoringRequestSchema
+} from '@giveaway/e2e-model/jobs';
 import { e2eRunIdSchema } from '@giveaway/e2e-model/naming';
 import { readE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 import { getE2eFakeServices } from '@giveaway/e2e-fakes/switch';
@@ -34,6 +38,8 @@ import { seedE2eInvites } from './invites';
 import { seedE2ePicker } from './pickers';
 import { seedE2eUserExtras } from './users';
 import { authorizeE2eOAuth } from './oauth';
+import { readE2eJobs, runE2eJobs } from './jobs';
+import { scoreE2eUser } from './scoring';
 
 export const E2E_SECRET_HEADER = 'x-e2e-secret';
 export const E2E_MAX_BODY_BYTES = 64 * 1024;
@@ -97,6 +103,13 @@ const ROUTES: E2eRoute[] = [
   },
   {
     method: 'POST',
+    path: ['users', 'scoring'],
+    write: true,
+    handle: ({ db, body }) =>
+      scoreE2eUser({ db, request: e2eUserScoringRequestSchema.parse(body) })
+  },
+  {
+    method: 'POST',
     path: ['integrations'],
     write: true,
     handle: ({ db, body }) =>
@@ -127,6 +140,23 @@ const ROUTES: E2eRoute[] = [
       readE2eRows({
         db,
         query: e2eRowsQuerySchema.parse(Object.fromEntries(query))
+      })
+  },
+  {
+    method: 'POST',
+    path: ['jobs', 'run'],
+    write: true,
+    handle: ({ db, body }) =>
+      runE2eJobs({ db, request: e2eJobsRequestSchema.parse(body) })
+  },
+  {
+    method: 'GET',
+    path: ['jobs'],
+    write: false,
+    handle: ({ db, query }) =>
+      readE2eJobs({
+        db,
+        request: e2eJobsRequestSchema.parse(Object.fromEntries(query))
       })
   },
   {

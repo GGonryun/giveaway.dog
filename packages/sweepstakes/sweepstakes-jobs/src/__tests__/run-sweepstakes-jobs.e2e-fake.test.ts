@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { prismaMock } from '@giveaway/testing-server/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   E2E_CLOSED_GATES,
   stubE2eFakeEnvironment
@@ -9,7 +9,9 @@ import {
   memoryOutbox,
   readE2eOutbox
 } from '@giveaway/e2e-fakes/testing/outbox';
-import { processSweepstakesJobs } from '../process-sweepstakes-jobs';
+import { runSweepstakesJobs } from '../run-sweepstakes-jobs';
+
+const db = asPrismaClient();
 
 vi.mock(
   '@giveaway/e2e-fakes/outbox',
@@ -73,7 +75,7 @@ describe('the activation alert with the discord fake', () => {
     stubE2eFakeEnvironment('preview', 'discord');
     vi.stubEnv('DISCORD_WEBHOOK_URL', undefined);
 
-    await processSweepstakesJobs();
+    await runSweepstakesJobs(db);
 
     const [entry] = await readE2eOutbox({
       channel: 'discord-alert',
@@ -99,7 +101,7 @@ describe('the activation alert with the discord fake', () => {
     stubE2eFakeEnvironment('preview', 'discord');
     vi.stubEnv('DISCORD_WEBHOOK_URL', WEBHOOK_URL);
 
-    await processSweepstakesJobs();
+    await runSweepstakesJobs(db);
 
     expect(fetchMock).not.toHaveBeenCalled();
     await expect(
@@ -113,7 +115,7 @@ describe('the activation alert with the discord fake', () => {
       stubE2eFakeEnvironment(environment, 'discord');
       vi.stubEnv('DISCORD_WEBHOOK_URL', WEBHOOK_URL);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(db);
 
       expect(fetchMock).toHaveBeenCalledWith(
         WEBHOOK_URL,
@@ -132,7 +134,7 @@ describe('the activation alert with the discord fake', () => {
         new Response(null, { status: 500, statusText: 'Server Error' })
       );
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(db);
 
       expect(prismaMock.sweepstakesJob.update).toHaveBeenCalledWith({
         where: { id: JOB_ID },
@@ -150,7 +152,7 @@ describe('the activation alert with the discord fake', () => {
       stubE2eFakeEnvironment(environment, 'discord');
       vi.stubEnv('DISCORD_WEBHOOK_URL', undefined);
 
-      await processSweepstakesJobs();
+      await runSweepstakesJobs(db);
 
       expect(fetchMock).not.toHaveBeenCalled();
       expect(memoryOutbox.redis.rpush).not.toHaveBeenCalled();

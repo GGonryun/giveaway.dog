@@ -715,7 +715,7 @@ export type E2eSweepstakesRequestInput = z.input<
   typeof e2eSweepstakesRequestSchema
 >;
 
-const e2eSweepstakesIdSchema = z.string().regex(/^[A-Za-z0-9_-]{1,32}$/);
+export const e2eSweepstakesIdSchema = z.string().regex(/^[A-Za-z0-9_-]{1,32}$/);
 
 export const e2eRowsQuerySchema = z.union([
   z.object({ view: z.literal('team'), slug: e2eTeamSlugSchema }).strict(),

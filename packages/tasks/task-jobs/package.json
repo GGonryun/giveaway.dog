@@ -17,7 +17,7 @@
   },
   "exports": {
     "./process-task-job": "./src/process-task-job.ts",
-    "./process-task-jobs": "./src/process-task-jobs.ts"
+    "./run-task-jobs": "./src/run-task-jobs.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -28,17 +28,16 @@
   "dependencies": {
     "@giveaway/bluesky-task-jobs": "workspace:*",
     "@giveaway/db-model": "workspace:*",
-    "@giveaway/rpc-server": "workspace:*",
     "@giveaway/task-jobs-core": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/x-task-jobs": "workspace:*",
-    "server-only": "catalog:",
-    "zod": "catalog:"
+    "server-only": "catalog:"
   },
   "devDependencies": {
     "@giveaway/bluesky-api": "workspace:*",
     "@giveaway/bluesky-import": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/testing-integration": "workspace:*",
     "@giveaway/testing-postgres": "workspace:*",

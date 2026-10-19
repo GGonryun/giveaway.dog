@@ -25,6 +25,7 @@
     "test:snapshot": "vitest run --project snapshot"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/rpc-client": "workspace:*",
     "@giveaway/sweepstakes-demo": "workspace:*",

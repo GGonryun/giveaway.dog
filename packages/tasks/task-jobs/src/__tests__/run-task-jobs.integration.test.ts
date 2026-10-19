@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Prisma } from '@giveaway/db-model';
+import prisma from '@giveaway/db-client/prisma';
 import { db, holdTableWrites } from '@giveaway/testing-integration/database';
 import {
   createHost,
@@ -11,8 +12,7 @@ import {
   crashes
 } from '@giveaway/testing-integration/faults';
 import { fakeNetwork, type FakeNetwork } from '@giveaway/testing-server/faults';
-import { expectOk } from '@giveaway/testing-server/result';
-import { processTaskJobs } from '../process-task-jobs';
+import { runTaskJobs } from '../run-task-jobs';
 
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 const MINUTE = 60_000;
@@ -155,7 +155,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe('processTaskJobs', () => {
+describe('runTaskJobs', () => {
   describe('when the function stops after a write and the job runs again', () => {
     beforeEach(() => {
       vi.useFakeTimers({ toFake: ['Date'] });
@@ -165,7 +165,7 @@ describe('processTaskJobs', () => {
     it('imports the retweeters and schedules the next run', async () => {
       const entry = await setupImport();
 
-      expectOk(await processTaskJobs());
+      await runTaskJobs(prisma);
 
       expect(await importState(entry)).toEqual({
         jobs: [
@@ -198,11 +198,11 @@ describe('processTaskJobs', () => {
         vi.setSystemTime(startedAt);
         const { task } = await setupImport();
         crashes.afterWrites(1);
-        await processTaskJobs();
+        await runTaskJobs(prisma);
         crashes.reset();
         vi.setSystemTime(startedAt + 15 * MINUTE);
 
-        expectOk(await processTaskJobs());
+        await runTaskJobs(prisma);
 
         expect(await completionsByAccount(task.id)).toEqual([
           'x-existing',
@@ -217,7 +217,7 @@ describe('processTaskJobs', () => {
       async () => {
         const { writes, mismatches } = await crashAtEveryWrite({
           setup: setupImport,
-          run: () => processTaskJobs(),
+          run: () => runTaskJobs(prisma),
           recover: () =>
             db.taskJob.updateMany({
               where: { status: 'IN_PROGRESS' },
@@ -239,7 +239,7 @@ describe('processTaskJobs', () => {
         const { task } = await setupImport();
 
         await holdTableWrites('TaskJob', { writers: 2 }, () =>
-          Promise.all([processTaskJobs(), processTaskJobs()])
+          Promise.all([runTaskJobs(prisma), runTaskJobs(prisma)])
         );
 
         expect(network.requests(RETWEETERS)).toHaveLength(1);
@@ -271,7 +271,7 @@ describe('processTaskJobs', () => {
       );
       const working = await setupImport();
 
-      expect(expectOk(await processTaskJobs())).toEqual({ processed: 2 });
+      expect(await runTaskJobs(prisma)).toEqual({ processed: 2 });
 
       expect(
         await db.taskJob.findUnique({ where: { id: broken.job.id } })
@@ -288,7 +288,7 @@ describe('processTaskJobs', () => {
         const ended = await createImport({ status: 'COMPLETED' });
         const working = await setupImport();
 
-        expectOk(await processTaskJobs());
+        await runTaskJobs(prisma);
 
         expect(
           await db.taskJob.findUnique({ where: { id: ended.job.id } })

@@ -36,6 +36,7 @@ import {
   SelectValue
 } from '@giveaway/ui-primitives/select';
 import { toBackgroundStyle } from '@giveaway/sweepstakes-model/color';
+import { environment } from '@giveaway/app-config/environment';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import completeSweepstakes from '@giveaway/sweepstakes-editor-server/complete-sweepstakes';
 import { useRouter } from 'next/navigation';
@@ -54,10 +55,10 @@ export const SweepstakesPreview: React.FC<ParticipantSweepstakeSchema> = (
   const detailsPage = useSweepstakesDetailsPage();
   const router = useRouter();
   const { activeTeam } = useTeams();
-  const liveUrl = browse.url({
+  const liveUrl = `${environment.appUrl()}${browse.path({
     sweepstakesId: sweepstakes.id,
     slug: sweepstakes.visibility.slug
-  });
+  })}`;
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
   const { run: runCompleteSweepstakes, isLoading: isCompleting } = useProcedure(

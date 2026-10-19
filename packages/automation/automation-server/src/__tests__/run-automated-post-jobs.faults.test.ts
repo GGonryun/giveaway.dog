@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AutomatedPostJob } from '@giveaway/db-model';
-import { prismaMock } from '@giveaway/testing-server/prisma';
-import { expectOk } from '@giveaway/testing-server/result';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   FAULTS,
   type Fault,
@@ -13,7 +12,9 @@ import {
   retryAfterTime,
   settleWithin
 } from '@giveaway/testing-server/faults';
-import { processAutomatedPostJobs } from '../process-automated-post-jobs';
+import { runAutomatedPostJobs } from '../run-automated-post-jobs';
+
+const db = asPrismaClient();
 
 const m = vi.hoisted(() => {
   process.env.TWITTER_TEAM_APP_CLIENT_ID = 'x-client-id';
@@ -320,7 +321,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe('processAutomatedPostJobs with a failing third-party call', () => {
+describe('runAutomatedPostJobs with a failing third-party call', () => {
   describe.each(CALLS)(
     'when $call fails',
     ({
@@ -352,9 +353,9 @@ describe('processAutomatedPostJobs with a failing third-party call', () => {
       });
 
       it('posts and completes the job when nothing fails', async () => {
-        const result = await settleWithin(processAutomatedPostJobs());
+        const result = await settleWithin(runAutomatedPostJobs(db));
 
-        expect(expectOk(result)).toEqual({ processed: 2 });
+        expect(result).toEqual({ processed: 2 });
         expect(reached(network)).toBe(true);
         expect(updatesOf('job-1').at(-1)?.data.status).toBe('COMPLETED');
         expect(prismaMock.sweepstakes.update).toHaveBeenCalledTimes(1);
@@ -369,9 +370,9 @@ describe('processAutomatedPostJobs with a failing third-party call', () => {
           async () => {
             inject(network, fault);
 
-            const result = await settleWithin(processAutomatedPostJobs());
+            const result = await settleWithin(runAutomatedPostJobs(db));
 
-            expect(expectOk(result)).toEqual({ processed: 2 });
+            expect(result).toEqual({ processed: 2 });
             expect(reached(network)).toBe(true);
             expect(updatesOf('job-1').at(-1)?.data.status).toMatch(
               /^(FAILED|PENDING)$/
@@ -394,7 +395,7 @@ describe('processAutomatedPostJobs with a failing third-party call', () => {
             const retryAt = retryAfterTime();
             inject(network, fault);
 
-            await settleWithin(processAutomatedPostJobs());
+            await settleWithin(runAutomatedPostJobs(db));
 
             const outcome = updatesOf('job-1').at(-1);
             expect(outcome?.data.status).toBe('PENDING');
@@ -418,7 +419,7 @@ describe('processAutomatedPostJobs with a failing third-party call', () => {
           async () => {
             inject(network, fault);
 
-            await settleWithin(processAutomatedPostJobs());
+            await settleWithin(runAutomatedPostJobs(db));
 
             expect(markedIntegrationError()).toBe(false);
           }

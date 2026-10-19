@@ -1,14 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { processTaskJobs } from '../process-task-jobs';
+import { runTaskJobs } from '../run-task-jobs';
 import { taskJobInclude } from '@giveaway/task-jobs-core/types';
 import { ApplicationError } from '@giveaway/util-errors';
-import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
-import { signIn } from '@giveaway/testing-server/session';
-import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import {
+  prismaMock,
+  knownRequestError,
+  asPrismaClient
+} from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
   buildTiming
 } from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
+
+const db = asPrismaClient();
 
 const m = vi.hoisted(() => ({
   getRetweetersUntilUser: vi.fn()
@@ -36,7 +40,7 @@ const retweetJob = (id: string) =>
 const updateCalls = () =>
   prismaMock.taskJob.update.mock.calls.map(([arg]) => arg);
 
-describe('processTaskJobs', () => {
+describe('runTaskJobs', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
@@ -50,14 +54,14 @@ describe('processTaskJobs', () => {
 
   describe('querying pending jobs', () => {
     it('returns zero processed jobs when nothing is due', async () => {
-      const result = await processTaskJobs();
+      const result = await runTaskJobs(db);
 
-      expect(expectOk(result)).toEqual({ processed: 0 });
+      expect(result).toEqual({ processed: 0 });
       expect(prismaMock.taskJob.update).not.toHaveBeenCalled();
     });
 
     it('loads at most five due pending jobs, oldest first, with their sweepstakes timing', async () => {
-      await processTaskJobs();
+      await runTaskJobs(db);
 
       expect(prismaMock.taskJob.findMany).toHaveBeenCalledWith({
         where: {
@@ -76,29 +80,25 @@ describe('processTaskJobs', () => {
       });
     });
 
-    it('runs without a session', async () => {
-      const result = await processTaskJobs();
+    it('loads the due jobs of one sweepstakes when it is given', async () => {
+      await runTaskJobs(db, { sweepstakesId: 'sweepstakes-1' });
 
-      expectOk(result);
-      expect(prismaMock.taskJob.findMany).toHaveBeenCalledTimes(1);
+      expect(prismaMock.taskJob.findMany).toHaveBeenCalledWith({
+        where: {
+          runAt: { lte: NOW },
+          status: { in: ['PENDING'] },
+          task: { sweepstakesId: 'sweepstakes-1' }
+        },
+        orderBy: { createdAt: 'asc' },
+        take: 5,
+        include: taskJobInclude
+      });
     });
 
-    it('runs for a signed in caller', async () => {
-      signIn();
-
-      const result = await processTaskJobs();
-
-      expect(expectOk(result)).toEqual({ processed: 0 });
-    });
-
-    it('returns INTERNAL_SERVER_ERROR when the job query fails', async () => {
+    it('throws when the job query fails', async () => {
       prismaMock.taskJob.findMany.mockRejectedValue(new Error('db down'));
 
-      const result = await processTaskJobs();
-
-      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
-        'db down'
-      );
+      await expect(runTaskJobs(db)).rejects.toThrow('db down');
     });
   });
 
@@ -106,9 +106,9 @@ describe('processTaskJobs', () => {
     it('marks the job in progress, processes it, then marks it completed', async () => {
       prismaMock.taskJob.findMany.mockResolvedValue([inactiveJob('job-1')]);
 
-      const result = await processTaskJobs();
+      const result = await runTaskJobs(db);
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(updateCalls()).toEqual([
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } }
@@ -126,9 +126,9 @@ describe('processTaskJobs', () => {
         buildTaskJob({ timing: buildTiming({ startDate }) })
       ]);
 
-      const result = await processTaskJobs();
+      const result = await runTaskJobs(db);
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(updateCalls()).toEqual([
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         {
@@ -145,9 +145,9 @@ describe('processTaskJobs', () => {
         inactiveJob('job-2')
       ]);
 
-      const result = await processTaskJobs();
+      const result = await runTaskJobs(db);
 
-      expect(expectOk(result)).toEqual({ processed: 2 });
+      expect(result).toEqual({ processed: 2 });
       expect(updateCalls()).toEqual([
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } },
@@ -163,9 +163,9 @@ describe('processTaskJobs', () => {
         buildTaskJob({ type: 'BONUS_TASK' })
       ]);
 
-      const result = await processTaskJobs();
+      const result = await runTaskJobs(db);
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(updateCalls()).toEqual([
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         {
@@ -186,7 +186,7 @@ describe('processTaskJobs', () => {
       prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
       m.getRetweetersUntilUser.mockRejectedValue(new Error('boom'));
 
-      await processTaskJobs();
+      await runTaskJobs(db);
 
       expect(updateCalls()[1]).toEqual({
         where: { id: 'job-1' },
@@ -198,7 +198,7 @@ describe('processTaskJobs', () => {
       prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
       m.getRetweetersUntilUser.mockRejectedValue(undefined);
 
-      await processTaskJobs();
+      await runTaskJobs(db);
 
       expect(updateCalls()[1]).toEqual({
         where: { id: 'job-1' },
@@ -216,7 +216,7 @@ describe('processTaskJobs', () => {
         })
       );
 
-      await processTaskJobs();
+      await runTaskJobs(db);
 
       expect(updateCalls()[1]).toEqual({
         where: { id: 'job-1' },
@@ -235,9 +235,9 @@ describe('processTaskJobs', () => {
       prismaMock.taskJob.findMany.mockResolvedValue([inactiveJob('job-1')]);
       prismaMock.taskJob.update.mockRejectedValueOnce(new Error('locked'));
 
-      const result = await processTaskJobs();
+      const result = await runTaskJobs(db);
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(prismaMock.taskJob.delete).not.toHaveBeenCalled();
       expect(updateCalls()[1]).toEqual({
         where: { id: 'job-1' },
@@ -251,9 +251,9 @@ describe('processTaskJobs', () => {
         inactiveJob('job-2')
       ]);
 
-      const result = await processTaskJobs();
+      const result = await runTaskJobs(db);
 
-      expect(expectOk(result)).toEqual({ processed: 2 });
+      expect(result).toEqual({ processed: 2 });
       expect(
         updateCalls().map((call) => [call.where.id, call.data.status])
       ).toEqual([
@@ -277,9 +277,9 @@ describe('processTaskJobs', () => {
         })
       );
 
-      const result = await processTaskJobs();
+      const result = await runTaskJobs(db);
 
-      expect(expectOk(result)).toEqual({ processed: 1 });
+      expect(result).toEqual({ processed: 1 });
       expect(updateCalls()).toEqual([
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         {
@@ -291,7 +291,7 @@ describe('processTaskJobs', () => {
   });
 
   describe('when recording the outcome fails', () => {
-    it('returns NOT_FOUND when the job record no longer exists', async () => {
+    it('throws when the job record no longer exists', async () => {
       prismaMock.taskJob.findMany.mockResolvedValue([
         inactiveJob('job-1'),
         inactiveJob('job-2')
@@ -301,11 +301,9 @@ describe('processTaskJobs', () => {
         .mockRejectedValueOnce(knownRequestError('P2025'))
         .mockRejectedValueOnce(knownRequestError('P2025'));
 
-      const result = await processTaskJobs();
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
-      );
+      await expect(runTaskJobs(db)).rejects.toMatchObject({
+        code: 'P2025'
+      });
       expect(updateCalls()).toEqual([
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } },

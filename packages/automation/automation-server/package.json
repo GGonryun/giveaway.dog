@@ -18,7 +18,7 @@
   "exports": {
     "./delete-automated-post-job": "./src/delete-automated-post-job.ts",
     "./get-automated-post-jobs": "./src/get-automated-post-jobs.ts",
-    "./process-automated-post-jobs": "./src/process-automated-post-jobs.ts",
+    "./run-automated-post-jobs": "./src/run-automated-post-jobs.ts",
     "./schedule-automated-post-job": "./src/schedule-automated-post-job.ts"
   },
   "scripts": {
@@ -38,9 +38,11 @@
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/x-api": "workspace:*",
     "nanoid": "catalog:",
+    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/testing-integration": "workspace:*",
     "@giveaway/testing-postgres": "workspace:*",

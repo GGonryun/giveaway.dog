@@ -16,7 +16,7 @@
     }
   },
   "exports": {
-    "./process-sweepstakes-jobs": "./src/process-sweepstakes-jobs.ts"
+    "./run-sweepstakes-jobs": "./src/run-sweepstakes-jobs.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -27,16 +27,17 @@
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
     "@giveaway/automation-model": "workspace:*",
-    "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-api": "workspace:*",
     "@giveaway/e2e-fakes": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/team-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
-    "@giveaway/util-html": "workspace:*"
+    "@giveaway/util-html": "workspace:*",
+    "server-only": "catalog:"
   },
   "devDependencies": {
+    "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/testing-integration": "workspace:*",
     "@giveaway/testing-postgres": "workspace:*",
