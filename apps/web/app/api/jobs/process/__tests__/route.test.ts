@@ -76,7 +76,7 @@ describe('GET /api/jobs/process', () => {
       expect(res.status).toBe(200);
       expect(await res.json()).toEqual({
         tasks: { ok: true, data: { processed: 0 } },
-        sweepstakes: { processed: 0 },
+        sweepstakes: { ok: true, data: { processed: 0 } },
         posts: { ok: true, data: { processed: 0 } }
       });
     });
@@ -139,7 +139,7 @@ describe('GET /api/jobs/process', () => {
           ok: false,
           data: { code: 'INTERNAL_SERVER_ERROR', message: 'db down' }
         },
-        sweepstakes: { processed: 0 },
+        sweepstakes: { ok: true, data: { processed: 0 } },
         posts: { ok: true, data: { processed: 0 } }
       });
     });
@@ -157,22 +157,23 @@ describe('GET /api/jobs/process', () => {
       });
     });
 
-    it.fails(
-      'still runs the post processor when the sweepstakes processor throws (fails until #300 is fixed)',
-      async () => {
-        prismaMock.sweepstakesJob.findMany.mockRejectedValue(
-          new Error('sweepstakes down')
-        );
+    it('still runs the post processor when the sweepstakes processor throws', async () => {
+      prismaMock.sweepstakesJob.findMany.mockRejectedValue(
+        new Error('sweepstakes down')
+      );
 
-        const res = await GET(authorizedRequest());
+      const res = await GET(authorizedRequest());
 
-        expect(res.status).toBe(200);
-        expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalled();
-        expect((await res.json()).posts).toEqual({
-          ok: true,
-          data: { processed: 0 }
-        });
-      }
-    );
+      expect(res.status).toBe(200);
+      expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalled();
+      expect(await res.json()).toEqual({
+        tasks: { ok: true, data: { processed: 0 } },
+        sweepstakes: {
+          ok: false,
+          data: { code: 'INTERNAL_SERVER_ERROR', message: 'sweepstakes down' }
+        },
+        posts: { ok: true, data: { processed: 0 } }
+      });
+    });
   });
 });

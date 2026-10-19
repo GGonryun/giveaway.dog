@@ -1,14 +1,12 @@
-'use server';
+import 'server-only';
 
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
-import { procedure } from '@giveaway/rpc-server/procedures';
 import {
   AutomatedPostJobStatus,
   Prisma,
   PrismaClient,
   SweepstakesStatus
 } from '@giveaway/db-model';
-import { z } from 'zod';
 import {
   PostToTwitterJobSchema,
   PostToBlueskyJobSchema,
@@ -27,53 +25,50 @@ import { processPostToDiscord } from '@giveaway/discord-connect/process-post-to-
 
 const MAX_JOBS_PER_RUN = 5;
 
-export const processAutomatedPostJobs = procedure()
-  .authorization({ required: false })
-  .output(
-    z.object({
-      processed: z.number()
-    })
-  )
-  .handler(async ({ db }) => {
-    const now = new Date();
+export const runAutomatedPostJobs = async (
+  db: PrismaClient,
+  { sweepstakesId }: { sweepstakesId?: string } = {}
+) => {
+  const now = new Date();
 
-    const pending = await db.automatedPostJob.findMany({
-      where: {
-        runAt: {
-          lte: now
-        },
-        status: {
-          in: ['PENDING']
-        }
+  const pending = await db.automatedPostJob.findMany({
+    where: {
+      runAt: {
+        lte: now
       },
-      orderBy: {
-        createdAt: 'asc'
+      status: {
+        in: ['PENDING']
       },
-      take: MAX_JOBS_PER_RUN
-    });
-
-    console.info(`Found ${pending.length} automated post jobs to process`);
-    for (const job of pending) {
-      try {
-        await processAutomatedPostJob({ db, job });
-      } catch (error) {
-        console.error(`Failed to process automated post job ${job.id}`, error);
-        await db.automatedPostJob.update({
-          where: { id: job.id },
-          data: {
-            status: AutomatedPostJobStatus.FAILED,
-            response: {
-              error: ApplicationError.toMessage(error)
-            }
-          }
-        });
-      }
-    }
-
-    return {
-      processed: pending.length
-    };
+      ...(sweepstakesId ? { sweepstakesId } : {})
+    },
+    orderBy: {
+      createdAt: 'asc'
+    },
+    take: MAX_JOBS_PER_RUN
   });
+
+  console.info(`Found ${pending.length} automated post jobs to process`);
+  for (const job of pending) {
+    try {
+      await processAutomatedPostJob({ db, job });
+    } catch (error) {
+      console.error(`Failed to process automated post job ${job.id}`, error);
+      await db.automatedPostJob.update({
+        where: { id: job.id },
+        data: {
+          status: AutomatedPostJobStatus.FAILED,
+          response: {
+            error: ApplicationError.toMessage(error)
+          }
+        }
+      });
+    }
+  }
+
+  return {
+    processed: pending.length
+  };
+};
 
 async function processAutomatedPostJob({
   db,

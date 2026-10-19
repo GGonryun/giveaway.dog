@@ -18,6 +18,7 @@
   "exports": {
     "./extras": "./src/extras.ts",
     "./fakes": "./src/fakes.ts",
+    "./jobs": "./src/jobs.ts",
     "./naming": "./src/naming.ts",
     "./oauth": "./src/oauth.ts",
     "./personas": "./src/personas.ts",

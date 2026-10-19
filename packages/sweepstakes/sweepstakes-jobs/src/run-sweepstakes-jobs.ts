@@ -1,4 +1,4 @@
-'use server';
+import 'server-only';
 
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { html } from '@giveaway/util-html/html';
@@ -11,7 +11,6 @@ import {
   VisibilityType
 } from '@giveaway/db-model';
 import { toSweepstakesUrl } from '@giveaway/sweepstakes-model/util';
-import db from '@giveaway/db-client/prisma';
 import { updateDiscordMessage } from '@giveaway/discord-api/update-discord-message';
 import { toPostToDiscordResponseSchema } from '@giveaway/automation-model/schemas';
 import { SWEEPSTAKES_DISCORD_POST_SELECT_QUERY } from '@giveaway/automation-model/db';
@@ -32,7 +31,10 @@ const recordE2eDiscordAlert =
     return new Response();
   };
 
-export const processSweepstakesJobs = async () => {
+export const runSweepstakesJobs = async (
+  db: PrismaClient,
+  { sweepstakesId }: { sweepstakesId?: string } = {}
+) => {
   const now = new Date();
 
   const pending = await db.sweepstakesJob.findMany({
@@ -42,7 +44,8 @@ export const processSweepstakesJobs = async () => {
       },
       status: {
         in: ['PENDING']
-      }
+      },
+      ...(sweepstakesId ? { sweepstakesId } : {})
     },
     orderBy: {
       createdAt: 'asc'

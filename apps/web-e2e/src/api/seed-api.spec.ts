@@ -12,6 +12,9 @@ const PATHS = [
   ['POST', 'invites'],
   ['POST', 'pickers'],
   ['GET', 'rows?view=accounts&persona=host&ns=abcdef'],
+  ['GET', 'jobs?sweepstakesId=nope'],
+  ['POST', 'jobs/run'],
+  ['POST', 'users/scoring'],
   ['POST', 'janitor'],
   ['DELETE', `runs/${RUN_ID}`],
   ['GET', 'does-not-exist']
@@ -104,5 +107,62 @@ test.describe('seed API', { tag: '@security' }, () => {
     expect(picker.draws).toEqual([
       expect.objectContaining({ userId: picker.users[0].id })
     ]);
+  });
+
+  test('runs the jobs of one giveaway and scores one user', async ({
+    request
+  }, testInfo) => {
+    const api = seedApi(request);
+    const health = await api.health();
+    test.skip(!health?.writes, 'The seed API needs E2E_ALLOW_WRITES=1');
+
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const ns = `${RUN_ID}j${testInfo.parallelIndex}`;
+    const giveaway = await api.sweepstakes({
+      ns: RUN_ID,
+      team: team.slug,
+      entries: [{ persona: 'participant', ns }]
+    });
+
+    const before = await api.jobs(giveaway.id);
+    expect(before.jobs.sweepstakes).toContainEqual(
+      expect.objectContaining({
+        type: 'PROCESS_ACTIVATION',
+        status: 'PENDING'
+      })
+    );
+
+    const run = await api.runJobs(giveaway.id);
+    expect(run).toMatchObject({
+      tasks: { ok: true },
+      sweepstakes: { ok: true },
+      posts: { ok: true }
+    });
+    expect(run.jobs.sweepstakes).toContainEqual(
+      expect.objectContaining({
+        type: 'PROCESS_ACTIVATION',
+        status: 'COMPLETED'
+      })
+    );
+
+    const scored = await api.scoreUser({ persona: 'participant', ns });
+    expect(scored).toMatchObject({
+      email: `e2e-participant-${ns}@example.com`,
+      userId: giveaway.entries[0].userId
+    });
+  });
+
+  test('runs no jobs of a giveaway that it did not seed', async ({
+    request
+  }) => {
+    const health = await seedApi(request).health();
+    test.skip(!health?.writes, 'The seed API needs E2E_ALLOW_WRITES=1');
+
+    const response = await request.post('/api/e2e/jobs/run', {
+      headers: { 'x-e2e-secret': E2E_SECRET },
+      data: { sweepstakesId: 'not-an-e2e-giveaway' }
+    });
+
+    expect(response.status()).toBe(404);
   });
 });

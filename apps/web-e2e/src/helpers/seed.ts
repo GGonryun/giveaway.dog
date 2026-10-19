@@ -6,6 +6,11 @@ import type {
   E2eUserExtrasRequestInput
 } from '@giveaway/e2e-model/extras';
 import type {
+  E2eJobProcessor,
+  E2eJobProcessorResult,
+  E2eUserScoringRequest
+} from '@giveaway/e2e-model/jobs';
+import type {
   E2eFakeService,
   E2eOutboxEntry,
   E2eOutboxQuery
@@ -106,6 +111,33 @@ export type SeededPicker = {
   draws: { id: string; userId: string; disqualified: string | null }[];
 };
 
+export type SeededJob = {
+  id: string;
+  status: string;
+  runAt: string | null;
+};
+
+export type SeededJobs = {
+  sweepstakesId: string;
+  jobs: {
+    sweepstakes: (SeededJob & { type: string; error: string | null })[];
+    tasks: (SeededJob & { taskId: string })[];
+    posts: (SeededJob & { type: string; response: unknown })[];
+  };
+};
+
+export type JobRun = SeededJobs & {
+  rounds: number;
+} & Record<E2eJobProcessor, E2eJobProcessorResult>;
+
+export type ScoredUser = {
+  userId: string;
+  email: string;
+  tracking: { processed: number; errors: number };
+  scoring: { processed: number };
+  quality: { score: number; createdAt: string } | null;
+};
+
 export type DeletedRun = {
   teams: { deleted: string[]; refused: string[] };
   sweepstakes: { deleted: number };
@@ -165,6 +197,16 @@ export const seedApi = (request: APIRequestContext) => ({
     call<SeededInvites>(request, 'POST', 'invites', body),
   picker: (body: E2ePickerRequestInput) =>
     call<SeededPicker>(request, 'POST', 'pickers', body),
+  jobs: (sweepstakesId: string) =>
+    call<SeededJobs>(
+      request,
+      'GET',
+      `jobs?${new URLSearchParams({ sweepstakesId })}`
+    ),
+  runJobs: (sweepstakesId: string) =>
+    call<JobRun>(request, 'POST', 'jobs/run', { sweepstakesId }),
+  scoreUser: (body: E2eUserScoringRequest) =>
+    call<ScoredUser>(request, 'POST', 'users/scoring', body),
   rows: <T = unknown>(query: Record<string, string>) =>
     call<T>(request, 'GET', `rows?${new URLSearchParams(query)}`),
   teamRows: (slug: string) =>

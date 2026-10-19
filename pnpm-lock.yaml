@@ -3003,10 +3003,16 @@ importers:
       nanoid:
         specifier: 'catalog:'
         version: 5.1.6
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
+      '@giveaway/db-client':
+        specifier: workspace:*
+        version: link:../../infra/db-client
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
@@ -3473,6 +3479,9 @@ importers:
 
   packages/e2e/e2e-server:
     dependencies:
+      '@giveaway/automation-server':
+        specifier: workspace:*
+        version: link:../../automation/automation-server
       '@giveaway/db-client':
         specifier: workspace:*
         version: link:../../infra/db-client
@@ -3494,15 +3503,24 @@ importers:
       '@giveaway/referrals-server':
         specifier: workspace:*
         version: link:../../participants/referrals-server
+      '@giveaway/scoring-server':
+        specifier: workspace:*
+        version: link:../../participants/scoring-server
       '@giveaway/sweepstakes-access':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-access
       '@giveaway/sweepstakes-editor-server':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-editor-server
+      '@giveaway/sweepstakes-jobs':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-jobs
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-model
+      '@giveaway/task-jobs':
+        specifier: workspace:*
+        version: link:../../tasks/task-jobs
       '@giveaway/team-model':
         specifier: workspace:*
         version: link:../../team/team-model
@@ -8193,6 +8211,12 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/request-context-model':
+        specifier: workspace:*
+        version: link:../../infra/request-context-model
+      '@giveaway/request-context-server':
+        specifier: workspace:*
+        version: link:../../infra/request-context-server
       '@giveaway/scoring-model':
         specifier: workspace:*
         version: link:../scoring-model
@@ -8205,6 +8229,9 @@ importers:
       '@giveaway/util-time':
         specifier: workspace:*
         version: link:../../shared/util-time
+      '@giveaway/util-types':
+        specifier: workspace:*
+        version: link:../../shared/util-types
       lodash:
         specifier: 'catalog:'
         version: 4.17.23
@@ -10064,6 +10091,9 @@ importers:
 
   packages/sweepstakes/sweepstakes-details-preview:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
@@ -11236,9 +11266,6 @@ importers:
       '@giveaway/automation-model':
         specifier: workspace:*
         version: link:../../automation/automation-model
-      '@giveaway/db-client':
-        specifier: workspace:*
-        version: link:../../infra/db-client
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
@@ -11260,7 +11287,13 @@ importers:
       '@giveaway/util-html':
         specifier: workspace:*
         version: link:../../shared/util-html
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
     devDependencies:
+      '@giveaway/db-client':
+        specifier: workspace:*
+        version: link:../../infra/db-client
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
@@ -12629,9 +12662,6 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
-      '@giveaway/rpc-server':
-        specifier: workspace:*
-        version: link:../../infra/rpc-server
       '@giveaway/task-jobs-core':
         specifier: workspace:*
         version: link:../task-jobs-core
@@ -12647,9 +12677,6 @@ importers:
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
-      zod:
-        specifier: 'catalog:'
-        version: 3.25.76
     devDependencies:
       '@giveaway/bluesky-api':
         specifier: workspace:*
@@ -12657,6 +12684,9 @@ importers:
       '@giveaway/bluesky-import':
         specifier: workspace:*
         version: link:../../integrations/bluesky/bluesky-import
+      '@giveaway/db-client':
+        specifier: workspace:*
+        version: link:../../infra/db-client
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config

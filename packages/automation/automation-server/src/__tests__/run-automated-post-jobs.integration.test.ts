@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Prisma } from '@giveaway/db-model';
+import prisma from '@giveaway/db-client/prisma';
 import { db, holdTableWrites } from '@giveaway/testing-integration/database';
 import {
   createHost,
@@ -7,8 +8,7 @@ import {
 } from '@giveaway/testing-integration/fixtures';
 import { crashAtEveryWrite } from '@giveaway/testing-integration/faults';
 import { fakeNetwork, type FakeNetwork } from '@giveaway/testing-server/faults';
-import { expectOk } from '@giveaway/testing-server/result';
-import { processAutomatedPostJobs } from '../process-automated-post-jobs';
+import { runAutomatedPostJobs } from '../run-automated-post-jobs';
 
 vi.hoisted(() => {
   process.env.TWITTER_TEAM_APP_CLIENT_ID = 'x-client-id';
@@ -128,7 +128,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe('processAutomatedPostJobs', () => {
+describe('runAutomatedPostJobs', () => {
   describe('when the function stops after a write and the job runs again', () => {
     beforeEach(() => {
       vi.useFakeTimers({ toFake: ['Date'] });
@@ -138,7 +138,7 @@ describe('processAutomatedPostJobs', () => {
     it('posts the tweet and adds the repost and like tasks in a clean run', async () => {
       const scenario = await setupTweet();
 
-      expectOk(await processAutomatedPostJobs());
+      await runAutomatedPostJobs(prisma);
 
       expect(await postState(scenario)).toEqual({
         jobs: [{ type: 'POST_TO_TWITTER', status: 'COMPLETED' }],
@@ -160,7 +160,7 @@ describe('processAutomatedPostJobs', () => {
       async (_, setup) => {
         const { writes, mismatches } = await crashAtEveryWrite({
           setup,
-          run: () => processAutomatedPostJobs(),
+          run: () => runAutomatedPostJobs(prisma),
           state: postState
         });
 
@@ -175,7 +175,10 @@ describe('processAutomatedPostJobs', () => {
       const { sweepstakes } = await setupTweet();
 
       await holdTableWrites('AutomatedPostJob', { writers: 2 }, () =>
-        Promise.all([processAutomatedPostJobs(), processAutomatedPostJobs()])
+        Promise.all([
+          runAutomatedPostJobs(prisma),
+          runAutomatedPostJobs(prisma)
+        ])
       );
 
       expect(network.requests(TWEETS)).toHaveLength(1);
@@ -191,7 +194,7 @@ describe('processAutomatedPostJobs', () => {
       const next = await setupDiscordPost();
       network.json(TWEETS, { title: 'Forbidden' }, { status: 403 });
 
-      expect(expectOk(await processAutomatedPostJobs())).toEqual({
+      expect(await runAutomatedPostJobs(prisma)).toEqual({
         processed: 2
       });
 
@@ -215,7 +218,7 @@ describe('processAutomatedPostJobs', () => {
           return new Response(null, { status: 503 });
         });
 
-        expectOk(await processAutomatedPostJobs());
+        await runAutomatedPostJobs(prisma);
 
         expect(
           await db.automatedPostJob.findUnique({ where: { id: next.job.id } })

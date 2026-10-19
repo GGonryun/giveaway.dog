@@ -7,6 +7,8 @@ import { seedE2eInvites } from '../invites';
 import { seedE2ePicker } from '../pickers';
 import { seedE2eSweepstakes } from '../sweepstakes';
 import { seedE2eUserExtras } from '../users';
+import { readE2eJobs, runE2eJobs } from '../jobs';
+import { scoreE2eUser } from '../scoring';
 import {
   clearMemoryOutbox,
   recordE2eOutbox
@@ -21,6 +23,8 @@ vi.mock('../users', () => ({
 vi.mock('../integrations', () => ({ seedE2eIntegrations: vi.fn() }));
 vi.mock('../invites', () => ({ seedE2eInvites: vi.fn() }));
 vi.mock('../pickers', () => ({ seedE2ePicker: vi.fn() }));
+vi.mock('../jobs', () => ({ readE2eJobs: vi.fn(), runE2eJobs: vi.fn() }));
+vi.mock('../scoring', () => ({ scoreE2eUser: vi.fn() }));
 vi.mock(
   '@giveaway/e2e-fakes/outbox',
   () => import('@giveaway/e2e-fakes/testing/outbox')
@@ -76,6 +80,12 @@ const WRITES: [string, string, string?][] = [
   ],
   ['POST', 'invites', JSON.stringify({ ns: 'abc123', team: 'e2e-abc123-w0' })],
   ['POST', 'pickers', JSON.stringify({ team: 'e2e-abc123-w0' })],
+  ['POST', 'jobs/run', JSON.stringify({ sweepstakesId: 'sw-1' })],
+  [
+    'POST',
+    'users/scoring',
+    JSON.stringify({ persona: 'participant', ns: 'abc123' })
+  ],
   ['DELETE', 'runs/abc123'],
   ['POST', 'janitor']
 ];
@@ -83,6 +93,7 @@ const WRITES: [string, string, string?][] = [
 const READS: [string, string][] = [
   ['GET', 'health'],
   ['GET', 'rows?view=team&slug=e2e-abc123-w0'],
+  ['GET', 'jobs?sweepstakesId=sw-1'],
   ['GET', 'outbox?channel=email&target=e2e-host-abc123@example.com']
 ];
 
@@ -325,6 +336,55 @@ describe('handleE2eRequest', () => {
           draws: []
         },
         now: expect.any(Date)
+      });
+    });
+
+    it('runs the jobs of the giveaway that the body names', async () => {
+      vi.mocked(runE2eJobs).mockResolvedValue({ rounds: 1 } as never);
+
+      const response = await call('POST', 'jobs/run', {
+        body: JSON.stringify({ sweepstakesId: 'sw-1' })
+      });
+
+      expect(await response.json()).toEqual({ rounds: 1 });
+      expect(runE2eJobs).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: { sweepstakesId: 'sw-1' }
+      });
+    });
+
+    it('refuses to run jobs without a giveaway', async () => {
+      vi.mocked(runE2eJobs).mockClear();
+
+      const response = await call('POST', 'jobs/run', { body: '{}' });
+
+      expect(response.status).toBe(400);
+      expect(runE2eJobs).not.toHaveBeenCalled();
+    });
+
+    it('reads the jobs of the giveaway that the query names', async () => {
+      vi.mocked(readE2eJobs).mockResolvedValue({ jobs: 1 } as never);
+
+      const response = await call('GET', 'jobs?sweepstakesId=sw-1');
+
+      expect(await response.json()).toEqual({ jobs: 1 });
+      expect(readE2eJobs).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: { sweepstakesId: 'sw-1' }
+      });
+    });
+
+    it('scores the persona that the body names', async () => {
+      vi.mocked(scoreE2eUser).mockResolvedValue({ userId: 'u-1' } as never);
+
+      const response = await call('POST', 'users/scoring', {
+        body: JSON.stringify({ persona: 'participant', ns: 'abc123' })
+      });
+
+      expect(await response.json()).toEqual({ userId: 'u-1' });
+      expect(scoreE2eUser).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: { persona: 'participant', ns: 'abc123' }
       });
     });
 
