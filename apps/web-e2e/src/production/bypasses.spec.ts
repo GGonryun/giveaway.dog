@@ -1,8 +1,14 @@
 import { randomBytes } from 'crypto';
+import {
+  E2E_OAUTH_AUTHORIZE_PATH,
+  E2E_OAUTH_SECRET_COOKIE,
+  toE2eOAuthProfileCookie,
+  toE2eOAuthProfileCookieValue
+} from '@giveaway/e2e-model/oauth';
 import { expect, test } from '../fixtures/test';
 import { BASE_URL } from '../env';
 import { postCredentials, sessionCookies } from '../helpers/credentials';
-import { expectSameOrigin } from '../helpers/http';
+import { expectSameOrigin, noRedirect } from '../helpers/http';
 
 const PRODUCTION_PROVIDERS = [
   'anonymous',
@@ -23,7 +29,16 @@ const SEED_PATHS = [
   'health',
   'teams',
   'sweepstakes',
+  'users/extras',
+  'users/scoring',
+  'integrations',
+  'invites',
+  'pickers',
   'rows',
+  'jobs',
+  'jobs/run',
+  'outbox',
+  'oauth/authorize',
   'runs/abc123',
   'janitor',
   'does-not-exist'
@@ -34,6 +49,30 @@ const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 const SITE_KEY = /["'`]([0-3]x[0-9A-Za-z_-]{20,})["'`]/g;
 
 const madeUpSecret = () => randomBytes(20).toString('hex');
+
+const mockOAuthCookies = (secret: string) => {
+  const { hostname } = new URL(BASE_URL);
+  const cookie = {
+    domain: hostname,
+    path: '/',
+    expires: -1,
+    httpOnly: true,
+    secure: BASE_URL.startsWith('https:'),
+    sameSite: 'Lax' as const
+  };
+  return [
+    { ...cookie, name: E2E_OAUTH_SECRET_COOKIE, value: secret },
+    {
+      ...cookie,
+      name: toE2eOAuthProfileCookie('discord'),
+      value: toE2eOAuthProfileCookieValue({
+        id: '100000000000000001',
+        username: 'e2e_production_check',
+        email: 'e2e-newbie-prodchk@example.com'
+      })
+    }
+  ];
+};
 
 test.describe(
   'e2e bypasses on production',
@@ -98,6 +137,67 @@ test.describe(
         );
       });
     }
+
+    test('hides the mock OAuth authorize page from a browser with a made-up secret', async ({
+      request
+    }) => {
+      const callback = new URL('/api/auth/callback/discord', BASE_URL);
+      const authorize = new URL(E2E_OAUTH_AUTHORIZE_PATH, BASE_URL);
+      authorize.searchParams.set('redirect_uri', callback.toString());
+      authorize.searchParams.set('state', 'e2e-production-check');
+
+      const response = await request.get(authorize.toString(), {
+        headers: {
+          cookie: `${E2E_OAUTH_SECRET_COOKIE}=${madeUpSecret()}`
+        },
+        ...noRedirect
+      });
+
+      expect(response.status()).toBe(404);
+      expect(await response.text()).toBe('');
+    });
+
+    test('sends a Discord sign-in to Discord, not to the mock OAuth provider', async ({
+      playwright,
+      request
+    }) => {
+      const state = await request.storageState();
+      const context = await playwright.request.newContext({
+        baseURL: BASE_URL,
+        storageState: {
+          ...state,
+          cookies: [...state.cookies, ...mockOAuthCookies(madeUpSecret())]
+        }
+      });
+
+      try {
+        const csrf = await context.get('/api/auth/csrf');
+        expect(csrf.ok(), `GET /api/auth/csrf returned ${csrf.status()}`).toBe(
+          true
+        );
+        const { csrfToken } = await csrf.json();
+
+        const signIn = await context.post('/api/auth/signin/discord', {
+          form: { csrfToken, callbackUrl: '/' },
+          ...noRedirect
+        });
+
+        expect(signIn.status()).toBe(302);
+        const location = new URL(signIn.headers().location, BASE_URL);
+        expect(
+          location.pathname,
+          'The mock OAuth provider replaced Discord'
+        ).not.toBe(E2E_OAUTH_AUTHORIZE_PATH);
+        expect(location.origin, 'The sign-in does not go to Discord').toBe(
+          'https://discord.com'
+        );
+        expect(sessionCookies(signIn), 'The response sets a session').toEqual(
+          []
+        );
+      } finally {
+        await context.dispose();
+      }
+    });
 
     test('serves a production Turnstile site key on a giveaway page', async ({
       request
