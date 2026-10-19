@@ -150,7 +150,7 @@ catalog:
   tailwindcss-animate: ^1.0.7
   tsx: ^4.20.6
   turndown: ^7.2.2
-  typescript: 5.7.2
+  typescript: 6.0.3
   uuid: ^11.1.0
   vitest: ^4.0.16
   workflow: 4.0.1-beta.50
