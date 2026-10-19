@@ -55,7 +55,7 @@ test.describe('cross-team isolation', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
   test.use({ allowedPageErrors: [ABORTED_ACTION] });
 
-  test("a host cannot read another team's entrants by putting its giveaway id under their own slug", async ({
+  test("[TEAM-002] a host cannot read another team's entrants by putting its giveaway id under their own slug", async ({
     page,
     request
   }, testInfo) => {
@@ -87,7 +87,7 @@ test.describe('cross-team isolation', () => {
   });
 
   test(
-    "the preview and promotion tabs do not show another team's giveaway",
+    "[TEAM-002] the preview and promotion tabs do not show another team's giveaway",
     knownBug(441),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
@@ -128,7 +128,7 @@ test.describe('cross-team isolation', () => {
       ]
     });
 
-    test('a host cannot open the profile of someone who never entered their team giveaways', async ({
+    test('[TEAM-003] a host cannot open the profile of someone who never entered their team giveaways', async ({
       page,
       request
     }, testInfo) => {
@@ -161,7 +161,7 @@ test.describe('cross-team isolation', () => {
     });
   });
 
-  test("a host's Users list contains only people who entered the team giveaways", async ({
+  test("[TEAM-003] a host's Users list contains only people who entered the team giveaways", async ({
     page,
     request
   }, testInfo) => {
@@ -202,7 +202,7 @@ test.describe('cross-team isolation', () => {
   });
 
   test(
-    "a user's Entries tab lists only the entries of the current team",
+    "[TEAM-004] a user's Entries tab lists only the entries of the current team",
     knownBug(437),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
@@ -237,136 +237,135 @@ test.describe('cross-team isolation', () => {
       ]
     });
 
-    test(
-      "a host cannot draw or delete another team's X picker",
-      knownBug(425),
-      async ({ page, request, browser }, testInfo) => {
-        const ns = freshNamespace(testInfo.workerIndex);
-        const seed = seedApi(request);
-        const { team } = await seedRolesTeam(request, ns);
-        const { team: other } = await seedOtherTeam(request, ns);
-        const users = [{ username: `own_${ns}` }, { username: `own2_${ns}` }];
-        const own = await seed.picker({
-          team: team.slug,
-          users,
-          draws: [{ user: 0 }]
-        });
-        const foreign = await seed.picker({
-          team: other.slug,
-          users: [{ username: `oth_${ns}` }, { username: `oth2_${ns}` }],
-          draws: [{ user: 0 }]
-        });
-        await signInAs(page.request, 'host', ns);
-
-        await page.goto(`/app/${team.slug}/pickers/x/${own.id}`);
-        const draw = await captureServerAction(
-          page,
-          async () => {
-            await page.getByRole('button', { name: 'Draw Extra' }).click();
-            await page.getByRole('button', { name: 'Confirm Draw' }).click();
-          },
-          { abort: true }
-        );
-        await page.keyboard.press('Escape');
-        const remove = await captureServerAction(
-          page,
-          async () => {
-            await page.getByRole('button', { name: 'Picker actions' }).click();
-            await page.getByRole('menuitem', { name: 'Delete Picker' }).click();
-            await page
-              .getByRole('dialog')
-              .getByRole('button', { name: 'Delete Picker' })
-              .click();
-          },
-          { abort: true }
-        );
-
-        for (const action of [draw, remove]) {
-          const response = await replayServerAction(
-            page,
-            action,
-            replaceInArgs(action.args, { [own.id]: foreign.id })
-          );
-          expect(readActionResult(response)).toMatchObject({ ok: false });
-        }
-
-        await expectNotInPayload(
-          page.request,
-          `/app/${team.slug}/pickers/x/${foreign.id}`,
-          { "the other team's picker user": `oth_${ns}` }
-        );
-
-        const owner = await openAs(browser, 'host2', ns);
-        await owner.page.goto(`/app/${other.slug}/pickers/x/${foreign.id}`);
-        await expect(owner.page.getByText('Winners (1)')).toBeVisible();
-        await owner.context.close();
-      }
-    );
-  });
-
-  test(
-    "a host cannot disqualify or re-roll another team's prize winner",
-    knownBug(425),
-    async ({ page, request }, testInfo) => {
+    test("[TEAM-005] a host cannot draw or delete another team's X picker", async ({
+      page,
+      request,
+      browser
+    }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
+      const seed = seedApi(request);
       const { team } = await seedRolesTeam(request, ns);
       const { team: other } = await seedOtherTeam(request, ns);
-      const own = await seedEndedWithWinner(
-        request,
-        ns,
-        team.slug,
-        'participant'
-      );
-      const foreign = await seedEndedWithWinner(
-        request,
-        ns,
-        other.slug,
-        'participant2'
-      );
+      const users = [{ username: `own_${ns}` }, { username: `own2_${ns}` }];
+      const own = await seed.picker({
+        team: team.slug,
+        users,
+        draws: [{ user: 0 }]
+      });
+      const foreign = await seed.picker({
+        team: other.slug,
+        users: [{ username: `oth_${ns}` }, { username: `oth2_${ns}` }],
+        draws: [{ user: 0 }]
+      });
       await signInAs(page.request, 'host', ns);
-      await page.goto(`/app/${team.slug}/sweepstakes/${own.id}/winners`);
 
-      const disqualify = await captureServerAction(
+      await page.goto(`/app/${team.slug}/pickers/x/${own.id}`);
+      const draw = await captureServerAction(
         page,
-        async () =>
-          (await openWinnerAction(page, 'Disqualify'))
-            .getByRole('button', { name: 'Disqualify', exact: true })
-            .click(),
+        async () => {
+          await page.getByRole('button', { name: 'Draw Extra' }).click();
+          await page.getByRole('button', { name: 'Confirm Draw' }).click();
+        },
         { abort: true }
       );
       await page.keyboard.press('Escape');
-      const reroll = await captureServerAction(
+      const remove = await captureServerAction(
         page,
-        async () =>
-          (await openWinnerAction(page, 'Re-roll'))
-            .getByRole('button', { name: 'Disqualify & Re-roll' })
-            .click(),
+        async () => {
+          await page.getByRole('button', { name: 'Picker actions' }).click();
+          await page.getByRole('menuitem', { name: 'Delete Picker' }).click();
+          await page
+            .getByRole('dialog')
+            .getByRole('button', { name: 'Delete Picker' })
+            .click();
+        },
         { abort: true }
       );
 
-      const disqualified = await replayServerAction(
-        page,
-        disqualify,
-        replaceInArgs(disqualify.args, {
-          [own.id]: foreign.id,
-          [own.draws[0].id]: foreign.draws[0].id
-        })
+      for (const action of [draw, remove]) {
+        const response = await replayServerAction(
+          page,
+          action,
+          replaceInArgs(action.args, { [own.id]: foreign.id })
+        );
+        expect(readActionResult(response)).toMatchObject({ ok: false });
+      }
+
+      await expectNotInPayload(
+        page.request,
+        `/app/${team.slug}/pickers/x/${foreign.id}`,
+        { "the other team's picker user": `oth_${ns}` }
       );
-      expect(readActionResult(disqualified)).toMatchObject({ ok: false });
 
-      const rerolled = await replayServerAction(
-        page,
-        reroll,
-        replaceInArgs(reroll.args, { [own.draws[0].id]: foreign.draws[0].id })
-      );
-      expect(readActionResult(rerolled)).toMatchObject({ ok: false });
+      const owner = await openAs(browser, 'host2', ns);
+      await owner.page.goto(`/app/${other.slug}/pickers/x/${foreign.id}`);
+      await expect(owner.page.getByText('Winners (1)')).toBeVisible();
+      await owner.context.close();
+    });
+  });
 
-      expect(await drawResults(request, foreign)).toEqual({ WINNER: 1 });
-      expect(await drawResults(request, own)).toEqual({ WINNER: 1 });
-    }
-  );
+  test("[TEAM-005] a host cannot disqualify or re-roll another team's prize winner", async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    const { team: other } = await seedOtherTeam(request, ns);
+    const own = await seedEndedWithWinner(
+      request,
+      ns,
+      team.slug,
+      'participant'
+    );
+    const foreign = await seedEndedWithWinner(
+      request,
+      ns,
+      other.slug,
+      'participant2'
+    );
+    await signInAs(page.request, 'host', ns);
+    await page.goto(`/app/${team.slug}/sweepstakes/${own.id}/winners`);
 
-  test('a visitor or a non-member cannot run a host procedure', async ({
+    const disqualify = await captureServerAction(
+      page,
+      async () =>
+        (await openWinnerAction(page, 'Disqualify'))
+          .getByRole('button', { name: 'Disqualify', exact: true })
+          .click(),
+      { abort: true }
+    );
+    await page.keyboard.press('Escape');
+    const reroll = await captureServerAction(
+      page,
+      async () =>
+        (await openWinnerAction(page, 'Re-roll'))
+          .getByRole('button', { name: 'Disqualify & Re-roll' })
+          .click(),
+      { abort: true }
+    );
+
+    const disqualified = await replayServerAction(
+      page,
+      disqualify,
+      replaceInArgs(disqualify.args, {
+        [own.id]: foreign.id,
+        [own.draws[0].id]: foreign.draws[0].id
+      })
+    );
+    expect(readActionResult(disqualified)).toMatchObject({ ok: false });
+
+    const rerolled = await replayServerAction(
+      page,
+      reroll,
+      replaceInArgs(reroll.args, { [own.draws[0].id]: foreign.draws[0].id })
+    );
+    expect(readActionResult(rerolled)).toMatchObject({ ok: false });
+
+    expect(await drawResults(request, foreign)).toEqual({ WINNER: 1 });
+    expect(await drawResults(request, own)).toEqual({ WINNER: 1 });
+  });
+
+  test('[TEAM-006] a visitor or a non-member cannot run a host procedure', async ({
     page,
     request,
     browser

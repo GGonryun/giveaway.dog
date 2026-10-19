@@ -13,7 +13,7 @@ type AccountRows = {
 test.describe('mock OAuth sign-in', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to use the mock OAuth provider');
 
-  test('a first Discord sign-in creates a new user', async ({
+  test('[AUTH-005] a first Discord sign-in creates a new user', async ({
     page,
     context,
     request
@@ -53,7 +53,7 @@ test.describe('mock OAuth sign-in', () => {
   });
 
   test(
-    "a new user's first OAuth sign-in lands on onboarding",
+    "[AUTH-006] a new user's first OAuth sign-in lands on onboarding",
     knownBug(428),
     async ({ page, context }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);

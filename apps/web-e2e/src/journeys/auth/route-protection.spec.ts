@@ -45,7 +45,9 @@ const expectOnboarding = async (page: Page) => {
 
 test.describe('a visitor', () => {
   for (const path of PROTECTED_PAGES) {
-    test(`is sent to the login page from ${path}`, async ({ page }) => {
+    test(`[ROUTE-001] is sent to the login page from ${path}`, async ({
+      page
+    }) => {
       const response = await page.request.get(path, noRedirect);
 
       expect(response.status()).toBeGreaterThanOrEqual(300);
@@ -64,7 +66,7 @@ test.describe('a visitor', () => {
     });
   }
 
-  test('is sent home from the logout page', async ({ page }) => {
+  test('[ROUTE-003] is sent home from the logout page', async ({ page }) => {
     await page.goto('/logout');
 
     await expect(page).toHaveURL(/\/$/);
@@ -72,7 +74,7 @@ test.describe('a visitor', () => {
   });
 
   for (const path of PUBLIC_PAGES) {
-    test(`opens ${path} without signing in`, async ({ page }) => {
+    test(`[ROUTE-002] opens ${path} without signing in`, async ({ page }) => {
       const response = await page.request.get(path, noRedirect);
       expect(response.status()).toBe(200);
 
@@ -94,7 +96,7 @@ test.describe('a participant', () => {
     expect((await session.json()).user.accountType).toBe('PARTICIPANT');
   });
 
-  test('is sent to browse from the host dashboard', async ({
+  test('[ROUTE-004] is sent to browse from the host dashboard', async ({
     page,
     request
   }, testInfo) => {
@@ -113,7 +115,7 @@ test.describe('a participant', () => {
     }
   });
 
-  test('is kept out of the login page', async ({ page }) => {
+  test('[ROUTE-005] is kept out of the login page', async ({ page }) => {
     for (const path of ['/login', '/login?verify=true']) {
       await page.goto(path);
 
@@ -126,7 +128,7 @@ test.describe('a host', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
   test.use({ storageState: personaState('host') });
 
-  test('is kept out of the login page', async ({ page }) => {
+  test('[ROUTE-005] is kept out of the login page', async ({ page }) => {
     for (const path of ['/login', '/login?verify=true', '/']) {
       await page.goto(path);
 
@@ -138,7 +140,7 @@ test.describe('a host', () => {
 test.describe('a user who has not finished onboarding', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
-  test('is sent to onboarding', async ({ page, freshPersona }) => {
+  test('[ROUTE-006] is sent to onboarding', async ({ page, freshPersona }) => {
     await freshPersona('newbie');
 
     for (const path of [
@@ -156,7 +158,10 @@ test.describe('a user who has not finished onboarding', () => {
     }
   });
 
-  test('opens the home and pricing pages', async ({ page, freshPersona }) => {
+  test('[ROUTE-006] opens the home and pricing pages', async ({
+    page,
+    freshPersona
+  }) => {
     await freshPersona('newbie');
 
     for (const path of ['/home', '/pricing']) {

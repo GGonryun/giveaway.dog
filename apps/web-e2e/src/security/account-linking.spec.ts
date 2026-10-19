@@ -17,7 +17,7 @@ test.describe('account linking', { tag: TAGS.security }, () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
   test(
-    'an unverified email change does not capture a magic-link sign-in',
+    '[LINK-001] an unverified email change does not capture a magic-link sign-in',
     knownBug(430),
     async ({ page, browser, request, freshPersona }, testInfo) => {
       await skipWithoutEmailFake(request);
@@ -54,7 +54,7 @@ test.describe('account linking', { tag: TAGS.security }, () => {
   );
 
   test(
-    'an unverified Discord email does not sign into another account',
+    '[LINK-002] an unverified Discord email does not sign into another account',
     knownBug(431),
     async ({ page, context, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);

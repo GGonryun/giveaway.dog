@@ -10,7 +10,7 @@ test.describe('user tracking', { tag: '@security' }, () => {
   test.use({ storageState: personaState('participant') });
 
   test(
-    'a signed-in visitor whose browser keeps no cookie is tracked at most once',
+    '[TRACK-001] a signed-in visitor whose browser keeps no cookie is tracked at most once',
     knownBug(75),
     async ({ page, context }) => {
       await context.clearCookies({ name: 'user_metrics' });

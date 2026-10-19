@@ -40,7 +40,7 @@ test.describe('personas', () => {
     test.describe(persona, () => {
       test.use({ storageState: personaState(persona) });
 
-      test(`lands where ${persona} belongs`, async ({ page }) => {
+      test(`[ROUTE-007] lands where ${persona} belongs`, async ({ page }) => {
         const session = await page.request.get('/api/auth/session');
         const { user } = await session.json();
         expect(user.email).toBe(toPersonaEmail(persona, RUN_ID));

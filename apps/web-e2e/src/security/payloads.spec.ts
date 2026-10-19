@@ -12,7 +12,7 @@ test.describe('page payloads', { tag: '@security' }, () => {
   test.use({ storageState: personaState('participant') });
 
   for (const path of ['/browse', '/account']) {
-    test(`${path} sends a participant no other user's email`, async ({
+    test(`[LEAK-001] ${path} sends a participant no other user's email`, async ({
       request
     }) => {
       await expectNotInPayload(request, path, {
@@ -26,7 +26,7 @@ test.describe('page payloads', { tag: '@security' }, () => {
 test.describe('giveaway page payloads', { tag: '@security' }, () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
 
-  test('a giveaway page sends a visitor no email of the host', async ({
+  test('[LEAK-002] a giveaway page sends a visitor no email of the host', async ({
     request
   }, testInfo) => {
     const { team } = await seedWorkerTeam(request, testInfo);
@@ -74,7 +74,7 @@ test.describe('secret-code task payloads', { tag: '@security' }, () => {
     });
   };
 
-  test('a giveaway page sends a visitor no secret code', async ({
+  test('[LEAK-003] a giveaway page sends a visitor no secret code', async ({
     request
   }, testInfo) => {
     const giveaway = await seedSecretCodeGiveaway(request, testInfo);
@@ -85,7 +85,7 @@ test.describe('secret-code task payloads', { tag: '@security' }, () => {
   test.describe('as a participant', () => {
     test.use({ storageState: personaState('participant') });
 
-    test('a giveaway page sends a participant no secret code', async ({
+    test('[LEAK-003] a giveaway page sends a participant no secret code', async ({
       request
     }, testInfo) => {
       const giveaway = await seedSecretCodeGiveaway(request, testInfo);
@@ -114,7 +114,7 @@ test.describe('winner payloads', { tag: '@security' }, () => {
           persona,
           ns,
           birthday,
-          location: { country: 'United States', countryCode: 'US' },
+          location: { country: 'New Zealand', countryCode: 'NZ' },
           accounts: [{ identity: 'GOOGLE', label }]
         }
       ]
@@ -178,7 +178,7 @@ test.describe('winner payloads', { tag: '@security' }, () => {
       secrets: {
         ...secrets,
         'the secret code': code,
-        'a country of a winner': '"countryCode":"US"'
+        'a country of a winner': '"countryCode":"NZ"'
       }
     };
   };
@@ -188,7 +188,7 @@ test.describe('winner payloads', { tag: '@security' }, () => {
     `/browse/${giveaway.slug}`
   ];
 
-  test('a completed giveaway sends a visitor no personal data of its winners', async ({
+  test('[LEAK-004] a completed giveaway sends a visitor no personal data of its winners', async ({
     request
   }, testInfo) => {
     const { giveaway, secrets } = await seedCompletedGiveaway(
@@ -210,7 +210,7 @@ test.describe('winner payloads', { tag: '@security' }, () => {
   test.describe('as a participant', () => {
     test.use({ storageState: personaState('participant') });
 
-    test('a completed giveaway sends a participant no personal data of its winners', async ({
+    test('[LEAK-004] a completed giveaway sends a participant no personal data of its winners', async ({
       request
     }, testInfo) => {
       const { giveaway, secrets } = await seedCompletedGiveaway(
