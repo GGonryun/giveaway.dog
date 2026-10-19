@@ -11166,6 +11166,9 @@ importers:
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../tasks/task-model
+      '@giveaway/team-permissions':
+        specifier: workspace:*
+        version: link:../../team/team-permissions
       '@giveaway/user-model':
         specifier: workspace:*
         version: link:../../account/user-model
@@ -11184,6 +11187,12 @@ importers:
       lodash:
         specifier: 'catalog:'
         version: 4.17.23
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -11191,6 +11200,12 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@giveaway/testing-integration':
+        specifier: workspace:*
+        version: link:../../tooling/testing-integration
+      '@giveaway/testing-postgres':
+        specifier: workspace:*
+        version: link:../../tooling/testing-postgres
       '@giveaway/testing-server':
         specifier: workspace:*
         version: link:../../tooling/testing-server

@@ -3,31 +3,26 @@ import getSweepstakesPrizes from '../get-sweepstake-prizes';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { PRIZE_WINNERS_INCLUDE_QUERY } from '@giveaway/sweepstakes-model/prizes';
 import {
   buildTaskRecord,
-  buildTeam,
   buildUserRecord,
   expectedBonusTask,
   expectedUserSchema,
   SWEEPSTAKES_ID,
   TEAM_SLUG
 } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
+import {
+  describeTeamAccess,
+  teamSweepstakes,
+  teamSweepstakesQuery
+} from './fixtures/team-sweepstakes';
 
 const input = { sweepstakesId: SWEEPSTAKES_ID, slug: TEAM_SLUG };
 
 const CREATED = new Date('2026-09-10T00:00:00.000Z');
 const UPDATED = new Date('2026-09-11T00:00:00.000Z');
 const COMPLETED = new Date('2026-09-05T00:00:00.000Z');
-
-const sweepstakes = (overrides: Record<string, unknown> = {}) => ({
-  id: SWEEPSTAKES_ID,
-  status: 'ACTIVE',
-  teamId: 'team-1',
-  team: buildTeam(),
-  ...overrides
-});
 
 const draw = (overrides: Record<string, unknown> = {}) => ({
   id: 'draw-1',
@@ -92,51 +87,33 @@ describe('getSweepstakesPrizes', () => {
     });
   });
 
-  describe('when the sweepstakes cannot be found', () => {
+  describeTeamAccess(
+    () => getSweepstakesPrizes(input),
+    () => [prismaMock.prize.findMany]
+  );
+
+  describe('when the caller is a member of the team', () => {
     beforeEach(() => {
       signIn();
     });
 
-    it('looks up the sweepstakes by id and team slug only', async () => {
+    it('looks up the sweepstakes through the membership of the caller', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
       await getSweepstakesPrizes(input);
 
-      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
-        where: { id: SWEEPSTAKES_ID, team: { slug: TEAM_SLUG } },
-        include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
-      });
-    });
-
-    it('returns NOT_FOUND when nothing matches', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
-
-      const result = await getSweepstakesPrizes(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith(
+        teamSweepstakesQuery(TEAM_SLUG)
       );
-      expect(prismaMock.prize.findMany).not.toHaveBeenCalled();
-    });
-
-    it('returns NOT_FOUND when the sweepstakes has no team', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(
-        sweepstakes({ team: null })
-      );
-
-      const result = await getSweepstakesPrizes(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
-      );
-      expect(prismaMock.prize.findMany).not.toHaveBeenCalled();
     });
   });
 
   describe('when the sweepstakes exists', () => {
     beforeEach(() => {
       signIn();
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(sweepstakes());
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes() as never
+      );
     });
 
     it('loads the prizes of the requested sweepstakes id with their draws', async () => {
@@ -150,16 +127,16 @@ describe('getSweepstakesPrizes', () => {
       });
     });
 
-    it('loads prizes by the requested id rather than the id of the loaded record', async () => {
+    it('loads prizes by the id of the sweepstakes the membership check loaded', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
-        sweepstakes({ id: 'loaded-id' })
+        teamSweepstakes('OWNER', 'loaded-id') as never
       );
       prismaMock.prize.findMany.mockResolvedValue([]);
 
       await getSweepstakesPrizes(input);
 
       expect(prismaMock.prize.findMany).toHaveBeenCalledWith({
-        where: { sweepstakesId: SWEEPSTAKES_ID },
+        where: { sweepstakesId: 'loaded-id' },
         include: PRIZE_WINNERS_INCLUDE_QUERY
       });
     });

@@ -1,14 +1,13 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { z } from 'zod';
-import { ApplicationError } from '@giveaway/util-errors';
 import { sweepstakesPrizeSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   PRIZE_WINNERS_INCLUDE_QUERY,
   toSweepstakesPrizes
 } from '@giveaway/sweepstakes-model/prizes';
+import { findTeamSweepstakes } from './team-sweepstakes';
 
 const getSweepstakesPrizes = procedure()
   .authorization({
@@ -21,27 +20,17 @@ const getSweepstakesPrizes = procedure()
     })
   )
   .output(sweepstakesPrizeSchema.array())
-  .handler(async ({ input: { sweepstakesId, slug }, db }) => {
-    const sweepstakes = await db.sweepstakes.findUnique({
-      where: {
-        id: sweepstakesId,
-        team: {
-          slug: slug
-        }
-      },
-      include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
+  .handler(async ({ input: { sweepstakesId, slug }, user, db }) => {
+    const sweepstakes = await findTeamSweepstakes({
+      db,
+      userId: user.id,
+      sweepstakesId,
+      slug
     });
-
-    if (!sweepstakes || !sweepstakes.team) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: `Sweepstakes with ID ${sweepstakesId} not found`
-      });
-    }
 
     const prizes = await db.prize.findMany({
       where: {
-        sweepstakesId
+        sweepstakesId: sweepstakes.id
       },
       include: PRIZE_WINNERS_INCLUDE_QUERY
     });

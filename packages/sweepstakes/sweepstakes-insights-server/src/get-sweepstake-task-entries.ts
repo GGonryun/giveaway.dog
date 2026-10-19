@@ -1,9 +1,7 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { z } from 'zod';
-import { ApplicationError } from '@giveaway/util-errors';
 
 import { toJsonObject } from '@giveaway/util-collections/json';
 import {
@@ -11,36 +9,34 @@ import {
   USER_SCHEMA_SELECT_QUERY
 } from '@giveaway/user-model/user';
 import { userEntriesSchema, toTaskSchema } from '@giveaway/task-model/schemas';
+import { findTeamSweepstakes } from './team-sweepstakes';
 
 const getSweepstakeTaskEntries = procedure()
   .authorization({
-    required: false
+    required: true
   })
   .input(
     z.object({
       sweepstakesId: z.string(),
+      slug: z.string(),
       taskId: z.string()
     })
   )
   .output(userEntriesSchema.array())
-  .handler(async ({ input, db }) => {
-    const sweepstakes = await db.sweepstakes.findUnique({
-      where: {
-        id: input.sweepstakesId
-      },
-      include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
+  .handler(async ({ input, user, db }) => {
+    const sweepstakes = await findTeamSweepstakes({
+      db,
+      userId: user.id,
+      sweepstakesId: input.sweepstakesId,
+      slug: input.slug
     });
-
-    if (!sweepstakes || !sweepstakes.team) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: `Sweepstakes with ID ${input.sweepstakesId} not found`
-      });
-    }
 
     const completions = await db.taskCompletion.findMany({
       where: {
-        taskId: input.taskId
+        taskId: input.taskId,
+        task: {
+          sweepstakesId: sweepstakes.id
+        }
       },
       include: {
         participant: {
