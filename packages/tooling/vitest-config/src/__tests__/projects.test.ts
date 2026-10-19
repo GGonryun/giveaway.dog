@@ -1,9 +1,12 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   packageTestConfig,
   RESET_MODULES,
   SERVER_SETUP,
-  testProjects
+  testProjects,
+  WORKSPACE_ROOT
 } from '../projects.ts';
 
 describe('packageTestConfig', () => {
@@ -26,6 +29,15 @@ describe('packageTestConfig', () => {
 
   it('isolates each test file when the package asks for it', () => {
     expect(packageTestConfig({ isolate: true }).test?.isolate).toBe(true);
+  });
+
+  it('lets a copy of the package outside the workspace load the shared setup files', () => {
+    expect(packageTestConfig().server?.fs?.allow).toEqual([
+      '.',
+      WORKSPACE_ROOT
+    ]);
+    expect(RESET_MODULES.startsWith(WORKSPACE_ROOT)).toBe(true);
+    expect(existsSync(join(WORKSPACE_ROOT, 'pnpm-workspace.yaml'))).toBe(true);
   });
 });
 
