@@ -66,12 +66,8 @@ export const getTeamParticipants = procedure()
       whereClause.quality = {
         some: {
           score: {
-            ...(input.minQualityScore !== undefined && {
-              gte: input.minQualityScore
-            }),
-            ...(input.maxQualityScore !== undefined && {
-              lte: input.maxQualityScore
-            })
+            gte: input.minQualityScore,
+            lte: input.maxQualityScore
           }
         }
       };
