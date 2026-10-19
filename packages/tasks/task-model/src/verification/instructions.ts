@@ -22,7 +22,9 @@ export function getVerificationInstructions(args: {
   const { task, user } = args;
 
   const name = user.name || 'the user';
-  const provider = getProviderByTask(task.type, user.providers || []);
+  const provider = user.providers
+    ? getProviderByTask(task.type, user.providers)
+    : null;
 
   switch (task.type) {
     case 'INSTAGRAM_VISIT':

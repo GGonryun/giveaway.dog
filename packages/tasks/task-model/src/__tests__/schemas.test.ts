@@ -379,7 +379,8 @@ const instagramPostCase = (
   invalid: [
     'https://www.instagram.com/reel/ABC/',
     'https://www.instagram.com/p/',
-    'https://www.instagram.com/tv/ABC'
+    'https://www.instagram.com/tv/ABC',
+    'https://www.instagram.com/p/ABC#comments'
   ]
 });
 
@@ -661,7 +662,9 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
       'https://www.facebook.com/page/posts/123?ref=share',
       'https://www.facebook.com/page/videos/123',
       'https://www.facebook.com/photo.php?fbid=abc&id=1',
-      'https://www.facebook.com/permalink.php?story_fbid=abc'
+      'https://www.facebook.com/permalink.php?story_fbid=abc',
+      'https://example.com/?https://www.facebook.com/page/posts/123',
+      'https://example.com/?https://www.facebook.com/photo.php?fbid=1&id=2'
     ]
   },
   {
@@ -704,7 +707,8 @@ const URL_FIELD_CASES: UrlFieldCase[] = [
       'https://www.tiktok.com/@giveawaydog/live',
       `https://www.tiktok.com/@${'a'.repeat(31)}/video/1`,
       'https://www.tiktok.com/@giveawaydog/video/abc',
-      'https://www.tiktok.com/giveawaydog/video/123'
+      'https://www.tiktok.com/giveawaydog/video/123',
+      'https://www.tiktok.com/@giveawaydog/video/123#comments'
     ]
   },
   blueskyPostCase('bluesky like', blueskyLikeTaskSchema, 'BLUESKY_LIKE'),
@@ -1528,7 +1532,7 @@ describe('twitchChatImportTaskSchema', () => {
     ).toEqual(['Chat command is required', COMMAND_ERROR]);
   });
 
-  it.each(['giveaway', '!give away', '!give-away', '!'])(
+  it.each(['giveaway', '!give away', '!give-away', '!', 'say !giveaway'])(
     'rejects the trigger %s',
     (trigger) => {
       expect(

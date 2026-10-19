@@ -56,10 +56,6 @@ export const toTaskCompletion = (
 export const toMostRecentCompletion = (
   completions: TaskCompletionSchema[]
 ): Date | null => {
-  if (completions.length === 0) {
-    return null;
-  }
-
   const sorted = completions
     .filter((c) => c.completedAt !== null)
     .sort((a, b) => b.completedAt.getTime() - a.completedAt.getTime());
