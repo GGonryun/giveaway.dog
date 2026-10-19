@@ -1,6 +1,7 @@
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET } from '../../env';
+import { knownBug } from '../../helpers/known-bug';
 import { newDiscordId, useMockOAuth } from '../../helpers/oauth';
 import { seedApi } from '../../helpers/seed';
 
@@ -50,4 +51,25 @@ test.describe('mock OAuth sign-in', () => {
       })
     ]);
   });
+
+  test(
+    "a new user's first OAuth sign-in lands on onboarding",
+    knownBug(428),
+    async ({ page, context }, testInfo) => {
+      const ns = freshNamespace(testInfo.workerIndex);
+      await useMockOAuth(context, 'discord', {
+        id: newDiscordId(),
+        username: `e2e_${ns}`,
+        email: `e2e-newbie-${ns}@example.com`
+      });
+
+      await page.goto('/login');
+      await page.getByRole('button', { name: 'Login with Discord' }).click();
+
+      await expect(page).toHaveURL(/\/onboarding$/, { timeout: 15_000 });
+      await expect(page.getByText('Welcome to Giveaway.dog')).toBeVisible();
+      const session = await page.request.get('/api/auth/session');
+      expect((await session.json()).user.onboarded).toBe(false);
+    }
+  );
 });
