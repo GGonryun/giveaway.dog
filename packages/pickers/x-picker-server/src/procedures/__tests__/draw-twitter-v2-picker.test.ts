@@ -1,14 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { PickerStatus } from '@giveaway/db-model';
+import { PickerStatus, TeamRole, TeamTier } from '@giveaway/db-model';
 import { drawTwitterV2Picker } from '../draw-twitter-v2-picker';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
-import { signIn } from '@giveaway/testing-server/session';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   NOW,
   buildDraw,
   buildPicker,
   buildPickerUser,
+  buildTeam,
   daysBeforeNow
 } from '../../testing/fixtures-pickers';
 
@@ -46,19 +47,25 @@ const drawnUserIds = () =>
 
 describe('drawTwitterV2Picker', () => {
   describe('when the caller is not signed in', () => {
-    it('returns UNAUTHORIZED without loading the picker', async () => {
-      const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+    it('returns UNAUTHORIZED without reading the team or the picker', async () => {
+      const result = await drawTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
         'Invalid session'
       );
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
       expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
+      expect(prismaMock.twitterPickerDraw.create).not.toHaveBeenCalled();
     });
   });
 
   describe('when signed in', () => {
     beforeEach(() => {
       signIn();
+      prismaMock.team.findUnique.mockResolvedValue(buildTeam());
       vi.spyOn(Math, 'random').mockReturnValue(0.9999);
       echoCreatedDraws();
     });
@@ -72,6 +79,7 @@ describe('drawTwitterV2Picker', () => {
       it('rejects a non-numeric count', async () => {
         const result = await drawTwitterV2Picker({
           pickerId: 'picker-1',
+          slug: 'acme',
           count: '2'
         } as unknown as Parameters<typeof drawTwitterV2Picker>[0]);
 
@@ -82,22 +90,94 @@ describe('drawTwitterV2Picker', () => {
       });
     });
 
-    describe('when the picker cannot be drawn', () => {
-      it('loads the picker with its users and draws', async () => {
-        prismaMock.twitterPicker.findUnique.mockResolvedValue(null);
+    describe('team access', () => {
+      it('looks the team up by slug among the caller memberships', async () => {
+        mockPicker();
 
-        await drawTwitterV2Picker({ pickerId: 'picker-42' });
+        await drawTwitterV2Picker({ pickerId: 'picker-1', slug: 'dog-team' });
 
-        expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
-          where: { id: 'picker-42' },
-          include: { users: true, draws: true }
+        expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
+          where: {
+            slug: 'dog-team',
+            members: { some: { userId: TEST_USER.id } }
+          },
+          include: { members: true }
         });
       });
 
-      it('returns NOT_FOUND when the picker does not exist', async () => {
+      it('returns NOT_FOUND without reading the picker or drawing when the caller is not a member', async () => {
+        prismaMock.team.findUnique.mockResolvedValue(null);
+        mockPicker();
+
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+          'Team not found'
+        );
+        expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
+        expect(prismaMock.twitterPickerDraw.create).not.toHaveBeenCalled();
+      });
+
+      it.each([TeamRole.BLOCKED, TeamRole.GUEST])(
+        'returns FORBIDDEN without reading the picker or drawing for a %s member',
+        async (role) => {
+          prismaMock.team.findUnique.mockResolvedValue(buildTeam({ role }));
+          mockPicker();
+
+          const result = await drawTwitterV2Picker({
+            pickerId: 'picker-1',
+            slug: 'acme'
+          });
+
+          expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+            'You do not have permission to perform this action. Required permission: UPDATE_PICKERS'
+          );
+          expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
+          expect(prismaMock.twitterPickerDraw.create).not.toHaveBeenCalled();
+        }
+      );
+
+      it('draws winners for a member of a FREE team', async () => {
+        prismaMock.team.findUnique.mockResolvedValue(
+          buildTeam({ role: TeamRole.MEMBER, tier: TeamTier.FREE })
+        );
+        mockPicker({ winners: 1 });
+
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectOk(result)).toHaveLength(1);
+      });
+
+      it('loads the picker by id within the caller team with its users and draws', async () => {
+        prismaMock.team.findUnique.mockResolvedValue({
+          ...buildTeam(),
+          id: 'team-7'
+        });
         prismaMock.twitterPicker.findUnique.mockResolvedValue(null);
 
-        const result = await drawTwitterV2Picker({ pickerId: 'missing' });
+        await drawTwitterV2Picker({ pickerId: 'picker-42', slug: 'acme' });
+
+        expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
+          where: { id: 'picker-42', teamId: 'team-7' },
+          include: { users: true, draws: true }
+        });
+      });
+    });
+
+    describe('when the picker cannot be drawn', () => {
+      it('returns NOT_FOUND when the picker is not in the caller team', async () => {
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(null);
+
+        const result = await drawTwitterV2Picker({
+          pickerId: 'missing',
+          slug: 'acme'
+        });
 
         expect(expectFailure(result, 'NOT_FOUND').message).toBe(
           'Picker not found'
@@ -116,7 +196,10 @@ describe('drawTwitterV2Picker', () => {
       ])('returns BAD_REQUEST for a %s picker', async (status) => {
         mockPicker({ status });
 
-        const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
           'Picker must be in COMPLETE status to draw winners'
@@ -127,7 +210,10 @@ describe('drawTwitterV2Picker', () => {
       it('returns BAD_REQUEST when the picker has no users', async () => {
         mockPicker({}, []);
 
-        const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
           'No eligible users to draw from'
@@ -137,7 +223,10 @@ describe('drawTwitterV2Picker', () => {
       it('returns BAD_REQUEST when every user is ineligible', async () => {
         mockPicker({ minFollowersCount: 10_000 });
 
-        const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
           'No eligible users to draw from'
@@ -151,7 +240,10 @@ describe('drawTwitterV2Picker', () => {
           buildDraw({ id: 'd2', userId: 'u2' })
         ]);
 
-        const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
           'All eligible users have already been drawn as winners'
@@ -164,7 +256,10 @@ describe('drawTwitterV2Picker', () => {
           buildDraw({ id: 'd1', userId: 'u1', disqualified: 'Bot' })
         ]);
 
-        const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
           'All eligible users have already been drawn as winners'
@@ -176,7 +271,7 @@ describe('drawTwitterV2Picker', () => {
       it('draws the picker winner quota by default', async () => {
         mockPicker({ winners: 2 });
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        await drawTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
         expect(drawnUserIds()).toEqual(['u1', 'u2']);
       });
@@ -184,7 +279,7 @@ describe('drawTwitterV2Picker', () => {
       it('creates each draw for the picker and user', async () => {
         mockPicker({ winners: 1 });
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        await drawTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
         expect(prismaMock.twitterPickerDraw.create).toHaveBeenCalledWith({
           data: { pickerId: 'picker-1', userId: 'u1' }
@@ -194,7 +289,7 @@ describe('drawTwitterV2Picker', () => {
       it('creates the draws in a single transaction', async () => {
         mockPicker({ winners: 3 });
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        await drawTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
         expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
         expect(prismaMock.$transaction.mock.calls[0][0]).toHaveLength(3);
@@ -203,7 +298,10 @@ describe('drawTwitterV2Picker', () => {
       it('returns the created draws without the picker id', async () => {
         mockPicker({ winners: 2 });
 
-        const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectOk(result)).toEqual(
           [
@@ -216,7 +314,11 @@ describe('drawTwitterV2Picker', () => {
       it('uses the requested count instead of the quota', async () => {
         mockPicker({ winners: 1 });
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1', count: 3 });
+        await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme',
+          count: 3
+        });
 
         expect(drawnUserIds()).toEqual(['u1', 'u2', 'u3']);
       });
@@ -224,7 +326,7 @@ describe('drawTwitterV2Picker', () => {
       it('caps the count at the number of available users', async () => {
         mockPicker({ winners: 10 });
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        await drawTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
         expect(drawnUserIds()).toEqual(['u1', 'u2', 'u3']);
       });
@@ -234,6 +336,7 @@ describe('drawTwitterV2Picker', () => {
 
         const result = await drawTwitterV2Picker({
           pickerId: 'picker-1',
+          slug: 'acme',
           count: 0
         });
 
@@ -244,7 +347,11 @@ describe('drawTwitterV2Picker', () => {
       it('draws all but the last available user for a count of -1', async () => {
         mockPicker({ winners: 1 });
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1', count: -1 });
+        await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme',
+          count: -1
+        });
 
         expect(drawnUserIds()).toEqual(['u1', 'u2']);
       });
@@ -254,7 +361,7 @@ describe('drawTwitterV2Picker', () => {
           buildDraw({ id: 'd1', userId: 'u2' })
         ]);
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        await drawTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
         expect(drawnUserIds()).toEqual(['u1', 'u3']);
       });
@@ -268,7 +375,7 @@ describe('drawTwitterV2Picker', () => {
           buildPickerUser({ id: 'ok' })
         ]);
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        await drawTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
         expect(drawnUserIds()).toEqual(['ok']);
       });
@@ -277,7 +384,7 @@ describe('drawTwitterV2Picker', () => {
         vi.mocked(Math.random).mockReturnValue(0);
         mockPicker({ winners: 1 });
 
-        await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        await drawTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
         expect(drawnUserIds()).toEqual(['u2']);
       });
@@ -288,7 +395,10 @@ describe('drawTwitterV2Picker', () => {
         mockPicker({ winners: 1 });
         prismaMock.twitterPickerDraw.create.mockResolvedValue({ id: 'd1' });
 
-        const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(
           expectFailure(result, 'UNPROCESSABLE_CONTENT').message
@@ -301,7 +411,10 @@ describe('drawTwitterV2Picker', () => {
           knownRequestError('P2003')
         );
 
-        const result = await drawTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await drawTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
           /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: [\w-]{6}$/

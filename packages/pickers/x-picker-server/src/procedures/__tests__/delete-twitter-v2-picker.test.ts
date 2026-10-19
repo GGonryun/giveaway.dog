@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { TeamRole, TeamTier } from '@giveaway/db-model';
 import { deleteTwitterV2Picker } from '../delete-twitter-v2-picker';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
-import { signIn } from '@giveaway/testing-server/session';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { buildPicker } from '../../testing/fixtures-pickers';
+import { buildPicker, buildTeam } from '../../testing/fixtures-pickers';
 
 const mocks = vi.hoisted(() => ({
   getWorld: vi.fn(),
@@ -23,11 +24,15 @@ describe('deleteTwitterV2Picker', () => {
 
   describe('when the caller is not signed in', () => {
     it('returns UNAUTHORIZED without deleting anything', async () => {
-      const result = await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await deleteTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
         'Invalid session'
       );
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
       expect(prismaMock.twitterPicker.delete).not.toHaveBeenCalled();
       expect(mocks.getWorld).not.toHaveBeenCalled();
     });
@@ -36,6 +41,85 @@ describe('deleteTwitterV2Picker', () => {
   describe('when signed in', () => {
     beforeEach(() => {
       signIn();
+      prismaMock.team.findUnique.mockResolvedValue(buildTeam());
+    });
+
+    describe('team access', () => {
+      it('looks the team up by slug among the caller memberships', async () => {
+        prismaMock.twitterPicker.delete.mockResolvedValue(buildPicker());
+
+        await deleteTwitterV2Picker({ pickerId: 'picker-1', slug: 'dog-team' });
+
+        expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
+          where: {
+            slug: 'dog-team',
+            members: { some: { userId: TEST_USER.id } }
+          },
+          include: { members: true }
+        });
+      });
+
+      it('returns NOT_FOUND without deleting when the caller is not a member', async () => {
+        prismaMock.team.findUnique.mockResolvedValue(null);
+
+        const result = await deleteTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+          'Team not found'
+        );
+        expect(prismaMock.twitterPicker.delete).not.toHaveBeenCalled();
+        expect(mocks.getWorld).not.toHaveBeenCalled();
+      });
+
+      it.each([TeamRole.BLOCKED, TeamRole.GUEST])(
+        'returns FORBIDDEN without deleting for a %s member',
+        async (role) => {
+          prismaMock.team.findUnique.mockResolvedValue(buildTeam({ role }));
+
+          const result = await deleteTwitterV2Picker({
+            pickerId: 'picker-1',
+            slug: 'acme'
+          });
+
+          expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+            'You do not have permission to perform this action. Required permission: UPDATE_PICKERS'
+          );
+          expect(prismaMock.twitterPicker.delete).not.toHaveBeenCalled();
+          expect(mocks.getWorld).not.toHaveBeenCalled();
+        }
+      );
+
+      it('deletes the picker for a member of a FREE team', async () => {
+        prismaMock.team.findUnique.mockResolvedValue(
+          buildTeam({ role: TeamRole.MEMBER, tier: TeamTier.FREE })
+        );
+        const deleted = buildPicker();
+        prismaMock.twitterPicker.delete.mockResolvedValue(deleted);
+
+        const result = await deleteTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectOk(result)).toEqual(deleted);
+      });
+
+      it('deletes the picker by id within the caller team', async () => {
+        prismaMock.team.findUnique.mockResolvedValue({
+          ...buildTeam(),
+          id: 'team-7'
+        });
+        prismaMock.twitterPicker.delete.mockResolvedValue(buildPicker());
+
+        await deleteTwitterV2Picker({ pickerId: 'picker-42', slug: 'acme' });
+
+        expect(prismaMock.twitterPicker.delete).toHaveBeenCalledWith({
+          where: { id: 'picker-42', teamId: 'team-7' }
+        });
+      });
     });
 
     it('rejects a non-string picker id', async () => {
@@ -49,21 +133,14 @@ describe('deleteTwitterV2Picker', () => {
       expect(prismaMock.twitterPicker.delete).not.toHaveBeenCalled();
     });
 
-    it('deletes the picker by id', async () => {
-      prismaMock.twitterPicker.delete.mockResolvedValue(buildPicker());
-
-      await deleteTwitterV2Picker({ pickerId: 'picker-42' });
-
-      expect(prismaMock.twitterPicker.delete).toHaveBeenCalledWith({
-        where: { id: 'picker-42' }
-      });
-    });
-
     it('returns the deleted picker', async () => {
       const deleted = buildPicker();
       prismaMock.twitterPicker.delete.mockResolvedValue(deleted);
 
-      const result = await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await deleteTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result)).toEqual(deleted);
     });
@@ -73,7 +150,7 @@ describe('deleteTwitterV2Picker', () => {
         buildPicker({ runId: null })
       );
 
-      await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      await deleteTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
       expect(mocks.getWorld).not.toHaveBeenCalled();
       expect(mocks.cancel).not.toHaveBeenCalled();
@@ -84,7 +161,7 @@ describe('deleteTwitterV2Picker', () => {
         buildPicker({ runId: '' })
       );
 
-      await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      await deleteTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
       expect(mocks.cancel).not.toHaveBeenCalled();
     });
@@ -95,7 +172,10 @@ describe('deleteTwitterV2Picker', () => {
       );
       mocks.cancel.mockResolvedValue(undefined);
 
-      const result = await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await deleteTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expectOk(result);
       expect(mocks.cancel).toHaveBeenCalledWith('run-123');
@@ -106,7 +186,10 @@ describe('deleteTwitterV2Picker', () => {
       prismaMock.twitterPicker.delete.mockResolvedValue(deleted);
       mocks.cancel.mockResolvedValue(undefined);
 
-      const result = await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await deleteTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result)).toEqual(deleted);
     });
@@ -117,7 +200,7 @@ describe('deleteTwitterV2Picker', () => {
       );
       mocks.cancel.mockResolvedValue(undefined);
 
-      await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      await deleteTwitterV2Picker({ pickerId: 'picker-1', slug: 'acme' });
 
       const [deleteOrder] =
         prismaMock.twitterPicker.delete.mock.invocationCallOrder;
@@ -131,7 +214,10 @@ describe('deleteTwitterV2Picker', () => {
       );
       mocks.cancel.mockRejectedValue(new Error('run already finished'));
 
-      const result = await deleteTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await deleteTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
         'run already finished'
@@ -139,26 +225,20 @@ describe('deleteTwitterV2Picker', () => {
       expect(prismaMock.twitterPicker.delete).toHaveBeenCalled();
     });
 
-    it('returns NOT_FOUND when the picker does not exist', async () => {
+    it('returns NOT_FOUND when the picker does not exist in the caller team', async () => {
       prismaMock.twitterPicker.delete.mockRejectedValue(
         knownRequestError('P2025')
       );
 
-      const result = await deleteTwitterV2Picker({ pickerId: 'missing' });
+      const result = await deleteTwitterV2Picker({
+        pickerId: 'missing',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'NOT_FOUND').message).toBe(
         'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
       );
       expect(mocks.getWorld).not.toHaveBeenCalled();
-    });
-
-    it('does not check team membership before deleting', async () => {
-      prismaMock.twitterPicker.delete.mockResolvedValue(buildPicker());
-
-      await deleteTwitterV2Picker({ pickerId: 'picker-1' });
-
-      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
-      expect(prismaMock.team.findFirst).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,18 +1,23 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { TeamRole, TeamTier } from '@giveaway/db-model';
 import { getTwitterV2PickerForm } from '../get-twitter-v2-picker-form';
 import { prismaMock } from '@giveaway/testing-server/prisma';
-import { signIn } from '@giveaway/testing-server/session';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { buildPicker } from '../../testing/fixtures-pickers';
+import { buildPicker, buildTeam } from '../../testing/fixtures-pickers';
 
 describe('getTwitterV2PickerForm', () => {
   describe('when the caller is not signed in', () => {
-    it('returns UNAUTHORIZED without loading the picker', async () => {
-      const result = await getTwitterV2PickerForm({ pickerId: 'picker-1' });
+    it('returns UNAUTHORIZED without reading the team or the picker', async () => {
+      const result = await getTwitterV2PickerForm({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
         'Invalid session'
       );
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
       expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
     });
   });
@@ -20,6 +25,99 @@ describe('getTwitterV2PickerForm', () => {
   describe('when signed in', () => {
     beforeEach(() => {
       signIn();
+      prismaMock.team.findUnique.mockResolvedValue(buildTeam());
+    });
+
+    describe('team access', () => {
+      it('looks the team up by slug among the caller memberships', async () => {
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+
+        await getTwitterV2PickerForm({
+          pickerId: 'picker-1',
+          slug: 'dog-team'
+        });
+
+        expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
+          where: {
+            slug: 'dog-team',
+            members: { some: { userId: TEST_USER.id } }
+          },
+          include: { members: true }
+        });
+      });
+
+      it('returns NOT_FOUND without reading the picker when the caller is not a member', async () => {
+        prismaMock.team.findUnique.mockResolvedValue(null);
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+
+        const result = await getTwitterV2PickerForm({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+          'Team not found'
+        );
+        expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
+      });
+
+      it('returns FORBIDDEN without reading the picker for a blocked member', async () => {
+        prismaMock.team.findUnique.mockResolvedValue(
+          buildTeam({ role: TeamRole.BLOCKED })
+        );
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+
+        const result = await getTwitterV2PickerForm({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to perform this action. Required permission: VIEW_PICKERS'
+        );
+        expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
+      });
+
+      it('returns the form to a guest of a FREE team', async () => {
+        prismaMock.team.findUnique.mockResolvedValue(
+          buildTeam({ role: TeamRole.GUEST, tier: TeamTier.FREE })
+        );
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+
+        const result = await getTwitterV2PickerForm({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectOk(result).winners).toEqual({ quota: 1 });
+      });
+
+      it('loads the picker by id within the caller team', async () => {
+        prismaMock.team.findUnique.mockResolvedValue({
+          ...buildTeam(),
+          id: 'team-7'
+        });
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+
+        await getTwitterV2PickerForm({ pickerId: 'picker-42', slug: 'acme' });
+
+        expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
+          where: { id: 'picker-42', teamId: 'team-7' }
+        });
+      });
+
+      it('returns NOT_FOUND when the picker belongs to another team', async () => {
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(null);
+
+        const result = await getTwitterV2PickerForm({
+          pickerId: 'other-team-picker',
+          slug: 'acme'
+        });
+
+        expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+          'Picker not found'
+        );
+      });
     });
 
     it('rejects a missing picker id', async () => {
@@ -32,20 +130,13 @@ describe('getTwitterV2PickerForm', () => {
       );
     });
 
-    it('loads the picker by id', async () => {
-      prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
-
-      await getTwitterV2PickerForm({ pickerId: 'picker-42' });
-
-      expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
-        where: { id: 'picker-42' }
-      });
-    });
-
     it('returns NOT_FOUND when the picker does not exist', async () => {
       prismaMock.twitterPicker.findUnique.mockResolvedValue(null);
 
-      const result = await getTwitterV2PickerForm({ pickerId: 'missing' });
+      const result = await getTwitterV2PickerForm({
+        pickerId: 'missing',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'NOT_FOUND').message).toBe(
         'Picker not found'
@@ -70,7 +161,10 @@ describe('getTwitterV2PickerForm', () => {
         })
       );
 
-      const result = await getTwitterV2PickerForm({ pickerId: 'picker-1' });
+      const result = await getTwitterV2PickerForm({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result)).toEqual({
         setup: {
@@ -101,7 +195,10 @@ describe('getTwitterV2PickerForm', () => {
         buildPicker({ tweetUrls: [] })
       );
 
-      const result = await getTwitterV2PickerForm({ pickerId: 'picker-1' });
+      const result = await getTwitterV2PickerForm({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result).setup).toEqual({ postUrls: [{ url: '' }] });
     });
@@ -111,7 +208,10 @@ describe('getTwitterV2PickerForm', () => {
         buildPicker({ runAt: null })
       );
 
-      const result = await getTwitterV2PickerForm({ pickerId: 'picker-1' });
+      const result = await getTwitterV2PickerForm({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result).timing).toBeNull();
     });
@@ -119,7 +219,10 @@ describe('getTwitterV2PickerForm', () => {
     it('passes null numeric filters through and defaults null flags to false', async () => {
       prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
 
-      const result = await getTwitterV2PickerForm({ pickerId: 'picker-1' });
+      const result = await getTwitterV2PickerForm({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result).filters).toEqual({
         minimumPostCount: null,
@@ -152,7 +255,10 @@ describe('getTwitterV2PickerForm', () => {
           })
         );
 
-        const result = await getTwitterV2PickerForm({ pickerId: 'picker-1' });
+        const result = await getTwitterV2PickerForm({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectOk(result).filters).toMatchObject({
           hasProfileImage: flag === 'hasProfileImage',
@@ -162,16 +268,5 @@ describe('getTwitterV2PickerForm', () => {
         });
       }
     );
-
-    it('does not check that the caller owns the picker', async () => {
-      prismaMock.twitterPicker.findUnique.mockResolvedValue(
-        buildPicker({ teamId: 'another-team' })
-      );
-
-      const result = await getTwitterV2PickerForm({ pickerId: 'picker-1' });
-
-      expectOk(result);
-      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
-    });
   });
 });
