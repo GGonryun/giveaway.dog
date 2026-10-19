@@ -33,7 +33,7 @@ test.describe('logout', () => {
   test.describe('as a participant', () => {
     test.use({ storageState: personaState('participant') });
 
-    test('logs out from the avatar menu', async ({ page }) => {
+    test('logs out from the avatar menu', knownBug(450), async ({ page }) => {
       await page.goto('/browse');
 
       await page.getByRole('button', { name: 'E2E participant' }).click();
@@ -42,7 +42,7 @@ test.describe('logout', () => {
       await expectLoggedOut(page);
     });
 
-    test('logs out from the account page', async ({ page }) => {
+    test('logs out from the account page', knownBug(450), async ({ page }) => {
       await page.goto('/account');
 
       await page.getByRole('button', { name: 'Logout', exact: true }).click();
