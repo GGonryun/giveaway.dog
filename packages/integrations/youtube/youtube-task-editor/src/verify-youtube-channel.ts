@@ -6,48 +6,39 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 
 interface YouTubeChannelParams {
-  type: 'handle' | 'channelId';
+  key: 'forHandle' | 'id';
   value: string;
 }
 
+function parseYouTubeChannelPath(
+  pathname: string
+): YouTubeChannelParams | null {
+  const handle = pathname.match(/^\/(@[^/]+)/)?.[1];
+  if (handle) {
+    return { key: 'forHandle', value: handle };
+  }
+
+  const channelId = pathname.match(/^\/channel\/([^/]+)/)?.[1];
+  if (channelId) {
+    return { key: 'id', value: channelId };
+  }
+
+  const username = pathname.match(/^\/([A-Za-z0-9_\-]+)$/)?.[1];
+  if (username) {
+    return { key: 'forHandle', value: `@${username}` };
+  }
+
+  return null;
+}
+
 function parseYouTubeChannelUrl(url: string): YouTubeChannelParams | null {
-  try {
-    const urlObj = new URL(url);
+  const urlObj = URL.parse(url);
 
-    if (!urlObj.hostname.includes('youtube.com')) {
-      return null;
-    }
-
-    const pathname = urlObj.pathname;
-
-    const usernameMatch = pathname.match(/^\/(@[^/]+)/);
-    if (usernameMatch) {
-      return {
-        type: 'handle',
-        value: usernameMatch[1]
-      };
-    }
-
-    const channelIdMatch = pathname.match(/^\/channel\/([^/]+)/);
-    if (channelIdMatch) {
-      return {
-        type: 'channelId',
-        value: channelIdMatch[1]
-      };
-    }
-
-    const directUsernameMatch = pathname.match(/^\/([A-Za-z0-9_\-]+)$/);
-    if (directUsernameMatch) {
-      return {
-        type: 'handle',
-        value: `@${directUsernameMatch[1]}`
-      };
-    }
-
-    return null;
-  } catch {
+  if (!urlObj?.hostname.includes('youtube.com')) {
     return null;
   }
+
+  return parseYouTubeChannelPath(urlObj.pathname);
 }
 
 export const verifyYouTubeChannel = procedure()
@@ -88,11 +79,7 @@ export const verifyYouTubeChannel = procedure()
         key: apiKey
       });
 
-      if (channelParams.type === 'handle') {
-        params.append('forHandle', channelParams.value);
-      } else {
-        params.append('id', channelParams.value);
-      }
+      params.append(channelParams.key, channelParams.value);
 
       const apiUrl = `https://www.googleapis.com/youtube/v3/channels?${params.toString()}`;
 

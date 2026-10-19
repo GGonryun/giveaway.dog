@@ -5,6 +5,8 @@ import { ListChannelSnippetSchema } from '@giveaway/youtube-model/youtube';
 
 type ValidationStatus = 'idle' | 'checking' | 'success' | 'error' | null;
 
+type VerifyResult = Awaited<ReturnType<typeof verifyYouTubeChannel>>;
+
 interface UseYouTubeChannelValidationOptions {
   channelUrl: string | undefined | null;
   debounceMs?: number;
@@ -26,54 +28,44 @@ export function useYouTubeChannelValidation({
 }: UseYouTubeChannelValidationOptions): UseYouTubeChannelValidationReturn {
   const [status, setStatus] = useState<ValidationStatus>(null);
   const [snippet, setSnippet] = useState<ListChannelSnippetSchema | null>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const pendingUrlRef = useRef<string>('');
+  const pendingUrlRef = useRef<string | null>(null);
 
   const checkChannelRef = useRef(async (url: string) => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
     pendingUrlRef.current = url;
-    abortControllerRef.current = new AbortController();
 
+    let result: VerifyResult;
     try {
-      const result = await verifyYouTubeChannel({
+      result = await verifyYouTubeChannel({
         channelUrl: url
       });
-
-      if (pendingUrlRef.current !== url) {
-        return;
-      }
-
-      if (!result.ok) {
-        setStatus('error');
-        setSnippet(null);
-        if (result.data.message) {
-          onError?.(result.data.message);
-        }
-      } else {
-        setStatus('success');
-        setSnippet(result.data);
-      }
-    } catch (error) {
+    } catch {
       if (pendingUrlRef.current === url) {
         setStatus('error');
         onError?.(
           'Unable to verify YouTube channel. Please check if the channel exists or double check the URL.'
         );
       }
+      return;
+    }
+
+    if (pendingUrlRef.current !== url) {
+      return;
+    }
+
+    if (!result.ok) {
+      setStatus('error');
+      setSnippet(null);
+      if (result.data.message) {
+        onError?.(result.data.message);
+      }
+    } else {
+      setStatus('success');
+      setSnippet(result.data);
     }
   });
 
   const debouncedCheckChannelRef = useRef(
     debounce((url: string) => {
-      if (!url) {
-        setStatus('idle');
-        setSnippet(null);
-        return;
-      }
-
       setStatus('checking');
       checkChannelRef.current(url);
     }, debounceMs)
@@ -83,28 +75,19 @@ export function useYouTubeChannelValidation({
     if (skipValidation) {
       setStatus(null);
       setSnippet(null);
-      debouncedCheckChannelRef.current.cancel();
       return;
     }
 
     if (!channelUrl) {
       setStatus('idle');
       setSnippet(null);
-      debouncedCheckChannelRef.current.cancel();
       return;
     }
 
-    debouncedCheckChannelRef.current(channelUrl);
+    const debouncedCheckChannel = debouncedCheckChannelRef.current;
+    debouncedCheckChannel(channelUrl);
+    return debouncedCheckChannel.cancel;
   }, [channelUrl, skipValidation]);
-
-  useEffect(() => {
-    return () => {
-      debouncedCheckChannelRef.current.cancel();
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, []);
 
   return {
     status,

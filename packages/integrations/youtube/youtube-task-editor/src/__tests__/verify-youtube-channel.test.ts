@@ -127,6 +127,20 @@ describe('verifyYouTubeChannel', () => {
       expectFailure(result, 'BAD_REQUEST');
     });
 
+    it('rejects an @handle that is not the first path segment', async () => {
+      const result = await verify('https://www.youtube.com/c/@giveawaydog');
+
+      expectFailure(result, 'BAD_REQUEST');
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
+    it('rejects a channel segment that is not the first path segment', async () => {
+      const result = await verify('https://www.youtube.com/user/channel/UC123');
+
+      expectFailure(result, 'BAD_REQUEST');
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+
     it('looks up an @handle url by handle', async () => {
       await verify('https://www.youtube.com/@giveawaydog');
 
