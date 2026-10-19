@@ -438,9 +438,6 @@ catalogs:
     turndown:
       specifier: ^7.2.2
       version: 7.2.2
-    tweetnacl:
-      specifier: ^1.0.3
-      version: 1.0.3
     typescript:
       specifier: 5.7.2
       version: 5.7.2
@@ -1566,9 +1563,6 @@ importers:
       turndown:
         specifier: 'catalog:'
         version: 7.2.2
-      tweetnacl:
-        specifier: 'catalog:'
-        version: 1.0.3
       typescript:
         specifier: 'catalog:'
         version: 5.7.2
@@ -4984,9 +4978,6 @@ importers:
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
-      tweetnacl:
-        specifier: 'catalog:'
-        version: 1.0.3
       workflow:
         specifier: 'catalog:'
         version: 4.0.1-beta.50(@aws-sdk/client-sts@3.981.0)(@playwright/test@1.63.0)(magicast@0.5.5)(next@16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.2)
@@ -23074,9 +23065,6 @@ packages:
   tweetnacl@0.14.5:
     resolution: {integrity: sha512-KXXFFdAbFXY4geFIwoyNK+f5Z1b7swfXABfL7HXCmoIWMKU3dmS26672A4EeQtDzLKy7SXmfBu51JolvEKwtGA==}
 
-  tweetnacl@1.0.3:
-    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
-
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -32260,8 +32248,6 @@ snapshots:
       '@mixmark-io/domino': 2.2.0
 
   tweetnacl@0.14.5: {}
-
-  tweetnacl@1.0.3: {}
 
   type-check@0.4.0:
     dependencies:

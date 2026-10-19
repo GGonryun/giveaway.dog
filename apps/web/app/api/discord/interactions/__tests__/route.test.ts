@@ -1,24 +1,23 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
-import nacl from 'tweetnacl';
 import { POST } from '../route';
 import { POST as handlerPOST } from '@giveaway/discord-bot/commands/handler';
 import { discordConnectWorkflow } from '@giveaway/discord-bot/workflows/discord-connect/workflow';
 import { discordInteractionWorkflow } from '@giveaway/discord-bot/workflows/discord-interaction/workflow';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  DISCORD_TEST_PUBLIC_KEY as PUBLIC_KEY,
+  signDiscordBody
+} from '@giveaway/discord-bot/testing/fixtures-discord-bot';
 
 const m = vi.hoisted(() => ({ start: vi.fn() }));
 
 vi.mock('workflow/api', () => ({ start: m.start }));
 
-const KEY_PAIR = nacl.sign.keyPair.fromSeed(new Uint8Array(32).fill(7));
-const PUBLIC_KEY = Buffer.from(KEY_PAIR.publicKey).toString('hex');
 const TIMESTAMP = '1767225600';
 
 const sign = (body: string, timestamp = TIMESTAMP) =>
-  Buffer.from(
-    nacl.sign.detached(Buffer.from(timestamp + body), KEY_PAIR.secretKey)
-  ).toString('hex');
+  signDiscordBody(body, timestamp);
 
 const baseInteraction = {
   app_permissions: '0',
