@@ -25,7 +25,7 @@ const setup = async (
 };
 
 describe('rerollDraw', () => {
-  it('disqualifies the draw and links a new winner to it', async () => {
+  it('[DRAW-003] disqualifies the draw and links a new winner to it', async () => {
     const { sweepstakes, draws, reroll } = await setup({
       quotas: [1],
       entries: 3
@@ -106,7 +106,7 @@ describe('rerollDraw', () => {
   });
 
   it.fails(
-    'picks different users when two draws are rerolled at the same time (fails until #135 is fixed)',
+    '[DRAW-002] picks different users when two draws are rerolled at the same time (fails until #135 is fixed)',
     async () => {
       const { sweepstakes, draws, reroll } = await setup({
         quotas: [2],

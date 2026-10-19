@@ -65,7 +65,7 @@ describe('submitTask', () => {
     ]);
   });
 
-  it('rejects a second submission of the same task', async () => {
+  it('[ENTRY-001] rejects a second submission of the same task', async () => {
     const { task, userId, submit } = await setup();
     expectOk(await submit());
 
@@ -113,10 +113,13 @@ describe('submitTask', () => {
       expect(progress).toEqual([expect.objectContaining({ count: 2 })]);
     });
 
-    it.fails('records one completion (fails until #261 is fixed)', async () => {
-      const { completions } = await submitTwice();
+    it.fails(
+      '[ENTRY-001] records one completion (fails until #261 is fixed)',
+      async () => {
+        const { completions } = await submitTwice();
 
-      expect(completions).toHaveLength(1);
-    });
+        expect(completions).toHaveLength(1);
+      }
+    );
   });
 });

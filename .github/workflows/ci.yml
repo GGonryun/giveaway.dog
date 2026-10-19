@@ -90,6 +90,14 @@ jobs:
         if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
         run: pnpm run format:check
 
+      - name: Spec coverage
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && matrix.shard == 1 }}
+        run: pnpm run spec:check
+
+      - name: Spec and code in separate pull requests
+        if: ${{ !cancelled() && matrix.shard == 1 && github.event_name == 'pull_request' }}
+        run: node .github/scripts/spec-separation.mjs "$NX_BASE" "$NX_HEAD"
+
       - name: Save the Nx cache
         if: ${{ !cancelled() && steps.nx-cache.outcome == 'success' && steps.nx-cache.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v4
