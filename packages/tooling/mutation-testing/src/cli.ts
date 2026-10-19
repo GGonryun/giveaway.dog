@@ -29,6 +29,7 @@ import {
   type MutantOutcome
 } from './gate.ts';
 import { pickPackages } from './pick-packages.ts';
+import { hasRuntimeCode } from './runtime-code.ts';
 import { strykerOptions, type MutationRunOptions } from './stryker-options.ts';
 import {
   isMutableFile,
@@ -112,6 +113,9 @@ const runStryker = (
 const readLines = (file: string): string[] =>
   readFileSync(join(ROOT, file), 'utf8').split('\n');
 
+const canHaveMutants = (file: string): boolean =>
+  hasRuntimeCode(readFileSync(join(ROOT, file), 'utf8'));
+
 const changesSince = (
   base: string
 ): { changed: Map<string, LineRange[]>; disableComments: AddedLine[] } => {
@@ -124,7 +128,11 @@ const changesSince = (
     '--',
     'packages'
   );
-  const changed = parseChangedLines(diff);
+  const changed = new Map(
+    [...parseChangedLines(diff)].filter(
+      ([file]) => !isMutableFile(file) || canHaveMutants(file)
+    )
+  );
   const disableComments = findAddedLines(diff, DISABLE_COMMENT);
 
   const untracked = git(
@@ -135,7 +143,7 @@ const changesSince = (
     'packages'
   )
     .split('\n')
-    .filter(isMutableFile);
+    .filter((file) => isMutableFile(file) && canHaveMutants(file));
   for (const file of untracked) {
     const lines = readLines(file);
     changed.set(file, [{ start: 1, end: lines.length }]);
@@ -201,7 +209,11 @@ const mutableFilesOf = (packageDir: string): string[] => {
   }
   return readdirSync(srcDir, { recursive: true, encoding: 'utf8' })
     .map((file) => `src/${file}`)
-    .filter((file) => isMutableFile(`${packageDir}/${file}`))
+    .filter(
+      (file) =>
+        isMutableFile(`${packageDir}/${file}`) &&
+        canHaveMutants(`${packageDir}/${file}`)
+    )
     .sort();
 };
 
@@ -229,13 +241,22 @@ const runPackage = (nameOrDir: string, incremental: boolean): number => {
   const reportDir = reportDirOf(packageName);
   mkdirSync(reportDir, { recursive: true });
 
-  const mutants = runStryker(packageDir, {
-    mutate: mutableFilesOf(packageDir),
-    reportDir,
-    ...(incremental
-      ? { incrementalFile: join(reportDir, 'stryker-incremental.json') }
-      : {})
-  });
+  const mutate = mutableFilesOf(packageDir);
+  if (mutate.length === 0) {
+    console.log(
+      `${packageName} has no source file with runtime code to mutate`
+    );
+  }
+  const mutants =
+    mutate.length === 0
+      ? []
+      : runStryker(packageDir, {
+          mutate,
+          reportDir,
+          ...(incremental
+            ? { incrementalFile: join(reportDir, 'stryker-incremental.json') }
+            : {})
+        });
 
   const runUrl =
     process.env.GITHUB_RUN_ID && process.env.GITHUB_REPOSITORY
@@ -257,7 +278,9 @@ const runPackage = (nameOrDir: string, incremental: boolean): number => {
     JSON.stringify({ packageName, packageDir, survivors })
   );
   console.log(`\n${report}`);
-  console.log(`HTML report: ${join(reportDir, 'mutation.html')}`);
+  if (mutate.length > 0) {
+    console.log(`HTML report: ${join(reportDir, 'mutation.html')}`);
+  }
   writeStepSummary(report);
   return 0;
 };
