@@ -4,7 +4,17 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
-import { SWEEPSTAKES_ID } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
+import {
+  SWEEPSTAKES_ID,
+  TEAM_SLUG
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
+import {
+  describeTeamAccess,
+  teamSweepstakes,
+  teamSweepstakesQuery
+} from './fixtures/team-sweepstakes';
+
+const input = { sweepstakesId: SWEEPSTAKES_ID, slug: TEAM_SLUG };
 
 const NOW = new Date(2026, 9, 1, 12, 0, 0);
 
@@ -29,10 +39,12 @@ describe('getSweepstakesEntryTimeSeries', () => {
   });
 
   describe('when the input is invalid', () => {
-    it('rejects a missing sweepstakes id', async () => {
-      const result = await getSweepstakesEntryTimeSeries(
-        {} as unknown as Parameters<typeof getSweepstakesEntryTimeSeries>[0]
-      );
+    it('rejects a missing slug', async () => {
+      signIn();
+
+      const result = await getSweepstakesEntryTimeSeries({
+        sweepstakesId: SWEEPSTAKES_ID
+      } as unknown as Parameters<typeof getSweepstakesEntryTimeSeries>[0]);
 
       expectFailure(result, 'UNPROCESSABLE_CONTENT');
       expect(nextCacheMock.unstable_cache).not.toHaveBeenCalled();
@@ -40,13 +52,33 @@ describe('getSweepstakesEntryTimeSeries', () => {
     });
   });
 
+  describeTeamAccess(
+    () => getSweepstakesEntryTimeSeries(input),
+    () => [nextCacheMock.unstable_cache, prismaMock.taskCompletion.findMany]
+  );
+
   describe('when the input is valid', () => {
     beforeEach(() => {
+      signIn();
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes() as never
+      );
       prismaMock.taskCompletion.findMany.mockResolvedValue([]);
     });
 
+    it('checks the membership of the caller before the cached read', async () => {
+      await getSweepstakesEntryTimeSeries(input);
+
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith(
+        teamSweepstakesQuery(TEAM_SLUG)
+      );
+      expect(
+        prismaMock.sweepstakes.findUnique.mock.invocationCallOrder[0]
+      ).toBeLessThan(nextCacheMock.unstable_cache.mock.invocationCallOrder[0]);
+    });
+
     it('caches the result per sweepstakes for ten minutes', async () => {
-      await getSweepstakesEntryTimeSeries({ sweepstakesId: SWEEPSTAKES_ID });
+      await getSweepstakesEntryTimeSeries(input);
 
       expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
         expect.any(Function),
@@ -62,7 +94,7 @@ describe('getSweepstakesEntryTimeSeries', () => {
     });
 
     it('queries completions of the sweepstakes from the last seven days in ascending order', async () => {
-      await getSweepstakesEntryTimeSeries({ sweepstakesId: SWEEPSTAKES_ID });
+      await getSweepstakesEntryTimeSeries(input);
 
       expect(prismaMock.taskCompletion.findMany).toHaveBeenCalledWith({
         where: {
@@ -74,31 +106,36 @@ describe('getSweepstakesEntryTimeSeries', () => {
     });
 
     it('returns an empty series when there are no completions', async () => {
-      const result = await getSweepstakesEntryTimeSeries({
-        sweepstakesId: SWEEPSTAKES_ID
-      });
+      const result = await getSweepstakesEntryTimeSeries(input);
 
       expect(expectOk(result)).toEqual([]);
     });
 
-    it('is available to signed in users as well as anonymous visitors', async () => {
-      signIn();
+    it('is available to a guest of the team', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes('GUEST') as never
+      );
 
-      const result = await getSweepstakesEntryTimeSeries({
-        sweepstakesId: SWEEPSTAKES_ID
-      });
+      const result = await getSweepstakesEntryTimeSeries(input);
 
       expect(expectOk(result)).toEqual([]);
     });
 
     it('does not revalidate any cache tags', async () => {
-      await getSweepstakesEntryTimeSeries({ sweepstakesId: SWEEPSTAKES_ID });
+      await getSweepstakesEntryTimeSeries(input);
 
       expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
     });
   });
 
   describe('when there are completions', () => {
+    beforeEach(() => {
+      signIn();
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes() as never
+      );
+    });
+
     it('counts completions per local calendar day in query order', async () => {
       prismaMock.taskCompletion.findMany.mockResolvedValue([
         completionAt('c-1', new Date(2026, 8, 28, 0, 5)),
@@ -107,9 +144,7 @@ describe('getSweepstakesEntryTimeSeries', () => {
         completionAt('c-4', new Date(2026, 9, 1, 11, 0))
       ]);
 
-      const result = await getSweepstakesEntryTimeSeries({
-        sweepstakesId: SWEEPSTAKES_ID
-      });
+      const result = await getSweepstakesEntryTimeSeries(input);
 
       expect(expectOk(result)).toEqual([
         { date: '2026-09-28', entries: 2 },
@@ -124,9 +159,7 @@ describe('getSweepstakesEntryTimeSeries', () => {
         completionAt('c-2', new Date(2026, 8, 29, 12))
       ]);
 
-      const result = await getSweepstakesEntryTimeSeries({
-        sweepstakesId: SWEEPSTAKES_ID
-      });
+      const result = await getSweepstakesEntryTimeSeries(input);
 
       expect(expectOk(result)).toHaveLength(2);
     });
@@ -138,9 +171,7 @@ describe('getSweepstakesEntryTimeSeries', () => {
         completionAt('c-3', new Date(2026, 8, 30, 13))
       ]);
 
-      const result = await getSweepstakesEntryTimeSeries({
-        sweepstakesId: SWEEPSTAKES_ID
-      });
+      const result = await getSweepstakesEntryTimeSeries(input);
 
       expect(expectOk(result)).toEqual([
         { date: '2026-09-30', entries: 2 },

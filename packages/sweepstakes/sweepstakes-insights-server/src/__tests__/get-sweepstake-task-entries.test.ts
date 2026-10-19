@@ -1,27 +1,28 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import getSweepstakeTaskEntries from '../get-sweepstake-task-entries';
 import { prismaMock } from '@giveaway/testing-server/prisma';
+import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
-import { PARTICIPANT_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { USER_SCHEMA_SELECT_QUERY } from '@giveaway/user-model/user';
 import {
   buildTaskRecord,
-  buildTeam,
   buildUserRecord,
   expectedBonusTask,
   expectedUserSchema,
-  SWEEPSTAKES_ID
+  SWEEPSTAKES_ID,
+  TEAM_SLUG
 } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
+import {
+  describeTeamAccess,
+  teamSweepstakes,
+  teamSweepstakesQuery
+} from './fixtures/team-sweepstakes';
 
-const input = { sweepstakesId: SWEEPSTAKES_ID, taskId: 'task-1' };
-
-const sweepstakes = (overrides: Record<string, unknown> = {}) => ({
-  id: SWEEPSTAKES_ID,
-  status: 'ACTIVE',
-  teamId: 'team-1',
-  team: buildTeam(),
-  ...overrides
-});
+const input = {
+  sweepstakesId: SWEEPSTAKES_ID,
+  slug: TEAM_SLUG,
+  taskId: 'task-1'
+};
 
 const completion = (
   id: string,
@@ -43,8 +44,23 @@ const completion = (
 describe('getSweepstakeTaskEntries', () => {
   describe('when the input is invalid', () => {
     it('rejects a missing task id', async () => {
+      signIn();
+
       const result = await getSweepstakeTaskEntries({
-        sweepstakesId: SWEEPSTAKES_ID
+        sweepstakesId: SWEEPSTAKES_ID,
+        slug: TEAM_SLUG
+      } as unknown as Parameters<typeof getSweepstakeTaskEntries>[0]);
+
+      expectFailure(result, 'UNPROCESSABLE_CONTENT');
+      expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('rejects a missing slug', async () => {
+      signIn();
+
+      const result = await getSweepstakeTaskEntries({
+        sweepstakesId: SWEEPSTAKES_ID,
+        taskId: 'task-1'
       } as unknown as Parameters<typeof getSweepstakeTaskEntries>[0]);
 
       expectFailure(result, 'UNPROCESSABLE_CONTENT');
@@ -52,55 +68,42 @@ describe('getSweepstakeTaskEntries', () => {
     });
   });
 
-  describe('when the sweepstakes cannot be found', () => {
-    it('looks up the sweepstakes by id only', async () => {
+  describeTeamAccess(
+    () => getSweepstakeTaskEntries(input),
+    () => [prismaMock.taskCompletion.findMany]
+  );
+
+  describe('when the caller is a member of the team', () => {
+    beforeEach(() => {
+      signIn();
+    });
+
+    it('looks up the sweepstakes through the membership of the caller', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
       await getSweepstakeTaskEntries(input);
 
-      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
-        where: { id: SWEEPSTAKES_ID },
-        include: PARTICIPANT_SWEEPSTAKES_PAYLOAD
-      });
-    });
-
-    it('returns NOT_FOUND naming the id when nothing matches', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
-
-      const result = await getSweepstakeTaskEntries(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith(
+        teamSweepstakesQuery(TEAM_SLUG)
       );
-      expect(prismaMock.taskCompletion.findMany).not.toHaveBeenCalled();
-    });
-
-    it('returns NOT_FOUND when the sweepstakes has no team', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(
-        sweepstakes({ team: null })
-      );
-
-      const result = await getSweepstakeTaskEntries(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        `Sweepstakes with ID ${SWEEPSTAKES_ID} not found`
-      );
-      expect(prismaMock.taskCompletion.findMany).not.toHaveBeenCalled();
     });
   });
 
   describe('when the sweepstakes exists', () => {
     beforeEach(() => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(sweepstakes());
+      signIn();
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes('OWNER', 'loaded-id') as never
+      );
     });
 
-    it('loads completions by task id without scoping them to the sweepstakes', async () => {
+    it('loads completions of the task only when the task belongs to the loaded sweepstakes', async () => {
       prismaMock.taskCompletion.findMany.mockResolvedValue([]);
 
       await getSweepstakeTaskEntries(input);
 
       expect(prismaMock.taskCompletion.findMany).toHaveBeenCalledWith({
-        where: { taskId: 'task-1' },
+        where: { taskId: 'task-1', task: { sweepstakesId: 'loaded-id' } },
         include: {
           participant: {
             select: { user: { select: USER_SCHEMA_SELECT_QUERY } }
