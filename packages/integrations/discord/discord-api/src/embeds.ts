@@ -49,7 +49,7 @@ const toAdditionalFields = (
   sweepstakes: Prisma.SweepstakesGetPayload<{
     select: typeof SWEEPSTAKES_DISCORD_POST_SELECT_QUERY;
   }>
-): DiscordMessageEmbed['fields'] | undefined => {
+): DiscordMessageEmbed['fields'] => {
   if (sweepstakes.status !== 'COMPLETED') return [];
 
   return [
@@ -63,8 +63,7 @@ const toAdditionalFields = (
               (d) => d.taskCompletion.participant.user.name || UNKNOWN_USER_NAME
             )
         )
-        .join(', '),
-      inline: false
+        .join(', ')
     }
   ];
 };
@@ -117,49 +116,41 @@ export const toSweepstakesEmbed = async ({
   const fields: DiscordMessageEmbed['fields'] = [
     {
       name: 'Name',
-      value: `[${name}](${sweepstakesUrl})`,
-      inline: false
+      value: `[${name}](${sweepstakesUrl})`
     },
     {
       name: 'Hosted By',
-      value: teamName,
-      inline: false
+      value: teamName
     },
     {
       name: 'Ends At',
-      value: endDate ? `<t:${endDate}:R>` : 'TBD',
-      inline: false
+      value: endDate ? `<t:${endDate}:R>` : 'TBD'
     },
     {
       name: 'Prizes',
-      value: prizeList || 'TBD',
-      inline: false
+      value: prizeList || 'TBD'
     },
     {
       name: 'Status',
-      value: SWEEPSTAKES_STATUS_LABEL[status],
-      inline: false
+      value: SWEEPSTAKES_STATUS_LABEL[status]
     },
     ...(eligibleRoles.length
       ? [
           {
             name: 'Eligible Roles',
-            value: eligibleRoles.map((id) => `<@&${id}>`).join(', '),
-            inline: false
+            value: eligibleRoles.map((id) => `<@&${id}>`).join(', ')
           }
         ]
       : []),
     {
       name: 'Participants',
-      value: participants.toString(),
-      inline: false
+      value: participants.toString()
     },
     {
       name: 'Entries',
-      value: entries.toString(),
-      inline: false
+      value: entries.toString()
     },
-    ...(additionalFields || [])
+    ...additionalFields
   ];
 
   const description = fields
