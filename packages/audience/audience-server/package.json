@@ -37,6 +37,7 @@
     "@giveaway/user-model": "workspace:*",
     "@giveaway/util-time": "workspace:*",
     "lodash": "catalog:",
+    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "peerDependencies": {

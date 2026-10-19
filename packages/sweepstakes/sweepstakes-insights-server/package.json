@@ -32,17 +32,15 @@
     "@giveaway/app-config": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
-    "@giveaway/team-permissions": "workspace:*",
     "@giveaway/user-model": "workspace:*",
     "@giveaway/util-collections": "workspace:*",
-    "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-time": "workspace:*",
     "date-fns": "catalog:",
     "lodash": "catalog:",
     "next": "catalog:",
-    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

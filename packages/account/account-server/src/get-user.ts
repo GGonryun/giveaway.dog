@@ -9,21 +9,13 @@ import z from 'zod';
 const getUser = procedure()
   .authorization({ required: true })
   .input(
-    z.union([
-      z.object({
-        userId: z.string()
-      }),
-      z.object({
-        self: z.literal(true)
-      })
-    ])
+    z.object({
+      self: z.literal(true)
+    })
   )
   .output(userSchema)
-  .handler(async ({ user, db, input }) => {
-    const data = await getUserQuery(
-      db,
-      'self' in input ? user.id : input.userId
-    );
+  .handler(async ({ user, db }) => {
+    const data = await getUserQuery(db, user.id);
     if (!data) {
       throw new ApplicationError({
         code: 'NOT_FOUND',

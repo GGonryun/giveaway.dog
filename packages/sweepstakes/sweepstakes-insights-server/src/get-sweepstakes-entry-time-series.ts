@@ -9,7 +9,7 @@ import { subDays } from 'date-fns/subDays';
 import { groupBy, map } from 'lodash';
 import { unstable_cache } from 'next/cache';
 import z from 'zod';
-import { findTeamSweepstakes } from './team-sweepstakes';
+import { findTeamSweepstakes } from '@giveaway/sweepstakes-access/team-sweepstakes';
 
 const loadEntryTimeSeries = async (db: PrismaClient, sweepstakesId: string) => {
   // group taskCompletion by date and count entries and only return the last 7 days.

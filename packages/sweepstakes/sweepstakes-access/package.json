@@ -16,7 +16,9 @@
     }
   },
   "exports": {
-    "./shared": "./src/shared.ts"
+    "./shared": "./src/shared.ts",
+    "./team-sweepstakes": "./src/team-sweepstakes.ts",
+    "./testing/team-sweepstakes": "./src/testing/team-sweepstakes.ts"
   },
   "scripts": {
     "test": "vitest run",

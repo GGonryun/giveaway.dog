@@ -7,7 +7,7 @@ import {
   PRIZE_WINNERS_INCLUDE_QUERY,
   toSweepstakesPrizes
 } from '@giveaway/sweepstakes-model/prizes';
-import { findTeamSweepstakes } from './team-sweepstakes';
+import { findTeamSweepstakes } from '@giveaway/sweepstakes-access/team-sweepstakes';
 
 const getSweepstakesPrizes = procedure()
   .authorization({

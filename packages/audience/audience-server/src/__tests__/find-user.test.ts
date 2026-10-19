@@ -19,7 +19,7 @@ type FindUserInput = Parameters<typeof findUser>[0];
 describe('findUser', () => {
   describe('when the caller is not signed in', () => {
     it('returns null without querying the database', async () => {
-      const result = await findUser({ userId: 'user-2' });
+      const result = await findUser({ self: true });
 
       expect(expectOk(result)).toBeNull();
       expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
@@ -64,14 +64,30 @@ describe('findUser', () => {
       );
     });
 
-    it('looks up the requested user id', async () => {
+    it('rejects a user id without self, so it never reads another user', async () => {
+      signIn();
+
+      const result = await findUser({
+        userId: 'user-2'
+      } as unknown as FindUserInput);
+
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
+        /^Input validation failed: /
+      );
+      expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('ignores a user id next to self and looks up the session user', async () => {
       signIn();
       prismaMock.user.findUnique.mockResolvedValue(userRow());
 
-      await findUser({ userId: 'user-2' });
+      await findUser({
+        userId: 'user-2',
+        self: true
+      } as unknown as FindUserInput);
 
       expect(prismaMock.user.findUnique).toHaveBeenCalledWith(
-        userSelectArgs('user-2')
+        userSelectArgs(TEST_USER.id)
       );
     });
 
@@ -79,7 +95,7 @@ describe('findUser', () => {
       signIn();
       prismaMock.user.findUnique.mockResolvedValue(userRow());
 
-      const result = await findUser({ userId: 'user-2' });
+      const result = await findUser({ self: true });
 
       expect(expectOk(result)).toEqual(mappedUser());
     });
@@ -88,7 +104,7 @@ describe('findUser', () => {
       signIn();
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      const result = await findUser({ userId: 'missing' });
+      const result = await findUser({ self: true });
 
       expect(expectOk(result)).toBeNull();
     });

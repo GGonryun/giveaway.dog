@@ -4,7 +4,7 @@ import React from 'react';
 import { Outline } from '@giveaway/shell-sidebar/app/outline';
 import { UserDetailsTabs } from '@giveaway/audience-user-details/user-details-tabs';
 import { UserParams } from '@giveaway/audience-user-details/params';
-import getUser from '@giveaway/account-server/get-user';
+import { getTeamParticipant } from '@giveaway/participant-server/get-team-participant';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 
 interface UserDetailPageProps {
@@ -16,15 +16,15 @@ export default async function Layout({
   params,
   children
 }: UserDetailPageProps) {
-  const { userId } = await params;
+  const { userId, slug } = await params;
 
-  const user = await getUser({ userId });
-  if (!user.ok) {
-    return <div>Error loading user: {user.data.message}</div>;
+  const participant = await getTeamParticipant({ userId, slug });
+  if (!participant.ok) {
+    return <div>Error loading user: {participant.data.message}</div>;
   }
 
   return (
-    <Outline title={user.data.name || UNKNOWN_USER_NAME}>
+    <Outline title={participant.data.user.name || UNKNOWN_USER_NAME}>
       <UserDetailsTabs id={userId}>{children}</UserDetailsTabs>
     </Outline>
   );
