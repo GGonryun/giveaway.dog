@@ -1,4 +1,5 @@
 import { randomBytes } from 'crypto';
+import type { APIRequestContext, PlaywrightWorkerArgs } from '@playwright/test';
 import {
   E2E_OAUTH_AUTHORIZE_PATH,
   E2E_OAUTH_SECRET_COOKIE,
@@ -74,6 +75,26 @@ const mockOAuthCookies = (secret: string) => {
   ];
 };
 
+const withMockOAuthCookies = async (
+  playwright: PlaywrightWorkerArgs['playwright'],
+  request: APIRequestContext,
+  run: (context: APIRequestContext) => Promise<void>
+) => {
+  const state = await request.storageState();
+  const context = await playwright.request.newContext({
+    baseURL: BASE_URL,
+    storageState: {
+      ...state,
+      cookies: [...state.cookies, ...mockOAuthCookies(madeUpSecret())]
+    }
+  });
+  try {
+    await run(context);
+  } finally {
+    await context.dispose();
+  }
+};
+
 test.describe(
   'e2e bypasses on production',
   { tag: ['@prod-safe', '@security'] },
@@ -139,6 +160,7 @@ test.describe(
     }
 
     test('hides the mock OAuth authorize page from a browser with a made-up secret', async ({
+      playwright,
       request
     }) => {
       const callback = new URL('/api/auth/callback/discord', BASE_URL);
@@ -146,31 +168,19 @@ test.describe(
       authorize.searchParams.set('redirect_uri', callback.toString());
       authorize.searchParams.set('state', 'e2e-production-check');
 
-      const response = await request.get(authorize.toString(), {
-        headers: {
-          cookie: `${E2E_OAUTH_SECRET_COOKIE}=${madeUpSecret()}`
-        },
-        ...noRedirect
-      });
+      await withMockOAuthCookies(playwright, request, async (context) => {
+        const response = await context.get(authorize.toString(), noRedirect);
 
-      expect(response.status()).toBe(404);
-      expect(await response.text()).toBe('');
+        expect(response.status()).toBe(404);
+        expect(await response.text()).toBe('');
+      });
     });
 
     test('sends a Discord sign-in to Discord, not to the mock OAuth provider', async ({
       playwright,
       request
     }) => {
-      const state = await request.storageState();
-      const context = await playwright.request.newContext({
-        baseURL: BASE_URL,
-        storageState: {
-          ...state,
-          cookies: [...state.cookies, ...mockOAuthCookies(madeUpSecret())]
-        }
-      });
-
-      try {
+      await withMockOAuthCookies(playwright, request, async (context) => {
         const csrf = await context.get('/api/auth/csrf');
         expect(csrf.ok(), `GET /api/auth/csrf returned ${csrf.status()}`).toBe(
           true
@@ -194,9 +204,7 @@ test.describe(
         expect(sessionCookies(signIn), 'The response sets a session').toEqual(
           []
         );
-      } finally {
-        await context.dispose();
-      }
+      });
     });
 
     test('serves a production Turnstile site key on a giveaway page', async ({
