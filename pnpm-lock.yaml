@@ -6807,6 +6807,9 @@ importers:
       '@giveaway/e2e-fakes':
         specifier: workspace:*
         version: link:../../../e2e/e2e-fakes
+      '@giveaway/e2e-gate':
+        specifier: workspace:*
+        version: link:../../../e2e/e2e-gate
       '@giveaway/e2e-model':
         specifier: workspace:*
         version: link:../../../e2e/e2e-model

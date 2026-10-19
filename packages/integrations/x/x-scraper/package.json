@@ -39,6 +39,7 @@
     "@giveaway/cache": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/e2e-fakes": "workspace:*",
+    "@giveaway/e2e-gate": "workspace:*",
     "@giveaway/e2e-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
