@@ -51,6 +51,7 @@ export const checkSecretCode = async (
   }
 
   const submittedCode = parsed.data.code;
+  // Stryker disable next-line ConditionalExpression: the input schema already refuses an empty or missing code
   if (!submittedCode || typeof submittedCode !== 'string') {
     throw new ApplicationError({
       code: 'BAD_REQUEST',
@@ -132,6 +133,7 @@ export const checkSecretCodeV2 = async (
   }
 
   const submittedCode = parsed.data.code;
+  // Stryker disable next-line ConditionalExpression: the input schema already refuses an empty or missing code
   if (!submittedCode || typeof submittedCode !== 'string') {
     throw new ApplicationError({
       code: 'BAD_REQUEST',

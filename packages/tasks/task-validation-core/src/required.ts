@@ -24,10 +24,6 @@ export const validateRequiredTasks = async ({
     });
   }
 
-  if (currentTask.tasksRequired === 0) {
-    return;
-  }
-
   const completedTasksCount = completions.length;
 
   if (completedTasksCount < currentTask.tasksRequired) {

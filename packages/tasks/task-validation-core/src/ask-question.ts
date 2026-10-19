@@ -22,6 +22,7 @@ export const checkAskQuestion = async (
   }
 
   const submittedAnswer = parsed.data.answer;
+  // Stryker disable next-line ConditionalExpression: the input schema already refuses an empty or missing answer
   if (!submittedAnswer || typeof submittedAnswer !== 'string') {
     throw new ApplicationError({
       code: 'BAD_REQUEST',

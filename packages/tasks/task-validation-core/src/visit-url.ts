@@ -25,12 +25,10 @@ export const checkVisitUrl = async (
 
   const { answer } = parsed.data;
 
-  if (answer) {
-    if (!answer || typeof answer !== 'string' || answer.trim().length === 0) {
-      throw new ApplicationError({
-        code: 'BAD_REQUEST',
-        message: 'Answer are required for this task'
-      });
-    }
+  if (answer && answer.trim().length === 0) {
+    throw new ApplicationError({
+      code: 'BAD_REQUEST',
+      message: 'Answer are required for this task'
+    });
   }
 };
