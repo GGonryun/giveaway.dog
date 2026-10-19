@@ -9,6 +9,22 @@ on:
         description: Record the responses (tokens, secrets, passwords and emails redacted) in the live-api-recordings artifact
         type: boolean
         default: false
+      x_tweet_url:
+        description: The public X post to read, in place of the LIVE_X_TWEET_URL variable
+        type: string
+        required: false
+      bluesky_post_url:
+        description: The public Bluesky post to read, in place of the LIVE_BLUESKY_POST_URL variable
+        type: string
+        required: false
+      twitch_login:
+        description: The Twitch login to look up, in place of the LIVE_TWITCH_LOGIN variable
+        type: string
+        required: false
+      discord_guild_id:
+        description: The Discord guild to read, in place of the LIVE_DISCORD_GUILD_ID variable
+        type: string
+        required: false
 
 permissions:
   actions: read
@@ -53,10 +69,10 @@ jobs:
           TWITCH_CLIENT_ID: ${{ secrets.LIVE_TWITCH_CLIENT_ID }}
           TWITCH_CLIENT_SECRET: ${{ secrets.LIVE_TWITCH_CLIENT_SECRET }}
           DISCORD_BOT_TOKEN: ${{ secrets.LIVE_DISCORD_BOT_TOKEN }}
-          LIVE_X_TWEET_URL: ${{ vars.LIVE_X_TWEET_URL }}
-          LIVE_BLUESKY_POST_URL: ${{ vars.LIVE_BLUESKY_POST_URL }}
-          LIVE_TWITCH_LOGIN: ${{ vars.LIVE_TWITCH_LOGIN }}
-          LIVE_DISCORD_GUILD_ID: ${{ vars.LIVE_DISCORD_GUILD_ID }}
+          LIVE_X_TWEET_URL: ${{ inputs.x_tweet_url || vars.LIVE_X_TWEET_URL }}
+          LIVE_BLUESKY_POST_URL: ${{ inputs.bluesky_post_url || vars.LIVE_BLUESKY_POST_URL }}
+          LIVE_TWITCH_LOGIN: ${{ inputs.twitch_login || vars.LIVE_TWITCH_LOGIN }}
+          LIVE_DISCORD_GUILD_ID: ${{ inputs.discord_guild_id || vars.LIVE_DISCORD_GUILD_ID }}
           LIVE_RECORD_DIR: ${{ inputs.record && format('{0}/live-recordings', runner.temp) || '' }}
         run: pnpm nx "$NX_RUN" -t test:live --output-style=static
 
