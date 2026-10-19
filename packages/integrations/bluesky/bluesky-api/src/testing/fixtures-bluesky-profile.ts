@@ -14,10 +14,20 @@ export const blueskyProfileFixture = {
     lists: 0,
     feedgens: 0,
     starterPacks: 0,
-    labeler: false
+    labeler: false,
+    chat: { allowIncoming: 'following' },
+    activitySubscription: { allowSubscriptions: 'followers' }
   },
   indexedAt: '2026-01-02T10:00:00.000Z',
   createdAt: '2024-02-01T09:00:00.000Z',
-  viewer: { muted: false, blockedBy: false },
-  labels: []
+  labels: [],
+  verification: {
+    verifications: [],
+    verifiedStatus: 'none',
+    trustedVerifierStatus: 'none'
+  },
+  pinnedPost: {
+    cid: 'bafyreie5737gdxlw5i64vzichcalba3z2v5n6icifvx5xytvske7mr3hpm',
+    uri: 'at://did:plc:acmegiveaways000000000000/app.bsky.feed.post/3lacmepost111'
+  }
 };
