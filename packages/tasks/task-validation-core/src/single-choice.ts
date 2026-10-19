@@ -22,6 +22,7 @@ export const checkSingleChoice = async (
   }
 
   const submittedChoice = parsed.data.choice;
+  // Stryker disable next-line ConditionalExpression: the input schema already refuses an empty or missing choice
   if (!submittedChoice || typeof submittedChoice !== 'string') {
     throw new ApplicationError({
       code: 'BAD_REQUEST',

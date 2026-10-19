@@ -57,6 +57,20 @@ describe('checkBonusTimed', () => {
     ).resolves.toBeUndefined();
   });
 
+  it('treats a null end date as no end date', async () => {
+    await expect(
+      checkBonusTimed(timedTask({ startDate: START, endDate: null }))
+    ).resolves.toBeUndefined();
+  });
+
+  it('treats a null start date as no start date', async () => {
+    vi.setSystemTime(new Date('1969-12-31T23:59:59.999Z'));
+
+    await expect(
+      checkBonusTimed(timedTask({ startDate: null, endDate: END }))
+    ).resolves.toBeUndefined();
+  });
+
   it('resolves inside the time window', async () => {
     await expect(
       checkBonusTimed(timedTask({ startDate: START, endDate: END }))
