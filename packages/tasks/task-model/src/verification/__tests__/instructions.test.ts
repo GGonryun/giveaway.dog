@@ -290,6 +290,156 @@ const BONUS_TYPES: TaskType[] = [
   'BONUS_COMPLETE_PROFILE'
 ];
 
+const STEP_NOTES: [TaskType, number, string][] = [
+  [
+    'INSTAGRAM_VISIT',
+    2,
+    'This task is trust-based as Instagram does not provide visit tracking'
+  ],
+  ['INSTAGRAM_LIKE', 2, 'Note: Private accounts may not show likes publicly'],
+  [
+    'INSTAGRAM_COMMENT',
+    2,
+    'Check that the comment is appropriate and follows your guidelines'
+  ],
+  [
+    'FACEBOOK_VISIT_PAGE',
+    2,
+    'This task is trust-based as Facebook does not provide visit tracking'
+  ],
+  [
+    'FACEBOOK_VIEW_POST',
+    2,
+    'Facebook does not show who viewed posts, so look for engagement'
+  ],
+  [
+    'TIKTOK_FOLLOW',
+    2,
+    'TikTok follower lists may be private depending on settings'
+  ],
+  ['TIKTOK_LIKE', 2, 'Note: TikTok may not show all users who liked a video'],
+  [
+    'TWITTER_FOLLOW',
+    2,
+    'You can use the search function to find specific followers'
+  ],
+  ['TWITTER_RETWEET', 2, 'The retweets list shows most recent retweets first'],
+  ['TWITTER_LIKE', 2, 'The likes list shows most recent likes first'],
+  ['YOUTUBE_VISIT', 1, 'YouTube does not provide specific viewer names'],
+  ['YOUTUBE_VISIT', 2, 'This task is primarily trust-based'],
+  [
+    'VISIT_URL',
+    1,
+    'This task is typically trust-based without detailed tracking'
+  ],
+  [
+    'SUBMIT_MEDIA',
+    2,
+    'Verify that content is appropriate and follows your rules'
+  ],
+  ['REFERRAL_LINK', 2, 'Referral data should be in the proof section'],
+  ['KICK_FOLLOW', 2, 'Kick may limit follower list visibility'],
+  [
+    'TWITTER_RETWEET_IMPORT',
+    1,
+    'Import jobs run periodically to check Twitter/X for users who engaged with your post'
+  ],
+  [
+    'TWITTER_RETWEET_IMPORT_V2',
+    1,
+    'Import jobs run periodically to check Twitter/X for users who engaged with your post'
+  ],
+  [
+    'TWITTER_LIKE_IMPORT',
+    1,
+    'Import jobs run periodically to check Twitter/X for users who engaged with your post'
+  ],
+  [
+    'BLUESKY_LIKE_IMPORT',
+    1,
+    'Import jobs run periodically to check Bluesky for users who engaged with your post'
+  ],
+  [
+    'BLUESKY_REPOST_IMPORT',
+    1,
+    'Import jobs run periodically to check Bluesky for users who engaged with your post'
+  ],
+  [
+    'STEAM_WISHLIST',
+    1,
+    'The system checks if the game is in their wishlist via Steam API'
+  ],
+  [
+    'STEAM_WISHLIST',
+    2,
+    'This will check if the game is still in their wishlist'
+  ],
+  [
+    'DISCORD_JOIN',
+    1,
+    'The system checks if they are a member of your Discord server'
+  ],
+  ['DISCORD_JOIN', 2, 'This will check if they are still in the server'],
+  [
+    'DISCORD_INTERACTION_IMPORT',
+    1,
+    'Role verification happens automatically when they click'
+  ],
+  [
+    'DISCORD_INTERACTION_IMPORT',
+    2,
+    'You can manually approve or reject entries if needed'
+  ],
+  ['TWITCH_FOLLOW', 1, 'The system checks if they follow your Twitch channel'],
+  ['TWITCH_FOLLOW', 2, 'This will check if they still follow your channel'],
+  [
+    'SECRET_CODE',
+    1,
+    'The submitted code is compared against the task configuration'
+  ],
+  [
+    'SECRET_CODE_V2',
+    1,
+    'The submitted code is compared against the task configuration'
+  ],
+  [
+    'BLUESKY_CONNECT',
+    1,
+    'The system validates the Bluesky handle is valid and accessible'
+  ],
+  [
+    'BLUESKY_FOLLOW',
+    1,
+    'The system checks if the user follows your Bluesky account'
+  ],
+  ['BLUESKY_LIKE', 1, 'The system checks if the user liked your Bluesky post'],
+  [
+    'BLUESKY_REPOST',
+    1,
+    'The system checks if the user reposted your Bluesky post'
+  ],
+  [
+    'TWITCH_CHAT_IMPORT',
+    1,
+    'The system listens for the command and marks the task as complete'
+  ],
+  [
+    'VELORA_CONNECT',
+    1,
+    'The system validates the Velora account is connected and accessible'
+  ],
+  [
+    'VELORA_FOLLOW',
+    1,
+    'The system checks if the user follows your Velora account'
+  ],
+  [
+    'LINKEDIN_CONNECT',
+    1,
+    'The system validates the LinkedIn account is connected and accessible'
+  ]
+];
+
 describe('getVerificationInstructions', () => {
   describe('titles and descriptions', () => {
     it('defines expectations for every task type', () => {
@@ -334,6 +484,13 @@ describe('getVerificationInstructions', () => {
         expect(
           steps.filter((step) => step.note !== undefined).map((s) => s.step)
         ).toEqual(expectedSteps);
+      }
+    );
+
+    it.each(STEP_NOTES)(
+      '%s notes step %i when no provider is connected',
+      (type, step, note) => {
+        expect(stepOf(type, step).note).toBe(note);
       }
     );
 

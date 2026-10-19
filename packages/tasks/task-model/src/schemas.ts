@@ -150,7 +150,7 @@ export type TwitterConnectTaskSchema = z.infer<typeof twitterConnectTaskSchema>;
 
 export const twitterFollowTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_FOLLOW'),
-  validation: validationSchema.default({ type: 'STRICT' }).optional(),
+  validation: validationSchema.optional(),
   username: z
     .string()
     .url('Profile URL is required')
@@ -161,7 +161,7 @@ export type TwitterFollowTaskSchema = z.infer<typeof twitterFollowTaskSchema>;
 
 export const twitterRetweetTaskSchema = baseTaskSchema.extend({
   type: z.literal('TWITTER_RETWEET'),
-  validation: validationSchema.default({ type: 'STRICT' }).optional(),
+  validation: validationSchema.optional(),
   tweetId: z
     .string()
     .url('Post URL is required')
@@ -251,7 +251,7 @@ export const steamFollowTaskSchema = baseTaskSchema.extend({
       return urlPattern.test(val);
     }, 'Unexpected URL, should be like https://store.steampowered.com/developer/DeveloperName or https://store.steampowered.com/publisher/PublisherName'),
   requireProof: z.boolean().default(false),
-  validation: validationSchema.default({ type: 'STRICT' }).optional()
+  validation: validationSchema.optional()
 });
 
 export type SteamFollowTaskSchema = z.infer<typeof steamFollowTaskSchema>;
@@ -443,7 +443,7 @@ export const facebookVisitPageTaskSchema = baseTaskSchema.extend({
     .url('Facebook Page URL is required or missing https://')
     .refine((val) => {
       const urlPattern =
-        /^https?:\/\/(www\.)?facebook\.com\/(profile\.php\?id=\d+|people\/[A-Za-z0-9_.\-]+\/\d+|share\/[A-Za-z0-9]+|\d+|[A-Za-z0-9_.]+)(\/)?(\?.*)?$/;
+        /^https?:\/\/(www\.)?facebook\.com\/(people\/[A-Za-z0-9_.\-]+\/\d+|share\/[A-Za-z0-9]+|[A-Za-z0-9_.]+)(\/)?(\?.*)?$/;
       return urlPattern.test(val);
     }, 'Unexpected URL, should be like https://www.facebook.com/yourpagename or https://www.facebook.com/profile.php?id=PAGE_ID or https://www.facebook.com/share/SHARE_ID')
 });
@@ -463,11 +463,11 @@ export const facebookViewPostTaskSchema = baseTaskSchema.extend({
       // 2. https://www.facebook.com/pagename/posts/123456789
       // 3. https://www.facebook.com/photo.php?fbid=123456789&id=987654321
       const permalinkPattern =
-        /^https?:\/\/(www\.)?facebook\.com\/permalink\.php\?story_fbid=[A-Za-z0-9]+(&|&amp;)id=\d+/;
+        /^https?:\/\/(www\.)?facebook\.com\/permalink\.php\?story_fbid=[A-Za-z0-9]+(&|&amp;)id=\d/;
       const postsPattern =
         /^https?:\/\/(www\.)?facebook\.com\/[A-Za-z0-9_.\-]+\/posts\/[A-Za-z0-9]+\/?$/;
       const photoPattern =
-        /^https?:\/\/(www\.)?facebook\.com\/photo\.php\?fbid=\d+(&|&amp;)id=\d+/;
+        /^https?:\/\/(www\.)?facebook\.com\/photo\.php\?fbid=\d+(&|&amp;)id=\d/;
 
       return (
         permalinkPattern.test(val) ||
@@ -483,7 +483,7 @@ export type FacebookViewPostTaskSchema = z.infer<
 
 export const tiktokFollowTaskSchema = baseTaskSchema.extend({
   type: z.literal('TIKTOK_FOLLOW'),
-  validation: validationSchema.default({ type: 'STRICT' }).optional(),
+  validation: validationSchema.optional(),
   profileUrl: z
     .string()
     .url('TikTok Profile URL is required')
@@ -498,7 +498,7 @@ export type TiktokFollowTaskSchema = z.infer<typeof tiktokFollowTaskSchema>;
 
 export const tiktokLikeTaskSchema = baseTaskSchema.extend({
   type: z.literal('TIKTOK_LIKE'),
-  validation: validationSchema.default({ type: 'STRICT' }).optional(),
+  validation: validationSchema.optional(),
   postUrl: z
     .string()
     .url('TikTok Post URL is required')
