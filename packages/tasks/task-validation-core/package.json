@@ -17,6 +17,7 @@
   },
   "exports": {
     "./ask-question": "./src/ask-question.ts",
+    "./audience": "./src/audience.ts",
     "./bonus": "./src/bonus.ts",
     "./mandatory": "./src/mandatory.ts",
     "./multiple-choice": "./src/multiple-choice.ts",
@@ -34,7 +35,9 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
     "@giveaway/loyalty-model": "workspace:*",
     "@giveaway/participant-model": "workspace:*",
     "@giveaway/referrals-model": "workspace:*",

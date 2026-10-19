@@ -167,6 +167,7 @@ type ValidateUniqueFieldsParams = {
   formFields: Array<{
     id: string;
     type: SweepstakesFormFieldType | null;
+    required: boolean | null;
   }>;
   participantId: string;
   sweepstakesId: string;
@@ -235,8 +236,16 @@ const validateUniqueFields = async (params: ValidateUniqueFieldsParams) => {
         break;
       }
 
-      case SweepstakesFormFieldType.USERNAME:
       case SweepstakesFormFieldType.AGE:
+        if (field.required && !isConfirmed(value)) {
+          throw new ApplicationError({
+            code: 'VALIDATION_ERROR',
+            message: 'Confirm your age to enter this giveaway.'
+          });
+        }
+        break;
+
+      case SweepstakesFormFieldType.USERNAME:
         // No validation required for these types
         break;
 
@@ -416,7 +425,9 @@ export const saveUserChanges = async ({
 
     switch (field.type) {
       case SweepstakesFormFieldType.AGE: {
-        updates.birthday = toBirthday({ field, user });
+        if (isConfirmed(value)) {
+          updates.birthday = toBirthday({ field, user });
+        }
         break;
       }
 
@@ -440,6 +451,9 @@ export const saveUserChanges = async ({
     });
   }
 };
+
+const isConfirmed = (value: string | boolean) =>
+  value === true || value === 'true';
 
 const toBirthday = ({
   field,

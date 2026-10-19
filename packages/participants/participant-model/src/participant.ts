@@ -164,6 +164,14 @@ const toFieldValue = (
   }
 };
 
+export const toInitialFormValues = (
+  formFields: SweepstakesFormFieldSchema[],
+  user: UserSchema
+) =>
+  toParticipantForm(formFields, user, {})
+    .filter((field) => field.value !== null)
+    .map((field) => ({ fieldId: field.id, value: String(field.value) }));
+
 export const isProfileComplete = (
   formFields: SweepstakesFormFieldSchema[],
   user?: UserSchema,

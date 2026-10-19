@@ -7,7 +7,8 @@ import {
   secretCodeTask
 } from '@giveaway/testing-integration/fixtures';
 import { signIn } from '@giveaway/testing-server/session';
-import { expectOk } from '@giveaway/testing-server/result';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import type { Prisma } from '@giveaway/db-model';
 import submitTask from '../submit-tasks';
 
 vi.mock('next/headers', () => ({
@@ -16,11 +17,20 @@ vi.mock('next/headers', () => ({
   draftMode: vi.fn()
 }));
 
-const setup = async () => {
+const OPEN_AUDIENCE = {
+  allowedIdentities: ['ANONYMOUS']
+} satisfies Prisma.SweepstakesAudienceCreateWithoutSweepstakesInput;
+
+const setup = async (
+  audience: Prisma.SweepstakesAudienceCreateWithoutSweepstakesInput = OPEN_AUDIENCE
+) => {
   const { team } = await createHost();
   const sweepstakes = await createSweepstakes({
     teamId: team.id,
     tasks: [secretCodeTask('good dog')]
+  });
+  await db.sweepstakesAudience.create({
+    data: { ...audience, sweepstakes: { connect: { id: sweepstakes.id } } }
   });
   const participant = await createUser();
   signIn({ id: participant.id, accountType: 'PARTICIPANT' });
@@ -121,5 +131,69 @@ describe('submitTask', () => {
         expect(completions).toHaveLength(1);
       }
     );
+  });
+
+  describe('when the audience of the giveaway does not include the participant', () => {
+    const expectRefused = async (
+      audience: Prisma.SweepstakesAudienceCreateWithoutSweepstakesInput,
+      message: string
+    ) => {
+      const { task, userId, submit } = await setup(audience);
+
+      expect(expectFailure(await submit(), 'FORBIDDEN').message).toBe(message);
+
+      const { participants, completions } = await findEntries(userId, task.id);
+      expect(participants).toEqual([]);
+      expect(completions).toEqual([]);
+    };
+
+    it('refuses a participant outside the allowed regions', async () => {
+      await expectRefused(
+        {
+          ...OPEN_AUDIENCE,
+          regionalRestriction: {
+            create: { regions: ['country:US'], filter: 'INCLUDE' }
+          }
+        },
+        'You are not eligible to participate in this giveaway.'
+      );
+    });
+
+    it('refuses a participant without an allowed account', async () => {
+      await expectRefused(
+        { allowedIdentities: ['DISCORD'] },
+        'Connect one of the accounts that this giveaway accepts to enter it.'
+      );
+    });
+
+    it('refuses a participant who has not confirmed the required age', async () => {
+      await expectRefused(
+        {
+          ...OPEN_AUDIENCE,
+          formFields: {
+            create: {
+              type: 'AGE',
+              label: 'I am at least 18',
+              required: true,
+              minimum: 18
+            }
+          }
+        },
+        'Complete your profile to enter this giveaway.'
+      );
+    });
+
+    it('refuses a participant who is not a member of the team of a private giveaway', async () => {
+      const { sweepstakes, task, userId, submit } = await setup();
+      await db.sweepstakesVisibility.update({
+        where: { sweepstakesId: sweepstakes.id },
+        data: { visibility: 'PRIVATE' }
+      });
+
+      expectFailure(await submit(), 'NOT_FOUND');
+
+      const { completions } = await findEntries(userId, task.id);
+      expect(completions).toEqual([]);
+    });
   });
 });

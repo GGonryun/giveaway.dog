@@ -5,6 +5,7 @@ import {
   isFormFilled,
   isProfileComplete,
   participantFormSchema,
+  toInitialFormValues,
   toParticipantForm,
   toParticipantFormFields,
   toSweepstakesHost,
@@ -751,5 +752,29 @@ describe('isFormFilled', () => {
         other: 1
       })
     ).toBe(true);
+  });
+});
+
+describe('toInitialFormValues', () => {
+  it('stores the values that the profile fills, as strings', () => {
+    expect(
+      toInitialFormValues(
+        [usernameField(), emailField(), ageField(), twitterField()],
+        user({ birthday: new Date('2000-01-01T00:00:00.000Z') })
+      )
+    ).toEqual([
+      { fieldId: 'username', value: 'Jane' },
+      { fieldId: 'email', value: 'jane@example.com' },
+      { fieldId: 'age', value: 'true' }
+    ]);
+  });
+
+  it('stores nothing when the profile fills no field', () => {
+    expect(
+      toInitialFormValues(
+        [ageField(), twitterField()],
+        user({ birthday: null })
+      )
+    ).toEqual([]);
   });
 });

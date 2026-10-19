@@ -11,6 +11,7 @@ import { computeTaskStatus } from '@giveaway/task-model/status';
 import { saveTaskProof } from '@giveaway/task-validation-core/proof';
 import { validateReferral } from '@giveaway/task-validation-core/referral';
 import { validateSweepstakesState } from '@giveaway/task-validation-core/task-state';
+import { validateAudience } from '@giveaway/task-validation-core/audience';
 
 const submitTask = procedure()
   .authorization({ required: true })
@@ -50,6 +51,8 @@ const submitTask = procedure()
         message: 'Giveaway team data is missing. Please contact support.'
       });
     }
+
+    await validateAudience(db, { sweepstakesId, userId: user.id });
 
     const participant = await db.sweepstakesParticipant.upsert({
       where: {

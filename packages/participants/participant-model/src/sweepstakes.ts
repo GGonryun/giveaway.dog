@@ -1,6 +1,7 @@
 import {
   GiveawayState,
-  ParticipantSweepstakeSchema
+  ParticipantSweepstakeSchema,
+  RegionalRestrictionSchema
 } from '@giveaway/sweepstakes-model/schemas';
 import { assertNever } from '@giveaway/util-errors';
 import { RequiredFields } from '@giveaway/util-types/types';
@@ -64,26 +65,30 @@ export const toSweepstakesState = (
 const isEligible = ({
   sweepstakes,
   participant
-}: RequiredFields<ComputeStateOptions, 'participant'>) => {
-  if (sweepstakes.audience.regionalRestriction) {
-    if (!participant.user.countryCode) return false;
+}: RequiredFields<ComputeStateOptions, 'participant'>) =>
+  isInAllowedRegion(
+    sweepstakes.audience.regionalRestriction,
+    participant.user.countryCode
+  );
 
-    const countries = expandCountries(
-      sweepstakes.audience.regionalRestriction.regions
-    );
-    const hasRegion = includesCountryCode(
-      countries,
-      participant.user.countryCode
-    );
+export const isInAllowedRegion = (
+  restriction: RegionalRestrictionSchema,
+  countryCode: string | null | undefined
+) => {
+  if (!restriction) return true;
+  if (!countryCode) return false;
 
-    switch (sweepstakes.audience.regionalRestriction.filter) {
-      case 'INCLUDE':
-        return hasRegion;
-      case 'EXCLUDE':
-        return !hasRegion;
-      default:
-        throw assertNever(sweepstakes.audience.regionalRestriction.filter);
-    }
+  const hasRegion = includesCountryCode(
+    expandCountries(restriction.regions),
+    countryCode
+  );
+
+  switch (restriction.filter) {
+    case 'INCLUDE':
+      return hasRegion;
+    case 'EXCLUDE':
+      return !hasRegion;
+    default:
+      throw assertNever(restriction.filter);
   }
-  return true;
 };

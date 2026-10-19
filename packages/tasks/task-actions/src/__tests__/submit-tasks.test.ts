@@ -3,6 +3,7 @@ import type { MockInstance } from 'vitest';
 import { Prisma } from '@giveaway/db-model';
 import type { Sweepstakes, SweepstakesTiming } from '@giveaway/db-model';
 import submitTask from '../submit-tasks';
+import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, signOut, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
@@ -14,6 +15,7 @@ import {
 } from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
 
 const m = vi.hoisted(() => ({
+  validateAudience: vi.fn(),
   referralCode: null as string | null,
   cookies: vi.fn(),
   deleteCookie: vi.fn()
@@ -23,6 +25,10 @@ vi.mock('next/headers', () => ({
   cookies: m.cookies,
   headers: vi.fn(),
   draftMode: vi.fn()
+}));
+
+vi.mock('@giveaway/task-validation-core/audience', () => ({
+  validateAudience: m.validateAudience
 }));
 
 vi.mock('cookies-next', () => ({
@@ -89,6 +95,8 @@ describe('submitTask', () => {
           : undefined
     }));
     m.deleteCookie.mockReset();
+    m.validateAudience.mockReset();
+    m.validateAudience.mockResolvedValue(undefined);
     signIn();
     givenTasks(storedTask('task-1', taskConfig('BONUS_TASK')));
     prismaMock.sweepstakesParticipant.upsert.mockResolvedValue(participant);
@@ -199,6 +207,44 @@ describe('submitTask', () => {
         'Giveaway team data is missing. Please contact support.'
       );
       expect(prismaMock.sweepstakesParticipant.upsert).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('checking the audience', () => {
+    it('checks the audience rules of the sweepstakes for the signed in user', async () => {
+      await submitTask(input());
+
+      expect(m.validateAudience).toHaveBeenCalledWith(prismaMock, {
+        sweepstakesId: 'sweep-1',
+        userId: TEST_USER.id
+      });
+    });
+
+    it('does not check the audience of a giveaway that is not accepting entries', async () => {
+      givenTasks(
+        storedTask('task-1', taskConfig('BONUS_TASK'), { status: 'DRAFT' })
+      );
+
+      await submitTask(input());
+
+      expect(m.validateAudience).not.toHaveBeenCalled();
+    });
+
+    it('records nothing when the audience rules refuse the user', async () => {
+      m.validateAudience.mockRejectedValue(
+        new ApplicationError({
+          code: 'FORBIDDEN',
+          message: 'You are not eligible to participate in this giveaway.'
+        })
+      );
+
+      const result = await submitTask(input());
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        'You are not eligible to participate in this giveaway.'
+      );
+      expect(prismaMock.sweepstakesParticipant.upsert).not.toHaveBeenCalled();
+      expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
     });
   });
 
