@@ -2262,6 +2262,9 @@ importers:
       next:
         specifier: 'catalog:'
         version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -7910,9 +7913,18 @@ importers:
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server
+      '@giveaway/sweepstakes-access':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-access
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../tasks/task-model
+      '@giveaway/team-permissions':
+        specifier: workspace:*
+        version: link:../../team/team-permissions
+      '@giveaway/team-server':
+        specifier: workspace:*
+        version: link:../../team/team-server
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors
@@ -11190,24 +11202,21 @@ importers:
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server
+      '@giveaway/sweepstakes-access':
+        specifier: workspace:*
+        version: link:../sweepstakes-access
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../sweepstakes-model
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../tasks/task-model
-      '@giveaway/team-permissions':
-        specifier: workspace:*
-        version: link:../../team/team-permissions
       '@giveaway/user-model':
         specifier: workspace:*
         version: link:../../account/user-model
       '@giveaway/util-collections':
         specifier: workspace:*
         version: link:../../shared/util-collections
-      '@giveaway/util-errors':
-        specifier: workspace:*
-        version: link:../../shared/util-errors
       '@giveaway/util-time':
         specifier: workspace:*
         version: link:../../shared/util-time
@@ -11220,9 +11229,6 @@ importers:
       next:
         specifier: 'catalog:'
         version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      server-only:
-        specifier: 'catalog:'
-        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 3.25.76

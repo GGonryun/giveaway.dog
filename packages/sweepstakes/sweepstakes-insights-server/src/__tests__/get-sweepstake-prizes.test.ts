@@ -16,7 +16,7 @@ import {
   describeTeamAccess,
   teamSweepstakes,
   teamSweepstakesQuery
-} from './fixtures/team-sweepstakes';
+} from '@giveaway/sweepstakes-access/testing/team-sweepstakes';
 
 const input = { sweepstakesId: SWEEPSTAKES_ID, slug: TEAM_SLUG };
 

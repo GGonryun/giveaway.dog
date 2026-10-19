@@ -8,19 +8,14 @@ import { z } from 'zod';
 const findUser = procedure()
   .authorization({ required: false })
   .input(
-    z.union([
-      z.object({
-        userId: z.string()
-      }),
-      z.object({
-        self: z.literal(true)
-      })
-    ])
+    z.object({
+      self: z.literal(true)
+    })
   )
   .output(userSchema.nullable())
-  .handler(async ({ db, user, input }) => {
+  .handler(async ({ db, user }) => {
     if (!user?.id) return null;
-    return await getUserQuery(db, 'self' in input ? user.id : input.userId);
+    return await getUserQuery(db, user.id);
   });
 
 export default findUser;

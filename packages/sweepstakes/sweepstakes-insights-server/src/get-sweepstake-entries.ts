@@ -9,7 +9,7 @@ import {
   USER_SCHEMA_SELECT_QUERY
 } from '@giveaway/user-model/user';
 import { userEntriesSchema, toTaskSchema } from '@giveaway/task-model/schemas';
-import { findTeamSweepstakes } from './team-sweepstakes';
+import { findTeamSweepstakes } from '@giveaway/sweepstakes-access/team-sweepstakes';
 
 const getSweepstakeEntries = procedure()
   .authorization({

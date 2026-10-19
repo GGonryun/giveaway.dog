@@ -10,7 +10,7 @@ import { findTeamSweepstakes } from '../team-sweepstakes';
 import {
   teamSweepstakes,
   teamSweepstakesQuery
-} from './fixtures/team-sweepstakes';
+} from '../testing/team-sweepstakes';
 
 const find = () =>
   findTeamSweepstakes({

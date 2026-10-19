@@ -51,7 +51,7 @@ describe('getUser', () => {
       signIn();
     });
 
-    it('rejects input with neither a user id nor self', async () => {
+    it('rejects input without self', async () => {
       const result = await getUser({} as unknown as GetUserInput);
 
       expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
@@ -68,12 +68,15 @@ describe('getUser', () => {
       );
     });
 
-    it('rejects a non-string user id', async () => {
-      const result = await getUser({ userId: 42 } as unknown as GetUserInput);
+    it('rejects a user id without self, so it never reads another user', async () => {
+      const result = await getUser({
+        userId: 'user-2'
+      } as unknown as GetUserInput);
 
       expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
         /^Input validation failed: /
       );
+      expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     });
   });
 
@@ -91,27 +94,19 @@ describe('getUser', () => {
       );
     });
 
-    it('looks up the requested user id', async () => {
-      await getUser({ userId: 'user-2' });
-
-      expect(prismaMock.user.findUnique).toHaveBeenCalledWith(
-        userSelectArgs('user-2')
-      );
-    });
-
-    it('prefers the user id when the input has both a user id and self', async () => {
+    it('ignores a user id next to self and looks up the session user', async () => {
       await getUser({
         userId: 'user-2',
         self: true
       } as unknown as GetUserInput);
 
       expect(prismaMock.user.findUnique).toHaveBeenCalledWith(
-        userSelectArgs('user-2')
+        userSelectArgs(TEST_USER.id)
       );
     });
 
     it('returns the mapped user', async () => {
-      const result = await getUser({ userId: 'user-2' });
+      const result = await getUser({ self: true });
 
       expect(expectOk(result)).toEqual(mappedUser());
     });
@@ -122,7 +117,7 @@ describe('getUser', () => {
       signIn();
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      const result = await getUser({ userId: 'missing' });
+      const result = await getUser({ self: true });
 
       expect(expectFailure(result, 'NOT_FOUND').message).toBe('User not found');
     });
@@ -135,7 +130,7 @@ describe('getUser', () => {
         userRow({ email: 'not-an-email' })
       );
 
-      const result = await getUser({ userId: 'user-2' });
+      const result = await getUser({ self: true });
 
       expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
         /^Output validation failed: /
@@ -151,7 +146,7 @@ describe('getUser', () => {
     it('maps a P2025 error to NOT_FOUND', async () => {
       prismaMock.user.findUnique.mockRejectedValue(knownRequestError('P2025'));
 
-      const result = await getUser({ userId: 'user-2' });
+      const result = await getUser({ self: true });
 
       expect(expectFailure(result, 'NOT_FOUND').message).toBe(
         'Unable to process your request. The item may no longer exist. Give us a minute before you try again.'
@@ -161,7 +156,7 @@ describe('getUser', () => {
     it('maps other errors to INTERNAL_SERVER_ERROR with their message', async () => {
       prismaMock.user.findUnique.mockRejectedValue(new Error('db offline'));
 
-      const result = await getUser({ userId: 'user-2' });
+      const result = await getUser({ self: true });
 
       expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
         'db offline'

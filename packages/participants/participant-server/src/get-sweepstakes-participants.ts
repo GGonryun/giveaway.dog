@@ -9,6 +9,7 @@ import {
   sortParticipantsByMostRecentCompletion
 } from '@giveaway/participant-model/db';
 import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schemas';
+import { findTeamSweepstakes } from '@giveaway/sweepstakes-access/team-sweepstakes';
 
 export const getSweepstakesParticipants = procedure()
   .authorization({
@@ -26,14 +27,16 @@ export const getSweepstakesParticipants = procedure()
     })
   )
   .handler(async ({ db, input, user }) => {
-    const data = {
-      ...input,
-      userId: user.id
-    };
+    const sweepstakes = await findTeamSweepstakes({
+      db,
+      userId: user.id,
+      sweepstakesId: input.sweepstakesId,
+      slug: input.slug
+    });
 
     const participants = await listSweepstakesParticipants({
       db,
-      sweepstakesId: data.sweepstakesId
+      sweepstakesId: sweepstakes.id
     });
 
     const processedUsers = participants

@@ -4,7 +4,6 @@ import { Suspense } from 'react';
 import { UserDetailsOverview } from '@giveaway/audience-user-details/components/overview/user-details-overview';
 import { UserDetailsOverviewSkeleton } from '@giveaway/audience-user-details/components/overview/user-details-overview-skeleton';
 import { UserParams } from '@giveaway/audience-user-details/params';
-import getUser from '@giveaway/account-server/get-user';
 import { getTeamParticipant } from '@giveaway/participant-server/get-team-participant';
 import { getTeamTasks } from '@giveaway/participant-server/get-team-tasks';
 import { getUserSignals } from '@giveaway/audience-server/get-user-signals';
@@ -32,13 +31,9 @@ export default async function Page({ params }: PageProps) {
 }
 
 const Wrapper: React.FC<UserParams> = async ({ userId, slug }) => {
-  const user = await getUser({ userId });
   const participant = await getTeamParticipant({ userId, slug });
   const tasks = await getTeamTasks({ slug });
 
-  if (!user.ok) {
-    return <div>Error loading user: {user.data.message}</div>;
-  }
   if (!participant.ok) {
     return (
       <div>Error loading participant data: {participant.data.message}</div>
