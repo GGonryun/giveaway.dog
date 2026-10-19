@@ -847,21 +847,4 @@ jobs:
           PROPERTY_COVERAGE: ${{ needs.property.outputs.coverage }}
           E2E: ${{ steps.e2e.outputs.state }}
           GH_TOKEN: ${{ github.token }}
-        run: |
-          git init --quiet --initial-branch badges "$RUNNER_TEMP/badges"
-          cd "$RUNNER_TEMP/badges"
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          if git ls-remote --exit-code --heads origin badges > /dev/null; then
-            git fetch --quiet origin badges
-            git checkout --quiet -B badges FETCH_HEAD
-          fi
-          cd "$GITHUB_WORKSPACE"
-          node .github/scripts/badges.mjs "$RUNNER_TEMP/badges" test-results
-          cd "$RUNNER_TEMP/badges"
-          rm -f coverage.svg property-coverage.svg
-          echo '{ "git": { "deploymentEnabled": false } }' > vercel.json
-          git add --all
-          git -c user.name='github-actions[bot]' \
-            -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-            commit --quiet --message "Badges of ${GITHUB_SHA::7}"
-          git push --quiet origin badges
+        run: bash .github/scripts/publish-badges.sh "Badges of ${GITHUB_SHA::7}" node .github/scripts/badges.mjs

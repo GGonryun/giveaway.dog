@@ -13,6 +13,7 @@
 [![integration tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FGGonryun%2Fgiveaway.dog%2Fbadges%2Fintegration-tests.json)](https://github.com/GGonryun/giveaway.dog/blob/badges/history.csv)
 [![mutation tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FGGonryun%2Fgiveaway.dog%2Fbadges%2Fmutation-tests.json)](https://github.com/GGonryun/giveaway.dog/blob/badges/history.csv)
 [![e2e tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FGGonryun%2Fgiveaway.dog%2Fbadges%2Fe2e-tests.json)](https://github.com/GGonryun/giveaway.dog/blob/badges/history.csv)
+[![production checks](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FGGonryun%2Fgiveaway.dog%2Fbadges%2Fproduction-checks.json)](https://github.com/GGonryun/giveaway.dog/blob/badges/production-history.csv)
 
 ## License
 

@@ -1,6 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import {
+  appendHistory,
+  now,
+  runUrl,
+  writeBadges,
+  writeSummary
+} from './badge-files.mjs';
+
 const [outputDir, resultsDir = 'test-results'] = process.argv.slice(2);
 if (!outputDir) {
   console.error('Usage: node badges.mjs <badges folder> [test results folder]');
@@ -164,68 +172,21 @@ const README_BADGES = [
   ['property-coverage', 'property coverage'],
   ...TEST_KINDS.map((kind) => [`${kind}-tests`, `${kind} tests`]),
   ['mutation-tests', 'mutation tests'],
-  ['e2e-tests', 'e2e tests']
+  ['e2e-tests', 'e2e tests'],
+  ['production-checks', 'production checks']
 ];
 
-fs.mkdirSync(outputDir, { recursive: true });
-const badgeFile = (id) => path.join(outputDir, `${id}.json`);
-for (const [id, label] of README_BADGES) {
-  if (
-    !badges.some((badge) => badge.id === id) &&
-    !fs.existsSync(badgeFile(id))
-  ) {
-    badges.push({ id, label, message: 'no result yet', color: 'lightgrey' });
-  }
-}
-for (const { id, label, message, color } of badges) {
-  fs.writeFileSync(
-    badgeFile(id),
-    `${JSON.stringify({ schemaVersion: 1, label, message, color }, null, 2)}\n`
-  );
-}
+const written = writeBadges(outputDir, badges, README_BADGES);
 
-const historyFile = path.join(outputDir, HISTORY);
-const rows = [];
-if (fs.existsSync(historyFile)) {
-  const [header, ...lines] = fs
-    .readFileSync(historyFile, 'utf8')
-    .split('\n')
-    .filter(Boolean);
-  const columns = header.split(',');
-  for (const line of lines) {
-    const cells = line.split(',');
-    rows.push(Object.fromEntries(columns.map((name, i) => [name, cells[i]])));
-  }
-}
-rows.push({
+appendHistory(path.join(outputDir, HISTORY), COLUMNS, {
   ...row,
-  date: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+  date: now(),
   commit: process.env.GITHUB_SHA ?? '',
-  run: process.env.GITHUB_RUN_ID
-    ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
-    : ''
+  run: runUrl()
 });
-fs.writeFileSync(
-  historyFile,
-  [
-    COLUMNS.join(','),
-    ...rows.map((entry) => COLUMNS.map((name) => entry[name] ?? '').join(','))
-  ].join('\n') + '\n'
-);
 
-const summary = [
-  '## Badges',
-  '',
-  badges.length === 0
-    ? 'No badge changed.'
-    : '| Badge | Value |\n| --- | --- |\n' +
-      badges
-        .map(({ label, message }) => `| ${label} | ${message} |`)
-        .join('\n'),
-  '',
+writeSummary(
+  'Badges',
+  written,
   'A badge that is not in this table keeps its last value, because its job did not run or did not report a result.'
-].join('\n');
-console.log(summary);
-if (process.env.GITHUB_STEP_SUMMARY) {
-  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary}\n`);
-}
+);
