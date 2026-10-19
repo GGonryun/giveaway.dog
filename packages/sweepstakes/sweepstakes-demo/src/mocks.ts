@@ -41,7 +41,7 @@ export const mockUserProfile: UserSchema = {
   id: 'preview-user',
   name: 'Preview User',
   email: 'user@example.com',
-  birthday: new Date('1900-00-00'),
+  birthday: new Date('2000-01-01T00:00:00Z'),
   emailVerified: true,
   image: null,
   countryCode: 'US',
