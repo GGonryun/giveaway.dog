@@ -25,16 +25,16 @@ export function collectUserMetrics(): UserMetrics | null {
   };
 }
 
-export function getUserMetricsCookie(): UserMetrics | null {
-  const value = getCookie(USER_METRICS_COOKIE);
-
-  if (!value) return null;
-
+function parseUserMetrics(value: unknown): UserMetrics | null {
   try {
     return JSON.parse(value as string);
   } catch {
     return null;
   }
+}
+
+export function getUserMetricsCookie(): UserMetrics | null {
+  return parseUserMetrics(getCookie(USER_METRICS_COOKIE));
 }
 
 export function setUserMetricsCookie(metrics: UserMetrics): void {
@@ -48,12 +48,5 @@ export function setUserMetricsCookie(metrics: UserMetrics): void {
 export const getUserMetricsFromServerCookies = (
   cookieStore: ReadonlyRequestCookies
 ): UserMetrics | null => {
-  const metricsCookie = cookieStore.get(USER_METRICS_COOKIE);
-  if (!metricsCookie?.value) return null;
-
-  try {
-    return JSON.parse(metricsCookie.value);
-  } catch {
-    return null;
-  }
+  return parseUserMetrics(cookieStore.get(USER_METRICS_COOKIE)?.value);
 };
