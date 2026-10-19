@@ -67,6 +67,13 @@ export const replayServerAction = (
   page: Page,
   action: ServerAction,
   args: unknown[] = action.args
+): Promise<ServerActionResponse> =>
+  sendServerActionBody(page, action, JSON.stringify(args));
+
+export const sendServerActionBody = (
+  page: Page,
+  action: ServerAction,
+  body: string
 ): Promise<ServerActionResponse> => {
   const target = new URL(action.url);
 
@@ -86,7 +93,7 @@ export const replayServerAction = (
     {
       path: `${target.pathname}${target.search}`,
       id: action.id,
-      body: JSON.stringify(args)
+      body
     }
   );
 };
