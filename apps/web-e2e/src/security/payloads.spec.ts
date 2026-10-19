@@ -114,7 +114,7 @@ test.describe('winner payloads', { tag: '@security' }, () => {
           persona,
           ns,
           birthday,
-          location: { country: 'United States', countryCode: 'US' },
+          location: { country: 'New Zealand', countryCode: 'NZ' },
           accounts: [{ identity: 'GOOGLE', label }]
         }
       ]
@@ -178,7 +178,7 @@ test.describe('winner payloads', { tag: '@security' }, () => {
       secrets: {
         ...secrets,
         'the secret code': code,
-        'a country of a winner': '"countryCode":"US"'
+        'a country of a winner': '"countryCode":"NZ"'
       }
     };
   };
