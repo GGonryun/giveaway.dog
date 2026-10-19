@@ -76,6 +76,10 @@ jobs:
           LIVE_RECORD_DIR: ${{ inputs.record && format('{0}/live-recordings', runner.temp) || '' }}
         run: pnpm nx "$NX_RUN" -t test:live --output-style=static
 
+      - name: Print the shape of the recorded responses
+        if: always() && inputs.record
+        run: node .github/scripts/live-recording-shapes.mjs "$RUNNER_TEMP/live-recordings"
+
       - name: Upload the recorded responses
         if: always() && inputs.record
         uses: actions/upload-artifact@v4
