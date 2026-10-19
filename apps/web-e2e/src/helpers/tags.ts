@@ -13,13 +13,17 @@ export const TAGS = {
 
 export const PROD_SMOKE_PROJECT = 'prod-smoke';
 
+export const PRODUCTION_PROJECT = 'production';
+
+const PROD_SAFE_PROJECTS: string[] = [PROD_SMOKE_PROJECT, PRODUCTION_PROJECT];
+
 export const applyTagModifiers = (testInfo: TestInfo) => {
   if (
-    testInfo.project.name === PROD_SMOKE_PROJECT &&
+    PROD_SAFE_PROJECTS.includes(testInfo.project.name) &&
     !testInfo.tags.includes(TAGS.prodSafe)
   ) {
     throw new Error(
-      `Every test of ${PROD_SMOKE_PROJECT} runs against production. Tag it ${TAGS.prodSafe} once it only reads and never signs in.`
+      `Every test of ${testInfo.project.name} runs against production. Tag it ${TAGS.prodSafe} once it only reads and never signs in.`
     );
   }
 

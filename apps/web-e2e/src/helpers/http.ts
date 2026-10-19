@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { BASE_URL } from '../env';
+import { APP_URL, BASE_URL } from '../env';
 
 export const noRedirect = { maxRedirects: 0 } as const;
 
@@ -9,11 +9,12 @@ export const STACK_TRACE_PATTERN =
 export const expectSameOrigin = (location: string | undefined) => {
   expect(location, 'The response has no Location header').toBeTruthy();
 
-  const origin = new URL(BASE_URL).origin;
-  expect(
-    new URL(location!, BASE_URL).origin,
-    `${location} leaves ${origin}`
-  ).toBe(origin);
+  const origins = [...new Set([BASE_URL, APP_URL])].map(
+    (url) => new URL(url).origin
+  );
+  expect(origins, `${location} leaves ${origins.join(' and ')}`).toContain(
+    new URL(location!, BASE_URL).origin
+  );
 };
 
 export const expectNoStackTrace = (body: string) => {

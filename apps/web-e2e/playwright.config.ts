@@ -5,9 +5,14 @@ import {
   BYPASS_SECRET,
   BYPASS_STATE,
   JSON_REPORT,
+  PRODUCTION_CHECKS,
   RUN_ID
 } from './src/env';
-import { PROD_SMOKE_PROJECT, TAGS } from './src/helpers/tags';
+import {
+  PRODUCTION_PROJECT,
+  PROD_SMOKE_PROJECT,
+  TAGS
+} from './src/helpers/tags';
 import { userMetricsCookie } from './src/helpers/user-metrics';
 
 const specsIn = (...folders: string[]) =>
@@ -20,6 +25,16 @@ const signedOut = { storageState: BYPASS_STATE };
 const prodSmoke: Project = BYPASS_SECRET
   ? { use: signedOut, dependencies: ['setup'] }
   : { use: { storageState: { cookies: [userMetricsCookie()], origins: [] } } };
+
+const productionChecks: Project[] = PRODUCTION_CHECKS
+  ? [
+      {
+        name: PRODUCTION_PROJECT,
+        testMatch: specsIn('production'),
+        ...prodSmoke
+      }
+    ]
+  : [];
 
 const webServer =
   process.env.E2E_WEB_SERVER === '1'
@@ -103,6 +118,7 @@ export default defineConfig({
       grep: new RegExp(TAGS.prodSafe),
       ...prodSmoke
     },
+    ...productionChecks,
     {
       name: 'teardown',
       testMatch: /\/src\/setup\/run\.teardown\.ts$/,

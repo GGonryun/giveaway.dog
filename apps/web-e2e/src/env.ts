@@ -4,6 +4,10 @@ import type { E2ePersona } from '@giveaway/e2e-model/personas';
 
 export const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:3000';
 
+export const APP_URL = process.env.E2E_APP_URL || BASE_URL;
+
+export const PRODUCTION_CHECKS = process.env.E2E_PRODUCTION_CHECKS === '1';
+
 export const E2E_SECRET = process.env.E2E_LOGIN_SECRET ?? '';
 
 export const BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET ?? '';

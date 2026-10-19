@@ -1,5 +1,5 @@
 import { expect, test } from '../fixtures/test';
-import { BASE_URL } from '../env';
+import { APP_URL, BASE_URL } from '../env';
 import { expectNoStackTrace } from '../helpers/http';
 
 const METADATA_PATH = '/api/bluesky/client-metadata.json';
@@ -59,8 +59,8 @@ test.describe(
       }
 
       expect
-        .soft(origin, 'The metadata is not on the origin of E2E_BASE_URL')
-        .toBe(new URL(BASE_URL).origin);
+        .soft(origin, 'The metadata is not on the origin of the app')
+        .toBe(new URL(APP_URL).origin);
     });
   }
 );

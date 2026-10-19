@@ -1,5 +1,10 @@
 import { expect, test as setup } from '@playwright/test';
-import { BASE_URL, BYPASS_SECRET as secret, BYPASS_STATE } from '../env';
+import {
+  APP_URL,
+  BASE_URL,
+  BYPASS_SECRET as secret,
+  BYPASS_STATE
+} from '../env';
 import { userMetricsCookie } from '../helpers/user-metrics';
 
 setup.use({ storageState: { cookies: [userMetricsCookie()], origins: [] } });
@@ -35,6 +40,6 @@ setup(
       `GET /api/bluesky/client-metadata.json returned ${response.status()}`
     ).toBe(true);
     const { client_id } = await response.json();
-    expect(new URL(client_id).origin).toBe(new URL(BASE_URL).origin);
+    expect(new URL(client_id).origin).toBe(new URL(APP_URL).origin);
   }
 );

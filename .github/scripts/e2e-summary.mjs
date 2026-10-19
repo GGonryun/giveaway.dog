@@ -62,6 +62,13 @@ const tests = suites
       knownBug: (spec.tags ?? []).includes('known-bug'),
       issue: test.annotations?.find((annotation) => annotation.type === 'issue')
         ?.description,
+      warnings: [
+        ...new Set(
+          [...(test.annotations ?? []), ...(last?.annotations ?? [])]
+            .filter((annotation) => annotation.type === 'warning')
+            .map((annotation) => annotation.description)
+        )
+      ],
       lastStatus: last?.status,
       lastError: errorOf(last),
       firstError: errorOf(results.find((result) => result.status !== 'passed'))
@@ -88,6 +95,8 @@ const skipped = tests.filter((test) => test.status === 'skipped');
 const passed = tests.filter(
   (test) => test.status === 'expected' && !test.knownBug
 );
+
+const warned = tests.filter((test) => test.warnings.length > 0);
 
 const seconds = Math.round((stats?.duration ?? 0) / 1000);
 const lines = [
@@ -131,6 +140,12 @@ table(
   flaky,
   ['Test', 'Project', 'Location', 'First error'],
   (test) => [...where(test), test.firstError || '-']
+);
+table(
+  'Warnings',
+  warned,
+  ['Test', 'Project', 'Location', 'Warning'],
+  (test) => [...where(test), cell(test.warnings.join(' '))]
 );
 table(
   'Known bugs',
