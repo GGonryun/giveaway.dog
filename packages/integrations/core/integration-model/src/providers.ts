@@ -44,7 +44,6 @@ export const isMissingScopes = (
 ) => {
   return (
     requiredScopes &&
-    requiredScopes.length > 0 &&
     !requiredScopes.every((scope) => provider?.scopes.includes(scope))
   );
 };

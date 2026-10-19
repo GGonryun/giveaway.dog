@@ -98,10 +98,10 @@ describe('required provider scopes', () => {
 });
 
 describe('twitter features', () => {
+  const defaultOptions = { ...TWITTER_FEATURE_OPTION };
+
   afterEach(() => {
-    TWITTER_FEATURE_OPTION.GET_PROFILE = true;
-    TWITTER_FEATURE_OPTION.IMPORT_TASKS = true;
-    TWITTER_FEATURE_OPTION.POST_TWEETS = true;
+    Object.assign(TWITTER_FEATURE_OPTION, defaultOptions);
   });
 
   describe('twitterFeatureSchema', () => {
@@ -274,11 +274,10 @@ describe('twitter features', () => {
 });
 
 describe('twitch features', () => {
+  const defaultOptions = { ...TWITCH_FEATURE_OPTION };
+
   afterEach(() => {
-    TWITCH_FEATURE_OPTION.USER_PROFILE = true;
-    TWITCH_FEATURE_OPTION.MODERATION_READ = true;
-    TWITCH_FEATURE_OPTION.CHAT_COMMANDS = true;
-    TWITCH_FEATURE_OPTION.CHANNEL_REDEMPTIONS = true;
+    Object.assign(TWITCH_FEATURE_OPTION, defaultOptions);
   });
 
   describe('twitchFeatureSchema', () => {
@@ -486,8 +485,10 @@ describe('twitch features', () => {
 });
 
 describe('bluesky features', () => {
+  const defaultOptions = { ...BLUESKY_FEATURE_OPTION };
+
   afterEach(() => {
-    BLUESKY_FEATURE_OPTION.FULL_ACCESS = true;
+    Object.assign(BLUESKY_FEATURE_OPTION, defaultOptions);
   });
 
   describe('blueskyFeatureSchema', () => {

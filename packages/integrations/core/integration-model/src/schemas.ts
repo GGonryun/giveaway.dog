@@ -94,37 +94,29 @@ export function hasFeature(
   integration: Nil<IntegrationSchema>,
   feature: TwitterFeatureSchema | BlueskyFeatureSchema | TwitchFeatureSchema
 ): boolean {
-  if (!integration?.scopes) return false;
+  const scopes = integration?.scopes;
+  if (!scopes) return false;
 
   // Determine which scope group to use based on provider
   if (integration.provider === IntegrationProvider.TWITTER) {
-    if (!integration.scopes) return false;
-    const twitterFeature = feature as TwitterFeatureSchema;
-    const requiredScopes =
-      twitterFeature === 'GET_PROFILE'
-        ? TWITTER_SCOPE_GROUPS[twitterFeature]
-        : [
-            ...TWITTER_SCOPE_GROUPS['GET_PROFILE'],
-            ...TWITTER_SCOPE_GROUPS[twitterFeature]
-          ];
-    if (!requiredScopes) return false;
-    return requiredScopes.every((scope) => integration.scopes!.includes(scope));
+    const requiredScopes = [
+      ...TWITTER_SCOPE_GROUPS.GET_PROFILE,
+      ...TWITTER_SCOPE_GROUPS[feature as TwitterFeatureSchema]
+    ];
+    return requiredScopes.every((scope) => scopes.includes(scope));
   }
 
   if (integration.provider === IntegrationProvider.BLUESKY) {
-    if (!integration.scopes) return false;
-    const blueskyFeature = feature as BlueskyFeatureSchema;
-    const requiredScopes = BLUESKY_SCOPE_GROUPS[blueskyFeature];
+    const requiredScopes =
+      BLUESKY_SCOPE_GROUPS[feature as BlueskyFeatureSchema];
     if (!requiredScopes) return false;
-    return requiredScopes.every((scope) => integration.scopes!.includes(scope));
+    return requiredScopes.every((scope) => scopes.includes(scope));
   }
 
   if (integration.provider === IntegrationProvider.TWITCH) {
-    if (!integration.scopes) return false;
-    const twitchFeature = feature as TwitchFeatureSchema;
-    const requiredScopes = TWITCH_SCOPE_GROUPS[twitchFeature];
+    const requiredScopes = TWITCH_SCOPE_GROUPS[feature as TwitchFeatureSchema];
     if (!requiredScopes) return false;
-    return requiredScopes.every((scope) => integration.scopes!.includes(scope));
+    return requiredScopes.every((scope) => scopes.includes(scope));
   }
 
   return false;
