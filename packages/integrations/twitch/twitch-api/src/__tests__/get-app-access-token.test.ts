@@ -85,6 +85,28 @@ describe('getAppAccessToken', () => {
         data: 'invalid client'
       });
     });
+
+    it('throws instead of returning a token from an error response', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({ access_token: 'error-token' }, 400)
+      );
+
+      await expect(getAppAccessToken()).rejects.toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Failed to create client_credentials token: 400',
+        data: JSON.stringify({ access_token: 'error-token' })
+      });
+    });
+
+    it('throws on a server error with an empty body', async () => {
+      fetchMock.mockResolvedValue(textResponse('', 500));
+
+      await expect(getAppAccessToken()).rejects.toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Failed to create client_credentials token: 500',
+        data: ''
+      });
+    });
   });
 
   describe('when fetch itself fails', () => {
