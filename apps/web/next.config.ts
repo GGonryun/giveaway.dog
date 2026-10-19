@@ -102,6 +102,7 @@ const nextConfig: NextConfig = {
     '@giveaway/rpc-client',
     '@giveaway/rpc-model',
     '@giveaway/rpc-server',
+    '@giveaway/scoring-jobs',
     '@giveaway/scoring-model',
     '@giveaway/scoring-server',
     '@giveaway/scoring-ui',

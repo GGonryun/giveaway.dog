@@ -3,6 +3,7 @@ import 'server-only';
 import { PrismaClient, UserSource } from '@giveaway/db-model';
 import { nanoid } from 'nanoid';
 import { TwitterUserSchema } from '@giveaway/integration-model/api';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
 
 export interface ImportTwitterParticipantsInput {
   sweepstakesId: string;
@@ -104,6 +105,8 @@ export async function importTwitterUsers(
       console.error('Error importing Twitter user', twitterUser, error);
     }
   }
+
+  if (imported.length + existing.length > 0) await ensureScoringDrain();
 
   return {
     imported,

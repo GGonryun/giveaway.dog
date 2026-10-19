@@ -6,7 +6,7 @@ import { devices, userAgent } from '@giveaway/request-context-server/devices';
 import { ip } from '@giveaway/request-context-server/ip';
 import { UserAgentSchema } from '@giveaway/request-context-model/user-agent';
 import { Nil } from '@giveaway/util-types/types';
-import { MAX_TRACKING_REQUESTS_PER_RUN } from '@giveaway/scoring-model/user-scoring';
+import { TRACKING_BATCH_SIZE } from '@giveaway/scoring-model/user-scoring';
 
 export const runUserTracking = async (
   db: PrismaClient,
@@ -14,7 +14,7 @@ export const runUserTracking = async (
 ) => {
   const events = await db.userEvent.findMany({
     ...(userId ? { where: { userId } } : {}),
-    take: MAX_TRACKING_REQUESTS_PER_RUN,
+    take: TRACKING_BATCH_SIZE,
     orderBy: {
       timestamp: 'asc'
     }
@@ -109,7 +109,7 @@ export const runUserTracking = async (
     } catch (error) {
       console.error(`Error processing event ${event.id}:`, error);
       errorCount++;
-      await db.userEvent.delete({
+      await db.userEvent.deleteMany({
         where: { id: event.id }
       });
       // TODO: Send admin notification for processing failures

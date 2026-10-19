@@ -27,6 +27,7 @@
   "dependencies": {
     "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
+    "@giveaway/scoring-jobs": "workspace:*",
     "nanoid": "catalog:",
     "server-only": "catalog:"
   },

@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { PrismaClient } from '@giveaway/db-model';
-import { MAX_SCORING_REQUESTS_PER_RUN } from '@giveaway/scoring-model/user-scoring';
+import { SCORING_BATCH_SIZE } from '@giveaway/scoring-model/user-scoring';
 import { computeUserQualityScore } from './scoring';
 
 export const runUserScoring = async (
@@ -10,7 +10,7 @@ export const runUserScoring = async (
 ) => {
   const requests = await db.userScoringRequest.findMany({
     ...(userId ? { where: { userId } } : {}),
-    take: MAX_SCORING_REQUESTS_PER_RUN,
+    take: SCORING_BATCH_SIZE,
     orderBy: {
       createdAt: 'asc'
     }
@@ -18,15 +18,29 @@ export const runUserScoring = async (
 
   console.info('Scoring requests:', requests.length);
 
+  let processed = 0;
+  let errors = 0;
+
   for (const request of requests) {
-    await db.$transaction(async (tx) => {
-      await computeUserQualityScore(tx, request.userId);
-      await db.userScoringRequest.delete({
-        where: { id: request.id }
+    const unchanged = {
+      where: { id: request.id, updatedAt: request.updatedAt }
+    };
+    try {
+      await db.$transaction(async (tx) => {
+        await computeUserQualityScore(tx, request.userId);
+        await tx.userScoringRequest.deleteMany(unchanged);
+        console.info(`Processed scoring request for user ${request.userId}`);
       });
-      console.info(`Processed scoring request for user ${request.userId}`);
-    });
+      processed++;
+    } catch (error) {
+      console.error(
+        `Error processing scoring request for user ${request.userId}:`,
+        error
+      );
+      errors++;
+      await db.userScoringRequest.deleteMany(unchanged);
+    }
   }
 
-  return { processed: requests.length };
+  return { processed, errors, total: requests.length };
 };

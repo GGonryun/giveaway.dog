@@ -4,6 +4,11 @@ import { sendChatMessage } from '@giveaway/twitch-api/send-chat-message';
 import { ApplicationError } from '@giveaway/util-errors';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { chatMessageEvent } from '@giveaway/testing-server/fixtures-twitch';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
+
+vi.mock('@giveaway/scoring-jobs/scoring-drain/ensure', () => ({
+  ensureScoringDrain: vi.fn()
+}));
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_BOT_USER_ID', 'bot-1');
@@ -110,6 +115,7 @@ const sentMessages = () =>
 
 describe('processChatMessage', () => {
   beforeEach(() => {
+    vi.mocked(ensureScoringDrain).mockReset();
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
     redisMock.store.clear();
@@ -657,6 +663,16 @@ describe('processChatMessage', () => {
         });
       });
 
+      it('starts the scoring drain after the scoring request is written', async () => {
+        await processChatMessage(event());
+
+        expect(ensureScoringDrain).toHaveBeenCalledTimes(1);
+        const [write] =
+          prismaMock.userScoringRequest.upsert.mock.invocationCallOrder;
+        const [drain] = vi.mocked(ensureScoringDrain).mock.invocationCallOrder;
+        expect(write).toBeLessThan(drain);
+      });
+
       it('tells the user they were added', async () => {
         await processChatMessage(event());
 
@@ -747,6 +763,7 @@ describe('processChatMessage', () => {
         ['broadcaster-1', '@viewer You are already entered in this giveaway!']
       ]);
       expect(prismaMock.userScoringRequest.upsert).not.toHaveBeenCalled();
+      expect(ensureScoringDrain).not.toHaveBeenCalled();
     });
 
     it('treats a unique constraint error from the scoring upsert as already entered', async () => {

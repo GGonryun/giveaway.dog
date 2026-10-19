@@ -7,7 +7,7 @@ import {
   prismaMock,
   type PrismaMock
 } from '@giveaway/testing-server/prisma';
-import { MAX_TRACKING_REQUESTS_PER_RUN } from '@giveaway/scoring-model/user-scoring';
+import { TRACKING_BATCH_SIZE } from '@giveaway/scoring-model/user-scoring';
 
 const CHROME_ON_WINDOWS =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -89,7 +89,7 @@ describe('runUserTracking', () => {
 
       expect(prismaMock.userEvent.findMany).toHaveBeenCalledWith({
         where: { userId: 'user-1' },
-        take: MAX_TRACKING_REQUESTS_PER_RUN,
+        take: TRACKING_BATCH_SIZE,
         orderBy: { timestamp: 'asc' }
       });
     });
@@ -97,9 +97,9 @@ describe('runUserTracking', () => {
     it('reads a bounded batch of the oldest events', async () => {
       await runUserTracking(db);
 
-      expect(MAX_TRACKING_REQUESTS_PER_RUN).toBe(10);
+      expect(TRACKING_BATCH_SIZE).toBe(100);
       expect(prismaMock.userEvent.findMany).toHaveBeenCalledWith({
-        take: MAX_TRACKING_REQUESTS_PER_RUN,
+        take: TRACKING_BATCH_SIZE,
         orderBy: { timestamp: 'asc' }
       });
     });
@@ -222,7 +222,7 @@ describe('runUserTracking', () => {
       expect(tx.userEvent.delete).toHaveBeenCalledWith({
         where: { id: 'event-1' }
       });
-      expect(prismaMock.userEvent.delete).not.toHaveBeenCalled();
+      expect(prismaMock.userEvent.deleteMany).not.toHaveBeenCalled();
     });
   });
 
@@ -351,11 +351,11 @@ describe('runUserTracking', () => {
       });
     });
 
-    it('deletes the failed event with the root client', async () => {
+    it('deletes the failed event with the root client, also when it is already gone', async () => {
       await runUserTracking(db);
 
-      expect(prismaMock.userEvent.delete).toHaveBeenCalledTimes(1);
-      expect(prismaMock.userEvent.delete).toHaveBeenCalledWith({
+      expect(prismaMock.userEvent.deleteMany).toHaveBeenCalledTimes(1);
+      expect(prismaMock.userEvent.deleteMany).toHaveBeenCalledWith({
         where: { id: 'event-1' }
       });
       expect(tx.userEvent.delete).toHaveBeenCalledTimes(1);
@@ -365,7 +365,9 @@ describe('runUserTracking', () => {
     });
 
     it('throws when deleting the failed event also fails', async () => {
-      prismaMock.userEvent.delete.mockRejectedValue(new Error('delete failed'));
+      prismaMock.userEvent.deleteMany.mockRejectedValue(
+        new Error('delete failed')
+      );
 
       await expect(runUserTracking(db)).rejects.toThrow('delete failed');
       expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);

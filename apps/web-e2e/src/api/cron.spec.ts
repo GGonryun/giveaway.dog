@@ -3,8 +3,6 @@ import { expectNoStackTrace } from '../helpers/http';
 
 const ENDPOINTS = [
   { method: 'GET', path: '/api/jobs/process' },
-  { method: 'GET', path: '/api/user/tracking' },
-  { method: 'GET', path: '/api/user/scoring' },
   { method: 'POST', path: '/api/workflows/cancel' },
   { method: 'POST', path: '/api/workflows/twitter/scrape/start' }
 ] as const;

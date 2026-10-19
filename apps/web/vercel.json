@@ -2,25 +2,11 @@
   "ignoreCommand": "bash ../../tools/vercel/ignore-build.sh",
   "crons": [
     {
-      "path": "/api/user/tracking",
-      "schedule": "*/17 * * * *"
-    },
-    {
-      "path": "/api/user/scoring",
-      "schedule": "*/43 * * * *"
-    },
-    {
       "path": "/api/jobs/process",
       "schedule": "*/5 * * * *"
     }
   ],
   "functions": {
-    "app/api/user/tracking/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/user/scoring/route.ts": {
-      "maxDuration": 300
-    },
     "app/api/jobs/process/route.ts": {
       "maxDuration": 300
     }

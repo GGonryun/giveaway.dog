@@ -2,6 +2,7 @@ import 'server-only';
 
 import db from '@giveaway/db-client/prisma';
 import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
 export async function scheduleRewards({
   sweepstakesId,
   userId
@@ -18,4 +19,5 @@ export async function scheduleRewards({
     create: { userId },
     update: { updatedAt: new Date() }
   });
+  await ensureScoringDrain();
 }

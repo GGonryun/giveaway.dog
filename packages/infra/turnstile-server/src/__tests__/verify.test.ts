@@ -3,6 +3,11 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import verifyTurnstile from '../verify';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
+
+vi.mock('@giveaway/scoring-jobs/scoring-drain/ensure', () => ({
+  ensureScoringDrain: vi.fn()
+}));
 
 const m = vi.hoisted(() => {
   const cookieStore = { get: vi.fn(), set: vi.fn() };
@@ -28,6 +33,7 @@ const cloudflareResponds = (body: Record<string, unknown>) => {
 
 describe('verifyTurnstile', () => {
   beforeEach(() => {
+    vi.mocked(ensureScoringDrain).mockReset();
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
     vi.stubGlobal('fetch', vi.fn());
@@ -114,6 +120,7 @@ describe('verifyTurnstile', () => {
 
       expect(prismaMock.userTurnstile.upsert).not.toHaveBeenCalled();
       expect(prismaMock.userScoringRequest.upsert).not.toHaveBeenCalled();
+      expect(ensureScoringDrain).not.toHaveBeenCalled();
     });
 
     it('does not set the cookie when verification fails', async () => {
@@ -200,6 +207,16 @@ describe('verifyTurnstile', () => {
       });
     });
 
+    it('starts the scoring drain after the scoring request is written', async () => {
+      await verifyTurnstile({ token: 'token-1' });
+
+      expect(ensureScoringDrain).toHaveBeenCalledTimes(1);
+      const [write] =
+        prismaMock.userScoringRequest.upsert.mock.invocationCallOrder;
+      const [drain] = vi.mocked(ensureScoringDrain).mock.invocationCallOrder;
+      expect(write).toBeLessThan(drain);
+    });
+
     it('also stores the verified token in the cookie', async () => {
       await verifyTurnstile({ token: 'token-1' });
 
@@ -273,6 +290,7 @@ describe('verifyTurnstile', () => {
       );
       expect(m.cookieStore.set).toHaveBeenCalledTimes(1);
       expect(prismaMock.userScoringRequest.upsert).not.toHaveBeenCalled();
+      expect(ensureScoringDrain).not.toHaveBeenCalled();
     });
   });
 });

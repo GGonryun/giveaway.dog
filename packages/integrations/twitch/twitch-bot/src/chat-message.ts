@@ -2,6 +2,7 @@ import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
 import db from '@giveaway/db-client/prisma';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
 import { redis } from '@giveaway/cache/redis';
 import { newVersionedRateLimiter } from '@giveaway/ratelimit/ratelimit';
 import { twitchChatMessageEventSchema } from '@giveaway/twitch-model/schema';
@@ -329,6 +330,7 @@ export const processChatMessage = async (event: unknown) => {
       create: { userId: user.id },
       update: { updatedAt: new Date() }
     });
+    await ensureScoringDrain();
 
     console.info(
       `[Twitch] Successfully completed task ${taskId} for user ${user.id} in sweepstakes ${sweepstakesId}`

@@ -6,6 +6,11 @@ import {
   discordMember,
   discordUser
 } from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
+
+vi.mock('@giveaway/scoring-jobs/scoring-drain/ensure', () => ({
+  ensureScoringDrain: vi.fn()
+}));
 
 const NOW = new Date('2026-06-01T12:00:00.000Z');
 
@@ -25,6 +30,7 @@ describe('commitEntry', () => {
   const consoleLog = vi.fn();
 
   beforeEach(() => {
+    vi.mocked(ensureScoringDrain).mockReset();
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
     vi.spyOn(console, 'log').mockImplementation(consoleLog);
@@ -73,6 +79,7 @@ describe('commitEntry', () => {
 
       expect(prismaMock.user.create).not.toHaveBeenCalled();
       expect(prismaMock.userScoringRequest.create).not.toHaveBeenCalled();
+      expect(ensureScoringDrain).not.toHaveBeenCalled();
     });
 
     it('records an empty role list when the interaction has no member', async () => {
@@ -187,6 +194,16 @@ describe('commitEntry', () => {
       expect(prismaMock.userScoringRequest.create).toHaveBeenCalledWith({
         data: { userId: 'user-new' }
       });
+    });
+
+    it('starts the scoring drain after the scoring request is written', async () => {
+      await commitEntry(args({ existingUserId: null }));
+
+      expect(ensureScoringDrain).toHaveBeenCalledTimes(1);
+      const [write] =
+        prismaMock.userScoringRequest.create.mock.invocationCallOrder;
+      const [drain] = vi.mocked(ensureScoringDrain).mock.invocationCallOrder;
+      expect(write).toBeLessThan(drain);
     });
 
     it('records the completion for the new user and returns its id', async () => {

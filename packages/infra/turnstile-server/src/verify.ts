@@ -4,6 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { verifyTurnstileToken } from './server';
 import { setTurnstileToken } from './cookies';
+import { ensureScoringDrain } from '@giveaway/scoring-jobs/scoring-drain/ensure';
 
 const verifyTurnstile = procedure()
   .authorization({ required: false })
@@ -47,6 +48,7 @@ const verifyTurnstile = procedure()
         update: { updatedAt: new Date() },
         create: { userId: user.id }
       });
+      await ensureScoringDrain();
     }
 
     return {
