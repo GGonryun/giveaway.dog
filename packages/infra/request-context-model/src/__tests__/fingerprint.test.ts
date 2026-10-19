@@ -44,29 +44,43 @@ describe('userFingerprintSchema', () => {
 
 describe('DEVELOPMENT_GEO', () => {
   it('describes a successful localhost lookup in San Diego, US', () => {
-    expect(DEVELOPMENT_GEO).toMatchObject({
+    expect(DEVELOPMENT_GEO).toEqual({
       ip: '127.0.0.1',
       success: true,
       type: 'IPv4',
+      continent: 'North America',
       continent_code: 'NA',
+      country: 'United States',
       country_code: 'US',
+      region: 'California',
       region_code: 'CA',
       city: 'San Diego',
-      is_eu: false
-    });
-  });
-
-  it('includes the connection and timezone details', () => {
-    expect(DEVELOPMENT_GEO.connection).toEqual({
-      asn: 22773,
-      org: 'Cox Communications',
-      isp: 'Cox Communications Inc.',
-      domain: 'cox.com'
-    });
-    expect(DEVELOPMENT_GEO.timezone).toMatchObject({
-      id: 'America/Los_Angeles',
-      offset: -28800,
-      utc: '-08:00'
+      latitude: 0,
+      longitude: 0,
+      is_eu: false,
+      postal: '92101',
+      calling_code: '1',
+      capital: 'Washington D.C.',
+      borders: 'CA,MX',
+      flag: {
+        img: 'https://cdn.ipwhois.io/flags/us.svg',
+        emoji: '🇺🇸',
+        emoji_unicode: 'U+1F1FA U+1F1F8'
+      },
+      connection: {
+        asn: 22773,
+        org: 'Cox Communications',
+        isp: 'Cox Communications Inc.',
+        domain: 'cox.com'
+      },
+      timezone: {
+        id: 'America/Los_Angeles',
+        abbr: 'PST',
+        is_dst: false,
+        offset: -28800,
+        utc: '-08:00',
+        current_time: '2025-01-01T01:00:00-08:00'
+      }
     });
   });
 
