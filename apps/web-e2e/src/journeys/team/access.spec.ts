@@ -48,7 +48,7 @@ const expectNoLeak = (hops: Hop[], secrets: Record<string, string>) => {
 test.describe('team page access', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
-  test('a non-member, a participant and a visitor cannot open the pages of a team, and learn nothing from the response', async ({
+  test('[TEAM-001] a non-member, a participant and a visitor cannot open the pages of a team, and learn nothing from the response', async ({
     request,
     playwright
   }, testInfo) => {
@@ -113,7 +113,7 @@ test.describe('team page access', () => {
   test.describe('blocked member', () => {
     test.use({ allowedPageErrors: [/ClientFetchError|is blocked from team/] });
 
-    test('a blocked member is locked out of the team', async ({
+    test('[ROLE-001] a blocked member is locked out of the team', async ({
       page,
       request,
       browser

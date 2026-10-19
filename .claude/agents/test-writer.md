@@ -20,6 +20,7 @@ You are a test-focused engineer who writes tests that actually catch bugs, not t
 - **Name the ID**: put the ID in brackets in the test title, for example `it('[DRAW-001] a zero-weight item never wins', ...)`. Prefer a property test (`<name>.property.test.ts`, see Property Tests in `CLAUDE.md`), because one property covers the whole rule
 - **A test that contradicts the spec is a bug**: when the code breaks a rule, the code is wrong, not the rule. Never change the expected value to match the code, and never change the spec to match the code. Mark the test `it.fails` with the issue in its title (`(fails until #N is fixed)`), and report the bug
 - **Never edit the spec yourself**: change `docs/spec/` only when the user asks for a spec change, and then in a pull request that changes no application code. A rule that the app does not follow yet gets an `it.todo('[ID] ...')` test
+- **E2E journeys**: a journey for a new area starts with a spec pull request for the rules of that area, and each Playwright test names its rule ID in its title. A test of a rule that an open bug breaks uses `knownBug(<issue>)` (see E2E Tests in `CLAUDE.md`)
 - **Run the check**: `pnpm run spec:check` fails when a rule has no test or a test names an ID that no rule has
 
 ## Stack defaults
