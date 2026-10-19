@@ -1,9 +1,10 @@
 import 'server-only';
 
 import { PrismaClient } from '@giveaway/db-model';
-import { isE2eEmail } from '@giveaway/e2e-model/personas';
+import { isE2eEmail, toE2ePersonaEmail } from '@giveaway/e2e-model/personas';
 import { E2eRowsQuery } from '@giveaway/e2e-model/requests';
 import { assertNever } from '@giveaway/util-errors';
+import { ApplicationError } from '@giveaway/util-errors';
 import { findE2eSweepstakesId, findE2eTeam } from './ownership';
 
 const MAX_ROWS = 500;
@@ -72,6 +73,111 @@ const readJobs = async (db: PrismaClient, id: string) => {
   return { jobs };
 };
 
+const toE2eEmail = (email: string | null) => (isE2eEmail(email) ? email : null);
+
+const countBy = <T extends string>(values: T[]) =>
+  values.reduce<Partial<Record<T, number>>>(
+    (counts, value) => ({ ...counts, [value]: (counts[value] ?? 0) + 1 }),
+    {}
+  );
+
+const readCompletions = async (db: PrismaClient, id: string) => {
+  const sweepstakesId = await findE2eSweepstakesId(db, id);
+  const completions = await db.taskCompletion.findMany({
+    where: { task: { sweepstakesId } },
+    select: {
+      id: true,
+      taskId: true,
+      status: true,
+      reason: true,
+      completedAt: true,
+      participant: {
+        select: { id: true, user: { select: { id: true, email: true } } }
+      }
+    },
+    orderBy: [{ completedAt: 'asc' }, { id: 'asc' }],
+    take: MAX_ROWS
+  });
+  return {
+    byStatus: countBy(completions.map((completion) => completion.status)),
+    completions: completions.map(({ participant, ...completion }) => ({
+      ...completion,
+      participantId: participant.id,
+      userId: participant.user.id,
+      email: toE2eEmail(participant.user.email)
+    }))
+  };
+};
+
+const readDraws = async (db: PrismaClient, id: string) => {
+  const sweepstakesId = await findE2eSweepstakesId(db, id);
+  const draws = await db.prizeDraw.findMany({
+    where: { prize: { sweepstakesId } },
+    select: {
+      id: true,
+      prizeId: true,
+      result: true,
+      disqualificationReason: true,
+      previousDrawId: true,
+      createdAt: true,
+      taskCompletion: {
+        select: {
+          id: true,
+          participant: {
+            select: { id: true, user: { select: { id: true, email: true } } }
+          }
+        }
+      }
+    },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    take: MAX_ROWS
+  });
+  return {
+    byResult: countBy(draws.map((draw) => draw.result)),
+    draws: draws.map(({ taskCompletion, ...draw }) => ({
+      ...draw,
+      completionId: taskCompletion.id,
+      participantId: taskCompletion.participant.id,
+      userId: taskCompletion.participant.user.id,
+      email: toE2eEmail(taskCompletion.participant.user.email)
+    }))
+  };
+};
+
+const readAccounts = async (
+  db: PrismaClient,
+  persona: E2eRowsQuery & { view: 'accounts' }
+) => {
+  const email = toE2ePersonaEmail(persona.persona, persona.ns);
+  const user = await db.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      email: true,
+      source: true,
+      emailVerified: true,
+      accounts: {
+        select: {
+          provider: true,
+          providerAccountId: true,
+          status: true,
+          scope: true,
+          label: true
+        },
+        orderBy: { provider: 'asc' }
+      }
+    }
+  });
+  if (!user) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: `User ${email} not found`
+    });
+  }
+  const { accounts, ...rest } = user;
+  return { user: rest, accounts };
+};
+
 export const readE2eRows = ({
   db,
   query
@@ -88,6 +194,12 @@ export const readE2eRows = ({
       return readParticipants(db, query.id);
     case 'jobs':
       return readJobs(db, query.id);
+    case 'completions':
+      return readCompletions(db, query.id);
+    case 'draws':
+      return readDraws(db, query.id);
+    case 'accounts':
+      return readAccounts(db, query);
     default:
       return assertNever(query);
   }

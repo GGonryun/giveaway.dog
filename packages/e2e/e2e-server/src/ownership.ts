@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { Prisma, PrismaClient } from '@giveaway/db-model';
+import { Prisma, PrismaClient, TeamRole } from '@giveaway/db-model';
 import { isE2eTeamSlug } from '@giveaway/e2e-model/naming';
 import { isE2eEmail } from '@giveaway/e2e-model/personas';
 import { ApplicationError } from '@giveaway/util-errors';
@@ -100,4 +100,15 @@ export const findE2eSweepstakesId = async (db: PrismaClient, id: string) => {
   }
 
   return sweepstakes.id;
+};
+
+export const findE2eTeamOwner = (team: E2eTeam) => {
+  const owner = team.members.find((member) => member.role === TeamRole.OWNER);
+  if (!owner) {
+    throw new ApplicationError({
+      code: 'PRECONDITION_FAILED',
+      message: `Team ${team.slug} has no owner`
+    });
+  }
+  return owner.user;
 };

@@ -1,5 +1,11 @@
 import type { APIRequestContext, TestInfo } from '@playwright/test';
 import type {
+  E2eIntegrationsRequestInput,
+  E2eInvitesRequestInput,
+  E2ePickerRequestInput,
+  E2eUserExtrasRequestInput
+} from '@giveaway/e2e-model/extras';
+import type {
   E2eFakeService,
   E2eOutboxEntry,
   E2eOutboxQuery
@@ -43,6 +49,61 @@ export type SeededSweepstakes = {
   endDate: string;
   tasks: (E2eTaskRequest & { id: string })[];
   prizes: (E2ePrizeRequest & { id: string })[];
+  formFields: { id: string; type: string; label: string }[];
+  entries: {
+    persona: string;
+    ns: string;
+    email: string;
+    userId: string;
+    participantId: string;
+    completions: { id: string; taskId: string; status: string }[];
+  }[];
+  draws: {
+    id: string;
+    entry: number;
+    prizeId: string;
+    result: string;
+    previousDrawId: string | null;
+  }[];
+  referrals: { entry: number; taskId: string; code: string }[];
+};
+
+export type SeededUserExtras = {
+  users: {
+    persona: string;
+    ns: string;
+    userId: string;
+    email: string;
+    ip: string | null;
+  }[];
+};
+
+export type SeededIntegrations = {
+  team: string;
+  integrations: {
+    id: string;
+    provider: string;
+    account_id: string;
+    status: string;
+    label: string;
+    scope: string;
+    settings: unknown;
+  }[];
+};
+
+export type SeededInvites = {
+  team: string;
+  emails: { id: string; email: string; role: string }[];
+  link: { id: string; expiresAt: string | null } | null;
+};
+
+export type SeededPicker = {
+  id: string;
+  team: string;
+  status: string;
+  users: { id: string; username: string }[];
+  posts: { id: string; tweetId: string }[];
+  draws: { id: string; userId: string; disqualified: string | null }[];
 };
 
 export type DeletedRun = {
@@ -96,6 +157,16 @@ export const seedApi = (request: APIRequestContext) => ({
     call<SeededTeam>(request, 'POST', 'teams', body),
   sweepstakes: (body: E2eSweepstakesRequestInput) =>
     call<SeededSweepstakes>(request, 'POST', 'sweepstakes', body),
+  userExtras: (body: E2eUserExtrasRequestInput) =>
+    call<SeededUserExtras>(request, 'POST', 'users/extras', body),
+  integrations: (body: E2eIntegrationsRequestInput) =>
+    call<SeededIntegrations>(request, 'POST', 'integrations', body),
+  invites: (body: E2eInvitesRequestInput) =>
+    call<SeededInvites>(request, 'POST', 'invites', body),
+  picker: (body: E2ePickerRequestInput) =>
+    call<SeededPicker>(request, 'POST', 'pickers', body),
+  rows: <T = unknown>(query: Record<string, string>) =>
+    call<T>(request, 'GET', `rows?${new URLSearchParams(query)}`),
   teamRows: (slug: string) =>
     call<SeededTeamRows>(
       request,

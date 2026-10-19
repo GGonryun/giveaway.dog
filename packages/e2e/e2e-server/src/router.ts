@@ -8,6 +8,12 @@ import {
   getE2eEnvironment,
   verifyE2eSecret
 } from '@giveaway/e2e-gate/gate';
+import {
+  e2eIntegrationsRequestSchema,
+  e2eInvitesRequestSchema,
+  e2ePickerRequestSchema,
+  e2eUserExtrasRequestSchema
+} from '@giveaway/e2e-model/extras';
 import { e2eOutboxQuerySchema } from '@giveaway/e2e-model/fakes';
 import { e2eRunIdSchema } from '@giveaway/e2e-model/naming';
 import { readE2eOutbox } from '@giveaway/e2e-fakes/outbox';
@@ -23,6 +29,10 @@ import { deleteE2eRun, sweepE2eData } from './cleanup';
 import { readE2eRows } from './rows';
 import { seedE2eSweepstakes } from './sweepstakes';
 import { seedE2eTeam } from './teams';
+import { seedE2eIntegrations } from './integrations';
+import { seedE2eInvites } from './invites';
+import { seedE2ePicker } from './pickers';
+import { seedE2eUserExtras } from './users';
 
 export const E2E_SECRET_HEADER = 'x-e2e-secret';
 export const E2E_MAX_BODY_BYTES = 64 * 1024;
@@ -72,6 +82,41 @@ const ROUTES: E2eRoute[] = [
         now,
         allowPublic: arePublicE2eGiveawaysAllowed()
       })
+  },
+  {
+    method: 'POST',
+    path: ['users', 'extras'],
+    write: true,
+    handle: ({ db, body, now }) =>
+      seedE2eUserExtras({
+        db,
+        request: e2eUserExtrasRequestSchema.parse(body),
+        now
+      })
+  },
+  {
+    method: 'POST',
+    path: ['integrations'],
+    write: true,
+    handle: ({ db, body }) =>
+      seedE2eIntegrations({
+        db,
+        request: e2eIntegrationsRequestSchema.parse(body)
+      })
+  },
+  {
+    method: 'POST',
+    path: ['invites'],
+    write: true,
+    handle: ({ db, body, now }) =>
+      seedE2eInvites({ db, request: e2eInvitesRequestSchema.parse(body), now })
+  },
+  {
+    method: 'POST',
+    path: ['pickers'],
+    write: true,
+    handle: ({ db, body, now }) =>
+      seedE2ePicker({ db, request: e2ePickerRequestSchema.parse(body), now })
   },
   {
     method: 'GET',

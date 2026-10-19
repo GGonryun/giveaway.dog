@@ -7,6 +7,10 @@ import { E2E_MAX_TASKS, E2E_TASK_TYPES } from '@giveaway/e2e-model/requests';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import { getOrCreateSweepstakesParticipant } from '@giveaway/participation-server/get-sweepstake-participant';
 import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
+import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
+import acceptInvite from '@giveaway/team-invites-server/accept-invite';
+import getInviteDetails from '@giveaway/team-invites-server/get-invite-details';
+import { getTwitterV2Picker } from '@giveaway/x-picker-server/procedures/get-twitter-v2-picker';
 import { handleE2eRequest } from '../router';
 
 const SECRET = 'e2e-secret-with-at-least-32-chars';
@@ -106,6 +110,35 @@ const seedRun = async (runId: string) => {
     ...ENTRIES_REQUEST
   });
 
+  const extras = await call('POST', 'users/extras', {
+    ns: `${runId}t1`,
+    users: [
+      {
+        persona: 'host2',
+        accounts: [{ identity: 'TWITTER' }],
+        location: { country: 'Germany', countryCode: 'DE' },
+        quality: 50,
+        turnstile: { success: true }
+      }
+    ]
+  });
+  await call('POST', 'integrations', {
+    team,
+    integrations: [{ provider: 'TWITTER' }, { provider: 'TWITCH' }]
+  });
+  await call('POST', 'invites', {
+    ns: `${runId}t1`,
+    team,
+    emails: [{ persona: 'member', role: 'MEMBER' }],
+    link: { expiresIn: 3600 }
+  });
+  await call('POST', 'pickers', {
+    team,
+    users: [{ username: 'alice' }],
+    posts: [{}],
+    draws: [{ user: 0 }]
+  });
+
   const participant = await db.user.create({
     data: { email: `e2e-participant-${runId}t1@example.com` }
   });
@@ -128,7 +161,12 @@ const seedRun = async (runId: string) => {
     data: { pickerId: picker.id, userId: picker.users[0].id }
   });
 
-  return { team, teamId, ids: Object.values(giveaways).map((g) => g.id) };
+  return {
+    team,
+    teamId,
+    ids: Object.values(giveaways).map((g) => g.id),
+    ip: extras.users[0].ip as string
+  };
 };
 
 const loadGiveawayPage = async (sweepstakesId: string) => {
@@ -181,6 +219,24 @@ const countRunRows = async (runId: string, ids: string[]) => ({
   }),
   qualities: await db.userQuality.count({
     where: { user: { email: { contains: `-${runId}` } } }
+  }),
+  accounts: await db.account.count({
+    where: { user: { email: { contains: `-${runId}` } } }
+  }),
+  userIps: await db.userIpAddress.count({
+    where: { user: { email: { contains: `-${runId}` } } }
+  }),
+  turnstiles: await db.userTurnstile.count({
+    where: { user: { email: { contains: `-${runId}` } } }
+  }),
+  integrations: await db.integration.count({
+    where: { team: { slug: { startsWith: `e2e-${runId}` } } }
+  }),
+  invites: await db.teamInviteEmail.count({
+    where: { team: { slug: { startsWith: `e2e-${runId}` } } }
+  }),
+  inviteLinks: await db.teamInviteLink.count({
+    where: { team: { slug: { startsWith: `e2e-${runId}` } } }
   })
 });
 
@@ -436,6 +492,297 @@ describe('the e2e seed API against a real database', () => {
     });
   });
 
+  it('gives a persona the identities, the address, the scores and the attributes of the request', async () => {
+    await call('POST', 'teams', { ns: 'abc123', suffix: 'w0' });
+    const giveaway = await call('POST', 'sweepstakes', {
+      ns: 'abc123t1',
+      team: 'e2e-abc123-w0'
+    });
+    const request = {
+      ns: 'abc123t1',
+      users: [
+        {
+          persona: 'participant',
+          source: 'TWITTER_IMPORT',
+          emailVerified: false,
+          birthday: '2009-06-15',
+          accounts: [
+            { identity: 'TWITTER', status: 'ERROR', label: 'alice' },
+            { identity: 'GOOGLE', scopes: ['openid'] }
+          ],
+          location: { country: 'Germany', countryCode: 'DE' },
+          quality: 80,
+          turnstile: { success: false, score: 0.2 }
+        }
+      ]
+    };
+
+    const first = await call('POST', 'users/extras', request);
+    const [seeded] = (await call('POST', 'users/extras', request)).users;
+
+    expect(seeded.userId).toBe(first.users[0].userId);
+    expect(seeded.ip).not.toBe(first.users[0].ip);
+    expect(
+      await db.user.findUniqueOrThrow({
+        where: { id: seeded.userId },
+        select: { source: true, emailVerified: true, birthday: true }
+      })
+    ).toEqual({
+      source: 'TWITTER_IMPORT',
+      emailVerified: null,
+      birthday: new Date('2009-06-15T00:00:00Z')
+    });
+    expect(
+      await db.userIpAddress.findMany({
+        where: { userId: seeded.userId },
+        select: {
+          ip: { select: { ip: true, country: true, countryCode: true } }
+        }
+      })
+    ).toEqual([
+      { ip: { ip: seeded.ip, country: 'Germany', countryCode: 'DE' } }
+    ]);
+    expect(await db.ipAddress.count({ where: { ip: first.users[0].ip } })).toBe(
+      0
+    );
+    expect(
+      await db.userTurnstile.findUniqueOrThrow({
+        where: { userId: seeded.userId },
+        select: { success: true, score: true }
+      })
+    ).toEqual({ success: false, score: 0.2 });
+    expect(
+      await db.userQuality.count({ where: { userId: seeded.userId } })
+    ).toBe(2);
+
+    const rows = await call(
+      'GET',
+      'rows?view=accounts&persona=participant&ns=abc123t1'
+    );
+    expect(rows.accounts).toEqual([
+      {
+        provider: 'google',
+        providerAccountId: 'e2e-participant-abc123t1',
+        status: 'ACTIVE',
+        scope: 'openid',
+        label: 'e2e-participant-abc123t1'
+      },
+      {
+        provider: 'twitter',
+        providerAccountId: 'e2e-participant-abc123t1',
+        status: 'ERROR',
+        scope: '',
+        label: 'alice'
+      }
+    ]);
+
+    signIn({ id: seeded.userId, email: seeded.email });
+    const participant = expectOk(
+      await getOrCreateSweepstakesParticipant({ sweepstakesId: giveaway.id })
+    );
+    expect(
+      participant?.user.providers.map(({ type, status, label }) => [
+        type,
+        status,
+        label
+      ])
+    ).toEqual(
+      expect.arrayContaining([
+        ['TWITTER', 'ERROR', 'alice'],
+        ['GOOGLE', 'ACTIVE', 'e2e-participant-abc123t1']
+      ])
+    );
+    expect(participant?.user.providers).toHaveLength(2);
+  });
+
+  it('gives the team integrations that its settings page reads', async () => {
+    await call('POST', 'teams', { ns: 'abc123', suffix: 'w0' });
+    await call('POST', 'integrations', {
+      team: 'e2e-abc123-w0',
+      integrations: [{ provider: 'TWITTER', status: 'ERROR' }]
+    });
+    await call('POST', 'integrations', {
+      team: 'e2e-abc123-w0',
+      integrations: [
+        { provider: 'TWITTER' },
+        { provider: 'TWITCH' },
+        { provider: 'DISCORD', label: 'E2E server' }
+      ]
+    });
+    const host = await db.user.findUniqueOrThrow({
+      where: { email: 'e2e-host-abc123@example.com' }
+    });
+
+    signIn({ id: host.id, email: host.email });
+    const integrations = expectOk(
+      await getTeamIntegrations({ slug: 'e2e-abc123-w0' })
+    );
+
+    expect(
+      integrations
+        .map(({ provider, status, label, url }) => ({
+          provider,
+          status,
+          label,
+          url
+        }))
+        .sort((a, b) => a.provider.localeCompare(b.provider))
+    ).toEqual([
+      {
+        provider: 'DISCORD',
+        status: 'ACTIVE',
+        label: 'E2E server',
+        url: null
+      },
+      {
+        provider: 'TWITCH',
+        status: 'ACTIVE',
+        label: 'e2e_abc123_w0',
+        url: null
+      },
+      {
+        provider: 'TWITTER',
+        status: 'ACTIVE',
+        label: 'e2e_abc123_w0',
+        url: 'https://x.com/e2e_abc123_w0'
+      }
+    ]);
+    const twitch = integrations.find((i) => i.provider === 'TWITCH');
+    expect(twitch).toMatchObject({
+      scopes: [
+        'user:read:email',
+        'moderation:read',
+        'channel:read:redemptions'
+      ],
+      settings: {
+        broadcasterLogin: 'e2e_abc123_w0',
+        channelUrl: 'https://www.twitch.tv/e2e_abc123_w0'
+      },
+      subscriptions: []
+    });
+  });
+
+  it('gives the team invites that a persona accepts', async () => {
+    await call('POST', 'teams', { ns: 'abc123', suffix: 'w0' });
+    const seeded = await call('POST', 'invites', {
+      ns: 'abc123t1',
+      team: 'e2e-abc123-w0',
+      emails: [{ persona: 'admin', role: 'ADMIN' }],
+      link: { expiresIn: -60 }
+    });
+    const [invite] = seeded.emails;
+
+    expect(new Date(seeded.link.expiresAt).getTime()).toBeLessThan(Date.now());
+    expect(expectOk(await getInviteDetails({ code: invite.id }))).toMatchObject(
+      {
+        teamSlug: 'e2e-abc123-w0',
+        role: 'ADMIN',
+        isEmailInvite: true
+      }
+    );
+    expect(
+      expectOk(await getInviteDetails({ code: seeded.link.id }))
+    ).toMatchObject({ teamSlug: 'e2e-abc123-w0', isEmailInvite: false });
+
+    const { users } = await call('POST', 'users/extras', {
+      ns: 'abc123t1',
+      users: [{ persona: 'admin' }]
+    });
+    signIn({ id: users[0].userId, email: users[0].email });
+    expectOk(await acceptInvite({ code: invite.id }));
+
+    const { members } = await call('GET', 'rows?view=team&slug=e2e-abc123-w0');
+    expect(
+      members.map(
+        (m: { email: string; role: string }) => `${m.email}:${m.role}`
+      )
+    ).toContain('e2e-admin-abc123t1@example.com:ADMIN');
+    expect(await db.teamInviteEmail.count()).toBe(0);
+  });
+
+  it('gives the team a picker that the picker page reads', async () => {
+    await call('POST', 'teams', { ns: 'abc123', suffix: 'w0' });
+    const seeded = await call('POST', 'pickers', {
+      team: 'e2e-abc123-w0',
+      status: 'COMPLETE',
+      winners: 1,
+      minFollowersCount: 10,
+      posts: [{ text: 'Win!', retweetCount: 40 }],
+      users: [
+        { username: 'alice', followersCount: 50, createdDaysAgo: 400 },
+        { username: 'bob', followersCount: 2 }
+      ],
+      draws: [{ user: 1, disqualified: 'Too few followers' }, { user: 0 }]
+    });
+
+    const picker = expectOk(await getTwitterV2Picker({ pickerId: seeded.id }));
+
+    expect(picker).toMatchObject({
+      id: seeded.id,
+      runId: null,
+      status: 'COMPLETE',
+      winners: 1,
+      tweetUrls: [`https://x.com/e2e/status/${seeded.id}-0`],
+      tweets: [{ text: 'Win!', retweetCount: 40 }]
+    });
+    expect(
+      picker.users.map(({ username, ineligible }) => [username, !!ineligible])
+    ).toEqual([
+      ['alice', false],
+      ['bob', true]
+    ]);
+    expect(
+      picker.draws.map(({ userId, disqualified }) => [userId, disqualified])
+    ).toEqual(
+      expect.arrayContaining([
+        [seeded.users[1].id, 'Too few followers'],
+        [seeded.users[0].id, null]
+      ])
+    );
+  });
+
+  it('reads the completions and the draws of the seeded entries', async () => {
+    await call('POST', 'teams', { ns: 'abc123', suffix: 'w0' });
+    const seeded = await call('POST', 'sweepstakes', {
+      ns: 'abc123t1',
+      team: 'e2e-abc123-w0',
+      preset: 'completed',
+      ...ENTRIES_REQUEST
+    });
+
+    const completions = await call(
+      'GET',
+      `rows?view=completions&id=${seeded.id}`
+    );
+    const draws = await call('GET', `rows?view=draws&id=${seeded.id}`);
+
+    expect(completions.byStatus).toEqual({
+      COMPLETED: 1,
+      PENDING: 1,
+      REJECTED: 1
+    });
+    expect(completions.completions).toHaveLength(3);
+    expect(draws.byResult).toEqual({ DISQUALIFIED: 1, WINNER: 1 });
+    expect(
+      draws.draws.map(
+        (draw: {
+          id: string;
+          previousDrawId: string | null;
+          email: string;
+        }) => [draw.id, draw.previousDrawId, draw.email]
+      )
+    ).toEqual(
+      expect.arrayContaining([
+        [seeded.draws[0].id, null, 'e2e-newbie-abc123t1@example.com'],
+        [
+          seeded.draws[1].id,
+          seeded.draws[0].id,
+          'e2e-participant2-abc123t1@example.com'
+        ]
+      ])
+    );
+  });
+
   it('gives the team its tier and each persona its role', async () => {
     await seedRun('abc123');
 
@@ -457,7 +804,8 @@ describe('the e2e seed API against a real database', () => {
   });
 
   it('leaves no rows of the run after a seed-then-delete round trip', async () => {
-    const { ids } = await seedRun('abc123');
+    const first = await seedRun('abc123');
+    const { ids } = first;
     const other = await seedRun('xyz789');
     const real = await createHost();
     const sharedHost = await db.user.create({
@@ -472,7 +820,7 @@ describe('the e2e seed API against a real database', () => {
     expect(result).toMatchObject({
       teams: { deleted: ['e2e-abc123-w0'], refused: [] },
       sweepstakes: { deleted: 6 },
-      users: { deleted: 6, refused: [] },
+      users: { deleted: 7, refused: [] },
       more: false
     });
     expect(await countRunRows('abc123', ids)).toEqual({
@@ -491,8 +839,16 @@ describe('the e2e seed API against a real database', () => {
       allocations: 0,
       referrals: 0,
       referredUsers: 0,
-      qualities: 0
+      qualities: 0,
+      accounts: 0,
+      userIps: 0,
+      turnstiles: 0,
+      integrations: 0,
+      invites: 0,
+      inviteLinks: 0
     });
+    expect(await db.ipAddress.count({ where: { ip: first.ip } })).toBe(0);
+    expect(await db.ipAddress.count({ where: { ip: other.ip } })).toBe(1);
     expect(await countRunRows('xyz789', other.ids)).toEqual(before);
     expect(await db.team.count({ where: { id: real.team.id } })).toBe(1);
     expect(await db.user.count({ where: { id: real.user.id } })).toBe(1);
@@ -563,9 +919,11 @@ describe('the e2e seed API against a real database', () => {
     });
     expect(await countRunRows('new123', fresh.ids)).toMatchObject({
       teams: 1,
-      users: 6,
+      users: 7,
       sweepstakes: 6
     });
+    expect(await db.ipAddress.count({ where: { ip: old.ip } })).toBe(0);
+    expect(await db.ipAddress.count({ where: { ip: fresh.ip } })).toBe(1);
     expect(await db.user.count({ where: { id: sharedHost.id } })).toBe(1);
   });
 

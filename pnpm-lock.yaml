@@ -3433,6 +3433,9 @@ importers:
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../tasks/task-model
+      '@giveaway/twitch-model':
+        specifier: workspace:*
+        version: link:../../integrations/twitch/twitch-model
       lodash:
         specifier: 'catalog:'
         version: 4.17.23
@@ -3482,6 +3485,9 @@ importers:
       '@giveaway/e2e-model':
         specifier: workspace:*
         version: link:../e2e-model
+      '@giveaway/integration-model':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-model
       '@giveaway/referrals-server':
         specifier: workspace:*
         version: link:../../participants/referrals-server
@@ -3516,9 +3522,15 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@giveaway/integration-server':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-server
       '@giveaway/participation-server':
         specifier: workspace:*
         version: link:../../participants/participation-server
+      '@giveaway/team-invites-server':
+        specifier: workspace:*
+        version: link:../../team/team-invites-server
       '@giveaway/testing-integration':
         specifier: workspace:*
         version: link:../../tooling/testing-integration
@@ -3534,6 +3546,9 @@ importers:
       '@giveaway/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
+      '@giveaway/x-picker-server':
+        specifier: workspace:*
+        version: link:../../pickers/x-picker-server
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
