@@ -28,7 +28,12 @@
     "./get-bluesky-likes": "./src/get-bluesky-likes.ts",
     "./get-bluesky-oembed": "./src/get-bluesky-oembed.ts",
     "./get-bluesky-reposts": "./src/get-bluesky-reposts.ts",
-    "./schemas": "./src/schemas.ts"
+    "./schemas": "./src/schemas.ts",
+    "./testing/fixtures-bluesky-actors": "./src/testing/fixtures-bluesky-actors.ts",
+    "./testing/fixtures-bluesky-likes": "./src/testing/fixtures-bluesky-likes.ts",
+    "./testing/fixtures-bluesky-oembed": "./src/testing/fixtures-bluesky-oembed.ts",
+    "./testing/fixtures-bluesky-profile": "./src/testing/fixtures-bluesky-profile.ts",
+    "./testing/fixtures-bluesky-reposted-by": "./src/testing/fixtures-bluesky-reposted-by.ts"
   },
   "scripts": {
     "test": "vitest run",

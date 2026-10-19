@@ -1,10 +1,15 @@
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import {
   expectLiveResponse,
   liveVariable,
   missingLiveVariables,
-  recordResponses
+  recordResponses,
+  redactSecrets,
+  toRecordingFileName
 } from '../live';
 
 const CALL = { provider: 'Acme', call: 'get thing' };
@@ -190,5 +195,117 @@ describe('recordResponses', () => {
     expect(() => recorder.body('https://api.acme.test/b', CALL)).toThrow(
       'HTTP 304'
     );
+  });
+});
+
+describe('redactSecrets', () => {
+  it('replaces the string values of token, secret, password and email keys', () => {
+    expect(
+      redactSecrets({
+        access_token: 'abc',
+        refresh_token: 'def',
+        client_secret: 'ghi',
+        password: 'jkl',
+        email: 'person@example.com',
+        expires_in: 3600,
+        token_type: 'bearer',
+        name: 'Acme'
+      })
+    ).toEqual({
+      access_token: '[redacted]',
+      refresh_token: '[redacted]',
+      client_secret: '[redacted]',
+      password: '[redacted]',
+      email: '[redacted]',
+      expires_in: 3600,
+      token_type: '[redacted]',
+      name: 'Acme'
+    });
+  });
+
+  it('redacts nested objects and arrays and keeps null', () => {
+    expect(
+      redactSecrets({
+        data: [{ id: '1', Email: 'a@example.com', banner: null }],
+        session: { idToken: 'x' }
+      })
+    ).toEqual({
+      data: [{ id: '1', Email: '[redacted]', banner: null }],
+      session: { idToken: '[redacted]' }
+    });
+  });
+
+  it('keeps values that are not objects', () => {
+    expect(redactSecrets('text')).toBe('text');
+    expect(redactSecrets(null)).toBeNull();
+  });
+});
+
+describe('toRecordingFileName', () => {
+  it('names the file after the provider and the call', () => {
+    expect(
+      toRecordingFileName({ provider: 'Twitch', call: 'get users by login' })
+    ).toBe('twitch-get-users-by-login.json');
+    expect(toRecordingFileName({ provider: 'X', call: 'oEmbed!' })).toBe(
+      'x-oembed.json'
+    );
+  });
+});
+
+describe('recording live responses', () => {
+  it('writes the redacted response to LIVE_RECORD_DIR, also when it does not match', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'live-record-'));
+    vi.stubEnv('LIVE_RECORD_DIR', join(directory, 'nested'));
+
+    try {
+      expectLiveResponse(
+        schema,
+        { id: '1', owner: { name: 'a' }, access_token: 'secret' },
+        CALL
+      );
+      expect(() => expectLiveResponse(schema, { id: 2 }, CALL)).toThrow();
+
+      const file = join(directory, 'nested', 'acme-get-thing.json');
+      expect(JSON.parse(readFileSync(file, 'utf8'))).toEqual({ id: 2 });
+      expect(readFileSync(file, 'utf8').endsWith('}\n')).toBe(true);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it('writes the first response with its secrets redacted', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'live-record-'));
+    vi.stubEnv('LIVE_RECORD_DIR', directory);
+
+    try {
+      expectLiveResponse(
+        schema,
+        { id: '1', owner: { name: 'a' }, access_token: 'secret' },
+        CALL
+      );
+
+      expect(
+        JSON.parse(readFileSync(join(directory, 'acme-get-thing.json'), 'utf8'))
+      ).toEqual({
+        id: '1',
+        owner: { name: 'a' },
+        access_token: '[redacted]'
+      });
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it('writes nothing without LIVE_RECORD_DIR', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'live-record-'));
+    vi.stubEnv('LIVE_RECORD_DIR', '');
+
+    try {
+      expectLiveResponse(schema, { id: '1', owner: { name: 'a' } }, CALL);
+
+      expect(readdirSync(directory)).toEqual([]);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
   });
 });

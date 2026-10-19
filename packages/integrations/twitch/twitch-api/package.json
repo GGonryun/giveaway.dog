@@ -25,7 +25,10 @@
     "./refresh-twitch-token": "./src/refresh-twitch-token.ts",
     "./schemas": "./src/schemas.ts",
     "./scopes": "./src/scopes.ts",
-    "./send-chat-message": "./src/send-chat-message.ts"
+    "./send-chat-message": "./src/send-chat-message.ts",
+    "./testing/fixtures-twitch-app-access-token": "./src/testing/fixtures-twitch-app-access-token.ts",
+    "./testing/fixtures-twitch-user-token": "./src/testing/fixtures-twitch-user-token.ts",
+    "./testing/fixtures-twitch-users": "./src/testing/fixtures-twitch-users.ts"
   },
   "scripts": {
     "test": "vitest run",

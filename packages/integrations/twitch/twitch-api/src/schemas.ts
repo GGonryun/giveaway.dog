@@ -15,6 +15,19 @@ export const twitchAppAccessTokenSchema = z.object({
   token_type: z.string()
 });
 
+export const twitchUserTokenSchema = z.object({
+  access_token: z.string(),
+  expires_in: z.number(),
+  refresh_token: z.string().nullish(),
+  scope: z.array(z.string()),
+  token_type: z.string().nullish()
+});
+
+export const twitchBotTokenSchema = z.object({
+  access_token: z.string(),
+  expires_in: z.number()
+});
+
 export const twitchUserSchema = z.object({
   id: z.string(),
   login: z.string(),

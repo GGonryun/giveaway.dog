@@ -7,6 +7,7 @@ import {
   jsonResponse,
   textResponse
 } from '@giveaway/testing-server/fixtures-twitch';
+import { twitchAppAccessTokenFixture } from '../testing/fixtures-twitch-app-access-token';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_CLIENT_ID', 'client-id');
@@ -30,9 +31,8 @@ describe('getAppAccessToken', () => {
     beforeEach(() => {
       fetchMock.mockResolvedValue(
         jsonResponse({
-          access_token: 'app-token',
-          expires_in: 3600,
-          token_type: 'bearer'
+          ...twitchAppAccessTokenFixture,
+          access_token: 'app-token'
         })
       );
     });
@@ -65,10 +65,18 @@ describe('getAppAccessToken', () => {
   });
 
   describe('when the response has no access token', () => {
-    it('returns undefined', async () => {
-      fetchMock.mockResolvedValue(jsonResponse({}));
+    it('throws a BAD_GATEWAY application error', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({
+          ...twitchAppAccessTokenFixture,
+          access_token: undefined
+        })
+      );
 
-      await expect(getAppAccessToken()).resolves.toBeUndefined();
+      await expect(getAppAccessToken()).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        message: 'Invalid app access token response from Twitch'
+      });
     });
   });
 

@@ -5,6 +5,7 @@ import {
   getRetweetersUntil,
   getRetweetersUntilUser
 } from '../get-retweeters';
+import { scrapeBadgerRetweetersFixture } from '../../testing/fixtures-scrapebadger-retweeters';
 
 const m = vi.hoisted(() => ({
   getRetweeters: vi.fn(),
@@ -17,7 +18,11 @@ vi.mock('scrapebadger', () => ({
 
 type TestUser = { id: string; username: string } | null;
 
-const user = (id: string) => ({ id, username: `user${id}` });
+const user = (id: string) => ({
+  ...scrapeBadgerRetweetersFixture.data[0],
+  id,
+  username: `user${id}`
+});
 
 const users = (from: number, count: number) =>
   Array.from({ length: count }, (_, index) => user(String(from + index)));

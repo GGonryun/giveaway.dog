@@ -6,6 +6,7 @@ import { TeamPermission } from '@giveaway/team-permissions';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { IntegrationProvider, TeamTier } from '@giveaway/db-model';
 import z from 'zod';
+import { discordGuildRolesSchema } from '@giveaway/discord-model/schemas';
 
 export const getDiscordRoles = procedure()
   .authorization({ required: true })
@@ -69,17 +70,25 @@ export const getDiscordRoles = procedure()
       });
     }
 
-    const allRoles = await response.json();
+    const allRoles = discordGuildRolesSchema.safeParse(await response.json());
 
-    const roles = allRoles
-      .filter((role: any) => role.name !== '@everyone')
-      .map((role: any) => ({
+    if (!allRoles.success) {
+      throw new ApplicationError({
+        code: 'BAD_GATEWAY',
+        message: 'Invalid Discord roles response',
+        cause: allRoles.error
+      });
+    }
+
+    const roles = allRoles.data
+      .filter((role) => role.name !== '@everyone')
+      .map((role) => ({
         id: role.id,
         name: role.name,
         color: role.color,
         position: role.position
       }))
-      .sort((a: any, b: any) => b.position - a.position);
+      .sort((a, b) => b.position - a.position);
 
     return { roles };
   });

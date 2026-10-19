@@ -2,10 +2,7 @@ import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from './scopes';
-
-type AppAccessTokenResponse = {
-  access_token: string;
-};
+import { twitchAppAccessTokenSchema } from './schemas';
 
 export const getAppAccessToken = async () => {
   const tokenResponse = await fetch('https://id.twitch.tv/oauth2/token', {
@@ -29,6 +26,17 @@ export const getAppAccessToken = async () => {
     });
   }
 
-  const tokens = (await tokenResponse.json()) as AppAccessTokenResponse;
-  return tokens.access_token;
+  const tokens = twitchAppAccessTokenSchema.safeParse(
+    await tokenResponse.json()
+  );
+
+  if (!tokens.success) {
+    throw new ApplicationError({
+      code: 'BAD_GATEWAY',
+      message: 'Invalid app access token response from Twitch',
+      cause: tokens.error
+    });
+  }
+
+  return tokens.data.access_token;
 };

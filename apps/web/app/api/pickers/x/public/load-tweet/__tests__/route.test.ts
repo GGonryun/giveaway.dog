@@ -8,6 +8,7 @@ import {
   X_PICKER_REPLIES_KEY,
   X_PICKER_RETWEETS_KEY
 } from '@giveaway/x-picker-model/constants';
+import { scrapeBadgerUserFixture } from '@giveaway/x-scraper/testing/fixtures-scrapebadger-user';
 
 const m = vi.hoisted(() => ({
   creditsLimit: vi.fn(),
@@ -73,6 +74,7 @@ const TWEET = {
 };
 
 const USER = {
+  ...scrapeBadgerUserFixture,
   id: 'author-id',
   username: 'Author',
   name: 'Author Name',
@@ -390,17 +392,22 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       id: '123',
       text: 'Hello',
       username: 'Author',
-      favorite_count: undefined,
-      retweet_count: 'not-a-number',
-      reply_count: null,
-      quote_count: undefined
+      favorite_count: 0,
+      retweet_count: 0,
+      reply_count: 0,
+      quote_count: 0
     };
 
     beforeEach(() => {
       m.getById.mockResolvedValue(sparseTweet);
       m.getByUsername.mockResolvedValue({
         id: 'author-id',
-        username: 'Author'
+        username: 'Author',
+        name: 'Author',
+        followers_count: 0,
+        following_count: 0,
+        tweet_count: 0,
+        verified: false
       });
     });
 
@@ -426,7 +433,7 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       });
     });
 
-    it('records zero for missing engagement counts', async () => {
+    it('records zero for empty engagement counts', async () => {
       await POST(buildRequest());
 
       expect(prismaMock.siteMetric.upsert).toHaveBeenCalledWith({
@@ -434,6 +441,23 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
         create: { key: X_PICKER_RETWEETS_KEY, value: 0 },
         update: { value: { increment: 0 } }
       });
+    });
+  });
+
+  describe('when ScrapeBadger sends a count that is not a number', () => {
+    it('returns 502 without loading the author', async () => {
+      m.getById.mockResolvedValue({ ...TWEET, retweet_count: 'not-a-number' });
+
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(502);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'BAD_GATEWAY',
+          message: 'Invalid ScrapeBadger tweet response'
+        }
+      });
+      expect(m.getByUsername).not.toHaveBeenCalled();
     });
   });
 

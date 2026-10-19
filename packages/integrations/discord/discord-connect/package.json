@@ -33,6 +33,7 @@
     "@giveaway/automation-model": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-api": "workspace:*",
+    "@giveaway/discord-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
@@ -44,7 +45,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@giveaway/discord-model": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",

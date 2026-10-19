@@ -2,16 +2,9 @@ import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@giveaway/db-model';
+import { discordTokenSchema } from '@giveaway/discord-model/schemas';
 
 const EXPIRY_BUFFER_SECONDS = 300;
-
-type DiscordTokenResponse = {
-  access_token: string;
-  expires_in: number;
-  refresh_token?: string;
-  scope?: string;
-  token_type?: string;
-};
 
 export const refreshDiscordToken = async (
   db: PrismaClient,
@@ -150,7 +143,17 @@ export const refreshDiscordToken = async (
     });
   }
 
-  const tokens = (await tokenResponse.json()) as DiscordTokenResponse;
+  const parsed = discordTokenSchema.safeParse(await tokenResponse.json());
+
+  if (!parsed.success) {
+    throw new ApplicationError({
+      code: 'BAD_GATEWAY',
+      message: 'Invalid token response from Discord',
+      cause: parsed.error
+    });
+  }
+
+  const tokens = parsed.data;
 
   const expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
 

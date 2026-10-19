@@ -29,6 +29,9 @@
     "./ratelimit": "./src/ratelimit.ts",
     "./schemas": "./src/schemas.ts",
     "./settings": "./src/settings.ts",
+    "./testing/fixtures-scrapebadger-retweeters": "./src/testing/fixtures-scrapebadger-retweeters.ts",
+    "./testing/fixtures-scrapebadger-tweet": "./src/testing/fixtures-scrapebadger-tweet.ts",
+    "./testing/fixtures-scrapebadger-user": "./src/testing/fixtures-scrapebadger-user.ts",
     "./utils": "./src/utils.ts"
   },
   "scripts": {

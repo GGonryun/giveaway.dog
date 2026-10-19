@@ -56,6 +56,17 @@ describe('getTwitchUser', () => {
     });
   });
 
+  describe('when the response has no user list', () => {
+    it('throws a BAD_GATEWAY application error', async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ users: [twitchUser] }));
+
+      await expect(getTwitchUser('user-token')).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        message: 'Invalid user response from Twitch'
+      });
+    });
+  });
+
   describe('when twitch returns no users', () => {
     it('returns undefined', async () => {
       fetchMock.mockResolvedValue(jsonResponse({ data: [] }));

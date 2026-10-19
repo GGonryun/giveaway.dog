@@ -4,6 +4,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review, labeled]
   workflow_dispatch:
+    inputs:
+      record:
+        description: Record the responses (tokens, secrets, passwords and emails redacted) in the live-api-recordings artifact
+        type: boolean
+        default: false
 
 permissions:
   actions: read
@@ -52,4 +57,14 @@ jobs:
           LIVE_BLUESKY_POST_URL: ${{ vars.LIVE_BLUESKY_POST_URL }}
           LIVE_TWITCH_LOGIN: ${{ vars.LIVE_TWITCH_LOGIN }}
           LIVE_DISCORD_GUILD_ID: ${{ vars.LIVE_DISCORD_GUILD_ID }}
+          LIVE_RECORD_DIR: ${{ inputs.record && format('{0}/live-recordings', runner.temp) || '' }}
         run: pnpm nx "$NX_RUN" -t test:live --output-style=static
+
+      - name: Upload the recorded responses
+        if: always() && inputs.record
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-api-recordings
+          path: ${{ runner.temp }}/live-recordings
+          if-no-files-found: warn
+          retention-days: 1

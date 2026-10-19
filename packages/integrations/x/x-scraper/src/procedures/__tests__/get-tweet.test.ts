@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getTweet } from '../get-tweet';
+import { scrapeBadgerTweetFixture } from '../../testing/fixtures-scrapebadger-tweet';
 
 const m = vi.hoisted(() => ({
   getById: vi.fn(),
@@ -27,7 +28,7 @@ describe('getTweet', () => {
   });
 
   it('fetches the tweet by id with a client using the configured API key', async () => {
-    m.getById.mockResolvedValue({ id: '123', text: 'hello' });
+    m.getById.mockResolvedValue(scrapeBadgerTweetFixture);
 
     await getTweet({ tweetId: '123' });
 
@@ -36,7 +37,7 @@ describe('getTweet', () => {
   });
 
   it('returns the tweet from the API', async () => {
-    const tweet = { id: '123', text: 'hello' };
+    const tweet = scrapeBadgerTweetFixture;
     m.getById.mockResolvedValue(tweet);
 
     await expect(getTweet({ tweetId: '123' })).resolves.toBe(tweet);
@@ -44,7 +45,7 @@ describe('getTweet', () => {
 
   it('logs the tweet being fetched', async () => {
     const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-    m.getById.mockResolvedValue({ id: '123' });
+    m.getById.mockResolvedValue(scrapeBadgerTweetFixture);
 
     await getTweet({ tweetId: '123' });
 

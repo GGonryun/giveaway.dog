@@ -3,18 +3,7 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
-
-interface BlueskyOEmbedResponse {
-  type: string;
-  version: string;
-  author_name: string;
-  author_url: string;
-  provider_name: string;
-  provider_url: string;
-  cache_age: number;
-  url: string;
-  html: string;
-}
+import { blueskyOEmbedSchema } from './schemas';
 
 const blueskyEmbedSchema = z.object({
   html: z.string(),
@@ -45,7 +34,7 @@ const getBlueskyOEmbed = procedure()
         });
       }
 
-      const data: BlueskyOEmbedResponse = await response.json();
+      const data = blueskyOEmbedSchema.parse(await response.json());
       return {
         html: data.html,
         authorName: data.author_name,

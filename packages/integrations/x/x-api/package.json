@@ -21,6 +21,8 @@
     "./get-latest-twitter-access-token": "./src/get-latest-twitter-access-token.ts",
     "./get-twitter-oembed": "./src/get-twitter-oembed.ts",
     "./schemas": "./src/schemas.ts",
+    "./testing/fixtures-x-oembed": "./src/testing/fixtures-x-oembed.ts",
+    "./testing/fixtures-x-token": "./src/testing/fixtures-x-token.ts",
     "./twitter-api-request": "./src/twitter-api-request.ts",
     "./upload-image": "./src/upload-image.ts"
   },

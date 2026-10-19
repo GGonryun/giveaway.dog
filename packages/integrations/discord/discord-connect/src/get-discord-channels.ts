@@ -6,6 +6,7 @@ import { TeamPermission } from '@giveaway/team-permissions';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { IntegrationProvider, TeamTier } from '@giveaway/db-model';
 import z from 'zod';
+import { discordGuildChannelsSchema } from '@giveaway/discord-model/schemas';
 
 export const getDiscordChannels = procedure()
   .authorization({ required: true })
@@ -67,15 +68,25 @@ export const getDiscordChannels = procedure()
       });
     }
 
-    const allChannels = await response.json();
+    const allChannels = discordGuildChannelsSchema.safeParse(
+      await response.json()
+    );
 
-    const textChannels = allChannels
-      .filter((channel: any) => channel.type === 0)
-      .map((channel: any) => ({
+    if (!allChannels.success) {
+      throw new ApplicationError({
+        code: 'BAD_GATEWAY',
+        message: 'Invalid Discord channels response',
+        cause: allChannels.error
+      });
+    }
+
+    const textChannels = allChannels.data
+      .filter((channel) => channel.type === 0)
+      .map((channel) => ({
         id: channel.id,
         name: channel.name
       }))
-      .sort((a: any, b: any) => a.name.localeCompare(b.name));
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     return { channels: textChannels };
   });

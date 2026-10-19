@@ -3,6 +3,7 @@
 import { Tx } from '@giveaway/db-client/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
 import { Agent } from '@atproto/api';
+import { blueskyProfileSchema, blueskyLikesSchema } from './schemas';
 
 export interface BlueskyUserSchema {
   did: string;
@@ -44,16 +45,18 @@ export const getBlueskyLikes = async (
       cursor: input.cursor
     });
 
-    const likes: BlueskyUserSchema[] = response.data.likes.map((like) => ({
+    const page = blueskyLikesSchema.parse(response.data);
+
+    const likes: BlueskyUserSchema[] = page.likes.map((like) => ({
       did: like.actor.did,
       handle: like.actor.handle,
-      displayName: like.actor.displayName,
-      avatar: like.actor.avatar
+      displayName: like.actor.displayName ?? undefined,
+      avatar: like.actor.avatar ?? undefined
     }));
 
     return {
       data: likes,
-      cursor: response.data.cursor
+      cursor: page.cursor ?? undefined
     };
   } catch (error) {
     console.error('Error fetching Bluesky likes:', error);
@@ -87,6 +90,14 @@ async function convertBskyUrlToUri(
     });
   }
 
-  const did = profileResponse.data.did;
-  return `at://${did}/app.bsky.feed.post/${rkey}`;
+  const profile = blueskyProfileSchema.safeParse(profileResponse.data);
+  if (!profile.success) {
+    throw new ApplicationError({
+      code: 'BAD_GATEWAY',
+      message: 'Invalid Bluesky profile response',
+      cause: profile.error
+    });
+  }
+
+  return `at://${profile.data.did}/app.bsky.feed.post/${rkey}`;
 }

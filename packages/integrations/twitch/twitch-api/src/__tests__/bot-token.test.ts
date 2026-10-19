@@ -6,6 +6,7 @@ import {
   jsonResponse,
   textResponse
 } from '@giveaway/testing-server/fixtures-twitch';
+import { twitchUserTokenFixture } from '../testing/fixtures-twitch-user-token';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_CLIENT_ID', 'client-id');
@@ -117,6 +118,24 @@ describe('bot-token', () => {
 
           await expect(getBotAccessToken()).resolves.toBeNull();
           expect(fetchMock).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('and twitch answers without an expiry', () => {
+        beforeEach(() => {
+          fetchMock.mockResolvedValue(
+            jsonResponse({ ...twitchUserTokenFixture, expires_in: undefined })
+          );
+        });
+
+        it('returns null', async () => {
+          await expect(getBotAccessToken()).resolves.toBeNull();
+        });
+
+        it('does not cache anything', async () => {
+          await getBotAccessToken();
+
+          expect(redisMock.set).not.toHaveBeenCalled();
         });
       });
 

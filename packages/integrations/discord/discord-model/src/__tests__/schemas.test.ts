@@ -6,7 +6,8 @@ import {
   discordGuildInfoSchema,
   discordGuildRolesSchema,
   discordMessageResponseSchema,
-  discordRoleSchema
+  discordRoleSchema,
+  discordTokenSchema
 } from '../schemas';
 
 const guildInfo = {
@@ -233,5 +234,34 @@ describe('discordBotTokenSchema', () => {
 
   it('rejects a non-string token', () => {
     expect(discordBotTokenSchema.safeParse(123).success).toBe(false);
+  });
+});
+
+describe('discordTokenSchema', () => {
+  const token = {
+    access_token: 'access',
+    expires_in: 604800,
+    refresh_token: 'refresh',
+    scope: 'identify guilds',
+    token_type: 'Bearer'
+  };
+
+  it('keeps the fields that the app reads', () => {
+    expect(discordTokenSchema.parse({ ...token, extra: true })).toEqual(token);
+  });
+
+  it('accepts a token without a refresh token, scope or type', () => {
+    expect(
+      discordTokenSchema.parse({ access_token: 'access', expires_in: 60 })
+    ).toEqual({ access_token: 'access', expires_in: 60 });
+  });
+
+  it('refuses a token without an access token or an expiry', () => {
+    expect(discordTokenSchema.safeParse({ expires_in: 60 }).success).toBe(
+      false
+    );
+    expect(
+      discordTokenSchema.safeParse({ access_token: 'access' }).success
+    ).toBe(false);
   });
 });

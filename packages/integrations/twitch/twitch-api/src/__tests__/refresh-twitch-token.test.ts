@@ -376,7 +376,7 @@ describe('refreshTwitchToken', () => {
       );
     });
 
-    it('rejects with a TypeError and stores nothing when the scope is not an array', async () => {
+    it('rejects with BAD_GATEWAY and stores nothing when the scope is not an array', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({
           access_token: 'new-access-token',
@@ -387,23 +387,23 @@ describe('refreshTwitchToken', () => {
 
       const error = await captureError(refresh());
 
-      expect(error).toBeInstanceOf(TypeError);
       expect(error).toMatchObject({
-        message: expect.stringContaining('join is not a function')
+        code: 'BAD_GATEWAY',
+        message: 'Invalid token response from Twitch'
       });
       expect(prismaMock.account.update).not.toHaveBeenCalled();
     });
 
-    it('rejects with a TypeError and stores nothing when the scope is missing', async () => {
+    it('rejects with BAD_GATEWAY and stores nothing when the scope is missing', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({ access_token: 'new-access-token', expires_in: 600 })
       );
 
       const error = await captureError(refresh());
 
-      expect(error).toBeInstanceOf(TypeError);
       expect(error).toMatchObject({
-        message: expect.stringContaining("reading 'join'")
+        code: 'BAD_GATEWAY',
+        message: 'Invalid token response from Twitch'
       });
       expect(prismaMock.account.update).not.toHaveBeenCalled();
     });
