@@ -304,39 +304,39 @@ test.describe('roles that check only membership', () => {
     }
   );
 
-  test(
-    'a guest cannot draw winners',
-    knownBug(436),
-    async ({ page, request, browser }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedRolesTeam(request, ns);
-      const giveaway = await seedApi(request).sweepstakes({
-        ns,
-        team: team.slug,
-        preset: 'ended',
-        entries: [
-          { persona: 'participant', completions: [{ task: 0 }], quality: 100 }
-        ]
-      });
-      await signInAs(page.request, 'host', ns);
-      await page.goto(`/app/${team.slug}/sweepstakes/${giveaway.id}/winners`);
-      const roll = await captureServerAction(
-        page,
-        () => page.getByRole('button', { name: 'Pick All Winners' }).click(),
-        { abort: true }
-      );
+  test('a guest cannot draw winners', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns,
+      team: team.slug,
+      preset: 'ended',
+      entries: [
+        { persona: 'participant', completions: [{ task: 0 }], quality: 100 }
+      ]
+    });
+    await signInAs(page.request, 'host', ns);
+    await page.goto(`/app/${team.slug}/sweepstakes/${giveaway.id}/winners`);
+    const roll = await captureServerAction(
+      page,
+      () => page.getByRole('button', { name: 'Pick All Winners' }).click(),
+      { abort: true }
+    );
 
-      const guest = await openAs(browser, 'guest', ns);
-      await guest.page.goto('/app?step=1');
-      expect(
-        readActionResult(await replayServerAction(guest.page, roll))
-      ).toMatchObject({ ok: false, data: { code: 'FORBIDDEN' } });
-      await guest.context.close();
+    const guest = await openAs(browser, 'guest', ns);
+    await guest.page.goto('/app?step=1');
+    expect(
+      readActionResult(await replayServerAction(guest.page, roll))
+    ).toMatchObject({ ok: false, data: { code: 'FORBIDDEN' } });
+    await guest.context.close();
 
-      const { byResult } = await seedApi(request).rows<{
-        byResult: Record<string, number>;
-      }>({ view: 'draws', id: giveaway.id });
-      expect(byResult).toEqual({});
-    }
-  );
+    const { byResult } = await seedApi(request).rows<{
+      byResult: Record<string, number>;
+    }>({ view: 'draws', id: giveaway.id });
+    expect(byResult).toEqual({});
+  });
 });
