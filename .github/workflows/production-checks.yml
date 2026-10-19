@@ -14,6 +14,14 @@ on:
         required: false
         default: ''
         type: string
+      deployment:
+        description: The kind of deployment that the URL serves. A preview builds its URLs on its own origin, and fails the bypass checks
+        required: false
+        default: production
+        type: choice
+        options:
+          - production
+          - preview
 
 permissions:
   contents: read
@@ -54,6 +62,7 @@ jobs:
           PAYLOAD_URL: ${{ github.event.client_payload.url }}
           PAYLOAD_SHA: ${{ github.event.client_payload.git.sha }}
           INPUT_URL: ${{ inputs.url }}
+          INPUT_DEPLOYMENT: ${{ inputs.deployment }}
         run: |
           sha="$GITHUB_SHA"
           case "$EVENT:$ACTION" in
@@ -93,12 +102,17 @@ jobs:
           if [ "$host" = "${LIVE_URL#https://}" ] && [ "$kind" = manual ]; then
             kind=live
           fi
+          app_url="$LIVE_URL"
+          if [ "$kind" = manual ] && [ "$INPUT_DEPLOYMENT" = preview ]; then
+            app_url="$url"
+          fi
           {
             echo "url=$url"
             echo "host=$host"
             echo "sha=$sha"
             echo "kind=$kind"
             echo "trigger=$trigger"
+            echo "app_url=$app_url"
           } >> "$GITHUB_OUTPUT"
           echo "Checking $url ($kind, $trigger) with the specs of $sha" | tee -a "$GITHUB_STEP_SUMMARY"
 
@@ -127,7 +141,7 @@ jobs:
         id: playwright
         env:
           E2E_BASE_URL: ${{ steps.target.outputs.url }}
-          E2E_APP_URL: ${{ env.LIVE_URL }}
+          E2E_APP_URL: ${{ steps.target.outputs.app_url }}
           E2E_PRODUCTION_CHECKS: '1'
           HOST: ${{ steps.target.outputs.host }}
           BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
@@ -140,7 +154,7 @@ jobs:
 
       - name: Summarize the results
         if: ${{ !cancelled() && steps.target.outcome == 'success' }}
-        run: node .github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json | tee summary.md >> "$GITHUB_STEP_SUMMARY"
+        run: node .github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json | tee summary.md | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the Playwright report
         if: ${{ !cancelled() && hashFiles('apps/web-e2e/playwright-report/**') != '' }}
