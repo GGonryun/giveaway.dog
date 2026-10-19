@@ -1,6 +1,6 @@
 import 'server-only';
 
-import nacl from 'tweetnacl';
+import { createPublicKey, verify } from 'node:crypto';
 
 import { ApplicationError } from '@giveaway/util-errors';
 
@@ -12,6 +12,7 @@ import {
 
 const SIGNATURE_PATTERN = /^[0-9a-f]{128}$/i;
 const PUBLIC_KEY_PATTERN = /^[0-9a-f]{64}$/i;
+const ED25519_SPKI_PREFIX = Buffer.from('302a300506032b6570032100', 'hex');
 
 export const verifyDiscordRequest = async (
   request: NextRequest
@@ -59,7 +60,7 @@ export const verifyDiscordRequest = async (
 
   const body = await request.text(); // rawBody is expected to be a string, not raw bytes
 
-  const isVerified = nacl.sign.detached.verify(
+  const isVerified = isValidSignature(
     Buffer.from(timestamp + body),
     Buffer.from(signature, 'hex'),
     Buffer.from(PUBLIC_KEY, 'hex')
@@ -73,6 +74,19 @@ export const verifyDiscordRequest = async (
   }
 
   return toDiscordInteraction(parseJsonBody(body));
+};
+
+const isValidSignature = (
+  message: Buffer,
+  signature: Buffer,
+  publicKey: Buffer
+): boolean => {
+  const key = createPublicKey({
+    key: Buffer.concat([ED25519_SPKI_PREFIX, publicKey]),
+    format: 'der',
+    type: 'spki'
+  });
+  return verify(null, message, key, signature);
 };
 
 const parseJsonBody = (body: string): unknown => {

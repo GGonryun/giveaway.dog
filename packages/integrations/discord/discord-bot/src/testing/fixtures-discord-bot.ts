@@ -1,21 +1,28 @@
-import nacl from 'tweetnacl';
+import { createPrivateKey, createPublicKey, sign } from 'node:crypto';
 import { NextRequest } from 'next/server';
 
-const signingKeys = nacl.sign.keyPair.fromSeed(new Uint8Array(32).fill(7));
+const ED25519_PKCS8_PREFIX = Buffer.from(
+  '302e020100300506032b657004220420',
+  'hex'
+);
 
-export const DISCORD_TEST_PUBLIC_KEY = Buffer.from(
-  signingKeys.publicKey
-).toString('hex');
+const privateKey = createPrivateKey({
+  key: Buffer.concat([ED25519_PKCS8_PREFIX, Buffer.alloc(32, 7)]),
+  format: 'der',
+  type: 'pkcs8'
+});
+
+export const DISCORD_TEST_PUBLIC_KEY = createPublicKey(privateKey)
+  .export({ format: 'der', type: 'spki' })
+  .subarray(-32)
+  .toString('hex');
 
 export const DISCORD_TEST_TIMESTAMP = '1700000000';
 
 export const signDiscordBody = (
   body: string,
   timestamp = DISCORD_TEST_TIMESTAMP
-) =>
-  Buffer.from(
-    nacl.sign.detached(Buffer.from(timestamp + body), signingKeys.secretKey)
-  ).toString('hex');
+) => sign(null, Buffer.from(timestamp + body), privateKey).toString('hex');
 
 export const discordRequest = ({
   body,
