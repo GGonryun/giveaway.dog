@@ -143,7 +143,9 @@ describe('mock data', () => {
     expect(mockUserReferral.code).toBe('PREVIEW123');
   });
 
-  it.fails('gives the preview user a valid birthday', () => {
-    expect(Number.isNaN(mockUserProfile.birthday?.getTime())).toBe(false);
+  it('gives the preview user a valid birthday', () => {
+    expect(mockUserProfile.birthday).toEqual(
+      new Date('2000-01-01T00:00:00.000Z')
+    );
   });
 });

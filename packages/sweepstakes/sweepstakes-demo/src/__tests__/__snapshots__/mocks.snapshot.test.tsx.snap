@@ -1,0 +1,334 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`mock data > mockHost matches the snapshot 1`] = `
+{
+  "id": "giveaway-dog-id",
+  "links": [
+    {
+      "platform": "twitter",
+      "url": "https://x.com/TheGiveawayDog",
+    },
+    {
+      "platform": "discord",
+      "url": "https://discord.gg/giveawaydog",
+    },
+  ],
+  "logo": "/taki.png",
+  "name": "Giveaway Dog",
+  "slug": "giveaway-dog",
+}
+`;
+
+exports[`mock data > mockParticipant matches the snapshot 1`] = `
+{
+  "allocation": null,
+  "completions": [],
+  "formValues": {},
+  "id": "preview-participant",
+  "user": {
+    "birthday": 2000-01-01T00:00:00.000Z,
+    "countryCode": "US",
+    "createdAt": 2023-01-15T10:00:00.000Z,
+    "email": "user@example.com",
+    "emailVerified": true,
+    "id": "preview-user",
+    "image": null,
+    "isAnonymous": false,
+    "name": "Preview User",
+    "preferredContactMethod": null,
+    "providers": [
+      {
+        "label": "preview_user",
+        "link": "https://x.com/thegiveawaydog",
+        "scopes": [
+          "users.read",
+          "tweet.read",
+          "offline.access",
+        ],
+        "status": "ACTIVE",
+        "type": "TWITTER",
+      },
+      {
+        "label": "giveawaydog.bsky.social",
+        "scopes": [
+          "atproto",
+          "transition:generic",
+        ],
+        "status": "ACTIVE",
+        "type": "BLUESKY",
+      },
+      {
+        "label": "preview.user@gmail.com",
+        "link": "https://myaccount.google.com/",
+        "scopes": [
+          "openid",
+          "https://www.googleapis.com/auth/userinfo.profile",
+          "https://www.googleapis.com/auth/userinfo.email",
+        ],
+        "status": "ACTIVE",
+        "type": "GOOGLE",
+      },
+      {
+        "label": "PreviewUser#1234",
+        "link": "https://discord.com/channels/@me",
+        "scopes": [
+          "identify",
+          "email",
+          "guilds",
+          "guilds.members.read",
+        ],
+        "status": "ACTIVE",
+        "type": "DISCORD",
+      },
+      {
+        "label": "PreviewUser",
+        "link": "https://www.twitch.tv/twitch",
+        "scopes": [
+          "openid",
+          "user:read:email",
+          "user:read:follows",
+        ],
+        "status": "ACTIVE",
+        "type": "TWITCH",
+      },
+      {
+        "label": "PreviewUser",
+        "link": "https://kick.com/kick",
+        "scopes": [
+          "user:read",
+        ],
+        "status": "ACTIVE",
+        "type": "KICK",
+      },
+      {
+        "label": "PreviewUser",
+        "link": "https://www.tiktok.com/@previewuser",
+        "scopes": [
+          "user.info.basic",
+        ],
+        "status": "ACTIVE",
+        "type": "TIKTOK",
+      },
+      {
+        "label": "PreviewUser",
+        "link": "https://store.steampowered.com/",
+        "scopes": [],
+        "status": "ACTIVE",
+        "type": "STEAM",
+      },
+      {
+        "label": "preview.user",
+        "link": "https://www.instagram.com/preview.user/",
+        "scopes": [],
+        "status": "ACTIVE",
+        "type": "INSTAGRAM",
+      },
+      {
+        "label": "Preview User",
+        "link": "https://www.facebook.com/preview.user",
+        "scopes": [],
+        "status": "ACTIVE",
+        "type": "FACEBOOK",
+      },
+      {
+        "label": "PreviewUser",
+        "link": "https://velora.tv/previewuser",
+        "scopes": [
+          "user:read",
+        ],
+        "status": "ACTIVE",
+        "type": "VELORA",
+      },
+      {
+        "label": "Preview User",
+        "link": "https://www.linkedin.com/in/previewuser/",
+        "scopes": [
+          "openid",
+          "profile",
+          "email",
+          "r_profile_basicinfo",
+        ],
+        "status": "ACTIVE",
+        "type": "LINKEDIN",
+      },
+    ],
+    "qualityScore": 85,
+    "source": "SIGNUP",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+  },
+}
+`;
+
+exports[`mock data > mockParticipation matches the snapshot 1`] = `
+{
+  "totalEntries": 2147,
+  "totalUsers": 357,
+  "usersByTask": {},
+}
+`;
+
+exports[`mock data > mockUserHostRelationship matches the snapshot 1`] = `
+{
+  "loyalty": 5,
+}
+`;
+
+exports[`mock data > mockUserParticipation matches the snapshot 1`] = `
+{
+  "entries": 0,
+  "submissions": [],
+}
+`;
+
+exports[`mock data > mockUserProfile matches the snapshot 1`] = `
+{
+  "birthday": 2000-01-01T00:00:00.000Z,
+  "countryCode": "US",
+  "createdAt": 2023-01-15T10:00:00.000Z,
+  "email": "user@example.com",
+  "emailVerified": true,
+  "id": "preview-user",
+  "image": null,
+  "isAnonymous": false,
+  "name": "Preview User",
+  "preferredContactMethod": null,
+  "providers": [
+    {
+      "label": "preview_user",
+      "link": "https://x.com/thegiveawaydog",
+      "scopes": [
+        "users.read",
+        "tweet.read",
+        "offline.access",
+      ],
+      "status": "ACTIVE",
+      "type": "TWITTER",
+    },
+    {
+      "label": "giveawaydog.bsky.social",
+      "scopes": [
+        "atproto",
+        "transition:generic",
+      ],
+      "status": "ACTIVE",
+      "type": "BLUESKY",
+    },
+    {
+      "label": "preview.user@gmail.com",
+      "link": "https://myaccount.google.com/",
+      "scopes": [
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+      ],
+      "status": "ACTIVE",
+      "type": "GOOGLE",
+    },
+    {
+      "label": "PreviewUser#1234",
+      "link": "https://discord.com/channels/@me",
+      "scopes": [
+        "identify",
+        "email",
+        "guilds",
+        "guilds.members.read",
+      ],
+      "status": "ACTIVE",
+      "type": "DISCORD",
+    },
+    {
+      "label": "PreviewUser",
+      "link": "https://www.twitch.tv/twitch",
+      "scopes": [
+        "openid",
+        "user:read:email",
+        "user:read:follows",
+      ],
+      "status": "ACTIVE",
+      "type": "TWITCH",
+    },
+    {
+      "label": "PreviewUser",
+      "link": "https://kick.com/kick",
+      "scopes": [
+        "user:read",
+      ],
+      "status": "ACTIVE",
+      "type": "KICK",
+    },
+    {
+      "label": "PreviewUser",
+      "link": "https://www.tiktok.com/@previewuser",
+      "scopes": [
+        "user.info.basic",
+      ],
+      "status": "ACTIVE",
+      "type": "TIKTOK",
+    },
+    {
+      "label": "PreviewUser",
+      "link": "https://store.steampowered.com/",
+      "scopes": [],
+      "status": "ACTIVE",
+      "type": "STEAM",
+    },
+    {
+      "label": "preview.user",
+      "link": "https://www.instagram.com/preview.user/",
+      "scopes": [],
+      "status": "ACTIVE",
+      "type": "INSTAGRAM",
+    },
+    {
+      "label": "Preview User",
+      "link": "https://www.facebook.com/preview.user",
+      "scopes": [],
+      "status": "ACTIVE",
+      "type": "FACEBOOK",
+    },
+    {
+      "label": "PreviewUser",
+      "link": "https://velora.tv/previewuser",
+      "scopes": [
+        "user:read",
+      ],
+      "status": "ACTIVE",
+      "type": "VELORA",
+    },
+    {
+      "label": "Preview User",
+      "link": "https://www.linkedin.com/in/previewuser/",
+      "scopes": [
+        "openid",
+        "profile",
+        "email",
+        "r_profile_basicinfo",
+      ],
+      "status": "ACTIVE",
+      "type": "LINKEDIN",
+    },
+  ],
+  "qualityScore": 85,
+  "source": "SIGNUP",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+}
+`;
+
+exports[`mock data > mockUserReferral matches the snapshot 1`] = `
+{
+  "code": "PREVIEW123",
+  "id": "preview-referral",
+  "link": undefined,
+  "referrals": [
+    {
+      "createdAt": 1994-10-21T10:00:00.000Z,
+      "user": {
+        "id": "preview-user",
+        "name": "Giveaway Dog",
+      },
+    },
+  ],
+}
+`;
+
+exports[`mock data > mockWinners matches the snapshot 1`] = `[]`;
