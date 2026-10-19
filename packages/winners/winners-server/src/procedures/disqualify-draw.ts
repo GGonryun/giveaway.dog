@@ -3,6 +3,8 @@
 import z from 'zod';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
+import { findTeamSweepstakes } from '@giveaway/sweepstakes-access/team-sweepstakes';
+import { TeamPermission } from '@giveaway/team-permissions';
 import { getSweepstakesCriteria } from '@giveaway/winners-model/criteria';
 import { PrizeDrawResult } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
@@ -22,9 +24,18 @@ export const disqualifyDraw = procedure()
   .output(z.object({ success: z.boolean() }))
   .handler(
     async ({
-      input: { sweepstakesId, drawId, disqualificationReason },
-      db
+      input: { sweepstakesId, slug, drawId, disqualificationReason },
+      db,
+      user
     }) => {
+      await findTeamSweepstakes({
+        db,
+        userId: user.id,
+        sweepstakesId,
+        slug,
+        permission: TeamPermission.UPDATE_SWEEPSTAKES
+      });
+
       const criteria = await getSweepstakesCriteria({
         db,
         sweepstakesId
@@ -32,7 +43,10 @@ export const disqualifyDraw = procedure()
 
       const draw = await db.prizeDraw.findUnique({
         where: {
-          id: drawId
+          id: drawId,
+          prize: {
+            sweepstakesId
+          }
         },
         include: {
           taskCompletion: {

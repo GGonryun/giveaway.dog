@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { TEST_USER } from '@giveaway/testing-server/session';
 import { ApplicationError } from '@giveaway/util-errors';
+import { TeamPermission } from '@giveaway/team-permissions';
 import {
   SWEEPSTAKES_ID,
   TEAM_SLUG
@@ -12,12 +13,13 @@ import {
   teamSweepstakesQuery
 } from '../testing/team-sweepstakes';
 
-const find = () =>
+const find = (permission?: TeamPermission) =>
   findTeamSweepstakes({
     db: prismaMock as never,
     userId: TEST_USER.id,
     sweepstakesId: SWEEPSTAKES_ID,
-    slug: TEAM_SLUG
+    slug: TEAM_SLUG,
+    permission
   });
 
 const rejection = async () => {
@@ -86,4 +88,34 @@ describe('findTeamSweepstakes', () => {
       await expect(find()).resolves.toEqual(loaded);
     }
   );
+
+  describe('with the UPDATE_SWEEPSTAKES permission', () => {
+    it('throws FORBIDDEN naming the permission for a guest', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes('GUEST') as never
+      );
+
+      const error = await find(TeamPermission.UPDATE_SWEEPSTAKES).catch(
+        (e: unknown) => e
+      );
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect((error as ApplicationError).code).toBe('FORBIDDEN');
+      expect((error as ApplicationError).message).toContain(
+        'UPDATE_SWEEPSTAKES'
+      );
+    });
+
+    it.each(['OWNER', 'ADMIN', 'MEMBER'] as const)(
+      'returns the sweepstakes to a member with the %s role',
+      async (role) => {
+        const loaded = teamSweepstakes(role);
+        prismaMock.sweepstakes.findUnique.mockResolvedValue(loaded as never);
+
+        await expect(find(TeamPermission.UPDATE_SWEEPSTAKES)).resolves.toEqual(
+          loaded
+        );
+      }
+    );
+  });
 });

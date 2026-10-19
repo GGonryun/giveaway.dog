@@ -26,13 +26,9 @@ export const SWEEPSTAKES_TASK_WHERE_QUERY = (input: {
   sweepstakesId?: string;
   slug: string;
   userId: string;
-}) => {
-  if (input.sweepstakesId) {
-    return {
-      sweepstakesId: input.sweepstakesId
-    };
-  }
-  return {
+}) =>
+  ({
+    ...(input.sweepstakesId ? { sweepstakesId: input.sweepstakesId } : {}),
     sweepstakes: {
       team: {
         slug: input.slug,
@@ -41,5 +37,4 @@ export const SWEEPSTAKES_TASK_WHERE_QUERY = (input: {
         }
       }
     }
-  } satisfies Prisma.TaskWhereInput;
-};
+  }) satisfies Prisma.TaskWhereInput;

@@ -40,7 +40,7 @@ const Wrapper: React.FC<{
 }> = async ({ params }) => {
   const { slug, pickerId } = await params;
 
-  const picker = await getTwitterV2Picker({ pickerId });
+  const picker = await getTwitterV2Picker({ pickerId, slug });
   if (!picker.ok) {
     return <div>Failed to load picker: {picker.data.message}</div>;
   }

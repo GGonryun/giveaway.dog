@@ -33,6 +33,7 @@
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-connect": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",

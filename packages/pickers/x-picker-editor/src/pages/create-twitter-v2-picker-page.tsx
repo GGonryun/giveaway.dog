@@ -10,10 +10,10 @@ interface CreateTwitterV2PickerPageProps {
 export const CreateTwitterV2PickerPage: React.FC<
   CreateTwitterV2PickerPageProps
 > = async ({ params }) => {
-  const { pickerId } = await params;
+  const { pickerId, slug } = await params;
 
   // Try to load existing picker data (in case user navigates back to create URL)
-  const picker = await getTwitterV2PickerForm({ pickerId });
+  const picker = await getTwitterV2PickerForm({ pickerId, slug });
 
   if (!picker.ok) {
     return <div>Error loading picker form: {picker.data.message}</div>;

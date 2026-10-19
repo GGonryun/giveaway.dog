@@ -174,7 +174,7 @@ export const TwitterV2PickerOverview: React.FC<
   const handleDeletePicker = async () => {
     setIsDeleting(true);
     try {
-      await deleteTwitterV2Picker({ pickerId: picker.id });
+      await deleteTwitterV2Picker({ pickerId: picker.id, slug });
       router.push(`/app/${slug}/pickers`);
     } catch (error) {
       console.error('Failed to delete picker:', error);
@@ -185,7 +185,7 @@ export const TwitterV2PickerOverview: React.FC<
   const handleDrawWinners = async (count?: number) => {
     setIsDrawing(true);
     try {
-      await drawTwitterV2Picker({ pickerId: picker.id, count });
+      await drawTwitterV2Picker({ pickerId: picker.id, slug, count });
       router.refresh();
     } catch (error) {
       console.error('Failed to draw winners:', error);
@@ -213,7 +213,11 @@ export const TwitterV2PickerOverview: React.FC<
     if (!disqualifyDrawId) return;
     setIsDisqualifying(true);
     try {
-      await disqualifyTwitterV2Winner({ drawId: disqualifyDrawId, reason });
+      await disqualifyTwitterV2Winner({
+        drawId: disqualifyDrawId,
+        slug,
+        reason
+      });
       await handleDrawWinners(1);
       setDisqualifyModalOpen(false);
       setDisqualifyDrawId(null);
