@@ -15,13 +15,17 @@ test.describe('user tracking', { tag: '@security' }, () => {
     async ({ page, context }) => {
       await context.clearCookies({ name: 'user_metrics' });
       await page.addInitScript(() => {
+        const scope = globalThis as unknown as {
+          Document: { prototype: object };
+          document: object;
+        };
         const descriptor = Object.getOwnPropertyDescriptor(
-          Document.prototype,
+          scope.Document.prototype,
           'cookie'
         );
         if (!descriptor?.get || !descriptor.set) return;
         const { get, set } = descriptor;
-        Object.defineProperty(document, 'cookie', {
+        Object.defineProperty(scope.document, 'cookie', {
           configurable: true,
           get() {
             return get.call(this);

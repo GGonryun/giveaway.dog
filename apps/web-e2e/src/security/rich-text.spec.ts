@@ -28,15 +28,15 @@ const expectNoScript = async (
       [root, ...root.querySelectorAll('*')].flatMap((element) =>
         element
           .getAttributeNames()
-          .filter((name) => name.toLowerCase().startsWith('on'))
-          .map((name) => `<${element.tagName.toLowerCase()} ${name}>`)
+          .filter((name: string) => name.toLowerCase().startsWith('on'))
+          .map((name: string) => `<${element.tagName.toLowerCase()} ${name}>`)
       )
     ),
     'Elements with an event handler attribute'
   ).toEqual([]);
-  expect(await page.evaluate(() => (window as { __xss?: unknown }).__xss)).toBe(
-    undefined
-  );
+  expect(
+    await page.evaluate(() => (globalThis as { __xss?: unknown }).__xss)
+  ).toBe(undefined);
   expect(dialogs).toEqual([]);
 };
 

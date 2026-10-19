@@ -25,7 +25,7 @@ test.describe('public pages', { tag: ['@prod-safe', '@security'] }, () => {
   const EMAIL = /[\w.+-]+@(?:[a-z0-9-]+\.)+[a-z]{2,}\b/gi;
 
   test('/winners sends no email address', async ({ request }) => {
-    for (const headers of [{}, { RSC: '1' }]) {
+    for (const headers of [{}, { RSC: '1' }] as Record<string, string>[]) {
       const response = await request.get('/winners', {
         ...noRedirect,
         headers
