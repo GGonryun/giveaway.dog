@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { upload } from '@vercel/blob/client';
 import { useFileProvider } from '../use-file-provider';
 
@@ -20,6 +20,28 @@ const blobResult = {
 
 const createImage = () =>
   new File(['image-bytes'], 'logo.png', { type: 'image/png' });
+
+type ProgressStep = Pick<
+  ProgressEvent,
+  'lengthComputable' | 'loaded' | 'total'
+>;
+
+const stubFileReader = (steps: ProgressStep[]) => {
+  class SteppedFileReader {
+    result: string | null = null;
+    onprogress: ((event: ProgressStep) => void) | null = null;
+    onload: (() => void) | null = null;
+
+    readAsDataURL() {
+      for (const step of steps) {
+        this.onprogress?.(step);
+      }
+      this.result = 'data:image/png;base64,aW1hZ2U=';
+      this.onload?.();
+    }
+  }
+  vi.stubGlobal('FileReader', SteppedFileReader);
+};
 
 describe('useFileProvider', () => {
   beforeEach(() => {
@@ -89,6 +111,33 @@ describe('useFileProvider', () => {
   });
 
   describe('when in demo mode', () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('reports the percentage of each progress event with a known length', async () => {
+      stubFileReader([
+        { lengthComputable: true, loaded: 1, total: 4 },
+        { lengthComputable: true, loaded: 3, total: 4 }
+      ]);
+      const onProgress = vi.fn();
+      const { result } = renderHook(() => useFileProvider(true));
+
+      await result.current.upload(createImage(), onProgress);
+
+      expect(onProgress.mock.calls).toEqual([[0], [25], [75], [100]]);
+    });
+
+    it('ignores the progress events with an unknown length', async () => {
+      stubFileReader([{ lengthComputable: false, loaded: 1, total: 0 }]);
+      const onProgress = vi.fn();
+      const { result } = renderHook(() => useFileProvider(true));
+
+      await result.current.upload(createImage(), onProgress);
+
+      expect(onProgress.mock.calls).toEqual([[0], [100]]);
+    });
+
     it('resolves with a data url of the file contents', async () => {
       const file = new File(['hello'], 'hello.txt', { type: 'text/plain' });
       const { result } = renderHook(() => useFileProvider(true));

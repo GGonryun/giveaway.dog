@@ -18,6 +18,10 @@ export const RESET_MODULES = fileURLToPath(
   new URL('./reset-modules.ts', import.meta.url)
 );
 
+export const WORKSPACE_ROOT = fileURLToPath(
+  new URL('../../../..', import.meta.url)
+);
+
 const EXCLUDE = ['**/node_modules/**', '**/.next/**'];
 
 export const testProjects = (): (TestProjectInlineConfiguration & {
@@ -82,6 +86,9 @@ export const packageTestConfig = ({
   return {
     resolve: {
       alias: { 'server-only': EMPTY_MODULE }
+    },
+    server: {
+      fs: { allow: ['.', WORKSPACE_ROOT] }
     },
     test: {
       globals: true,
