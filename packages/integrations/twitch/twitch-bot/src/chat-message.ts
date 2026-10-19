@@ -23,7 +23,7 @@ type TaskWithSweepstakes = Task & {
 };
 
 const extractTrigger = (text: string): string | undefined => {
-  const words = text.trim().split(/\s+/);
+  const words = text.split(/\s/);
   return words.find((word) => word.startsWith('!'));
 };
 
@@ -109,7 +109,7 @@ const findMatchingTask = async (
   const cacheKey = getTaskCacheKey(broadcasterId, trigger);
   const cached = await redis.get<TaskWithSweepstakes | false>(cacheKey);
   if (cached !== null) {
-    return cached === false ? null : cached;
+    return cached || null;
   }
 
   const result = await findMatchingTaskFromDb(broadcasterId, trigger);
