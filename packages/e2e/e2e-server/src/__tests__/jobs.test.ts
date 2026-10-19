@@ -79,15 +79,31 @@ describe('readE2eJobs', () => {
         posts: []
       }
     });
-    expect(prismaMock.taskJob.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { task: { sweepstakesId: 'sw-1' } } })
-    );
-    expect(prismaMock.sweepstakesJob.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { sweepstakesId: 'sw-1' } })
-    );
-    expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { sweepstakesId: 'sw-1' } })
-    );
+    const order = [{ createdAt: 'asc' }, { id: 'asc' }];
+    expect(prismaMock.sweepstakesJob.findMany).toHaveBeenCalledWith({
+      where: { sweepstakesId: 'sw-1' },
+      select: { id: true, type: true, status: true, runAt: true, error: true },
+      orderBy: order,
+      take: 100
+    });
+    expect(prismaMock.taskJob.findMany).toHaveBeenCalledWith({
+      where: { task: { sweepstakesId: 'sw-1' } },
+      select: { id: true, taskId: true, status: true, runAt: true },
+      orderBy: order,
+      take: 100
+    });
+    expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalledWith({
+      where: { sweepstakesId: 'sw-1' },
+      select: {
+        id: true,
+        type: true,
+        status: true,
+        runAt: true,
+        response: true
+      },
+      orderBy: order,
+      take: 100
+    });
   });
 
   it('refuses a giveaway of a team with a member who is not an e2e user', async () => {
@@ -135,6 +151,26 @@ describe('runE2eJobs', () => {
     expect(runTaskJobs).toHaveBeenCalledTimes(3);
   });
 
+  it('runs one round when nothing is due', async () => {
+    ownedGiveaway();
+
+    const result = await runE2eJobs({ db, request });
+
+    expect(result).toMatchObject({
+      rounds: 1,
+      tasks: { ok: true, processed: 0 },
+      sweepstakes: { ok: true, processed: 0 },
+      posts: { ok: true, processed: 0 }
+    });
+  });
+
+  it('runs again when only one processor processed a job', async () => {
+    ownedGiveaway();
+    vi.mocked(runTaskJobs).mockImplementation(processed(1));
+
+    expect((await runE2eJobs({ db, request })).rounds).toBe(2);
+  });
+
   it(`stops after ${E2E_MAX_JOB_ROUNDS} rounds`, async () => {
     ownedGiveaway();
     vi.mocked(runTaskJobs).mockResolvedValue({ processed: 1 });
@@ -160,6 +196,17 @@ describe('runE2eJobs', () => {
     expect(runSweepstakesJobs).toHaveBeenCalledTimes(1);
   });
 
+  it('reports a processor that throws something that is not an error', async () => {
+    ownedGiveaway();
+    vi.mocked(runTaskJobs).mockRejectedValue('nope');
+
+    expect((await runE2eJobs({ db, request })).tasks).toEqual({
+      ok: false,
+      processed: 0,
+      error: 'The jobs failed'
+    });
+  });
+
   it('expires the cache tags of the giveaway and returns its jobs', async () => {
     ownedGiveaway();
 
@@ -169,6 +216,14 @@ describe('runE2eJobs', () => {
     expect(revalidateTag).toHaveBeenCalledWith('sweepstakes-sw-1', {
       expire: 0
     });
+    expect(revalidateTag).not.toHaveBeenCalledWith(
+      'public-sweepstakes-list',
+      expect.anything()
+    );
+    expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledTimes(1);
+    expect(prismaMock.sweepstakesJob.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { sweepstakesId: 'sw-1' } })
+    );
   });
 
   it('runs nothing for a giveaway that is not an e2e giveaway', async () => {

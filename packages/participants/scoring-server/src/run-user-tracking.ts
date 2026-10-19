@@ -22,7 +22,6 @@ export const runUserTracking = async (
 
   let processedCount = 0;
   let errorCount = 0;
-  const processedEventIds: string[] = [];
 
   for (const event of events) {
     try {
@@ -107,7 +106,6 @@ export const runUserTracking = async (
       });
 
       processedCount++;
-      processedEventIds.push(event.id);
     } catch (error) {
       console.error(`Error processing event ${event.id}:`, error);
       errorCount++;
@@ -135,20 +133,17 @@ const saveFingerprint = async (tx: Tx, fingerprint: string) =>
     update: {}
   });
 
-const saveDeviceAgent = async (tx: Tx, agent: UserAgentSchema) => {
-  return agent && agent.agent
-    ? await tx.deviceAgent.upsert({
-        where: { agent: agent.agent },
-        create: {
-          agent: agent.agent,
-          device: agent.device,
-          os: agent.os,
-          browser: agent.browser
-        },
-        update: {}
-      })
-    : null;
-};
+const saveDeviceAgent = async (tx: Tx, agent: UserAgentSchema) =>
+  await tx.deviceAgent.upsert({
+    where: { agent: agent.agent },
+    create: {
+      agent: agent.agent,
+      device: agent.device,
+      os: agent.os,
+      browser: agent.browser
+    },
+    update: {}
+  });
 
 const saveIpAddress = async (tx: Tx, geo: Nil<ip.IpSchema>) => {
   if (!geo || !geo.ip) return null;

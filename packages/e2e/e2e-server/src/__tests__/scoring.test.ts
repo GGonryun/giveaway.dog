@@ -50,12 +50,12 @@ describe('scoreE2eUser', () => {
     });
     expect(runUserTracking).toHaveBeenCalledWith(db, { userId: 'user-1' });
     expect(runUserScoring).toHaveBeenCalledWith(db, { userId: 'user-1' });
-    expect(prismaMock.userQuality.findFirst).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: { userId: 'user-1' },
-        orderBy: { createdAt: 'desc' }
-      })
-    );
+    expect(runUserTracking).toHaveBeenCalledTimes(2);
+    expect(prismaMock.userQuality.findFirst).toHaveBeenCalledWith({
+      where: { userId: 'user-1' },
+      select: { score: true, createdAt: true },
+      orderBy: { createdAt: 'desc' }
+    });
   });
 
   it('scores after the tracking of every event of the user', async () => {
@@ -79,7 +79,8 @@ describe('scoreE2eUser', () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
 
     await expect(scoreE2eUser({ db, request })).rejects.toMatchObject({
-      code: 'NOT_FOUND'
+      code: 'NOT_FOUND',
+      message: 'User e2e-participant-abc123@example.com not found'
     });
     expect(runUserTracking).not.toHaveBeenCalled();
     expect(runUserScoring).not.toHaveBeenCalled();

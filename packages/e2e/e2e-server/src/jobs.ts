@@ -27,14 +27,7 @@ const RUNNERS: Record<E2eJobProcessor, JobRunner> = {
 
 const MAX_JOB_ROWS = 100;
 
-export const readE2eJobs = async ({
-  db,
-  request
-}: {
-  db: PrismaClient;
-  request: E2eJobsRequest;
-}) => {
-  const sweepstakesId = await findE2eSweepstakesId(db, request.sweepstakesId);
+const readJobs = async (db: PrismaClient, sweepstakesId: string) => {
   const [sweepstakes, tasks, posts] = await Promise.all([
     db.sweepstakesJob.findMany({
       where: { sweepstakesId },
@@ -64,6 +57,14 @@ export const readE2eJobs = async ({
   return { sweepstakesId, jobs: { sweepstakes, tasks, posts } };
 };
 
+export const readE2eJobs = async ({
+  db,
+  request
+}: {
+  db: PrismaClient;
+  request: E2eJobsRequest;
+}) => readJobs(db, await findE2eSweepstakesId(db, request.sweepstakesId));
+
 export const runE2eJobs = async ({
   db,
   request
@@ -79,14 +80,14 @@ export const runE2eJobs = async ({
   let rounds = 0;
   while (rounds < E2E_MAX_JOB_ROUNDS) {
     rounds++;
-    let processed = 0;
+    const processed: number[] = [];
     for (const name of E2E_JOB_PROCESSORS) {
       const result = results[name];
       if (!result.ok) continue;
       try {
         const run = await RUNNERS[name](db, { sweepstakesId });
         result.processed += run.processed;
-        processed += run.processed;
+        processed.push(run.processed);
       } catch (error) {
         console.error(
           `[e2e] The ${name} jobs of ${sweepstakesId} failed`,
@@ -99,14 +100,15 @@ export const runE2eJobs = async ({
         };
       }
     }
-    if (processed === 0) break;
+    if (processed.every((count) => count === 0)) break;
   }
 
+  // Stryker disable next-line ObjectLiteral: an empty object leaves lists undefined, which expires the same tags as false
   expireE2eSweepstakesTags([sweepstakesId], { lists: false });
 
   return {
     rounds,
     ...results,
-    ...(await readE2eJobs({ db, request: { sweepstakesId } }))
+    ...(await readJobs(db, sweepstakesId))
   };
 };
