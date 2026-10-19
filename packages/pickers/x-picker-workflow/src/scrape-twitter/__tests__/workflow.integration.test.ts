@@ -5,6 +5,7 @@ import { fakeNetwork } from '@giveaway/testing-server/faults';
 import { scrapeTwitterWorkflow } from '../workflow';
 import { storeTweetData } from '../steps/store-tweet-data';
 import { storeRetweeters } from '../steps/store-retweeters';
+import { scrapeBadgerTweetFixture } from '@giveaway/x-scraper/testing/fixtures-scrapebadger-tweet';
 
 const TWEET_ID = '1234567890';
 const TWEET = `https://scrapebadger.com/v1/twitter/tweets/tweet/${TWEET_ID}`;
@@ -49,6 +50,7 @@ beforeEach(() => {
   vi.spyOn(console, 'info').mockImplementation(() => undefined);
   const network = fakeNetwork();
   network.json(TWEET, {
+    ...scrapeBadgerTweetFixture,
     id: TWEET_ID,
     text: 'Retweet to win',
     created_at: '2026-09-01T00:00:00.000Z',

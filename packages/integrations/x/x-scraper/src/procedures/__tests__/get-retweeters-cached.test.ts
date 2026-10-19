@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getRetweetersUntilCached } from '../get-retweeters-cached';
+import { scrapeBadgerRetweetersFixture } from '../../testing/fixtures-scrapebadger-retweeters';
 
 const m = vi.hoisted(() => ({
   redis: { get: vi.fn(), set: vi.fn() },
@@ -15,7 +16,11 @@ vi.mock('scrapebadger', () => ({
   ScrapeBadger: m.ScrapeBadger
 }));
 
-const user = (id: string) => ({ id, username: `user${id}` });
+const user = (id: string) => ({
+  ...scrapeBadgerRetweetersFixture.data[0],
+  id,
+  username: `user${id}`
+});
 
 describe('getRetweetersUntilCached', () => {
   beforeEach(() => {

@@ -9,6 +9,7 @@ import {
   jsonResponse,
   teamWithRole
 } from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
+import { discordGuildRolesFixture } from '@giveaway/discord-api/testing/fixtures-discord-guild-roles';
 
 const input = { slug: 'acme', integrationId: 'integration-1' };
 
@@ -224,25 +225,25 @@ describe('getDiscordRoles', () => {
       );
     });
 
-    it('returns INTERNAL_SERVER_ERROR when discord returns a non-array payload', async () => {
+    it('returns BAD_GATEWAY when discord returns a non-array payload', async () => {
       fetchMock.mockResolvedValue(jsonResponse({ roles: [] }));
 
       const result = await getDiscordRoles(input);
 
-      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
-        'allRoles.filter is not a function'
+      expect(expectFailure(result, 'BAD_GATEWAY').message).toBe(
+        'Invalid Discord roles response'
       );
     });
 
-    it('returns UNPROCESSABLE_CONTENT when a role has no color', async () => {
+    it('returns BAD_GATEWAY when a role has no color', async () => {
       fetchMock.mockResolvedValue(
-        jsonResponse([{ id: 'r-1', name: 'Member', position: 1 }])
+        jsonResponse([{ ...discordGuildRolesFixture[2], color: undefined }])
       );
 
       const result = await getDiscordRoles(input);
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
-        /^Output validation failed: /
+      expect(expectFailure(result, 'BAD_GATEWAY').message).toBe(
+        'Invalid Discord roles response'
       );
     });
   });

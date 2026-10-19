@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getUserCached } from '../get-user-cached';
+import { scrapeBadgerUserFixture } from '../../testing/fixtures-scrapebadger-user';
 
 const m = vi.hoisted(() => ({
   redis: { get: vi.fn(), set: vi.fn() },
@@ -16,7 +17,7 @@ vi.mock('scrapebadger', () => ({
 }));
 
 describe('getUserCached', () => {
-  const user = { id: '1', username: 'Alice' };
+  const user = { ...scrapeBadgerUserFixture, username: 'Alice' };
 
   beforeEach(() => {
     vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');

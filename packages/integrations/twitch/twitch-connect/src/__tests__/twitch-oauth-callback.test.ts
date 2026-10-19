@@ -11,6 +11,7 @@ import {
   jsonResponse,
   textResponse
 } from '@giveaway/testing-server/fixtures-twitch';
+import { twitchAppAccessTokenFixture } from '@giveaway/twitch-api/testing/fixtures-twitch-app-access-token';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_CLIENT_ID', 'client-id');
@@ -67,7 +68,8 @@ type Routes = {
 
 const routeFetch = ({
   exchange = () => jsonResponse(userTokens),
-  appToken = () => jsonResponse({ access_token: 'app-token' }),
+  appToken = () =>
+    jsonResponse({ ...twitchAppAccessTokenFixture, access_token: 'app-token' }),
   users = () => jsonResponse({ data: [twitchUser] })
 }: Routes = {}) => {
   fetchMock.mockImplementation(async (url, init) => {

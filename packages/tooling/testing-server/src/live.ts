@@ -1,3 +1,5 @@
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { afterEach, describe, vi } from 'vitest';
 
 export type LiveCall = { provider: string; call: string };
@@ -54,11 +56,49 @@ const toIssueLine = ({ path, code, expected }: LiveIssue) => {
     : `  ${where}: ${code}`;
 };
 
+const SECRET_KEY = /token|secret|password|email/i;
+
+export const redactSecrets = (value: unknown): unknown => {
+  if (Array.isArray(value)) {
+    return value.map(redactSecrets);
+  }
+  if (value !== null && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [
+        key,
+        SECRET_KEY.test(key) && typeof entry === 'string'
+          ? '[redacted]'
+          : redactSecrets(entry)
+      ])
+    );
+  }
+  return value;
+};
+
+export const toRecordingFileName = ({ provider, call }: LiveCall) =>
+  `${`${provider}-${call}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')}.json`;
+
+const saveRecording = (body: unknown, call: LiveCall) => {
+  const directory = process.env.LIVE_RECORD_DIR;
+  if (!directory) {
+    return;
+  }
+  mkdirSync(directory, { recursive: true });
+  writeFileSync(
+    join(directory, toRecordingFileName(call)),
+    `${JSON.stringify(redactSecrets(body), null, 2)}\n`
+  );
+};
+
 export const expectLiveResponse = <T>(
   schema: LiveSchema<T>,
   body: unknown,
   { provider, call }: LiveCall
 ): T => {
+  saveRecording(body, { provider, call });
   const result = schema.safeParse(body);
   if (!result.success) {
     throw new Error(

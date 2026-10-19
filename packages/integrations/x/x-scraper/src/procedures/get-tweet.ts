@@ -1,6 +1,8 @@
 import 'server-only';
 
 import { getScrapeBadgerClient } from '../client';
+import { parseScrapeBadgerResponse } from '../parse';
+import { scrapeBadgerTweetSchema } from '../schemas';
 import type { Tweet } from 'scrapebadger';
 
 export const getTweet = async ({
@@ -10,5 +12,7 @@ export const getTweet = async ({
 }): Promise<Tweet> => {
   console.info(`[ScrapeBadger] Fetching tweet details for tweet ${tweetId}`);
 
-  return await getScrapeBadgerClient().twitter.tweets.getById(tweetId);
+  const tweet = await getScrapeBadgerClient().twitter.tweets.getById(tweetId);
+
+  return parseScrapeBadgerResponse(scrapeBadgerTweetSchema, tweet, 'tweet');
 };

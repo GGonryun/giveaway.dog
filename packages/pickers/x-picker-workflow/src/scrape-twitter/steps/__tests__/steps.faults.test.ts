@@ -12,6 +12,7 @@ import {
 } from '@giveaway/testing-server/faults';
 import { storeTweetData } from '../store-tweet-data';
 import { storeRetweeters } from '../store-retweeters';
+import { scrapeBadgerTweetFixture } from '@giveaway/x-scraper/testing/fixtures-scrapebadger-tweet';
 
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 const TWEET = 'GET https://scrapebadger.com/v1/twitter/tweets/tweet/123';
@@ -59,9 +60,8 @@ beforeEach(() => {
   prismaMock.twitterPickerUser.createMany.mockResolvedValue({ count: 0 });
   network = fakeNetwork();
   network.json(TWEET, {
+    ...scrapeBadgerTweetFixture,
     id: '123',
-    text: 'Retweet to win',
-    created_at: '2026-09-01T00:00:00.000Z',
     retweet_count: 0
   });
   network.json(RETWEETERS, { data: [] });

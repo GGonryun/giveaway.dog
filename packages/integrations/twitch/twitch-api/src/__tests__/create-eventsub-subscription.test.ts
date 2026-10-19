@@ -12,6 +12,7 @@ import {
   textResponse,
   twitchSubscription
 } from '@giveaway/testing-server/fixtures-twitch';
+import { twitchAppAccessTokenFixture } from '../testing/fixtures-twitch-app-access-token';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_CLIENT_ID', 'client-id');
@@ -47,7 +48,10 @@ const routeFetch = ({
   fetchMock.mockImplementation(async (input, init) => {
     const url = String(input);
     if (url === TOKEN_URL) {
-      return jsonResponse({ access_token: 'app-token' });
+      return jsonResponse({
+        ...twitchAppAccessTokenFixture,
+        access_token: 'app-token'
+      });
     }
     if (url === EVENTSUB_URL && init?.method === 'POST') {
       return create(jsonBody(init) as { type: string; version: string });

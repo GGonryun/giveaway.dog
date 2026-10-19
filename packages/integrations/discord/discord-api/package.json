@@ -23,6 +23,11 @@
     "./post-discord-message": "./src/post-discord-message.ts",
     "./refresh-discord-token": "./src/refresh-discord-token.ts",
     "./testing/fixtures-discord-core": "./src/testing/fixtures-discord-core.ts",
+    "./testing/fixtures-discord-guild": "./src/testing/fixtures-discord-guild.ts",
+    "./testing/fixtures-discord-guild-channels": "./src/testing/fixtures-discord-guild-channels.ts",
+    "./testing/fixtures-discord-guild-roles": "./src/testing/fixtures-discord-guild-roles.ts",
+    "./testing/fixtures-discord-message": "./src/testing/fixtures-discord-message.ts",
+    "./testing/fixtures-discord-token": "./src/testing/fixtures-discord-token.ts",
     "./update-discord-message": "./src/update-discord-message.ts",
     "./util": "./src/util.ts"
   },

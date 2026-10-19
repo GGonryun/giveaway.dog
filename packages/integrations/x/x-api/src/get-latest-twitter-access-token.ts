@@ -7,6 +7,7 @@ import {
   TWITTER_TEAM_APP_CLIENT_SECRET
 } from '@giveaway/integration-model/schemas';
 import { Tx } from '@giveaway/db-client/prisma';
+import { twitterTokenResponseSchema } from './schemas';
 
 const EXPIRY_BUFFER_SECONDS = 300;
 
@@ -127,7 +128,19 @@ export const getLatestTwitterAccessToken = async (
     });
   }
 
-  const tokens = await tokenResponse.json();
+  const parsed = twitterTokenResponseSchema.safeParse(
+    await tokenResponse.json()
+  );
+
+  if (!parsed.success) {
+    throw new ApplicationError({
+      code: 'BAD_GATEWAY',
+      message: 'Invalid token response from X',
+      cause: parsed.error
+    });
+  }
+
+  const tokens = parsed.data;
 
   const expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
 

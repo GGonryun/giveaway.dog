@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ZodError } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getDiscordGuildInfo } from '../get-discord-guild-name';
+import { discordGuildFixture } from '../testing/fixtures-discord-guild';
 
 const fetchMock = vi.fn<typeof fetch>();
 
@@ -9,6 +10,7 @@ const jsonResponse = (body: unknown, init: ResponseInit = {}) =>
   new Response(JSON.stringify(body), { status: 200, ...init });
 
 const guild = (overrides: Record<string, unknown> = {}) => ({
+  ...discordGuildFixture,
   id: 'guild-1',
   name: 'Dog Park',
   icon: 'icon-hash',

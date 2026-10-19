@@ -1,6 +1,8 @@
 import 'server-only';
 
 import { getScrapeBadgerClient } from '../client';
+import { parseScrapeBadgerResponse } from '../parse';
+import { scrapeBadgerUserSchema } from '../schemas';
 import type { User } from 'scrapebadger';
 
 export const getUser = async ({
@@ -10,5 +12,8 @@ export const getUser = async ({
 }): Promise<User> => {
   console.info(`[ScrapeBadger] Fetching user details for username ${username}`);
 
-  return await getScrapeBadgerClient().twitter.users.getByUsername(username);
+  const user =
+    await getScrapeBadgerClient().twitter.users.getByUsername(username);
+
+  return parseScrapeBadgerResponse(scrapeBadgerUserSchema, user, 'user');
 };

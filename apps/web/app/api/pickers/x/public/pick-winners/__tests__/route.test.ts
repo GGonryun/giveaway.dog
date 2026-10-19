@@ -524,30 +524,21 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
   });
 
   describe('winner and author fallbacks', () => {
-    it('fills in placeholders for winners without a username, name or image', async () => {
+    it('returns 502 when ScrapeBadger sends a retweeter without a username or name', async () => {
       m.getRetweeters.mockResolvedValue({
-        data: [
-          retweeter('1', {
-            username: undefined,
-            name: undefined,
-            profile_image_url: undefined
-          })
-        ],
+        data: [retweeter('1', { username: undefined, name: undefined })],
         hasMore: false
       });
 
       const res = await POST(buildRequest(buildBody({ winnersCount: 1 })));
 
-      const { data } = await res.json();
-      expect(data.winners).toEqual([
-        {
-          id: '1',
-          username: 'unknown',
-          name: 'Unknown User',
-          profileImageUrl: 'https://avatar.vercel.sh/undefined',
-          profileUrl: 'https://x.com/undefined'
+      expect(res.status).toBe(502);
+      expect(await res.json()).toEqual({
+        error: {
+          code: 'BAD_GATEWAY',
+          message: 'Invalid ScrapeBadger retweeters response'
         }
-      ]);
+      });
     });
 
     it('uses a generated avatar when only the profile image is missing', async () => {

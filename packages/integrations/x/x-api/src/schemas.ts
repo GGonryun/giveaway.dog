@@ -8,3 +8,11 @@ export const twitterOEmbedResponseSchema = z.object({
   author_url: z.string(),
   html: z.string()
 });
+
+export const twitterTokenResponseSchema = z.object({
+  access_token: z.string(),
+  expires_in: z.number(),
+  refresh_token: z.string().nullish(),
+  scope: z.string().nullish(),
+  token_type: z.string().nullish()
+});

@@ -9,6 +9,7 @@ import {
   jsonResponse,
   teamWithRole
 } from '@giveaway/discord-model/testing/fixtures-discord-procedures-workflows';
+import { discordGuildChannelsFixture } from '@giveaway/discord-api/testing/fixtures-discord-guild-channels';
 
 const input = { slug: 'acme', integrationId: 'integration-1' };
 
@@ -145,7 +146,9 @@ describe('getDiscordChannels', () => {
 
     it('returns an empty list when the guild has no text channels', async () => {
       fetchMock.mockResolvedValue(
-        jsonResponse([{ id: 'c-voice', name: 'voice', type: 2 }])
+        jsonResponse(
+          discordGuildChannelsFixture.filter((channel) => channel.type !== 0)
+        )
       );
 
       const result = await getDiscordChannels(input);
@@ -219,23 +222,25 @@ describe('getDiscordChannels', () => {
       );
     });
 
-    it('returns INTERNAL_SERVER_ERROR when discord returns a non-array payload', async () => {
+    it('returns BAD_GATEWAY when discord returns a non-array payload', async () => {
       fetchMock.mockResolvedValue(jsonResponse({ channels: [] }));
 
       const result = await getDiscordChannels(input);
 
-      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
-        'allChannels.filter is not a function'
+      expect(expectFailure(result, 'BAD_GATEWAY').message).toBe(
+        'Invalid Discord channels response'
       );
     });
 
-    it('returns UNPROCESSABLE_CONTENT when a text channel has no id', async () => {
-      fetchMock.mockResolvedValue(jsonResponse([{ name: 'general', type: 0 }]));
+    it('returns BAD_GATEWAY when a text channel has no id', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse([{ ...discordGuildChannelsFixture[1], id: undefined }])
+      );
 
       const result = await getDiscordChannels(input);
 
-      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toMatch(
-        /^Output validation failed: /
+      expect(expectFailure(result, 'BAD_GATEWAY').message).toBe(
+        'Invalid Discord channels response'
       );
     });
   });

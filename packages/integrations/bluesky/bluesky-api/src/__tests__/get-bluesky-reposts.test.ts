@@ -3,6 +3,8 @@ import type { Agent } from '@atproto/api';
 import { getBlueskyReposts } from '../get-bluesky-reposts';
 import { ApplicationError } from '@giveaway/util-errors';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
+import { blueskyActorFixture } from '../testing/fixtures-bluesky-actors';
+import { blueskyProfileFixture } from '../testing/fixtures-bluesky-profile';
 
 const POST_URL = 'https://bsky.app/profile/acme.bsky.social/post/3kpost';
 
@@ -19,6 +21,7 @@ const createAgent = () => {
 };
 
 const actor = (did: string, extra: Record<string, unknown> = {}) => ({
+  ...blueskyActorFixture(1),
   did,
   handle: `${did}.bsky.social`,
   displayName: `User ${did}`,
@@ -34,7 +37,7 @@ describe('getBlueskyReposts', () => {
     mocks = createAgent();
     mocks.getProfile.mockResolvedValue({
       success: true,
-      data: { did: 'did:plc:acme' }
+      data: { ...blueskyProfileFixture, did: 'did:plc:acme' }
     });
     mocks.getRepostedBy.mockResolvedValue({ data: { repostedBy: [] } });
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -100,6 +103,20 @@ describe('getBlueskyReposts', () => {
       expect(mocks.getRepostedBy.mock.calls[0][0].uri).toBe(
         'at://did:plc:acme/app.bsky.feed.post/3kpost'
       );
+    });
+
+    it('throws BAD_GATEWAY when the profile has no did', async () => {
+      mocks.getProfile.mockResolvedValue({
+        success: true,
+        data: { handle: blueskyProfileFixture.handle }
+      });
+
+      await expect(
+        getBlueskyReposts(tx, { agent: mocks.agent, postUrl: POST_URL })
+      ).rejects.toMatchObject({
+        code: 'BAD_GATEWAY',
+        message: 'Invalid Bluesky profile response'
+      });
     });
 
     it('throws NOT_FOUND when the profile lookup is unsuccessful', async () => {

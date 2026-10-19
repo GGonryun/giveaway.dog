@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getTweetCached } from '../get-tweet-cached';
+import { scrapeBadgerTweetFixture } from '../../testing/fixtures-scrapebadger-tweet';
 
 const m = vi.hoisted(() => ({
   redis: { get: vi.fn(), set: vi.fn() },
@@ -16,7 +17,7 @@ vi.mock('scrapebadger', () => ({
 }));
 
 describe('getTweetCached', () => {
-  const tweet = { id: '123', text: 'fresh' };
+  const tweet = scrapeBadgerTweetFixture;
 
   beforeEach(() => {
     vi.stubEnv('SCRAPEBADGER_API_KEY', 'sb-key');

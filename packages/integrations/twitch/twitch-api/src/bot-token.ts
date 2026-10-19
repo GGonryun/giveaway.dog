@@ -2,13 +2,9 @@ import 'server-only';
 
 import { redis } from '@giveaway/cache/redis';
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from './scopes';
+import { twitchBotTokenSchema } from './schemas';
 
 const BOT_TOKEN_CACHE_KEY = 'twitch:bot:access_token';
-
-type BotTokenResponse = {
-  access_token: string;
-  expires_in: number;
-};
 
 const refreshBotToken = async (): Promise<string | null> => {
   const refreshToken = process.env.TWITCH_BOT_REFRESH_TOKEN;
@@ -30,7 +26,13 @@ const refreshBotToken = async (): Promise<string | null> => {
     return null;
   }
 
-  const data = (await response.json()) as BotTokenResponse;
+  const parsed = twitchBotTokenSchema.safeParse(await response.json());
+  if (!parsed.success) {
+    console.error('[Twitch] Invalid bot token response', parsed.error.issues);
+    return null;
+  }
+
+  const data = parsed.data;
   await redis.set(BOT_TOKEN_CACHE_KEY, data.access_token, {
     ex: data.expires_in - 60
   });

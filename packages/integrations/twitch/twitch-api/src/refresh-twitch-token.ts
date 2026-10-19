@@ -2,16 +2,9 @@ import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { PrismaClient } from '@giveaway/db-model';
+import { twitchUserTokenSchema } from './schemas';
 
 const EXPIRY_BUFFER_SECONDS = 300;
-
-type TwitchTokenResponse = {
-  access_token: string;
-  expires_in: number;
-  refresh_token?: string;
-  scope: string[];
-  token_type?: string;
-};
 
 export const refreshTwitchToken = async (
   db: PrismaClient,
@@ -153,7 +146,17 @@ export const refreshTwitchToken = async (
     });
   }
 
-  const tokens = (await tokenResponse.json()) as TwitchTokenResponse;
+  const parsed = twitchUserTokenSchema.safeParse(await tokenResponse.json());
+
+  if (!parsed.success) {
+    throw new ApplicationError({
+      code: 'BAD_GATEWAY',
+      message: 'Invalid token response from Twitch',
+      cause: parsed.error
+    });
+  }
+
+  const tokens = parsed.data;
 
   const expiresAt = Math.floor(Date.now() / 1000) + tokens.expires_in;
 

@@ -1,14 +1,11 @@
 import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
+import type { z } from 'zod';
 import { TWITCH_CLIENT_ID } from './scopes';
+import { twitchUserSchema, twitchUsersSchema } from './schemas';
 
-interface TwitchUser {
-  id: string;
-  login: string;
-  display_name: string;
-  profile_image_url: string;
-}
+type TwitchUser = z.infer<typeof twitchUserSchema>;
 
 export const getTwitchUser = async (
   accessToken: string
@@ -29,6 +26,15 @@ export const getTwitchUser = async (
     });
   }
 
-  const data = (await response.json()) as { data: TwitchUser[] };
-  return data.data[0];
+  const users = twitchUsersSchema.safeParse(await response.json());
+
+  if (!users.success) {
+    throw new ApplicationError({
+      code: 'BAD_GATEWAY',
+      message: 'Invalid user response from Twitch',
+      cause: users.error
+    });
+  }
+
+  return users.data.data[0];
 };

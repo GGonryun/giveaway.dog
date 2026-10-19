@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getUser } from '../get-user';
+import { scrapeBadgerUserFixture } from '../../testing/fixtures-scrapebadger-user';
 
 const m = vi.hoisted(() => ({
   getByUsername: vi.fn(),
@@ -27,7 +28,7 @@ describe('getUser', () => {
   });
 
   it('fetches the user by username with a client using the configured API key', async () => {
-    m.getByUsername.mockResolvedValue({ id: '1', username: 'Alice' });
+    m.getByUsername.mockResolvedValue(scrapeBadgerUserFixture);
 
     await getUser({ username: 'Alice' });
 
@@ -36,7 +37,7 @@ describe('getUser', () => {
   });
 
   it('returns the user from the API', async () => {
-    const user = { id: '1', username: 'alice' };
+    const user = scrapeBadgerUserFixture;
     m.getByUsername.mockResolvedValue(user);
 
     await expect(getUser({ username: 'alice' })).resolves.toBe(user);
@@ -44,7 +45,7 @@ describe('getUser', () => {
 
   it('logs the username being fetched', async () => {
     const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
-    m.getByUsername.mockResolvedValue({ id: '1' });
+    m.getByUsername.mockResolvedValue(scrapeBadgerUserFixture);
 
     await getUser({ username: 'alice' });
 

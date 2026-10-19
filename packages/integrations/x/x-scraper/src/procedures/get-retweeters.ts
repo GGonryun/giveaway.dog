@@ -2,10 +2,29 @@ import 'server-only';
 
 import { compact } from 'lodash';
 import { getScrapeBadgerClient } from '../client';
+import type { ScrapeBadgerClient } from '../fixtures';
+import { parseScrapeBadgerResponse } from '../parse';
+import { scrapeBadgerRetweetersSchema } from '../schemas';
 import { User } from 'scrapebadger';
 
 const DEFAULT_MAX_API_CALLS = 10;
 const DEFAULT_MAX_USERS = 500;
+
+const fetchRetweeterPage = async (
+  client: ScrapeBadgerClient,
+  tweetId: string,
+  options: { cursor?: string; count?: number }
+) => {
+  const response = await client.twitter.tweets.getRetweeters(tweetId, options);
+
+  parseScrapeBadgerResponse(
+    scrapeBadgerRetweetersSchema,
+    { data: compact(response.data), next_cursor: response.nextCursor },
+    'retweeters'
+  );
+
+  return response;
+};
 
 export const getRetweeters = async ({
   tweetId,
@@ -14,7 +33,7 @@ export const getRetweeters = async ({
   tweetId: string;
   cursor?: string;
 }) => {
-  return await getScrapeBadgerClient().twitter.tweets.getRetweeters(tweetId, {
+  return await fetchRetweeterPage(getScrapeBadgerClient(), tweetId, {
     cursor
   });
 };
@@ -42,7 +61,7 @@ export const getRetweetersUntil = async ({
     console.info(
       `Fetching retweeters batch ${apiCallCount + 1}, current user count=${users.length}`
     );
-    const response = await client.twitter.tweets.getRetweeters(tweetId, {
+    const response = await fetchRetweeterPage(client, tweetId, {
       cursor,
       count: 20
     });
@@ -98,7 +117,7 @@ export const getRetweetersUntilUser = async ({
     console.info(
       `Fetching retweeters batch ${batchIndex + 1}, current count=${users.length}`
     );
-    const response = await client.twitter.tweets.getRetweeters(tweetId, {
+    const response = await fetchRetweeterPage(client, tweetId, {
       cursor
     });
     batchIndex++;
@@ -165,7 +184,7 @@ export const getAllRetweeters = async ({
   console.info(`[getAllRetweeters] Starting fetch for tweet ${tweetId}`);
 
   while (hasMore) {
-    const response = await client.twitter.tweets.getRetweeters(tweetId, {
+    const response = await fetchRetweeterPage(client, tweetId, {
       cursor
     });
     batchIndex++;
