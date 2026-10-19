@@ -2,6 +2,9 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
+import { TeamPermission } from '@giveaway/team-permissions';
+import { TeamTier } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
   twitterV2PickerSchema,
@@ -10,13 +13,21 @@ import {
 
 export const getTwitterV2Picker = procedure()
   .authorization({
-    required: false
+    required: true
   })
-  .input(z.object({ pickerId: z.string() }))
+  .input(z.object({ pickerId: z.string(), slug: z.string() }))
   .output(twitterV2PickerSchema)
-  .handler(async ({ db, input }) => {
+  .handler(async ({ db, input, user }) => {
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.VIEW_PICKERS,
+      tier: TeamTier.FREE
+    });
+
     const picker = await db.twitterPicker.findUnique({
-      where: { id: input.pickerId },
+      where: { id: input.pickerId, teamId: team.id },
       include: {
         users: true,
         draws: true,

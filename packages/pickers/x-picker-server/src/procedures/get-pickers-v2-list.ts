@@ -2,6 +2,9 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
+import { TeamPermission } from '@giveaway/team-permissions';
+import { TeamTier } from '@giveaway/db-model';
 import {
   pickersV2ListSchema,
   listPickersV2FilterSchema
@@ -17,12 +20,18 @@ export const getPickersV2List = procedure()
     })
   )
   .output(pickersV2ListSchema)
-  .handler(async ({ input, db }) => {
+  .handler(async ({ input, db, user }) => {
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.VIEW_PICKERS,
+      tier: TeamTier.FREE
+    });
+
     const twitterPickers = await db.twitterPicker.findMany({
       where: {
-        team: {
-          slug: input.slug
-        },
+        teamId: team.id,
         status: input.status !== 'ALL' ? input.status : undefined
       },
       orderBy: {

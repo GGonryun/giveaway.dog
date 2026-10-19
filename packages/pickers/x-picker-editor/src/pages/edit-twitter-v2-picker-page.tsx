@@ -10,9 +10,9 @@ interface EditTwitterV2PickerPageProps {
 export const EditTwitterV2PickerPage: React.FC<
   EditTwitterV2PickerPageProps
 > = async ({ params }) => {
-  const { pickerId } = await params;
+  const { pickerId, slug } = await params;
 
-  const pickerResult = await getTwitterV2PickerForm({ pickerId });
+  const pickerResult = await getTwitterV2PickerForm({ pickerId, slug });
 
   if (!pickerResult.ok) {
     return <div>Error loading picker: {pickerResult.data.message}</div>;

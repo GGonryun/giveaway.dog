@@ -14,6 +14,7 @@ import { PickersV2ListItemSchema } from '@giveaway/x-picker-model/schemas/list';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { deleteTwitterV2PickerFromList } from '@giveaway/x-picker-server/procedures/delete-twitter-v2-picker-from-list';
 import { useRouter } from 'next/navigation';
+import { useTeams } from '@giveaway/team-context/team-provider';
 
 interface DeletePickerV2ModalProps {
   onClose: () => void;
@@ -25,6 +26,7 @@ export const DeletePickerV2Modal: React.FC<DeletePickerV2ModalProps> = ({
   picker
 }) => {
   const router = useRouter();
+  const { activeTeam } = useTeams();
   const [confirmText, setConfirmText] = useState('');
 
   const deleteProcedure = useProcedure({
@@ -47,7 +49,10 @@ export const DeletePickerV2Modal: React.FC<DeletePickerV2ModalProps> = ({
   const handleConfirm = () => {
     setConfirmText('');
     if (!isConfirmDisabled && picker) {
-      deleteProcedure.run(picker);
+      deleteProcedure.run({
+        pickerId: picker.pickerId,
+        slug: activeTeam.slug
+      });
     }
   };
 

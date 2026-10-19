@@ -163,11 +163,11 @@ const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
     }
 
     if (action === 'create') {
-      deleteProcedure.run({ pickerId });
+      deleteProcedure.run({ pickerId, slug: team.slug });
     } else {
       page.navigateTo({ path: 'list' });
     }
-  }, [deleteProcedure, action, pickerId, page]);
+  }, [deleteProcedure, action, pickerId, page, team.slug]);
 
   const isLoading =
     deleteProcedure.isLoading ||

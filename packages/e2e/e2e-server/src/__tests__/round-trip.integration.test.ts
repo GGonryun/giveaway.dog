@@ -715,7 +715,14 @@ describe('the e2e seed API against a real database', () => {
       draws: [{ user: 1, disqualified: 'Too few followers' }, { user: 0 }]
     });
 
-    const picker = expectOk(await getTwitterV2Picker({ pickerId: seeded.id }));
+    const host = await db.user.findUniqueOrThrow({
+      where: { email: 'e2e-host-abc123@example.com' }
+    });
+
+    signIn({ id: host.id, email: host.email });
+    const picker = expectOk(
+      await getTwitterV2Picker({ pickerId: seeded.id, slug: 'e2e-abc123-w0' })
+    );
 
     expect(picker).toMatchObject({
       id: seeded.id,

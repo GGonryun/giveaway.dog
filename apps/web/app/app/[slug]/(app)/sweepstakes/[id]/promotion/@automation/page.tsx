@@ -26,7 +26,7 @@ const Wrapper: React.FC<SweepstakesPageProps> = async ({
 }) => {
   const sweepstake = await getParticipantSweepstake({ sweepstakesId });
   const integrations = await getTeamIntegrations({ slug });
-  const jobs = await getAutomatedPostJobs({ sweepstakesId });
+  const jobs = await getAutomatedPostJobs({ sweepstakesId, slug });
 
   if (!sweepstake.ok) {
     return <div>Failed to load sweepstakes: {sweepstake.data.message}</div>;

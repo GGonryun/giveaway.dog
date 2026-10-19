@@ -8,8 +8,16 @@ import {
   buildCriteriaRow
 } from '@giveaway/winners-model/testing/fixtures-winners-model';
 import {
+  SWEEPSTAKES_ID,
+  TEAM_SLUG
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
+import {
+  describeTeamAccess,
+  teamSweepstakes,
+  teamSweepstakesQuery
+} from '@giveaway/sweepstakes-access/testing/team-sweepstakes';
+import {
   buildCompletion,
-  buildTeamSweepstakes,
   givenSweepstakesLookups,
   inputIssuePaths,
   omitField
@@ -27,8 +35,8 @@ vi.mock('nanoid', () => ({
 type Input = Parameters<typeof rerollDraw>[0];
 
 const input = (overrides: Partial<Input> = {}): Input => ({
-  sweepstakesId: 'sw-1',
-  slug: 'acme',
+  sweepstakesId: SWEEPSTAKES_ID,
+  slug: TEAM_SLUG,
   drawId: 'draw-1',
   disqualificationReason: ' Fake account ',
   ...overrides
@@ -48,8 +56,15 @@ const loser = buildCompletion({
 const alice = buildCompletion({ id: 'c-alice', userId: 'alice' });
 const bob = buildCompletion({ id: 'c-bob', userId: 'bob' });
 
+const givenTeamAccess = (role: Parameters<typeof teamSweepstakes>[0]) => {
+  prismaMock.sweepstakes.findUnique.mockResolvedValueOnce(
+    teamSweepstakes(role) as never
+  );
+};
+
 const givenHappyPath = () => {
   givenSweepstakesLookups();
+  givenTeamAccess('OWNER');
   prismaMock.prizeDraw.findMany.mockResolvedValue([
     { id: 'draw-1', taskCompletion: { participant: { userId: 'loser' } } }
   ]);
@@ -71,16 +86,18 @@ afterEach(() => {
 });
 
 describe('rerollDraw', () => {
+  describeTeamAccess(
+    () => rerollDraw(input()),
+    () => [
+      prismaMock.prizeDraw.findUnique,
+      prismaMock.taskCompletion.findMany,
+      prismaMock.prizeDraw.update,
+      prismaMock.prizeDraw.createMany,
+      prismaMock.$transaction
+    ]
+  );
+
   describe('authorization and validation', () => {
-    it('rejects unauthenticated callers without touching the database', async () => {
-      const result = await rerollDraw(input());
-
-      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
-        'Invalid session'
-      );
-      expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
-    });
-
     it.each(['sweepstakesId', 'slug', 'drawId', 'disqualificationReason'])(
       'rejects input without %s',
       async (field) => {
@@ -105,48 +122,32 @@ describe('rerollDraw', () => {
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
 
-    it('returns NOT_FOUND when the user is not on the sweepstakes team', async () => {
+    it('loads the sweepstakes through the membership of the caller', async () => {
       signIn();
       givenHappyPath();
-      givenSweepstakesLookups({ team: null });
-
-      const result = await rerollDraw(input());
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        'Sweepstakes not found'
-      );
-      expect(prismaMock.prizeDraw.update).not.toHaveBeenCalled();
-    });
-
-    it('returns FORBIDDEN when the member is blocked', async () => {
-      signIn();
-      givenHappyPath();
-      givenSweepstakesLookups({
-        team: buildTeamSweepstakes({ role: 'BLOCKED' })
-      });
-
-      const result = await rerollDraw(input());
-
-      expectFailure(result, 'FORBIDDEN');
-      expect(prismaMock.$transaction).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('when the caller is a view only guest', () => {
-    it('still disqualifies and replaces the draw because only view permission is checked', async () => {
-      signIn();
-      givenHappyPath();
-      givenSweepstakesLookups({
-        team: buildTeamSweepstakes({ role: 'GUEST' })
-      });
 
       expectOk(await rerollDraw(input()));
 
-      expect(prismaMock.prizeDraw.update).toHaveBeenCalledWith({
-        where: { id: 'draw-1' },
-        data: { result: 'DISQUALIFIED', disqualificationReason: 'Fake account' }
-      });
-      expect(createdDraws().data).toHaveLength(1);
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenNthCalledWith(
+        1,
+        teamSweepstakesQuery(TEAM_SLUG)
+      );
+    });
+
+    it('returns FORBIDDEN to a guest without touching the draw', async () => {
+      signIn();
+      givenSweepstakesLookups();
+      givenTeamAccess('GUEST');
+      prismaMock.prizeDraw.findUnique.mockResolvedValue(storedDraw);
+
+      const result = await rerollDraw(input());
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toContain(
+        'UPDATE_SWEEPSTAKES'
+      );
+      expect(prismaMock.prizeDraw.findUnique).not.toHaveBeenCalled();
+      expect(prismaMock.prizeDraw.update).not.toHaveBeenCalled();
+      expect(prismaMock.prizeDraw.createMany).not.toHaveBeenCalled();
     });
   });
 
@@ -211,11 +212,11 @@ describe('rerollDraw', () => {
       });
     });
 
-    it('looks up the draw with its participant', async () => {
+    it('looks up the draw only among the prizes of the sweepstakes', async () => {
       await rerollDraw(input());
 
       expect(prismaMock.prizeDraw.findUnique).toHaveBeenCalledWith({
-        where: { id: 'draw-1' },
+        where: { id: 'draw-1', prize: { sweepstakesId: SWEEPSTAKES_ID } },
         include: { taskCompletion: { select: { participantId: true } } }
       });
     });

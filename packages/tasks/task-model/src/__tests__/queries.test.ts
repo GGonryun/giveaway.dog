@@ -26,14 +26,22 @@ describe('ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY', () => {
 
 describe('SWEEPSTAKES_TASK_WHERE_QUERY', () => {
   describe('when a sweepstakes id is provided', () => {
-    it('filters by sweepstakes id only and ignores the team slug and user', () => {
+    it('filters by sweepstakes id and keeps the team membership scope', () => {
       const where = SWEEPSTAKES_TASK_WHERE_QUERY({
         sweepstakesId: 'sweep-1',
         slug: 'acme',
         userId: 'user-1'
       });
 
-      expect(where).toEqual({ sweepstakesId: 'sweep-1' });
+      expect(where).toEqual({
+        sweepstakesId: 'sweep-1',
+        sweepstakes: {
+          team: {
+            slug: 'acme',
+            members: { some: { userId: 'user-1' } }
+          }
+        }
+      });
     });
   });
 

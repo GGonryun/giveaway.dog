@@ -11,12 +11,14 @@ export const findTeamSweepstakes = async ({
   db,
   userId,
   sweepstakesId,
-  slug
+  slug,
+  permission = TeamPermission.VIEW_SWEEPSTAKES
 }: {
   db: PrismaClient;
   userId: string;
   sweepstakesId: string;
   slug: string;
+  permission?: TeamPermission;
 }) => {
   const sweepstakes = await db.sweepstakes.findUnique({
     where: {
@@ -50,10 +52,7 @@ export const findTeamSweepstakes = async ({
     });
   }
 
-  assertMembershipPermission(
-    sweepstakes.team.members[0],
-    TeamPermission.VIEW_SWEEPSTAKES
-  );
+  assertMembershipPermission(sweepstakes.team.members[0], permission);
 
   return sweepstakes;
 };

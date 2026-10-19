@@ -4,6 +4,17 @@ import { getAutomatedPostJobs } from '../get-automated-post-jobs';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import {
+  SWEEPSTAKES_ID,
+  TEAM_SLUG
+} from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
+import {
+  describeTeamAccess,
+  teamSweepstakes,
+  teamSweepstakesQuery
+} from '@giveaway/sweepstakes-access/testing/team-sweepstakes';
+
+const input = { sweepstakesId: SWEEPSTAKES_ID, slug: TEAM_SLUG };
 
 const RUN_AT = new Date('2026-05-01T10:00:00.000Z');
 const CREATED_AT = new Date('2026-04-01T10:00:00.000Z');
@@ -12,7 +23,7 @@ const jobRow = (
   overrides: Partial<AutomatedPostJob> = {}
 ): AutomatedPostJob => ({
   id: 'job-1',
-  sweepstakesId: 'sweep-1',
+  sweepstakesId: SWEEPSTAKES_ID,
   type: 'POST_TO_BLUESKY',
   status: 'PENDING',
   runAt: RUN_AT,
@@ -24,35 +35,63 @@ const jobRow = (
 });
 
 describe('getAutomatedPostJobs', () => {
-  describe('when the caller is not signed in', () => {
-    it('returns UNAUTHORIZED without querying jobs', async () => {
-      const result = await getAutomatedPostJobs({ sweepstakesId: 'sweep-1' });
-
-      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
-        'Invalid session'
-      );
-      expect(prismaMock.automatedPostJob.findMany).not.toHaveBeenCalled();
-    });
-  });
+  describeTeamAccess(
+    () => getAutomatedPostJobs(input),
+    () => [prismaMock.automatedPostJob.findMany]
+  );
 
   describe('when the caller is signed in', () => {
     beforeEach(() => {
       signIn();
-    });
-
-    it('rejects input without a sweepstakes id', async () => {
-      const result = await getAutomatedPostJobs(
-        {} as unknown as Parameters<typeof getAutomatedPostJobs>[0]
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes() as never
       );
-
-      expectFailure(result, 'UNPROCESSABLE_CONTENT');
-      expect(prismaMock.automatedPostJob.findMany).not.toHaveBeenCalled();
     });
 
-    it('queries jobs by sweepstakes id only', async () => {
+    it.each(['sweepstakesId', 'slug'])(
+      'rejects input without %s',
+      async (key) => {
+        const partial: Record<string, string> = { ...input };
+        delete partial[key];
+
+        const result = await getAutomatedPostJobs(
+          partial as unknown as Parameters<typeof getAutomatedPostJobs>[0]
+        );
+
+        expect(
+          expectFailure(result, 'UNPROCESSABLE_CONTENT').message
+        ).toContain(key);
+        expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
+        expect(prismaMock.automatedPostJob.findMany).not.toHaveBeenCalled();
+      }
+    );
+
+    it('loads the sweepstakes through the membership of the caller', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
 
-      await getAutomatedPostJobs({ sweepstakesId: 'sweep-9' });
+      await getAutomatedPostJobs(input);
+
+      expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith(
+        teamSweepstakesQuery(TEAM_SLUG)
+      );
+    });
+
+    it('lets a guest read the jobs', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes('GUEST') as never
+      );
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
+
+      expect(expectOk(await getAutomatedPostJobs(input))).toEqual([]);
+    });
+
+    it('queries jobs by the id of the sweepstakes the caller can access', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        teamSweepstakes('OWNER', 'sweep-9') as never
+      );
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
+
+      await getAutomatedPostJobs(input);
 
       expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalledWith({
         where: { sweepstakesId: 'sweep-9' }
@@ -62,7 +101,7 @@ describe('getAutomatedPostJobs', () => {
     it('returns an empty list when there are no jobs', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
 
-      const result = await getAutomatedPostJobs({ sweepstakesId: 'sweep-1' });
+      const result = await getAutomatedPostJobs(input);
 
       expect(expectOk(result)).toEqual([]);
     });
@@ -79,12 +118,12 @@ describe('getAutomatedPostJobs', () => {
         })
       ]);
 
-      const result = await getAutomatedPostJobs({ sweepstakesId: 'sweep-1' });
+      const result = await getAutomatedPostJobs(input);
 
       expect(expectOk(result)).toEqual([
         {
           id: 'job-1',
-          sweepstakesId: 'sweep-1',
+          sweepstakesId: SWEEPSTAKES_ID,
           type: 'POST_TO_BLUESKY',
           status: 'PENDING',
           runAt: RUN_AT,
@@ -95,7 +134,7 @@ describe('getAutomatedPostJobs', () => {
         },
         {
           id: 'job-2',
-          sweepstakesId: 'sweep-1',
+          sweepstakesId: SWEEPSTAKES_ID,
           type: 'POST_TO_DISCORD',
           status: 'COMPLETED',
           runAt: RUN_AT,
@@ -118,7 +157,7 @@ describe('getAutomatedPostJobs', () => {
         jobRow({ id: 'job-2', request: { text: 'missing integration' } })
       ]);
 
-      const result = await getAutomatedPostJobs({ sweepstakesId: 'sweep-1' });
+      const result = await getAutomatedPostJobs(input);
 
       const failure = expectFailure(result, 'VALIDATION_ERROR');
       expect(failure.message).toContain('integrationId');

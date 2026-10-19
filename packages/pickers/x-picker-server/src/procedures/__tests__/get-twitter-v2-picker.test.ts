@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { TeamRole, TeamTier } from '@giveaway/db-model';
 import { getTwitterV2Picker } from '../get-twitter-v2-picker';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
-import { signIn } from '@giveaway/testing-server/session';
+import { signIn, signOut, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   DISQUALIFICATION_CASES,
@@ -9,7 +10,8 @@ import {
   buildDraw,
   buildPicker,
   buildPickerUser,
-  buildPost
+  buildPost,
+  buildTeam
 } from '../../testing/fixtures-pickers';
 
 const withoutKeys = (value: object, ...keys: string[]) =>
@@ -37,26 +39,100 @@ describe('getTwitterV2Picker', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
+    signIn();
+    prismaMock.team.findUnique.mockResolvedValue(buildTeam());
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  describe('authorization', () => {
-    it('returns the picker to a signed out caller', async () => {
+  describe('when the caller is not signed in', () => {
+    it('returns UNAUTHORIZED without reading the team or the picker', async () => {
+      signOut();
+
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
+
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Invalid session'
+      );
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
+      expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('team access', () => {
+    it('looks the team up by slug among the caller memberships', async () => {
       mockPicker();
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      await getTwitterV2Picker({ pickerId: 'picker-1', slug: 'dog-team' });
+
+      expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
+        where: {
+          slug: 'dog-team',
+          members: { some: { userId: TEST_USER.id } }
+        },
+        include: { members: true }
+      });
+    });
+
+    it('returns NOT_FOUND without reading the picker when the caller is not a member', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(null);
+      mockPicker();
+
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe('Team not found');
+      expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('returns FORBIDDEN without reading the picker for a blocked member', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(
+        buildTeam({ role: TeamRole.BLOCKED })
+      );
+      mockPicker();
+
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        'You do not have permission to perform this action. Required permission: VIEW_PICKERS'
+      );
+      expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('returns the picker to a guest', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(
+        buildTeam({ role: TeamRole.GUEST })
+      );
+      mockPicker();
+
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result).id).toBe('picker-1');
     });
 
-    it('returns the picker to a signed in caller', async () => {
-      signIn();
+    it('returns the picker to a member of a FREE team', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(
+        buildTeam({ tier: TeamTier.FREE })
+      );
       mockPicker();
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result).id).toBe('picker-1');
     });
@@ -64,9 +140,25 @@ describe('getTwitterV2Picker', () => {
     it('does not restrict access by picker status', async () => {
       mockPicker({ picker: { status: 'DRAFT' } });
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result).status).toBe('DRAFT');
+    });
+
+    it('returns NOT_FOUND when the picker belongs to another team', async () => {
+      prismaMock.twitterPicker.findUnique.mockResolvedValue(null);
+
+      const result = await getTwitterV2Picker({
+        pickerId: 'other-team-picker',
+        slug: 'acme'
+      });
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Picker not found'
+      );
     });
   });
 
@@ -82,13 +174,17 @@ describe('getTwitterV2Picker', () => {
       expect(prismaMock.twitterPicker.findUnique).not.toHaveBeenCalled();
     });
 
-    it('loads the picker with its users, draws and tweets', async () => {
+    it('loads the picker of the caller team with its users, draws and tweets', async () => {
+      prismaMock.team.findUnique.mockResolvedValue({
+        ...buildTeam(),
+        id: 'team-7'
+      });
       mockPicker();
 
-      await getTwitterV2Picker({ pickerId: 'picker-42' });
+      await getTwitterV2Picker({ pickerId: 'picker-42', slug: 'acme' });
 
       expect(prismaMock.twitterPicker.findUnique).toHaveBeenCalledWith({
-        where: { id: 'picker-42' },
+        where: { id: 'picker-42', teamId: 'team-7' },
         include: { users: true, draws: true, tweets: true }
       });
     });
@@ -96,7 +192,10 @@ describe('getTwitterV2Picker', () => {
     it('returns NOT_FOUND when the picker does not exist', async () => {
       prismaMock.twitterPicker.findUnique.mockResolvedValue(null);
 
-      const result = await getTwitterV2Picker({ pickerId: 'missing' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'missing',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'NOT_FOUND').message).toBe(
         'Picker not found'
@@ -108,7 +207,10 @@ describe('getTwitterV2Picker', () => {
         knownRequestError('P1001')
       );
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
         /^We f\*\*\*\*d up\. Try again or contact giveaway\.dog support staff and provide the following error code: [\w-]{6}$/
@@ -123,7 +225,10 @@ describe('getTwitterV2Picker', () => {
         tweets: []
       });
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
         'Output validation failed'
@@ -135,7 +240,10 @@ describe('getTwitterV2Picker', () => {
     it('returns the declared picker fields with eligibility and stats', async () => {
       const row = mockPicker();
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result)).toEqual({
         ...withoutKeys(row, 'lastPostWithin'),
@@ -167,7 +275,10 @@ describe('getTwitterV2Picker', () => {
         tweets: [buildPost({ retweetCount: 900 })]
       });
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result).stats).toEqual({
         totalParticipants: 3,
@@ -187,7 +298,10 @@ describe('getTwitterV2Picker', () => {
         tweets: [buildPost({ retweetCount: 900 })]
       });
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(expectOk(result).stats).toEqual({
         totalParticipants: 900,
@@ -200,7 +314,10 @@ describe('getTwitterV2Picker', () => {
     it('returns empty collections for a picker without data', async () => {
       mockPicker({ users: [], draws: [], tweets: [] });
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       const data = expectOk(result);
       expect(data.users).toEqual([]);
@@ -221,7 +338,10 @@ describe('getTwitterV2Picker', () => {
       async ({ picker, user, reason }) => {
         mockPicker({ picker, users: [buildPickerUser(user)] });
 
-        const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+        const result = await getTwitterV2Picker({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
 
         expect(expectOk(result).users[0].ineligible).toBe(reason);
       }
@@ -236,7 +356,10 @@ describe('getTwitterV2Picker', () => {
         ]
       });
 
-      const result = await getTwitterV2Picker({ pickerId: 'picker-1' });
+      const result = await getTwitterV2Picker({
+        pickerId: 'picker-1',
+        slug: 'acme'
+      });
 
       expect(
         expectOk(result).users.map(({ id, ineligible }) => ({ id, ineligible }))
