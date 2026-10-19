@@ -30,7 +30,8 @@
   "scripts": {
     "test": "vitest run",
     "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:server": "vitest run --project server",
+    "test:live": "vitest run --config vitest.live.config.ts"
   },
   "dependencies": {
     "@giveaway/app-config": "workspace:*",

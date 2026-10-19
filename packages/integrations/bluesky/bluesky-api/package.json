@@ -27,12 +27,14 @@
     "./create-skeet": "./src/create-skeet.ts",
     "./get-bluesky-likes": "./src/get-bluesky-likes.ts",
     "./get-bluesky-oembed": "./src/get-bluesky-oembed.ts",
-    "./get-bluesky-reposts": "./src/get-bluesky-reposts.ts"
+    "./get-bluesky-reposts": "./src/get-bluesky-reposts.ts",
+    "./schemas": "./src/schemas.ts"
   },
   "scripts": {
     "test": "vitest run",
     "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:server": "vitest run --project server",
+    "test:live": "vitest run --config vitest.live.config.ts"
   },
   "dependencies": {
     "@atproto/api": "catalog:",
@@ -45,6 +47,7 @@
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
+    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

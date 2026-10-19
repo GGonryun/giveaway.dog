@@ -1,0 +1,55 @@
+name: Live API checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  NX_NO_CLOUD: true
+  NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
+
+jobs:
+  live:
+    name: Live API checks
+    if: github.event.action != 'labeled' || github.event.label.name == 'live-api'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set the base and head commits for nx affected
+        if: env.NX_RUN == 'affected'
+        uses: nrwl/nx-set-shas@v5
+
+      - name: Check whether the change can affect a project
+        id: changes
+        uses: ./.github/actions/changes
+
+      - name: Set up the project
+        if: steps.changes.outputs.projects != 'false'
+        uses: ./.github/actions/setup
+
+      - name: Call the providers from the affected API packages
+        if: steps.changes.outputs.projects != 'false'
+        env:
+          SCRAPEBADGER_API_KEY: ${{ (github.event_name != 'pull_request' || !github.event.pull_request.draft || contains(github.event.pull_request.labels.*.name, 'live-api')) && secrets.LIVE_SCRAPEBADGER_API_KEY || '' }}
+          TWITCH_CLIENT_ID: ${{ secrets.LIVE_TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.LIVE_TWITCH_CLIENT_SECRET }}
+          DISCORD_BOT_TOKEN: ${{ secrets.LIVE_DISCORD_BOT_TOKEN }}
+          LIVE_X_TWEET_URL: ${{ vars.LIVE_X_TWEET_URL }}
+          LIVE_BLUESKY_POST_URL: ${{ vars.LIVE_BLUESKY_POST_URL }}
+          LIVE_TWITCH_LOGIN: ${{ vars.LIVE_TWITCH_LOGIN }}
+          LIVE_DISCORD_GUILD_ID: ${{ vars.LIVE_DISCORD_GUILD_ID }}
+        run: pnpm nx "$NX_RUN" -t test:live --output-style=static

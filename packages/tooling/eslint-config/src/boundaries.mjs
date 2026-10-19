@@ -31,7 +31,7 @@ const DEV_FILES = [
   '**/__tests__/**',
   '**/src/testing/**',
   '**/*.test.{ts,tsx}',
-  '**/{vitest,vitest.visual,vitest.integration}.config.ts',
+  '**/{vitest,vitest.visual,vitest.integration,vitest.live}.config.ts',
   '**/eslint.config.mjs'
 ];
 
@@ -79,6 +79,7 @@ const boundaries = [
             '{projectRoot}/vitest.config.ts',
             '{projectRoot}/vitest.visual.config.ts',
             '{projectRoot}/vitest.integration.config.ts',
+            '{projectRoot}/vitest.live.config.ts',
             '{projectRoot}/eslint.config.mjs',
             '{projectRoot}/prisma.config.ts'
           ]
