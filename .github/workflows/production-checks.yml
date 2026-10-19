@@ -140,7 +140,7 @@ jobs:
 
       - name: Summarize the results
         if: ${{ !cancelled() && steps.target.outcome == 'success' }}
-        run: node .github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json | tee summary.md >> "$GITHUB_STEP_SUMMARY"
+        run: node .github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json | tee summary.md | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the Playwright report
         if: ${{ !cancelled() && hashFiles('apps/web-e2e/playwright-report/**') != '' }}
