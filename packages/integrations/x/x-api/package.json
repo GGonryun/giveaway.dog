@@ -20,13 +20,15 @@
     "./create-tweet": "./src/create-tweet.ts",
     "./get-latest-twitter-access-token": "./src/get-latest-twitter-access-token.ts",
     "./get-twitter-oembed": "./src/get-twitter-oembed.ts",
+    "./schemas": "./src/schemas.ts",
     "./twitter-api-request": "./src/twitter-api-request.ts",
     "./upload-image": "./src/upload-image.ts"
   },
   "scripts": {
     "test": "vitest run",
     "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:server": "vitest run --project server",
+    "test:live": "vitest run --config vitest.live.config.ts"
   },
   "dependencies": {
     "@giveaway/db-client": "workspace:*",

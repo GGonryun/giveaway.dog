@@ -23,12 +23,18 @@
     "./fixtures-procedures-sweepstakes-b": "./src/fixtures-procedures-sweepstakes-b.ts",
     "./fixtures-task-validation": "./src/fixtures-task-validation.ts",
     "./fixtures-twitch": "./src/fixtures-twitch.ts",
+    "./live": "./src/live.ts",
     "./next-cache": "./src/next-cache.ts",
     "./prisma": "./src/prisma.ts",
     "./property": "./src/property.ts",
     "./result": "./src/result.ts",
     "./session": "./src/session.ts",
     "./setup": "./src/setup.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
   },
   "dependencies": {
     "@giveaway/testing-mocks": "workspace:*",
@@ -43,8 +49,10 @@
     "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
     "prisma": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "zod": "catalog:"
   }
 }

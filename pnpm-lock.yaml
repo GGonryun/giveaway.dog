@@ -4267,6 +4267,9 @@ importers:
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../../shared/util-errors
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -6843,6 +6846,9 @@ importers:
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       '@giveaway/eslint-config':
         specifier: workspace:*
@@ -14312,6 +14318,9 @@ importers:
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+      '@giveaway/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
@@ -14321,6 +14330,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
 
   packages/tooling/testing-visual:
     dependencies:

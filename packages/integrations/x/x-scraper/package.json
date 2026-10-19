@@ -27,13 +27,15 @@
     "./procedures/get-user": "./src/procedures/get-user.ts",
     "./procedures/get-user-cached": "./src/procedures/get-user-cached.ts",
     "./ratelimit": "./src/ratelimit.ts",
+    "./schemas": "./src/schemas.ts",
     "./settings": "./src/settings.ts",
     "./utils": "./src/utils.ts"
   },
   "scripts": {
     "test": "vitest run",
     "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:server": "vitest run --project server",
+    "test:live": "vitest run --config vitest.live.config.ts"
   },
   "dependencies": {
     "@giveaway/cache": "workspace:*",
@@ -46,7 +48,8 @@
     "@upstash/ratelimit": "catalog:",
     "lodash": "catalog:",
     "scrapebadger": "catalog:",
-    "server-only": "catalog:"
+    "server-only": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",

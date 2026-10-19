@@ -293,5 +293,10 @@
     "name": "wontfix",
     "color": "ffffff",
     "description": "This will not be worked on"
+  },
+  {
+    "name": "live-api",
+    "color": "fbca04",
+    "description": "Runs the ScrapeBadger live checks on a draft pull request (Live API checks)"
   }
 ]

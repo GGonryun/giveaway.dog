@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { twitchStateSchema } from '../schemas';
+import {
+  twitchAppAccessTokenSchema,
+  twitchStateSchema,
+  twitchUsersSchema
+} from '../schemas';
 
 describe('twitchStateSchema', () => {
   it('parses a state with features', () => {
@@ -77,5 +81,46 @@ describe('twitchStateSchema', () => {
     });
 
     expect(parsed).not.toHaveProperty('userId');
+  });
+});
+
+describe('twitchAppAccessTokenSchema', () => {
+  it('keeps the token, its lifetime and its type', () => {
+    const token = {
+      access_token: 'token',
+      expires_in: 5011271,
+      token_type: 'bearer'
+    };
+
+    expect(twitchAppAccessTokenSchema.parse(token)).toEqual(token);
+  });
+
+  it('refuses a response without a token', () => {
+    expect(
+      twitchAppAccessTokenSchema.safeParse({
+        expires_in: 5011271,
+        token_type: 'bearer'
+      }).success
+    ).toBe(false);
+  });
+});
+
+describe('twitchUsersSchema', () => {
+  const user = {
+    id: '12826',
+    login: 'twitch',
+    display_name: 'Twitch',
+    profile_image_url: 'https://static-cdn.jtvnw.net/a.png'
+  };
+
+  it('keeps the fields that the app reads', () => {
+    expect(twitchUsersSchema.parse({ data: [{ ...user, type: '' }] })).toEqual({
+      data: [user]
+    });
+  });
+
+  it('refuses a user without a login', () => {
+    const { login, ...rest } = user;
+    expect(twitchUsersSchema.safeParse({ data: [rest] }).success).toBe(false);
   });
 });

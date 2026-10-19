@@ -87,6 +87,9 @@
     "test:integration": {
       "inputs": ["source", "^runtime"]
     },
+    "test:live": {
+      "cache": false
+    },
     "test:visual": {
       "inputs": [
         "source",

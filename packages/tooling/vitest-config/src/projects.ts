@@ -34,7 +34,12 @@ export const testProjects = (): (TestProjectInlineConfiguration & {
       environment: 'node',
       isolate: true,
       include: ['**/*.test.ts'],
-      exclude: [...EXCLUDE, '**/*.integration.test.ts', '**/*.property.test.ts']
+      exclude: [
+        ...EXCLUDE,
+        '**/*.integration.test.ts',
+        '**/*.live.test.ts',
+        '**/*.property.test.ts'
+      ]
     }
   },
   {
@@ -107,6 +112,27 @@ export const packageTestConfig = ({
           ...coverageExclude
         ]
       }
+    }
+  };
+};
+
+export const LIVE_TEST_TIMEOUT = 30_000;
+
+export const liveTestConfig = (): ViteUserConfig => {
+  process.env.TZ = 'UTC';
+  return {
+    resolve: {
+      alias: { 'server-only': EMPTY_MODULE }
+    },
+    test: {
+      name: 'live',
+      environment: 'node',
+      include: ['**/*.live.test.ts'],
+      exclude: ['**/node_modules/**', '**/.next/**'],
+      setupFiles: [SERVER_SETUP],
+      silent: true,
+      testTimeout: LIVE_TEST_TIMEOUT,
+      retry: 0
     }
   };
 };
