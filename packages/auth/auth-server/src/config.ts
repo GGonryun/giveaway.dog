@@ -3,7 +3,7 @@ import 'server-only';
 import { createAuthConfig } from '@giveaway/auth-core/config-runtime';
 import { createId } from '@paralleldrive/cuid2';
 
-import NextAuth from 'next-auth';
+import NextAuth, { type NextAuthConfig } from 'next-auth';
 import TwitterProvider from 'next-auth/providers/twitter';
 import GoogleProvider from 'next-auth/providers/google';
 import DiscordProvider from 'next-auth/providers/discord';
@@ -17,6 +17,10 @@ import { InboundEmailProvider } from '@giveaway/auth-provider-inbound/inbound';
 import { KickProvider } from '@giveaway/kick-auth/kick';
 import { VeloraProvider } from '@giveaway/velora-auth/velora';
 import { newE2eProviders } from '@giveaway/auth-provider-e2e/e2e';
+import {
+  readE2eOAuthProfiles,
+  withE2eOAuth
+} from '@giveaway/auth-provider-e2e/oauth';
 
 import {
   REQUIRED_DISCORD_SCOPES,
@@ -32,9 +36,8 @@ import { environment } from '@giveaway/app-config/environment';
 
 const authConfig = createAuthConfig(() => auth());
 
-export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
-  ...authConfig,
-  providers: [
+export const { handlers, signIn, signOut, auth } = NextAuth(async (req) => {
+  const providers: NextAuthConfig['providers'] = [
     TikTokProvider({
       allowDangerousEmailAccountLinking: true,
       clientId: process.env.TIKTOK_CLIENT_ID,
@@ -78,7 +81,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
         redeemBlueskyLoginToken(credentials?.token)
     }),
     SteamProvider({
-      request,
+      request: req,
       callbackUrl: `${environment.appUrl()}/api/auth/steam-callback`,
       clientSecret: process.env.STEAM_SECRET!
     }),
@@ -193,5 +196,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth((request) => ({
       }
     }),
     ...newE2eProviders()
-  ]
-}));
+  ];
+
+  return {
+    ...authConfig,
+    providers: withE2eOAuth(providers, await readE2eOAuthProfiles(req))
+  };
+});

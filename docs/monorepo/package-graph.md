@@ -471,7 +471,7 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 | `@giveaway/auth-core`             | server  | 6 / 6  | `lib/auth/auto-merge.ts`<br>`lib/auth/config-middleware.ts`<br>`lib/auth/config-no-providers.ts`<br>`lib/auth/config-runtime.ts`<br>and 2 more                                |
 | `@giveaway/auth-login-ui`         | feature | 8 / 10 | `app/(auth)/login/login-form.tsx`<br>`app/(auth)/logout/logout-screen.tsx`<br>`app/(auth)/portal/auth-portal.tsx`<br>`components/auth/account-status-alert.tsx`<br>and 4 more |
 | `@giveaway/auth-model`            | model   | 2 / 2  | `lib/auth/cookies.ts`<br>`lib/auth/util.ts`                                                                                                                                   |
-| `@giveaway/auth-provider-e2e`     | server  | 1 / 1  | `lib/auth/providers/e2e.ts`                                                                                                                                                   |
+| `@giveaway/auth-provider-e2e`     | server  | 2 / 2  | `lib/auth/providers/e2e.ts`<br>New: `oauth.ts`, the mock OAuth provider of the end-to-end tests                                                                               |
 | `@giveaway/auth-provider-inbound` | server  | 1 / 1  | `lib/auth/providers/inbound.ts`                                                                                                                                               |
 | `@giveaway/auth-server`           | server  | 2 / 2  | `lib/auth/bluesky-login-token.ts`<br>`lib/auth/config.ts`                                                                                                                     |
 | `@giveaway/auth-session-ui`       | feature | 3 / 1  | `components/context/auth-session-provider.tsx`<br>`lib/auth/components/logout-button.tsx`<br>`lib/auth/hooks/`                                                                |
@@ -767,12 +767,12 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 4 packages, 23 source files, 23 test files.
 
-| Package                | Type   | Files   | Moves from                                                                                                                                                                     |
-| ---------------------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `@giveaway/e2e-fakes`  | server | 5 / 2   | New package: the `E2E_FAKE_EXTERNALS` switch and the outbox in Redis of the fakes of the third-party services                                                                  |
-| `@giveaway/e2e-gate`   | server | 1 / 1   | New package: the environment and secret checks that the `e2e` provider and the seed API share                                                                                  |
-| `@giveaway/e2e-model`  | model  | 5 / 7   | New package: the personas, the namespaces and slugs, the request schemas and limits of the seed API, and the fakes                                                             |
-| `@giveaway/e2e-server` | server | 12 / 13 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways and their entries, user extras, integrations, invites, pickers, rows, run cleanup, janitor |
+| Package                | Type   | Files   | Moves from                                                                                                                                                                                                                        |
+| ---------------------- | ------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@giveaway/e2e-fakes`  | server | 5 / 2   | New package: the `E2E_FAKE_EXTERNALS` switch and the outbox in Redis of the fakes of the third-party services                                                                                                                     |
+| `@giveaway/e2e-gate`   | server | 1 / 1   | New package: the environment and secret checks that the `e2e` provider and the seed API share                                                                                                                                     |
+| `@giveaway/e2e-model`  | model  | 6 / 8   | New package: the personas, the namespaces and slugs, the request schemas and limits of the seed API, the fakes, and the profiles of the mock OAuth provider                                                                       |
+| `@giveaway/e2e-server` | server | 13 / 14 | New package: the seed API behind `app/api/e2e/[...path]/route.ts`: teams, giveaways and their entries, user extras, integrations, invites, pickers, rows, run cleanup, janitor, and the authorize step of the mock OAuth provider |
 
 ### Apps and tools
 

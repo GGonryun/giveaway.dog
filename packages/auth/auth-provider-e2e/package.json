@@ -16,7 +16,8 @@
     }
   },
   "exports": {
-    "./e2e": "./src/e2e.ts"
+    "./e2e": "./src/e2e.ts",
+    "./oauth": "./src/oauth.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -24,15 +25,18 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/db-client": "workspace:*",
     "@giveaway/e2e-gate": "workspace:*",
     "@giveaway/e2e-model": "workspace:*",
     "server-only": "catalog:"
   },
   "peerDependencies": {
+    "next": "catalog:",
     "next-auth": "catalog:"
   },
   "devDependencies": {
+    "@giveaway/e2e-fakes": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
