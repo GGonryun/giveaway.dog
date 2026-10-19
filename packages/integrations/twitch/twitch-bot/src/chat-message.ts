@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { ApplicationError } from '@giveaway/util-errors';
 import db from '@giveaway/db-client/prisma';
 import { redis } from '@giveaway/cache/redis';
 import { newVersionedRateLimiter } from '@giveaway/ratelimit/ratelimit';
@@ -198,7 +199,16 @@ const findMatchingTaskFromDb = async (
 };
 
 export const processChatMessage = async (event: unknown) => {
-  const data = twitchChatMessageEventSchema.parse(event);
+  const parsed = twitchChatMessageEventSchema.safeParse(event);
+
+  if (!parsed.success) {
+    throw new ApplicationError({
+      code: 'BAD_REQUEST',
+      message: 'Invalid Twitch chat message event'
+    });
+  }
+
+  const data = parsed.data;
   console.info('Processing Twitch chat message event:', data);
   const {
     broadcaster_user_id,

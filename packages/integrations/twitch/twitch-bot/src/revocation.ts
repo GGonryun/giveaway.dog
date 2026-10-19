@@ -1,11 +1,21 @@
 import 'server-only';
 
+import { ApplicationError } from '@giveaway/util-errors';
 import { NextResponse } from 'next/server';
 import db from '@giveaway/db-client/prisma';
 import { twitchRevocationSchema } from '@giveaway/twitch-model/schema';
 
 export const handleRevocation = async (body: unknown) => {
-  const data = twitchRevocationSchema.parse(body);
+  const parsed = twitchRevocationSchema.safeParse(body);
+
+  if (!parsed.success) {
+    throw new ApplicationError({
+      code: 'BAD_REQUEST',
+      message: 'Invalid Twitch revocation'
+    });
+  }
+
+  const data = parsed.data;
   const { subscription } = data;
 
   const eventSubSubscription = await db.eventSubSubscription.findUnique({

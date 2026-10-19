@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ZodError } from 'zod';
+import { ApplicationError } from '@giveaway/util-errors';
 import { handleRevocation } from '../revocation';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import {
@@ -141,10 +141,16 @@ describe('handleRevocation', () => {
   });
 
   describe('when the body is invalid', () => {
-    it('throws a ZodError without querying the database', async () => {
-      await expect(handleRevocation({ subscription: {} })).rejects.toThrow(
-        ZodError
+    it('throws a bad request error without querying the database', async () => {
+      const error = await handleRevocation({ subscription: {} }).catch(
+        (thrown: unknown) => thrown
       );
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Invalid Twitch revocation'
+      });
       expect(prismaMock.eventSubSubscription.findUnique).not.toHaveBeenCalled();
     });
   });

@@ -20,11 +20,11 @@ export const POST = async (request: NextRequest) => {
       }
       case 'notification': {
         const { handleNotification } = await import('./notification');
-        return handleNotification(body);
+        return await handleNotification(body);
       }
       case 'revocation': {
         const { handleRevocation } = await import('./revocation');
-        return handleRevocation(body);
+        return await handleRevocation(body);
       }
       default:
         return NextResponse.json(

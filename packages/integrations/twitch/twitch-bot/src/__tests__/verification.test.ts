@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ZodError } from 'zod';
+import { ApplicationError } from '@giveaway/util-errors';
 import { handleSubscriptionVerification } from '../verification';
 import { subscriptionPayload } from '@giveaway/testing-server/fixtures-twitch';
 
@@ -49,10 +49,19 @@ describe('handleSubscriptionVerification', () => {
   });
 
   describe('when the body is not a valid challenge', () => {
-    it('throws a ZodError', () => {
-      expect(() =>
-        handleSubscriptionVerification({ subscription: subscriptionPayload() })
-      ).toThrow(ZodError);
+    it('throws a bad request error', () => {
+      let error: unknown;
+      try {
+        handleSubscriptionVerification({ subscription: subscriptionPayload() });
+      } catch (thrown) {
+        error = thrown;
+      }
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Invalid Twitch subscription verification'
+      });
     });
   });
 });
