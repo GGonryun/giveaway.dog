@@ -268,6 +268,9 @@ test.describe('team roles', () => {
 
 test.describe('roles that check only membership', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
+  test.use({
+    allowedPageErrors: [/Failed to load resource: net::ERR_FAILED/]
+  });
 
   test(
     'a guest or a blocked member cannot complete a giveaway',

@@ -135,7 +135,7 @@ test.describe('team page access', () => {
       );
 
       await page.goto(`/app/${other.slug}`);
-      await page.getByRole('button', { name: other.name, exact: true }).click();
+      await page.getByRole('button', { name: other.name }).click();
       await expect(page.getByRole('menu')).toBeVisible();
       await expect(page.getByRole('menu')).not.toContainText(team.name);
       await page.keyboard.press('Escape');

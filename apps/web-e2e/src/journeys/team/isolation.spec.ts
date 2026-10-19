@@ -23,6 +23,8 @@ import {
 
 type DrawRows = { byResult: Record<string, number> };
 
+const ABORTED_ACTION = /Failed to load resource: net::ERR_FAILED/;
+
 const REFUSED = /^(FORBIDDEN|NOT_FOUND)$/;
 
 const drawResults = async (
@@ -51,6 +53,7 @@ const openWinnerAction = async (
 
 test.describe('cross-team isolation', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
+  test.use({ allowedPageErrors: [ABORTED_ACTION] });
 
   test("a host cannot read another team's entrants by putting its giveaway id under their own slug", async ({
     page,
@@ -230,7 +233,7 @@ test.describe('cross-team isolation', () => {
   test.describe('X pickers', () => {
     test.use({
       allowedPageErrors: [
-        /Failed to (draw winners|delete picker): TypeError: Failed to fetch/
+        /Failed to (draw winners|delete picker): TypeError: Failed to fetch|Failed to load resource: net::ERR_FAILED/
       ]
     });
 
