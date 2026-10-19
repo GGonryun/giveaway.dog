@@ -65,10 +65,8 @@ const getParticipationHistory = procedure()
           }))
         );
 
-        const lastParticipation = allCompletions.reduce(
-          (latest, current) =>
-            current.completedAt > latest ? current.completedAt : latest,
-          new Date(0)
+        const lastParticipation = new Date(
+          Math.max(0, ...allCompletions.map((c) => c.completedAt.getTime()))
         );
 
         const uniqueCompletedTaskIds = new Set(
