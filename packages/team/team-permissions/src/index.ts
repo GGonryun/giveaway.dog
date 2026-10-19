@@ -17,8 +17,8 @@ export enum TeamPermission {
   MANAGE_SOCIAL_LINKS = 'MANAGE_SOCIAL_LINKS'
 }
 
-const ROLE_PERMISSIONS: Record<TeamRole, TeamPermission[]> = {
-  [TeamRole.OWNER]: [
+const ROLE_PERMISSIONS: Record<TeamRole, ReadonlySet<TeamPermission>> = {
+  [TeamRole.OWNER]: new Set([
     TeamPermission.MANAGE_ROLES,
     TeamPermission.INVITE_MEMBERS,
     TeamPermission.REMOVE_MEMBERS,
@@ -32,8 +32,8 @@ const ROLE_PERMISSIONS: Record<TeamRole, TeamPermission[]> = {
     TeamPermission.VIEW_INTEGRATIONS,
     TeamPermission.UPDATE_PICKERS,
     TeamPermission.VIEW_PICKERS
-  ],
-  [TeamRole.ADMIN]: [
+  ]),
+  [TeamRole.ADMIN]: new Set([
     TeamPermission.INVITE_MEMBERS,
     TeamPermission.REMOVE_MEMBERS,
     TeamPermission.VIEW_MEMBERS,
@@ -45,21 +45,21 @@ const ROLE_PERMISSIONS: Record<TeamRole, TeamPermission[]> = {
     TeamPermission.VIEW_INTEGRATIONS,
     TeamPermission.UPDATE_PICKERS,
     TeamPermission.VIEW_PICKERS
-  ],
-  [TeamRole.MEMBER]: [
+  ]),
+  [TeamRole.MEMBER]: new Set([
     TeamPermission.UPDATE_INTEGRATIONS,
     TeamPermission.UPDATE_SWEEPSTAKES,
     TeamPermission.VIEW_SWEEPSTAKES,
     TeamPermission.VIEW_INTEGRATIONS,
     TeamPermission.UPDATE_PICKERS,
     TeamPermission.VIEW_PICKERS
-  ],
-  [TeamRole.GUEST]: [
+  ]),
+  [TeamRole.GUEST]: new Set([
     TeamPermission.VIEW_SWEEPSTAKES,
     TeamPermission.VIEW_INTEGRATIONS,
     TeamPermission.VIEW_PICKERS
-  ],
-  [TeamRole.BLOCKED]: []
+  ]),
+  [TeamRole.BLOCKED]: new Set()
 };
 
 export const hasPermission = (
@@ -67,7 +67,7 @@ export const hasPermission = (
   permission: TeamPermission
 ): boolean => {
   const permissions = ROLE_PERMISSIONS[role];
-  return permissions.includes(permission);
+  return permissions.has(permission);
 };
 
 export const requirePermission = (
