@@ -5,30 +5,32 @@ on:
     types: [opened, synchronize, reopened, ready_for_review, labeled]
   workflow_dispatch:
     inputs:
+      packages:
+        description: The packages to check, comma-separated (for example x-scraper,twitch-api). Empty checks every package with live checks
+        type: string
+        default: ''
       record:
-        description: Record the responses (tokens, secrets, passwords and emails redacted) in the live-api-recordings artifact
+        description: Record the responses (tokens, secrets, passwords and emails redacted) in the live-api-recordings artifacts
         type: boolean
         default: false
 
 permissions:
-  actions: read
   contents: read
 
 env:
   NX_NO_CLOUD: true
-  NX_RUN: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
 
 jobs:
-  live:
-    name: Live API checks
-    if: >-
-      (github.event.action != 'labeled' || github.event.label.name == 'live-api') &&
-      (github.event.action != 'synchronize' || contains(github.event.pull_request.labels.*.name, 'live-api'))
+  plan:
+    name: Pick the live checks
+    if: github.event.action != 'labeled' || github.event.label.name == 'live-api'
     runs-on: ubuntu-24.04-arm
-    timeout-minutes: 15
+    timeout-minutes: 5
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-plan-${{ github.ref }}
       cancel-in-progress: true
+    outputs:
+      packages: ${{ steps.plan.outputs.packages }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v7
@@ -36,20 +38,39 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Set the base and head commits for nx affected
-        if: env.NX_RUN == 'affected'
-        uses: nrwl/nx-set-shas@v5
+      - name: Pick the packages whose live checks reach a changed file
+        id: plan
+        env:
+          LIVE_RUN_ALL: ${{ github.event_name != 'pull_request' }}
+          LIVE_PACKAGES: ${{ inputs.packages }}
+          LIVE_BASE: ${{ github.event.action == 'synchronize' && github.event.before || 'HEAD^1' }}
+          LIVE_HEAD: ${{ github.event.action == 'synchronize' && github.event.after || 'HEAD' }}
+          LIVE_FALLBACK_BASE: HEAD^1
+        run: node .github/scripts/live-api-plan.mjs
 
-      - name: Check whether the change can affect a project
-        id: changes
-        uses: ./.github/actions/changes
+  live:
+    name: Live API checks (${{ matrix.package }})
+    needs: plan
+    if: needs.plan.outputs.packages != '' && needs.plan.outputs.packages != '[]'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.plan.outputs.packages) }}
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.package }}
+      cancel-in-progress: true
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up the project
-        if: steps.changes.outputs.projects != 'false'
         uses: ./.github/actions/setup
 
-      - name: Call the providers from the affected API packages
-        if: steps.changes.outputs.projects != 'false'
+      - name: Call the provider
         env:
           SCRAPEBADGER_API_KEY: ${{ (github.event_name != 'pull_request' || !github.event.pull_request.draft || contains(github.event.pull_request.labels.*.name, 'live-api')) && secrets.LIVE_SCRAPEBADGER_API_KEY || '' }}
           TWITCH_CLIENT_ID: ${{ secrets.LIVE_TWITCH_CLIENT_ID }}
@@ -60,13 +81,21 @@ jobs:
           LIVE_TWITCH_LOGIN: ${{ vars.LIVE_TWITCH_LOGIN }}
           LIVE_DISCORD_GUILD_ID: ${{ vars.LIVE_DISCORD_GUILD_ID }}
           LIVE_RECORD_DIR: ${{ inputs.record && format('{0}/live-recordings', runner.temp) || '' }}
-        run: pnpm nx "$NX_RUN" -t test:live --output-style=static
+          PACKAGE: ${{ matrix.package }}
+        run: pnpm nx run "$PACKAGE:test:live" --output-style=static
+
+      - name: Name the recordings artifact
+        id: artifact
+        if: always() && inputs.record
+        env:
+          PACKAGE: ${{ matrix.package }}
+        run: echo "name=live-api-recordings-${PACKAGE#@giveaway/}" >> "$GITHUB_OUTPUT"
 
       - name: Upload the recorded responses
         if: always() && inputs.record
         uses: actions/upload-artifact@v4
         with:
-          name: live-api-recordings
+          name: ${{ steps.artifact.outputs.name }}
           path: ${{ runner.temp }}/live-recordings
           if-no-files-found: warn
           retention-days: 1
