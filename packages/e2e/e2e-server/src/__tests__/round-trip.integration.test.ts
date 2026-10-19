@@ -302,7 +302,7 @@ describe('the e2e seed API against a real database', () => {
     expect(new Date(endedRow.timing.endDate).getTime()).toBeLessThan(now);
   });
 
-  it('gives each preset a giveaway whose page loads for a visitor and for a participant', async () => {
+  it('gives each preset a giveaway whose page loads, except a draft, and makes a participant only of a running one', async () => {
     const { ids } = await seedRun('abc123');
     const participant = await db.user.create({
       data: { email: 'e2e-guest-abc123t1@example.com' }
@@ -311,7 +311,9 @@ describe('the e2e seed API against a real database', () => {
     for (const [index, preset] of PRESETS.entries()) {
       const sweepstakesId = ids[index];
       signOut();
-      const visitor = await loadGiveawayPage(sweepstakesId);
+      const visitor = expectOk(
+        await getParticipantSweepstake({ sweepstakesId })
+      );
 
       expect(visitor, preset).toMatchObject({
         sweepstakes: {
@@ -324,13 +326,30 @@ describe('the e2e seed API against a real database', () => {
         host: { slug: 'e2e-abc123-w0' },
         prizes: [{ prizeName: 'My Custom Prize', quota: 1, draws: [] }]
       });
+      expect((await getSweepstakesPrivacy({ sweepstakesId })).ok, preset).toBe(
+        preset !== 'draft'
+      );
 
       signIn({ id: participant.id, email: participant.email });
-      expect(await loadGiveawayPage(sweepstakesId), preset).toEqual(visitor);
       expect(
-        expectOk(await getOrCreateSweepstakesParticipant({ sweepstakesId })),
+        expectOk(await getParticipantSweepstake({ sweepstakesId })),
         preset
-      ).toMatchObject({ user: { id: participant.id }, completions: [] });
+      ).toEqual(visitor);
+      expect((await getSweepstakesPrivacy({ sweepstakesId })).ok, preset).toBe(
+        preset !== 'draft'
+      );
+
+      const entrant = expectOk(
+        await getOrCreateSweepstakesParticipant({ sweepstakesId })
+      );
+      if (preset === 'running') {
+        expect(entrant, preset).toMatchObject({
+          user: { id: participant.id },
+          completions: []
+        });
+      } else {
+        expect(entrant, preset).toBeUndefined();
+      }
     }
   });
 

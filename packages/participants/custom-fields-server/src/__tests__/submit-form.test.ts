@@ -324,6 +324,36 @@ describe('submitParticipantForm', () => {
       expect(prismaMock.sweepstakesFormValue.findMany).not.toHaveBeenCalled();
     });
 
+    it.each([false, 'false'])(
+      'refuses an unconfirmed required AGE value %j without writing',
+      async (age) => {
+        arrange({ fields: [{ ...ageField, required: true }] });
+
+        const result = await submit({ age });
+
+        expect(expectFailure(result, 'VALIDATION_ERROR').message).toBe(
+          'Confirm your age to enter this giveaway.'
+        );
+        expect(prismaMock.$transaction).not.toHaveBeenCalled();
+        expect(prismaMock.user.update).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each([true, 'true'])(
+      'accepts a confirmed required AGE value %j',
+      async (age) => {
+        arrange({ fields: [{ ...ageField, required: true }] });
+
+        expectOk(await submit({ age }));
+      }
+    );
+
+    it('accepts an unconfirmed optional AGE value', async () => {
+      arrange({ fields: [{ ...ageField, required: false }] });
+
+      expectOk(await submit({ age: false }));
+    });
+
     it('validates every field before writing any value', async () => {
       arrange();
 
@@ -999,11 +1029,25 @@ describe('saveUserChanges', () => {
     });
   });
 
-  it('derives the birthday even when the AGE value is false', async () => {
+  it.each([false, 'false', ''])(
+    'does not set a birthday when the AGE value is %j',
+    async (age) => {
+      await saveUserChanges({
+        db,
+        user: dbUser(),
+        data: { age },
+        fields: [ageField]
+      });
+
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
+    }
+  );
+
+  it('derives the birthday when the AGE value is true', async () => {
     await saveUserChanges({
       db,
       user: dbUser(),
-      data: { age: false },
+      data: { age: true },
       fields: [ageField]
     });
 

@@ -2,7 +2,6 @@ import type { APIRequestContext, Page, TestInfo } from '@playwright/test';
 import type { E2eSweepstakesRequestInput } from '@giveaway/e2e-model/requests';
 import { expect, test } from '../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../env';
-import { knownBug } from '../helpers/known-bug';
 import {
   captureServerAction,
   readActionResult,
@@ -23,24 +22,23 @@ const BLOCKED: {
   name: string;
   giveaway: Omit<E2eSweepstakesRequestInput, 'ns' | 'team'>;
   refusal?: RegExp;
-  bug?: number;
 }[] = [
   {
     name: 'a region that the participant is not in',
     giveaway: {
       audience: {
         ...OPEN_AUDIENCE,
-        regionalRestriction: { regions: ['country:US'], filter: 'INCLUDE' }
+        regionalRestriction: { regions: ['country:JP'], filter: 'INCLUDE' }
       }
     },
-    bug: 442
+    refusal: /not eligible to participate/
   },
   {
     name: 'an identity that the participant has not connected',
     giveaway: {
       audience: { ...OPEN_AUDIENCE, allowedIdentities: ['DISCORD'] }
     },
-    bug: 442
+    refusal: /Connect one of the accounts/
   },
   {
     name: 'a required age that the participant has not confirmed',
@@ -57,7 +55,7 @@ const BLOCKED: {
         ]
       }
     },
-    bug: 442
+    refusal: /Complete your profile/
   },
   {
     name: 'a giveaway that has not started',
@@ -116,36 +114,32 @@ test.describe('entry rules on the server', { tag: '@security' }, () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
 
   for (const blocked of BLOCKED) {
-    test(
-      `[ENTRY-004] a participant cannot enter ${blocked.name} with a direct call`,
-      blocked.bug ? knownBug(blocked.bug) : {},
-      async ({ page, request, freshPersona }, testInfo) => {
-        const { ns } = await freshPersona('participant');
-        await seedApi(request).userExtras({
-          ns: RUN_ID,
-          users: [
-            { persona: 'participant', ns, accounts: [{ identity: 'GOOGLE' }] }
-          ]
-        });
-        const action = await captureEntryAction(page, request, testInfo);
-        const giveaway = await seedGiveaway(
-          request,
-          testInfo,
-          blocked.giveaway
-        );
+    test(`[ENTRY-004] a participant cannot enter ${blocked.name} with a direct call`, async ({
+      page,
+      request,
+      freshPersona
+    }, testInfo) => {
+      const { ns } = await freshPersona('participant');
+      await seedApi(request).userExtras({
+        ns: RUN_ID,
+        users: [
+          { persona: 'participant', ns, accounts: [{ identity: 'GOOGLE' }] }
+        ]
+      });
+      const action = await captureEntryAction(page, request, testInfo);
+      const giveaway = await seedGiveaway(request, testInfo, blocked.giveaway);
 
-        const result = readActionResult(
-          await replayServerAction(page, action, [
-            { taskId: giveaway.tasks[0].id, sweepstakesId: giveaway.id }
-          ])
-        );
+      const result = readActionResult(
+        await replayServerAction(page, action, [
+          { taskId: giveaway.tasks[0].id, sweepstakesId: giveaway.id }
+        ])
+      );
 
-        expect(result.ok, JSON.stringify(result)).toBe(false);
-        if (blocked.refusal && !result.ok) {
-          expect(result.data.message).toMatch(blocked.refusal);
-        }
-        expect(await completedEntries(request, giveaway.id)).toBe(0);
+      expect(result.ok, JSON.stringify(result)).toBe(false);
+      if (blocked.refusal && !result.ok) {
+        expect(result.data.message).toMatch(blocked.refusal);
       }
-    );
+      expect(await completedEntries(request, giveaway.id)).toBe(0);
+    });
   }
 });

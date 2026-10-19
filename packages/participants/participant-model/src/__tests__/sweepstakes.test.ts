@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { toSweepstakesState } from '../sweepstakes';
+import { isInAllowedRegion, toSweepstakesState } from '../sweepstakes';
 import { ApplicationError } from '@giveaway/util-errors';
 
 type Args = Parameters<typeof toSweepstakesState>[0];
@@ -382,5 +382,47 @@ describe('toSweepstakesState', () => {
         ).toThrow('Unexpected value: ONLY');
       });
     });
+  });
+});
+
+describe('isInAllowedRegion', () => {
+  it('allows every country when there is no restriction', () => {
+    expect(isInAllowedRegion(null, 'XX')).toBe(true);
+    expect(isInAllowedRegion(undefined, null)).toBe(true);
+  });
+
+  it('refuses a user without a country when there is a restriction', () => {
+    expect(
+      isInAllowedRegion({ regions: ['country:US'], filter: 'EXCLUDE' }, null)
+    ).toBe(false);
+  });
+
+  it.each([
+    ['INCLUDE', 'US', true],
+    ['INCLUDE', 'CA', false],
+    ['EXCLUDE', 'US', false],
+    ['EXCLUDE', 'CA', true]
+  ] as const)(
+    'with %s of the US, a user in %s is allowed: %s',
+    (filter, countryCode, allowed) => {
+      expect(
+        isInAllowedRegion({ regions: ['country:US'], filter }, countryCode)
+      ).toBe(allowed);
+    }
+  );
+
+  it('expands a continent into its countries', () => {
+    expect(
+      isInAllowedRegion({ regions: ['continent:EU'], filter: 'INCLUDE' }, 'FR')
+    ).toBe(true);
+  });
+
+  it('throws on an unknown filter', () => {
+    expect(() =>
+      isInAllowedRegion(
+        { regions: ['country:US'], filter: 'OTHER' as 'INCLUDE' },
+        'US'
+      )
+    ).toThrow('Unexpected value: OTHER');
   });
 });

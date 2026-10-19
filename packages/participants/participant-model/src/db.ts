@@ -17,7 +17,7 @@ import { widetype } from '@giveaway/util-types/widetype';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
 import {
   isProfileComplete,
-  toParticipantForm,
+  toInitialFormValues,
   toParticipantFormFields
 } from './participant';
 import { ApplicationError } from '@giveaway/util-errors';
@@ -104,11 +104,7 @@ export const findOrCreateSweepstakesParticipant = async ({
   );
   const userSchema = toUserSchema(user);
 
-  const values = toParticipantForm(participantFormFields, userSchema, {});
-
-  const data = values
-    .filter((fv) => fv.value !== null)
-    .map((fv) => ({ fieldId: fv.id, value: String(fv.value) }));
+  const data = toInitialFormValues(participantFormFields, userSchema);
 
   const isComplete = isProfileComplete(participantFormFields, userSchema, {});
 

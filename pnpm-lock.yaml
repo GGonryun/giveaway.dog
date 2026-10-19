@@ -8096,6 +8096,9 @@ importers:
       '@giveaway/util-types':
         specifier: workspace:*
         version: link:../../shared/util-types
+      server-only:
+        specifier: 'catalog:'
+        version: 0.0.1
       zod:
         specifier: 'catalog:'
         version: 3.25.76
@@ -13010,9 +13013,15 @@ importers:
 
   packages/tasks/task-validation-core:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/integration-model':
+        specifier: workspace:*
+        version: link:../../integrations/core/integration-model
       '@giveaway/loyalty-model':
         specifier: workspace:*
         version: link:../../participants/loyalty-model

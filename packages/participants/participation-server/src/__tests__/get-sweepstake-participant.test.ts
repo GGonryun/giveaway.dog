@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { getOrCreateSweepstakesParticipant } from '../get-sweepstake-participant';
 import { SWEEPSTAKES_PARTICIPANT_INCLUDE_QUERY } from '@giveaway/participant-model/db';
 import { prismaMock } from '@giveaway/testing-server/prisma';
@@ -50,12 +50,62 @@ const expectedUser = {
   isAnonymous: true
 };
 
-const signedInWithSweepstakes = (id = 'sw-1') => {
+const NOW = new Date('2026-03-10T12:00:00.000Z');
+
+type StoredSweepstakes = {
+  id: string;
+  teamId: string | null;
+  status: 'DRAFT' | 'ACTIVE' | 'COMPLETED';
+  visibility: { visibility: 'PUBLIC' | 'UNLISTED' | 'PRIVATE' } | null;
+  timing: { startDate: Date | null; endDate: Date | null } | null;
+};
+
+const storedSweepstakes = (
+  overrides: Partial<StoredSweepstakes> = {}
+): StoredSweepstakes => ({
+  id: 'sw-1',
+  teamId: 'team-1',
+  status: 'ACTIVE',
+  visibility: { visibility: 'PUBLIC' },
+  timing: {
+    startDate: new Date('2026-03-01T00:00:00.000Z'),
+    endDate: new Date('2026-03-20T00:00:00.000Z')
+  },
+  ...overrides
+});
+
+const signedInWithSweepstakes = (
+  id = 'sw-1',
+  overrides: Partial<StoredSweepstakes> = {}
+) => {
   signIn();
-  prismaMock.sweepstakes.findFirst.mockResolvedValue({ id });
+  prismaMock.sweepstakes.findFirst.mockResolvedValue(
+    storedSweepstakes({ id, ...overrides })
+  );
+};
+
+const givenNewParticipant = () => {
+  prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(null);
+  prismaMock.user.findFirst.mockResolvedValue(
+    buildSelectedUser({ id: TEST_USER.id })
+  );
+  prismaMock.sweepstakes.findUnique.mockResolvedValue({
+    audience: { formFields: [] }
+  });
+  prismaMock.sweepstakesParticipant.create.mockResolvedValue(participantRow());
+  prismaMock.task.findMany.mockResolvedValue([]);
 };
 
 describe('getOrCreateSweepstakesParticipant', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe('when the caller is anonymous', () => {
     it('returns undefined without touching the database', async () => {
       const result = await getOrCreateSweepstakesParticipant({
@@ -84,7 +134,7 @@ describe('getOrCreateSweepstakesParticipant', () => {
   });
 
   describe('when the caller already participates', () => {
-    it('looks the sweepstakes up by id or slug selecting only its id', async () => {
+    it('looks the sweepstakes up by id or slug selecting its id, timing and visibility', async () => {
       signedInWithSweepstakes();
       prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(
         participantRow()
@@ -94,7 +144,13 @@ describe('getOrCreateSweepstakesParticipant', () => {
 
       expect(prismaMock.sweepstakes.findFirst).toHaveBeenCalledWith({
         where: { OR: [{ id: 'promo' }, { visibility: { slug: 'promo' } }] },
-        select: { id: true }
+        select: {
+          id: true,
+          timing: { select: { startDate: true, endDate: true } },
+          teamId: true,
+          status: true,
+          visibility: { select: { visibility: true } }
+        }
       });
     });
 
@@ -212,17 +268,7 @@ describe('getOrCreateSweepstakesParticipant', () => {
   describe('when the caller does not participate yet', () => {
     it('creates a participant for the caller and returns it', async () => {
       signedInWithSweepstakes('sw-1');
-      prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(null);
-      prismaMock.user.findFirst.mockResolvedValue(
-        buildSelectedUser({ id: TEST_USER.id })
-      );
-      prismaMock.sweepstakes.findUnique.mockResolvedValue({
-        audience: { formFields: [] }
-      });
-      prismaMock.sweepstakesParticipant.create.mockResolvedValue(
-        participantRow()
-      );
-      prismaMock.task.findMany.mockResolvedValue([]);
+      givenNewParticipant();
 
       const result = await getOrCreateSweepstakesParticipant({
         sweepstakesId: 'sw-1'
@@ -269,6 +315,174 @@ describe('getOrCreateSweepstakesParticipant', () => {
       expect(expectFailure(result, 'NOT_FOUND').message).toBe(
         'Sweepstakes with ID sw-1 not found when creating participant'
       );
+    });
+  });
+
+  describe('when the giveaway is not accepting entries', () => {
+    it.each([
+      ['a draft', { status: 'DRAFT' as const }],
+      ['a completed giveaway', { status: 'COMPLETED' as const }],
+      [
+        'a giveaway that has not started',
+        {
+          timing: {
+            startDate: new Date(NOW.getTime() + 1),
+            endDate: new Date('2026-03-20T00:00:00.000Z')
+          }
+        }
+      ],
+      [
+        'a giveaway that has ended',
+        {
+          timing: {
+            startDate: new Date('2026-03-01T00:00:00.000Z'),
+            endDate: new Date(NOW.getTime() - 1)
+          }
+        }
+      ],
+      ['a giveaway without timing', { timing: null }],
+      [
+        'a giveaway without an end date',
+        {
+          timing: {
+            startDate: new Date('2026-03-01T00:00:00.000Z'),
+            endDate: null
+          }
+        }
+      ],
+      [
+        'a giveaway without a start date',
+        {
+          timing: {
+            startDate: null,
+            endDate: new Date('2026-03-20T00:00:00.000Z')
+          }
+        }
+      ]
+    ])('does not create a participant for %s', async (_label, overrides) => {
+      signedInWithSweepstakes('sw-1', overrides);
+      prismaMock.membership.findUnique.mockResolvedValue({ id: 'm-1' });
+      givenNewParticipant();
+
+      const result = await getOrCreateSweepstakesParticipant({
+        sweepstakesId: 'sw-1'
+      });
+
+      expect(expectOk(result)).toBeUndefined();
+      expect(prismaMock.sweepstakesParticipant.create).not.toHaveBeenCalled();
+    });
+
+    it('returns the existing participant of an ended giveaway', async () => {
+      signedInWithSweepstakes('sw-1', {
+        timing: {
+          startDate: new Date('2026-03-01T00:00:00.000Z'),
+          endDate: new Date(NOW.getTime() - 1)
+        }
+      });
+      prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(
+        participantRow()
+      );
+
+      const result = await getOrCreateSweepstakesParticipant({
+        sweepstakesId: 'sw-1'
+      });
+
+      expect(expectOk(result)?.id).toBe('participant-1');
+    });
+
+    it.each([
+      ['starts', { startDate: NOW, endDate: new Date('2026-03-20T00:00:00Z') }],
+      ['ends', { startDate: new Date('2026-03-01T00:00:00Z'), endDate: NOW }]
+    ])(
+      'creates a participant at the moment the giveaway %s',
+      async (_label, timing) => {
+        signedInWithSweepstakes('sw-1', { timing });
+        givenNewParticipant();
+
+        await getOrCreateSweepstakesParticipant({ sweepstakesId: 'sw-1' });
+
+        expect(prismaMock.sweepstakesParticipant.create).toHaveBeenCalled();
+      }
+    );
+  });
+
+  describe('when the giveaway is visible only to its team', () => {
+    it.each([
+      [
+        'a private giveaway',
+        { visibility: { visibility: 'PRIVATE' as const } }
+      ],
+      ['a draft', { status: 'DRAFT' as const }]
+    ])(
+      'returns undefined and reads nothing for a caller outside the team of %s',
+      async (_label, overrides) => {
+        signedInWithSweepstakes('sw-1', overrides);
+        prismaMock.membership.findUnique.mockResolvedValue(null);
+
+        const result = await getOrCreateSweepstakesParticipant({
+          sweepstakesId: 'sw-1'
+        });
+
+        expect(expectOk(result)).toBeUndefined();
+        expect(prismaMock.membership.findUnique).toHaveBeenCalledWith({
+          where: {
+            userId_teamId: { userId: TEST_USER.id, teamId: 'team-1' }
+          },
+          select: { id: true }
+        });
+        expect(
+          prismaMock.sweepstakesParticipant.findUnique
+        ).not.toHaveBeenCalled();
+      }
+    );
+
+    it('returns undefined for a private giveaway without a team', async () => {
+      signedInWithSweepstakes('sw-1', {
+        teamId: null,
+        visibility: { visibility: 'PRIVATE' }
+      });
+
+      const result = await getOrCreateSweepstakesParticipant({
+        sweepstakesId: 'sw-1'
+      });
+
+      expect(expectOk(result)).toBeUndefined();
+      expect(prismaMock.membership.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('creates a participant for a member of the team of a private giveaway', async () => {
+      signedInWithSweepstakes('sw-1', {
+        visibility: { visibility: 'PRIVATE' }
+      });
+      prismaMock.membership.findUnique.mockResolvedValue({ id: 'm-1' });
+      givenNewParticipant();
+
+      const result = await getOrCreateSweepstakesParticipant({
+        sweepstakesId: 'sw-1'
+      });
+
+      expect(expectOk(result)?.id).toBe('participant-1');
+    });
+
+    it('creates a participant of a giveaway without a visibility row', async () => {
+      signedInWithSweepstakes('sw-1', { visibility: null });
+      givenNewParticipant();
+
+      await getOrCreateSweepstakesParticipant({ sweepstakesId: 'sw-1' });
+
+      expect(prismaMock.sweepstakesParticipant.create).toHaveBeenCalled();
+    });
+
+    it('creates a participant of an UNLISTED giveaway without checking membership', async () => {
+      signedInWithSweepstakes('sw-1', {
+        visibility: { visibility: 'UNLISTED' }
+      });
+      givenNewParticipant();
+
+      await getOrCreateSweepstakesParticipant({ sweepstakesId: 'sw-1' });
+
+      expect(prismaMock.membership.findUnique).not.toHaveBeenCalled();
+      expect(prismaMock.sweepstakesParticipant.create).toHaveBeenCalled();
     });
   });
 

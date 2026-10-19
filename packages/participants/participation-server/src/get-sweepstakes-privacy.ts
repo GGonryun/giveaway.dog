@@ -2,15 +2,19 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { VisibilityType } from '@giveaway/db-model';
 import z from 'zod';
+import {
+  isMembersOnly,
+  isTeamMember,
+  VISIBILITY_SELECT_QUERY
+} from './visibility';
 
 const getCacheConfig = ({ user, input }: any) => {
   // Cache PUBLIC/UNLISTED checks for longer since they don't depend on user
   // Cache PRIVATE checks per-user since they depend on team membership
   const userKey = user?.id ? `-user-${user.id}` : '-anonymous';
   return {
-    keyParts: [`sweepstakes-privacy-${input.sweepstakesId}${userKey}`],
+    keyParts: [`sweepstakes-privacy-v2-${input.sweepstakesId}${userKey}`],
     tags: [
       `sweepstakes-${input.sweepstakesId}-privacy`,
       ...(user?.id ? [`user-${user.id}-privacy`] : [])
@@ -40,12 +44,7 @@ export const getSweepstakesPrivacy = procedure()
           { visibility: { slug: input.sweepstakesId } }
         ]
       },
-      select: {
-        teamId: true,
-        visibility: {
-          select: { visibility: true }
-        }
-      }
+      select: VISIBILITY_SELECT_QUERY
     });
 
     if (!sweepstakes?.visibility?.visibility) {
@@ -55,8 +54,7 @@ export const getSweepstakesPrivacy = procedure()
       });
     }
 
-    // anyone can see public or unlisted sweepstakes
-    if (sweepstakes.visibility.visibility !== VisibilityType.PRIVATE) {
+    if (!isMembersOnly(sweepstakes)) {
       return true;
     }
 
@@ -73,17 +71,7 @@ export const getSweepstakesPrivacy = procedure()
         message: 'User is not authorized to view this sweepstakes'
       });
 
-    const profile = await db.membership.findUnique({
-      where: {
-        userId_teamId: {
-          userId: user.id,
-          teamId: sweepstakes.teamId
-        }
-      },
-      select: { id: true }
-    });
-
-    if (profile) {
+    if (await isTeamMember({ db, userId: user.id, sweepstakes })) {
       return true;
     }
 

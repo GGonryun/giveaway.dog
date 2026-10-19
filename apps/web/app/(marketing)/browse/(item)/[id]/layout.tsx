@@ -1,5 +1,6 @@
 import { auth } from '@giveaway/auth-server/config';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
 import { Metadata } from 'next';
 import { date } from '@giveaway/util-time/date';
 
@@ -16,9 +17,13 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const result = await getParticipantSweepstake({ sweepstakesId: id });
+  const options = { sweepstakesId: id };
+  const [result, privacy] = await Promise.all([
+    getParticipantSweepstake(options),
+    getSweepstakesPrivacy(options)
+  ]);
 
-  if (!result.ok) {
+  if (!result.ok || !privacy.ok || !privacy.data) {
     return {
       title: 'Giveaway Not Found | Giveaway.dog'
     };

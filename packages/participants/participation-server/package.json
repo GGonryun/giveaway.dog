@@ -39,6 +39,7 @@
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-types": "workspace:*",
+    "server-only": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

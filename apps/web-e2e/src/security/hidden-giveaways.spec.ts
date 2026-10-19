@@ -3,7 +3,6 @@ import type { E2eSweepstakesRequestInput } from '@giveaway/e2e-model/requests';
 import { expect, test } from '../fixtures/test';
 import { E2E_SECRET, RUN_ID, personaState } from '../env';
 import { noRedirect } from '../helpers/http';
-import { knownBug } from '../helpers/known-bug';
 import {
   freshSlug,
   seedApi,
@@ -20,8 +19,6 @@ const HIDDEN: {
   giveaway: (
     testInfo: TestInfo
   ) => Omit<E2eSweepstakesRequestInput, 'ns' | 'team'>;
-  pageBug?: number;
-  metadataBug?: number;
 }[] = [
   {
     kind: 'private',
@@ -30,8 +27,7 @@ const HIDDEN: {
       slug: freshSlug(testInfo),
       tasks: [{ type: 'BONUS_COMPLETE_PROFILE' }, { type: 'BONUS_TASK' }],
       audience: { formFields: [] }
-    }),
-    metadataBug: 444
+    })
   },
   {
     kind: 'draft',
@@ -39,9 +35,7 @@ const HIDDEN: {
       preset: 'draft',
       slug: freshSlug(testInfo),
       tasks: [{ type: 'SECRET_CODE', code: `E2E-DRAFT-${freshSlug(testInfo)}` }]
-    }),
-    pageBug: 443,
-    metadataBug: 444
+    })
   }
 ];
 
@@ -111,10 +105,34 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
 
   for (const hidden of HIDDEN) {
     test.describe(`a ${hidden.kind} giveaway`, () => {
-      test(
-        '[VIS-001] is not found for a visitor',
-        hidden.pageBug ? knownBug(hidden.pageBug) : {},
-        async ({ request }, testInfo) => {
+      test('[VIS-001] is not found for a visitor', async ({
+        request
+      }, testInfo) => {
+        const giveaway = await seedHidden(
+          request,
+          testInfo,
+          hidden.giveaway(testInfo)
+        );
+
+        await expectNotFound(request, giveaway);
+      });
+
+      test('[VIS-003] gives a bot no metadata', async ({
+        request
+      }, testInfo) => {
+        const giveaway = await seedHidden(
+          request,
+          testInfo,
+          hidden.giveaway(testInfo)
+        );
+
+        await expectNoMetadata(request, giveaway);
+      });
+
+      test.describe('as a participant who is not a member', () => {
+        test.use({ storageState: personaState('participant') });
+
+        test('[VIS-001] is not found', async ({ request }, testInfo) => {
           const giveaway = await seedHidden(
             request,
             testInfo,
@@ -122,39 +140,7 @@ test.describe('hidden giveaways', { tag: '@security' }, () => {
           );
 
           await expectNotFound(request, giveaway);
-        }
-      );
-
-      test(
-        '[VIS-003] gives a bot no metadata',
-        hidden.metadataBug ? knownBug(hidden.metadataBug) : {},
-        async ({ request }, testInfo) => {
-          const giveaway = await seedHidden(
-            request,
-            testInfo,
-            hidden.giveaway(testInfo)
-          );
-
-          await expectNoMetadata(request, giveaway);
-        }
-      );
-
-      test.describe('as a participant who is not a member', () => {
-        test.use({ storageState: personaState('participant') });
-
-        test(
-          '[VIS-001] is not found',
-          hidden.pageBug ? knownBug(hidden.pageBug) : {},
-          async ({ request }, testInfo) => {
-            const giveaway = await seedHidden(
-              request,
-              testInfo,
-              hidden.giveaway(testInfo)
-            );
-
-            await expectNotFound(request, giveaway);
-          }
-        );
+        });
       });
     });
   }
@@ -198,27 +184,27 @@ test.describe('opening a giveaway page', { tag: '@security' }, () => {
   ];
 
   for (const closed of CLOSED) {
-    test(
-      `[VIS-004] makes no participant of a visitor of a ${closed.kind} giveaway`,
-      knownBug(445),
-      async ({ page, request, freshPersona }, testInfo) => {
-        const { email } = await freshPersona('participant');
-        const giveaway = await seedHidden(
-          request,
-          testInfo,
-          closed.giveaway(testInfo)
-        );
+    test(`[VIS-004] makes no participant of a visitor of a ${closed.kind} giveaway`, async ({
+      page,
+      request,
+      freshPersona
+    }, testInfo) => {
+      const { email } = await freshPersona('participant');
+      const giveaway = await seedHidden(
+        request,
+        testInfo,
+        closed.giveaway(testInfo)
+      );
 
-        await page.request.get(`/browse/${giveaway.id}`, noRedirect);
+      await page.request.get(`/browse/${giveaway.id}`, noRedirect);
 
-        const { participants } = await seedApi(request).rows<Participants>({
-          view: 'participants',
-          id: giveaway.id
-        });
-        expect(
-          participants.map((participant) => participant.email)
-        ).not.toContain(email);
-      }
-    );
+      const { participants } = await seedApi(request).rows<Participants>({
+        view: 'participants',
+        id: giveaway.id
+      });
+      expect(
+        participants.map((participant) => participant.email)
+      ).not.toContain(email);
+    });
   }
 });

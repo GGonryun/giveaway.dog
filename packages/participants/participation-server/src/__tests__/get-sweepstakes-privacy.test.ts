@@ -14,15 +14,17 @@ type Input = Parameters<typeof getSweepstakesPrivacy>[0];
 
 const sweepstakes = (
   visibility: 'PUBLIC' | 'UNLISTED' | 'PRIVATE' | null,
-  teamId: string | null = 'team-1'
+  teamId: string | null = 'team-1',
+  status: 'DRAFT' | 'ACTIVE' | 'COMPLETED' = 'ACTIVE'
 ) => ({
   teamId,
+  status,
   visibility: visibility ? { visibility } : null
 });
 
 describe('getSweepstakesPrivacy', () => {
   describe('query shape', () => {
-    it('looks the sweepstakes up by id or slug and selects only teamId and visibility', async () => {
+    it('looks the sweepstakes up by id or slug and selects only teamId, status and visibility', async () => {
       prismaMock.sweepstakes.findFirst.mockResolvedValue(sweepstakes('PUBLIC'));
 
       await getSweepstakesPrivacy({ sweepstakesId: 'my-slug' });
@@ -33,6 +35,7 @@ describe('getSweepstakesPrivacy', () => {
         },
         select: {
           teamId: true,
+          status: true,
           visibility: { select: { visibility: true } }
         }
       });
@@ -47,7 +50,7 @@ describe('getSweepstakesPrivacy', () => {
 
       expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
         expect.any(Function),
-        ['sweepstakes-privacy-sw-1-anonymous'],
+        ['sweepstakes-privacy-v2-sw-1-anonymous'],
         { tags: ['sweepstakes-sw-1-privacy'], revalidate: 3600 }
       );
     });
@@ -60,7 +63,7 @@ describe('getSweepstakesPrivacy', () => {
 
       expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
         expect.any(Function),
-        [`sweepstakes-privacy-sw-1-user-${TEST_USER.id}`],
+        [`sweepstakes-privacy-v2-sw-1-user-${TEST_USER.id}`],
         {
           tags: ['sweepstakes-sw-1-privacy', `user-${TEST_USER.id}-privacy`],
           revalidate: 3600
@@ -185,6 +188,60 @@ describe('getSweepstakesPrivacy', () => {
     });
   });
 
+  describe('when the sweepstakes is a DRAFT', () => {
+    it.each(['PUBLIC', 'UNLISTED'] as const)(
+      'returns NOT_FOUND for an anonymous caller of a %s draft',
+      async (visibility) => {
+        prismaMock.sweepstakes.findFirst.mockResolvedValue(
+          sweepstakes(visibility, 'team-1', 'DRAFT')
+        );
+
+        const result = await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
+
+        expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+          'User is not authorized to view this sweepstakes'
+        );
+      }
+    );
+
+    it('returns FORBIDDEN when the caller is not a member of the team', async () => {
+      signIn();
+      prismaMock.sweepstakes.findFirst.mockResolvedValue(
+        sweepstakes('UNLISTED', 'team-1', 'DRAFT')
+      );
+      prismaMock.membership.findUnique.mockResolvedValue(null);
+
+      const result = await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        'User is not authorized to view this sweepstakes'
+      );
+    });
+
+    it('returns true when the caller is a member of the team', async () => {
+      signIn();
+      prismaMock.sweepstakes.findFirst.mockResolvedValue(
+        sweepstakes('UNLISTED', 'team-1', 'DRAFT')
+      );
+      prismaMock.membership.findUnique.mockResolvedValue({ id: 'm-1' });
+
+      const result = await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
+
+      expect(expectOk(result)).toBe(true);
+    });
+
+    it('returns true for a COMPLETED UNLISTED sweepstakes without checking membership', async () => {
+      prismaMock.sweepstakes.findFirst.mockResolvedValue(
+        sweepstakes('UNLISTED', 'team-1', 'COMPLETED')
+      );
+
+      const result = await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
+
+      expect(expectOk(result)).toBe(true);
+      expect(prismaMock.membership.findUnique).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when visibility data is missing', () => {
     it('returns INTERNAL_SERVER_ERROR when the sweepstakes does not exist', async () => {
       prismaMock.sweepstakes.findFirst.mockResolvedValue(null);
@@ -209,6 +266,7 @@ describe('getSweepstakesPrivacy', () => {
     it('returns INTERNAL_SERVER_ERROR when the visibility row has no visibility value', async () => {
       prismaMock.sweepstakes.findFirst.mockResolvedValue({
         teamId: 'team-1',
+        status: 'ACTIVE',
         visibility: { visibility: null }
       });
 
