@@ -143,19 +143,6 @@ describe('createSweepstakes', () => {
       );
       expect(prismaMock.sweepstakes.create).not.toHaveBeenCalled();
     });
-
-    it('returns NOT_FOUND when the loaded team has no id', async () => {
-      prismaMock.team.findUnique.mockResolvedValue(
-        buildTeam({ id: undefined })
-      );
-
-      const result = await createSweepstakes(input);
-
-      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
-        'Team does not exist or you do not have access to it.'
-      );
-      expect(prismaMock.sweepstakes.create).not.toHaveBeenCalled();
-    });
   });
 
   describe('when no template is requested', () => {

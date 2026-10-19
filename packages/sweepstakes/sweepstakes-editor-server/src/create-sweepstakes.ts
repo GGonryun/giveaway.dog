@@ -41,14 +41,7 @@ export const createSweepstakes = procedure()
       tier: TeamTier.FREE
     });
 
-    console.info('Creating sweepstakes for team:', team?.id);
-
-    if (!team?.id) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Team does not exist or you do not have access to it.'
-      });
-    }
+    console.info('Creating sweepstakes for team:', team.id);
 
     const base = toNewSweepstakesData({
       teamId: team.id,
