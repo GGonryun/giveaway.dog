@@ -1,0 +1,227 @@
+name: Production checks
+
+on:
+  repository_dispatch:
+    types:
+      - vercel.deployment.ready
+      - vercel.deployment.promoted
+  schedule:
+    - cron: '41 7 * * *'
+  workflow_dispatch:
+    inputs:
+      url:
+        description: URL to check. Leave empty to check https://www.giveaway.dog
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-checks-${{ github.event.client_payload.url || inputs.url || 'live' }}
+  cancel-in-progress: false
+
+env:
+  NX_NO_CLOUD: true
+  LIVE_URL: https://www.giveaway.dog
+
+jobs:
+  checks:
+    name: Production checks
+    if: ${{ github.event_name != 'repository_dispatch' || github.event.client_payload.environment == 'production' }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+      statuses: write
+    env:
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      STATUS_CONTEXT: 'Vercel - giveaway-dog: Production checks'
+    steps:
+      - name: Pick the target
+        id: target
+        env:
+          EVENT: ${{ github.event_name }}
+          ACTION: ${{ github.event.action }}
+          PAYLOAD_URL: ${{ github.event.client_payload.url }}
+          PAYLOAD_SHA: ${{ github.event.client_payload.git.sha }}
+          INPUT_URL: ${{ inputs.url }}
+        run: |
+          sha="$GITHUB_SHA"
+          case "$EVENT:$ACTION" in
+            repository_dispatch:vercel.deployment.ready)
+              url="$PAYLOAD_URL"
+              sha="${PAYLOAD_SHA:-$GITHUB_SHA}"
+              kind=held
+              trigger=deployment
+              ;;
+            repository_dispatch:vercel.deployment.promoted)
+              url="$LIVE_URL"
+              sha="${PAYLOAD_SHA:-$GITHUB_SHA}"
+              kind=live
+              trigger=promotion
+              ;;
+            schedule:*)
+              url="$LIVE_URL"
+              kind=live
+              trigger=schedule
+              ;;
+            *)
+              url="${INPUT_URL:-$LIVE_URL}"
+              kind=manual
+              trigger=manual
+              ;;
+          esac
+          if [ -z "$url" ]; then
+            echo "::error::No URL to check."
+            exit 1
+          fi
+          case "$url" in
+            http://* | https://*) ;;
+            *) url="https://$url" ;;
+          esac
+          url="${url%/}"
+          host=$(node -p 'new URL(process.argv[1]).host' "$url")
+          if [ "$host" = "${LIVE_URL#https://}" ] && [ "$kind" = manual ]; then
+            kind=live
+          fi
+          {
+            echo "url=$url"
+            echo "host=$host"
+            echo "sha=$sha"
+            echo "kind=$kind"
+            echo "trigger=$trigger"
+          } >> "$GITHUB_OUTPUT"
+          echo "Checking $url ($kind, $trigger) with the specs of $sha" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Report a pending status on the commit
+        if: ${{ steps.target.outputs.kind == 'held' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.target.outputs.sha }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state=pending \
+            -f context="$STATUS_CONTEXT" \
+            -f description='Checking the production deployment' \
+            -f target_url="$RUN_URL"
+
+      - name: Check out the deployed commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.target.outputs.sha }}
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Playwright
+        id: playwright
+        env:
+          E2E_BASE_URL: ${{ steps.target.outputs.url }}
+          E2E_APP_URL: ${{ env.LIVE_URL }}
+          E2E_PRODUCTION_CHECKS: '1'
+          HOST: ${{ steps.target.outputs.host }}
+          BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          case "$HOST" in
+            www.giveaway.dog | giveaway.dog) ;;
+            *) export VERCEL_AUTOMATION_BYPASS_SECRET="$BYPASS_SECRET" ;;
+          esac
+          pnpm --filter web-e2e exec playwright test --project=prod-smoke --project=production
+
+      - name: Summarize the results
+        if: ${{ !cancelled() && steps.target.outcome == 'success' }}
+        run: node .github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json | tee summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the Playwright report
+        if: ${{ !cancelled() && hashFiles('apps/web-e2e/playwright-report/**') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-checks-report-${{ github.run_attempt }}
+          path: apps/web-e2e/playwright-report/
+          retention-days: 30
+
+      - name: Report the result on the commit
+        if: ${{ (success() || failure()) && steps.target.outputs.kind == 'held' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.target.outputs.sha }}
+          RESULT: ${{ steps.playwright.outcome }}
+        run: |
+          if [ "$RESULT" = success ]; then
+            state=success
+            description='The e2e bypasses are off'
+          else
+            state=failure
+            description='A production check failed'
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state="$state" \
+            -f context="$STATUS_CONTEXT" \
+            -f description="$description" \
+            -f target_url="$RUN_URL"
+
+      - name: Open, update or close the issue
+        if: ${{ (success() || failure()) && (steps.target.outputs.kind == 'held' || steps.target.outputs.kind == 'live') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RESULT: ${{ steps.playwright.outcome }}
+          URL: ${{ steps.target.outputs.url }}
+          KIND: ${{ steps.target.outputs.kind }}
+          TRIGGER: ${{ steps.target.outputs.trigger }}
+          SHA: ${{ steps.target.outputs.sha }}
+        run: |
+          title='Production check failed'
+          existing=$(gh issue list --state open --label security --limit 200 --json number,title \
+            --jq ".[] | select(.title == \"$title\") | .number" | head -n 1)
+
+          if [ "$RESULT" = success ]; then
+            if [ -n "$existing" ]; then
+              gh issue close "$existing" --comment "The production checks passed on $URL in $RUN_URL."
+              echo "Closed issue #$existing" | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+            exit 0
+          fi
+
+          if [ "$KIND" = held ]; then
+            where='A production deployment that Vercel holds. The domain stays on the previous deployment, and no user reaches this one.'
+            todo='Fix the cause and merge again, or re-run the failed run once the cause is fixed outside the code (a Vercel variable). Never remove the check to ship.'
+          else
+            where='The live domain. Users reach this deployment now.'
+            todo='Roll back in Vercel (Instant Rollback) to the last deployment that passed, then fix the variable or revert the change.'
+          fi
+          {
+            echo "## $title"
+            echo
+            echo "| | |"
+            echo "| --- | --- |"
+            echo "| URL | $URL |"
+            echo "| Target | $where |"
+            echo "| Trigger | $TRIGGER |"
+            echo "| Commit | $SHA |"
+            echo "| Run | $RUN_URL |"
+            echo
+            if [ -f summary.md ]; then
+              sed 's/^## E2E tests$/## Results/' summary.md
+            else
+              echo "The run stopped before the checks reported. See the log of the run."
+            fi
+            echo
+            echo "### What to do"
+            echo
+            echo "$todo"
+            echo
+            echo "A later run that passes closes this issue."
+          } > issue.md
+
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --body-file issue.md
+            echo "Updated issue #$existing" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            url=$(gh issue create --title "$title" --label security --label severity:high --body-file issue.md)
+            echo "Opened $url" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
