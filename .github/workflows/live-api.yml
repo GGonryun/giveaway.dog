@@ -21,7 +21,9 @@ env:
 jobs:
   live:
     name: Live API checks
-    if: github.event.action != 'labeled' || github.event.label.name == 'live-api'
+    if: >-
+      (github.event.action != 'labeled' || github.event.label.name == 'live-api') &&
+      (github.event.action != 'synchronize' || contains(github.event.pull_request.labels.*.name, 'live-api'))
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
     concurrency:
