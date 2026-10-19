@@ -36,6 +36,12 @@ jobs:
       contents: read
       issues: write
       statuses: write
+    outputs:
+      url: ${{ steps.target.outputs.url }}
+      sha: ${{ steps.target.outputs.sha }}
+      kind: ${{ steps.target.outputs.kind }}
+      trigger: ${{ steps.target.outputs.trigger }}
+      result: ${{ steps.playwright.outcome }}
     env:
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       STATUS_CONTEXT: 'Vercel - giveaway-dog: Production checks'
@@ -225,3 +231,28 @@ jobs:
             url=$(gh issue create --title "$title" --label security --label severity:high --body-file issue.md)
             echo "Opened $url" | tee -a "$GITHUB_STEP_SUMMARY"
           fi
+
+  badge:
+    name: Badge
+    needs: checks
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (needs.checks.outputs.kind == 'held' || needs.checks.outputs.kind == 'live') }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+    continue-on-error: true
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Publish the badge and the history to the badges branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          URL: ${{ needs.checks.outputs.url }}
+          SHA: ${{ needs.checks.outputs.sha }}
+          KIND: ${{ needs.checks.outputs.kind }}
+          TRIGGER: ${{ needs.checks.outputs.trigger }}
+          RESULT: ${{ needs.checks.outputs.result }}
+        run: bash .github/scripts/publish-badges.sh "Production checks of ${SHA::7} ($KIND)" node .github/scripts/production-badge.mjs
