@@ -14099,6 +14099,9 @@ importers:
       '@stryker-mutator/vitest-runner':
         specifier: 'catalog:'
         version: 10.0.0(@stryker-mutator/core@10.0.0(@types/node@20.17.6))(vitest@4.0.18)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
     devDependencies:
       '@giveaway/eslint-config':
         specifier: workspace:*
@@ -14112,9 +14115,6 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
-      typescript:
-        specifier: 'catalog:'
-        version: 5.7.2
 
   packages/tooling/testing-dom:
     dependencies:

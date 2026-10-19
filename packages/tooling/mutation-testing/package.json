@@ -22,6 +22,7 @@
     "./ignore-console": "./src/ignore-console.ts",
     "./pick-packages": "./src/pick-packages.ts",
     "./retry": "./src/retry.ts",
+    "./runtime-code": "./src/runtime-code.ts",
     "./stryker-options": "./src/stryker-options.ts",
     "./targets": "./src/targets.ts",
     "./vitest-runner": "./src/vitest-runner.ts"
@@ -33,13 +34,13 @@
   "dependencies": {
     "@stryker-mutator/api": "catalog:",
     "@stryker-mutator/core": "catalog:",
-    "@stryker-mutator/vitest-runner": "catalog:"
+    "@stryker-mutator/vitest-runner": "catalog:",
+    "typescript": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
-    "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "@types/node": "catalog:"
   }
 }
