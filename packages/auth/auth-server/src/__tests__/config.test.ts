@@ -256,7 +256,6 @@ describe('auth config', () => {
 
   describe('oauth providers', () => {
     it.each([
-      ['tiktok', 'tiktok-id', 'tiktok-secret'],
       ['twitter', 'twitter-id', 'twitter-secret'],
       ['google', 'google-id', 'google-secret'],
       ['discord', 'discord-id', 'discord-secret'],
@@ -274,6 +273,16 @@ describe('auth config', () => {
         });
       }
     );
+
+    it('configures tiktok with env credentials and without email linking', async () => {
+      const options = await optionsOf('tiktok');
+
+      expect(options).toMatchObject({
+        clientId: 'tiktok-id',
+        clientSecret: 'tiktok-secret'
+      });
+      expect(options.allowDangerousEmailAccountLinking).toBeUndefined();
+    });
 
     it('asks google for offline consent', async () => {
       expect((await optionsOf('google')).authorization).toEqual({
@@ -332,7 +341,7 @@ describe('auth config', () => {
     const mapProfile = async (user: Record<string, unknown>) =>
       (await optionsOf('tiktok')).profile?.(tiktokUser(user), {});
 
-    it('maps the tiktok user with display name and email', async () => {
+    it('maps the tiktok user with its display name and no email', async () => {
       expect(
         await mapProfile({
           display_name: 'Display',
@@ -343,21 +352,58 @@ describe('auth config', () => {
         id: 'open-1',
         name: 'Display',
         image: 'https://tiktok.com/a.png',
-        email: 't@example.com'
-      });
-    });
-
-    it('falls back to the username for the name and email', async () => {
-      expect(await mapProfile({ username: 'user' })).toMatchObject({
-        name: 'user',
-        email: 'user'
-      });
-    });
-
-    it('returns a null email when there is no email or username', async () => {
-      expect(await mapProfile({ display_name: 'Display' })).toMatchObject({
-        name: 'Display',
         email: null
+      });
+    });
+
+    it('[LINK-002] never uses the tiktok username as the email', async () => {
+      expect(await mapProfile({ username: 'user' })).toEqual({
+        id: 'open-1',
+        name: 'user',
+        image: 'https://tiktok.com/a.png',
+        email: null
+      });
+    });
+  });
+
+  describe('discord profile', () => {
+    const discordUser = (user: Record<string, unknown>) => ({
+      id: '80351110224678912',
+      username: 'nelly',
+      global_name: 'Nelly',
+      discriminator: '0',
+      avatar: '8342729096ea3675442027381ff50dfe',
+      email: 'nelly@example.com',
+      ...user
+    });
+
+    const mapProfile = async (user: Record<string, unknown>) =>
+      (await optionsOf('discord')).profile?.(discordUser(user), {});
+
+    it('maps the discord user with a verified email', async () => {
+      expect(await mapProfile({ verified: true })).toEqual({
+        id: '80351110224678912',
+        name: 'Nelly',
+        email: 'nelly@example.com',
+        image:
+          'https://cdn.discordapp.com/avatars/80351110224678912/8342729096ea3675442027381ff50dfe.png'
+      });
+    });
+
+    it('[LINK-002] drops an email that discord has not verified', async () => {
+      expect(await mapProfile({ verified: false })).toMatchObject({
+        id: '80351110224678912',
+        email: null
+      });
+    });
+
+    it('[LINK-002] drops the email when discord does not say it is verified', async () => {
+      expect(await mapProfile({})).toMatchObject({ email: null });
+    });
+
+    it('keeps the default avatar of a discord user without an avatar', async () => {
+      expect(await mapProfile({ avatar: null, verified: true })).toMatchObject({
+        image: 'https://cdn.discordapp.com/embed/avatars/5.png'
       });
     });
   });
