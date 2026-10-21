@@ -81,7 +81,7 @@ describe('scrapebadger retweeter procedures', () => {
       vi.stubEnv('SCRAPEBADGER_API_KEY', undefined);
 
       await expect(getRetweeters({ tweetId: 't-1' })).rejects.toThrow(
-        'SCRAPEBADGER_API_KEY environment variable not set'
+        'Loading posts from X is not available right now'
       );
     });
   });

@@ -11,7 +11,7 @@ export const scrapeBadgerTweetFixture = {
   retweet_count: 45,
   reply_count: 17,
   quote_count: 3,
-  view_count: 9876,
+  view_count: '9876',
   bookmark_count: 4,
   favorited: false,
   retweeted: false,

@@ -69,7 +69,7 @@ describe('getScrapeBadgerClient', () => {
         expect(error).toBeInstanceOf(ApplicationError);
         expect(error.code).toBe('INTERNAL_SERVER_ERROR');
         expect(error.message).toBe(
-          'SCRAPEBADGER_API_KEY environment variable not set'
+          'Loading posts from X is not available right now'
         );
         expect(m.ScrapeBadger).not.toHaveBeenCalled();
       }

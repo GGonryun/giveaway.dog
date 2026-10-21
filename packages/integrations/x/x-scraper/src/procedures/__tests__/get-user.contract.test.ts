@@ -58,7 +58,7 @@ describe('ScrapeBadger user contract', () => {
 
     await expect(getUser({ username })).rejects.toMatchObject({
       code: 'BAD_GATEWAY',
-      message: 'Invalid ScrapeBadger user response'
+      message: 'Could not read the user from X'
     });
   });
 });

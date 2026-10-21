@@ -72,6 +72,22 @@ describe('scrapeBadgerTweetSchema', () => {
     );
   });
 
+  it('accepts a view count that X sends as a string of digits', () => {
+    expect(
+      scrapeBadgerTweetSchema.parse({ ...tweet, view_count: '1234' })
+    ).toEqual({ ...tweet, view_count: '1234' });
+  });
+
+  it.each(['many', '12 views', 'about 12'])(
+    'refuses the view count %j, which is not a number',
+    (viewCount) => {
+      expect(
+        scrapeBadgerTweetSchema.safeParse({ ...tweet, view_count: viewCount })
+          .success
+      ).toBe(false);
+    }
+  );
+
   it('refuses a tweet whose counts are not numbers', () => {
     expect(
       scrapeBadgerTweetSchema.safeParse({ ...tweet, retweet_count: '4' })

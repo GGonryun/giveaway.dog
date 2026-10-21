@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       favoriteCount: likeCount,
       retweetCount,
       replyCount,
-      viewCount: Number(tweet.view_count) ?? null,
+      viewCount: tweet.view_count == null ? null : Number(tweet.view_count),
       quoteCount,
       createdAt: tweet.created_at
         ? new Date(tweet.created_at).toISOString()

@@ -297,6 +297,15 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       });
     });
 
+    it('returns a view count that X sends as a string as a number', async () => {
+      m.getById.mockResolvedValue({ ...TWEET, view_count: '500' });
+
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(200);
+      expect((await res.json()).data.viewCount).toBe(500);
+    });
+
     it('looks up the author by the tweet username', async () => {
       await POST(buildRequest());
 
@@ -454,7 +463,7 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       expect(await res.json()).toEqual({
         error: {
           code: 'BAD_GATEWAY',
-          message: 'Invalid ScrapeBadger tweet response'
+          message: 'Could not read the tweet from X'
         }
       });
       expect(m.getByUsername).not.toHaveBeenCalled();
@@ -508,7 +517,7 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       expect(await res.json()).toEqual({
         error: {
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'SCRAPEBADGER_API_KEY environment variable not set'
+          message: 'Loading posts from X is not available right now'
         }
       });
     });
