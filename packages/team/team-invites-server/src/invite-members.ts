@@ -17,7 +17,7 @@ const inviteMembersSchema = z.object({
   invitations: z.array(
     z.object({
       email: z.string().email('Invalid email address'),
-      role: z.nativeEnum(TeamRole)
+      role: z.enum([TeamRole.ADMIN, TeamRole.MEMBER, TeamRole.GUEST])
     })
   )
 });

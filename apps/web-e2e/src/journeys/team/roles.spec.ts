@@ -168,40 +168,37 @@ test.describe('team roles', () => {
     await expectTeamName(page, team.slug, team.name);
   });
 
-  test(
-    '[ROLE-005] an admin cannot make someone an owner through an email invite',
-    knownBug(434),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedRolesTeam(request, ns);
-      await signInAs(page.request, 'admin', ns);
-      await page.goto(`/app/${team.slug}/settings/team`);
+  test('[ROLE-005] an admin cannot make someone an owner through an email invite', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    await signInAs(page.request, 'admin', ns);
+    await page.goto(`/app/${team.slug}/settings/team`);
 
-      await page
-        .getByRole('textbox', { name: 'Email Address' })
-        .fill(toE2ePersonaEmail('participant', ns));
-      await page.getByRole('combobox', { name: 'Role' }).click();
-      await page.getByRole('option', { name: 'Admin' }).click();
+    await page
+      .getByRole('textbox', { name: 'Email Address' })
+      .fill(toE2ePersonaEmail('participant', ns));
+    await page.getByRole('combobox', { name: 'Role' }).click();
+    await page.getByRole('option', { name: 'Admin' }).click();
 
-      const rewrite = await rewriteServerActions(page, (args) =>
-        JSON.parse(
-          JSON.stringify(args).replaceAll('"role":"ADMIN"', '"role":"OWNER"')
-        )
-      );
-      await page.getByRole('button', { name: 'Send Invitations' }).click();
-      await expect.poll(() => rewrite.responses.length).toBeGreaterThan(0);
-      await rewrite.stop();
+    const rewrite = await rewriteServerActions(page, (args) =>
+      JSON.parse(
+        JSON.stringify(args).replaceAll('"role":"ADMIN"', '"role":"OWNER"')
+      )
+    );
+    await page.getByRole('button', { name: 'Send Invitations' }).click();
+    await expect.poll(() => rewrite.responses.length).toBeGreaterThan(0);
+    await rewrite.stop();
 
-      expect(readActionResult(rewrite.responses[0])).toMatchObject({
-        ok: false
-      });
-      await page.reload();
-      await page.getByRole('tab', { name: /Pending/ }).click();
-      await expect(
-        page.getByRole('tab', { name: 'Pending (0)' })
-      ).toBeVisible();
-    }
-  );
+    expect(readActionResult(rewrite.responses[0])).toMatchObject({
+      ok: false
+    });
+    await page.reload();
+    await page.getByRole('tab', { name: /Pending/ }).click();
+    await expect(page.getByRole('tab', { name: 'Pending (0)' })).toBeVisible();
+  });
 
   test('[ROLE-006] a guest cannot disconnect the team Twitch channel', async ({
     page,
