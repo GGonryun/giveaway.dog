@@ -200,34 +200,33 @@ test.describe('cross-team isolation', () => {
     await expect(rows).toContainText('E2E participant');
   });
 
-  test(
-    "[TEAM-004] a user's Entries tab lists only the entries of the current team",
-    knownBug(437),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedRolesTeam(request, ns);
-      const { team: shared } = await seedApi(request).team({
-        ns,
-        suffix: 'c',
-        owner: 'host2',
-        members: [{ persona: 'host', role: 'MEMBER' }]
-      });
-      await seedEndedWithWinner(request, ns, team.slug, 'participant2');
-      const giveaway = await seedEndedWithWinner(
-        request,
-        ns,
-        shared.slug,
-        'participant2'
-      );
-      await signInAs(page.request, 'host', ns);
+  test("[TEAM-004] a user's Entries tab lists only the entries of the current team", async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    const { team: shared } = await seedApi(request).team({
+      ns,
+      suffix: 'c',
+      owner: 'host2',
+      members: [{ persona: 'host', role: 'MEMBER' }]
+    });
+    await seedEndedWithWinner(request, ns, team.slug, 'participant2');
+    const giveaway = await seedEndedWithWinner(
+      request,
+      ns,
+      shared.slug,
+      'participant2'
+    );
+    await signInAs(page.request, 'host', ns);
 
-      await expectNotInPayload(
-        page.request,
-        `/app/${team.slug}/users/${giveaway.entries[0].userId}/entries`,
-        { "the other team's giveaway id": giveaway.id }
-      );
-    }
-  );
+    await expectNotInPayload(
+      page.request,
+      `/app/${team.slug}/users/${giveaway.entries[0].userId}/entries`,
+      { "the other team's giveaway id": giveaway.id }
+    );
+  });
 
   test.describe('X pickers', () => {
     test.use({
