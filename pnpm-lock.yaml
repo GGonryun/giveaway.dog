@@ -2554,6 +2554,9 @@ importers:
       '@auth/prisma-adapter':
         specifier: 'catalog:'
         version: 2.7.2(@prisma/client@6.19.2(prisma@6.19.2(typescript@6.0.3))(typescript@6.0.3))
+      '@giveaway/cache':
+        specifier: workspace:*
+        version: link:../../infra/cache
       '@giveaway/db-client':
         specifier: workspace:*
         version: link:../../infra/db-client
@@ -3632,9 +3635,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-server':
-        specifier: workspace:*
-        version: link:../../tooling/testing-server
       '@giveaway/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/tsconfig
@@ -6157,6 +6157,9 @@ importers:
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../../infra/rpc-server
+      '@giveaway/team-permissions':
+        specifier: workspace:*
+        version: link:../../../team/team-permissions
       '@giveaway/team-server':
         specifier: workspace:*
         version: link:../../../team/team-server

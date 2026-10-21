@@ -6,6 +6,10 @@ import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
 import { Agent } from '@atproto/api';
 import { auth } from '@giveaway/auth-server/config';
 import { environment } from '@giveaway/app-config/environment';
+import {
+  assertMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -46,7 +50,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const team = await prisma.team.findUnique({ where: { slug } });
+    const team = await prisma.team.findUnique({
+      where: { slug },
+      include: { members: true }
+    });
 
     if (!team) {
       throw new ApplicationError({
@@ -55,26 +62,11 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const owner = await prisma.user.findFirst({
-      where: {
-        id: userSession.user.id,
-        teams: {
-          some: {
-            teamId: team.id
-          }
-        }
-      },
-      include: {
-        teams: true
-      }
-    });
+    assertMembershipPermission(
+      team.members.find((member) => member.userId === userSession.user.id),
+      TeamPermission.UPDATE_INTEGRATIONS
+    );
 
-    if (!owner) {
-      throw new ApplicationError({
-        code: 'FORBIDDEN',
-        message: 'User is not a member of the team'
-      });
-    }
     const client = await getTeamBlueskyClient();
 
     const { session: blueskySession } = await client.callback(searchParams);

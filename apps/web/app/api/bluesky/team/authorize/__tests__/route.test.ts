@@ -1,15 +1,32 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
+import { TeamRole } from '@prisma/client';
 import { GET } from '../route';
+import { prismaMock } from '@giveaway/testing-server/prisma';
+import { createSession, TEST_USER } from '@giveaway/testing-server/session';
 
 const m = vi.hoisted(() => ({
+  auth: vi.fn(),
   getTeamBlueskyClient: vi.fn(),
   authorize: vi.fn()
+}));
+
+vi.mock('@giveaway/auth-server/config', () => ({
+  auth: m.auth,
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+  handlers: { GET: vi.fn(), POST: vi.fn() }
 }));
 
 vi.mock('@giveaway/bluesky-api/bluesky/team-bluesky-client', () => ({
   getTeamBlueskyClient: m.getTeamBlueskyClient
 }));
+
+const teamWithRole = (role: TeamRole, userId = TEST_USER.id) => ({
+  id: 'team-1',
+  slug: 'acme',
+  members: [{ teamId: 'team-1', userId, role }]
+});
 
 const AUTH_URL = 'https://bsky.social/oauth/authorize?request_uri=urn%3Areq';
 const APP_URL = 'https://app.giveaway.dog';
@@ -51,6 +68,9 @@ describe('bluesky team authorize GET', () => {
     m.authorize.mockResolvedValue(new URL(AUTH_URL));
     m.getTeamBlueskyClient.mockReset();
     m.getTeamBlueskyClient.mockResolvedValue({ authorize: m.authorize });
+    m.auth.mockReset();
+    m.auth.mockResolvedValue(createSession());
+    prismaMock.team.findUnique.mockResolvedValue(teamWithRole(TeamRole.OWNER));
   });
 
   afterEach(() => {
@@ -131,6 +151,118 @@ describe('bluesky team authorize GET', () => {
         { handle: 'acme.bsky.social', authUrlHost: 'bsky.social' }
       );
     });
+  });
+
+  describe('when the user may not connect the team integrations', () => {
+    const FAILURE = `${APP_URL}/app/acme/settings/integrations?error=bluesky_auth_failed`;
+
+    it('redirects with an auth failure error when there is no session', async () => {
+      m.auth.mockResolvedValue(null);
+
+      const res = await GET(request(validParams));
+
+      expect(res.headers.get('location')).toBe(FAILURE);
+      expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
+      expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
+      expect(consoleError).toHaveBeenCalledWith(
+        'Bluesky team authorization failed:',
+        expect.objectContaining({
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required'
+        })
+      );
+    });
+
+    it('redirects with an auth failure error when the session has no user id', async () => {
+      m.auth.mockResolvedValue({ user: {}, expires: '2999-01-01' });
+
+      const res = await GET(request(validParams));
+
+      expect(res.headers.get('location')).toBe(FAILURE);
+      expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
+    });
+
+    it('looks up the team of the slug with its members', async () => {
+      await GET(request(validParams));
+
+      expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
+        where: { slug: 'acme' },
+        include: { members: true }
+      });
+    });
+
+    it('redirects with an auth failure error when the team does not exist', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(null);
+
+      const res = await GET(request(validParams));
+
+      expect(res.headers.get('location')).toBe(FAILURE);
+      expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
+      expect(consoleError).toHaveBeenCalledWith(
+        'Bluesky team authorization failed:',
+        expect.objectContaining({
+          code: 'NOT_FOUND',
+          message: 'Team not found'
+        })
+      );
+    });
+
+    it('[TEAM-006] does not start the flow for a person who is not a member', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(
+        teamWithRole(TeamRole.OWNER, 'someone-else')
+      );
+
+      const res = await GET(request(validParams));
+
+      expect(res.headers.get('location')).toBe(FAILURE);
+      expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
+      expect(res.headers.getSetCookie()).toEqual([]);
+      expect(consoleError).toHaveBeenCalledWith(
+        'Bluesky team authorization failed:',
+        expect.objectContaining({
+          code: 'FORBIDDEN',
+          message: 'You are not a member of this team'
+        })
+      );
+    });
+
+    const expectRefused = async (role: TeamRole) => {
+      prismaMock.team.findUnique.mockResolvedValue(teamWithRole(role));
+
+      const res = await GET(request(validParams));
+
+      expect(res.headers.get('location')).toBe(FAILURE);
+      expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
+      expect(m.authorize).not.toHaveBeenCalled();
+      expect(res.headers.getSetCookie()).toEqual([]);
+      expect(consoleError).toHaveBeenCalledWith(
+        'Bluesky team authorization failed:',
+        expect.objectContaining({
+          code: 'FORBIDDEN',
+          message:
+            'You do not have permission to perform this action. Required permission: UPDATE_INTEGRATIONS'
+        })
+      );
+    };
+
+    it('[ROLE-006] does not start the flow for a guest', async () => {
+      await expectRefused(TeamRole.GUEST);
+    });
+
+    it('[ROLE-001] does not start the flow for a blocked member', async () => {
+      await expectRefused(TeamRole.BLOCKED);
+    });
+
+    it.each([TeamRole.OWNER, TeamRole.ADMIN, TeamRole.MEMBER])(
+      'starts the flow for the %s of the team',
+      async (role) => {
+        prismaMock.team.findUnique.mockResolvedValue(teamWithRole(role));
+
+        const res = await GET(request(validParams));
+
+        expect(res.headers.get('location')).toBe(AUTH_URL);
+      }
+    );
   });
 
   describe('when the handle is missing', () => {

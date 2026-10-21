@@ -16,6 +16,7 @@ export const createAuthConfig = (getSession: GetSession) =>
   ({
     ...authConfigMiddleware,
     events: {
+      ...authConfigMiddleware.events,
       async linkAccount({ user, account, profile }) {
         console.info('linkAccount event for provider:', account, user, profile);
         const label = getAccountLabel(account, profile, user);
