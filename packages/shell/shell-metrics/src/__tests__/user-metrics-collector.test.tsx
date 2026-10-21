@@ -149,6 +149,22 @@ describe('UserMetricsCollector', () => {
     });
   });
 
+  describe('when the metrics cookie cannot be stored', () => {
+    beforeEach(() => {
+      vi.mocked(setUserMetricsCookie).mockImplementation(() => {});
+    });
+
+    it('[TRACK-001] tracks the user only once', async () => {
+      const { rerender } = render(<UserMetricsCollector />);
+
+      await waitFor(() => expect(trackUser).toHaveBeenCalledTimes(1));
+      rerender(<UserMetricsCollector />);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(trackUser).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('when no metrics can be collected', () => {
     beforeEach(() => {
       vi.mocked(collectUserMetrics).mockReturnValue(null);

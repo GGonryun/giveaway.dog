@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import {
   collectUserMetrics,
@@ -13,6 +13,7 @@ import { UserEventType } from '@giveaway/db-model';
 
 export function UserMetricsCollector() {
   const { data: session, status } = useSession();
+  const tracked = useRef(false);
 
   const { run: runTrackUser } = useProcedure({
     action: trackUser,
@@ -22,6 +23,8 @@ export function UserMetricsCollector() {
   });
 
   useEffect(() => {
+    if (tracked.current) return;
+
     const existingMetrics = getUserMetricsCookie();
     const cookieExpired = !existingMetrics;
 
@@ -32,6 +35,7 @@ export function UserMetricsCollector() {
         setUserMetricsCookie(metrics);
 
         if (status === 'authenticated' && session?.user) {
+          tracked.current = true;
           runTrackUser({ type: UserEventType.TRACKING });
         }
       }
