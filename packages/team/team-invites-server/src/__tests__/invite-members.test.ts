@@ -36,10 +36,12 @@ const teamDetails = {
   logo: 'https://example.com/logo.png'
 };
 
+type Invitation = InviteInput['invitations'][number];
+
 const invitation = (
   email: string,
-  role: TeamRole = TeamRole.MEMBER
-): InviteInput['invitations'][number] => ({ email, role });
+  role: Invitation['role'] = TeamRole.MEMBER
+): Invitation => ({ email, role });
 
 const request = (...invitations: InviteInput['invitations']): InviteInput => ({
   slug: 'acme',
@@ -108,6 +110,27 @@ describe('inviteMembers', () => {
 
       expect(inputIssuePaths(result)).toEqual([['invitations', 0, 'role']]);
     });
+
+    it.each([TeamRole.OWNER, TeamRole.BLOCKED])(
+      '[ROLE-005] rejects an invitation with the %s role',
+      async (role) => {
+        prismaMock.team.findFirst.mockResolvedValue(
+          callerTeam(TeamRole.ADMIN, teamDetails)
+        );
+
+        const result = await inviteMembers(
+          request({
+            email: 'a@example.com',
+            role
+          } as unknown as InviteInput['invitations'][number])
+        );
+
+        expectFailure(result, 'UNPROCESSABLE_CONTENT');
+        expect(inputIssuePaths(result)).toEqual([['invitations', 0, 'role']]);
+        expect(prismaMock.teamInviteEmail.create).not.toHaveBeenCalled();
+        expect(inbound.send).not.toHaveBeenCalled();
+      }
+    );
 
     it('rejects a missing invitations list', async () => {
       const result = await inviteMembers({
