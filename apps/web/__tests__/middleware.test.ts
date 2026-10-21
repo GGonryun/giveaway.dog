@@ -34,7 +34,7 @@ describe('middleware', () => {
     it('declares a single negative lookahead matcher', () => {
       expect(config).toEqual({
         matcher: [
-          '/((?!api|_next/static|_next/image|favicon.ico|.well-known/workflow/*).*)'
+          '/((?!api|_next/static|_next/image|favicon.ico|.well-known/workflow/*|.*\\.(?:avif|gif|ico|jpe?g|png|svg|webp|woff2?)$).*)'
         ]
       });
     });
@@ -64,7 +64,6 @@ describe('middleware', () => {
       '/app/api',
       '/browse',
       '/login',
-      '/favicon.png',
       '/robots.txt',
       '/sitemap.xml',
       '/_next/data/build/index.json',
@@ -79,6 +78,10 @@ describe('middleware', () => {
       '/_next/static/chunks/main.js',
       '/_next/image?url=%2Fdog.png',
       '/favicon.ico',
+      '/favicon.png',
+      '/platforms/discord.svg',
+      '/images/demo-sweepstakes-banner-2.jpg',
+      '/fonts/figtree.woff2',
       '/.well-known/workflow',
       '/.well-known/workflow/v1/flow'
     ])('skips %s', (path) => {

@@ -6,8 +6,7 @@ const ASSETS: { path: string; contentType: string; bug?: number }[] = [
   { path: '/favicon.ico', contentType: 'image/x-icon' },
   { path: '/favicon-16x16.png', contentType: 'image/png' },
   { path: '/favicon-32x32.png', contentType: 'image/png' },
-  // The middleware runs on public files, and the path starts with /app.
-  { path: '/apple-touch-icon.png', contentType: 'image/png', bug: 360 },
+  { path: '/apple-touch-icon.png', contentType: 'image/png' },
   { path: '/android-chrome-192x192.png', contentType: 'image/png' },
   { path: '/android-chrome-512x512.png', contentType: 'image/png' },
   { path: '/site.webmanifest', contentType: 'application/manifest+json' },

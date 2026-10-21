@@ -203,38 +203,38 @@ test.describe('team roles', () => {
     }
   );
 
-  test(
-    '[ROLE-006] a guest cannot disconnect the team Twitch channel',
-    knownBug(435),
-    async ({ page, request, browser }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedRolesTeam(request, ns);
-      await seedApi(request).integrations({
-        team: team.slug,
-        integrations: [{ provider: 'TWITCH' }]
-      });
-      await signInAs(page.request, 'guest', ns);
-      await page.goto(`/app/${team.slug}/settings/integrations`);
+  test('[ROLE-006] a guest cannot disconnect the team Twitch channel', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    await seedApi(request).integrations({
+      team: team.slug,
+      integrations: [{ provider: 'TWITCH' }]
+    });
+    await signInAs(page.request, 'guest', ns);
+    await page.goto(`/app/${team.slug}/settings/integrations`);
 
-      await page.getByRole('button', { name: 'Disconnect' }).click();
-      await page
-        .getByRole('alertdialog')
-        .getByRole('button', { name: 'Disconnect' })
-        .click();
-      const result = page.getByText(
-        /Twitch disconnected successfully|Failed to disconnect Twitch/
-      );
-      await expect(result).toBeVisible();
-      await expect(result).toHaveText(/Failed to disconnect Twitch/);
+    await page.getByRole('button', { name: 'Disconnect' }).click();
+    await page
+      .getByRole('alertdialog')
+      .getByRole('button', { name: 'Disconnect' })
+      .click();
+    const result = page.getByText(
+      /Twitch disconnected successfully|Failed to disconnect Twitch/
+    );
+    await expect(result).toBeVisible();
+    await expect(result).toHaveText(/Failed to disconnect Twitch/);
 
-      const owner = await openAs(browser, 'host', ns);
-      await owner.page.goto(`/app/${team.slug}/settings/integrations`);
-      await expect(
-        owner.page.getByRole('link', { name: 'Profile', exact: true })
-      ).toBeVisible();
-      await owner.context.close();
-    }
-  );
+    const owner = await openAs(browser, 'host', ns);
+    await owner.page.goto(`/app/${team.slug}/settings/integrations`);
+    await expect(
+      owner.page.getByRole('link', { name: 'Profile', exact: true })
+    ).toBeVisible();
+    await owner.context.close();
+  });
 
   test('[ROLE-006] a guest cannot install the Discord bot or disconnect Discord', async ({
     page,
