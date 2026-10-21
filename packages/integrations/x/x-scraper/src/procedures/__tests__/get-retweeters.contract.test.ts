@@ -98,7 +98,7 @@ describe('ScrapeBadger retweeters contract', () => {
 
     await expect(getRetweeters({ tweetId: TWEET_ID })).rejects.toMatchObject({
       code: 'BAD_GATEWAY',
-      message: 'Invalid ScrapeBadger retweeters response'
+      message: 'Could not read the retweeters from X'
     });
   });
 });

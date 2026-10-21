@@ -31,10 +31,12 @@ const captureError = (fn: () => unknown) => {
 describe('getScrapeBadgerClient', () => {
   beforeEach(() => {
     m.ScrapeBadger.mockClear();
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    vi.restoreAllMocks();
   });
 
   describe('when the API key is configured', () => {
@@ -69,11 +71,29 @@ describe('getScrapeBadgerClient', () => {
         expect(error).toBeInstanceOf(ApplicationError);
         expect(error.code).toBe('INTERNAL_SERVER_ERROR');
         expect(error.message).toBe(
-          'SCRAPEBADGER_API_KEY environment variable not set'
+          'Loading posts from X is not available right now'
         );
         expect(m.ScrapeBadger).not.toHaveBeenCalled();
       }
     );
+
+    it('does not name the scraper or its key in the error that customers see', () => {
+      vi.stubEnv('SCRAPEBADGER_API_KEY', '');
+
+      const error = captureError(() => getScrapeBadgerClient());
+
+      expect(error.message.toLowerCase()).not.toContain('scrapebadger');
+    });
+
+    it('logs the missing variable for the developers', () => {
+      vi.stubEnv('SCRAPEBADGER_API_KEY', '');
+
+      captureError(() => getScrapeBadgerClient());
+
+      expect(console.error).toHaveBeenCalledWith(
+        '[ScrapeBadger] SCRAPEBADGER_API_KEY is not set'
+      );
+    });
   });
 });
 

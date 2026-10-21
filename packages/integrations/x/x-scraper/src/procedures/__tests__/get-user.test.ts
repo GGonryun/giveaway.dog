@@ -68,7 +68,7 @@ describe('getUser', () => {
     await expect(promise).rejects.toBeInstanceOf(ApplicationError);
     await expect(promise).rejects.toMatchObject({
       code: 'INTERNAL_SERVER_ERROR',
-      message: 'SCRAPEBADGER_API_KEY environment variable not set'
+      message: 'Loading posts from X is not available right now'
     });
     expect(m.getByUsername).not.toHaveBeenCalled();
   });

@@ -17,7 +17,7 @@ export const parseScrapeBadgerResponse = <T>(
     );
     throw new ApplicationError({
       code: 'BAD_GATEWAY',
-      message: `Invalid ScrapeBadger ${call} response`,
+      message: `Could not read the ${call} from X`,
       cause: result.error
     });
   }

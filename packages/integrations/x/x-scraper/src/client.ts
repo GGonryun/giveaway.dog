@@ -25,9 +25,10 @@ export const getScrapeBadgerClient = (): ScrapeBadgerClient => {
   const apiKey = process.env.SCRAPEBADGER_API_KEY;
 
   if (!apiKey) {
+    console.error('[ScrapeBadger] SCRAPEBADGER_API_KEY is not set');
     throw new ApplicationError({
       code: 'INTERNAL_SERVER_ERROR',
-      message: 'SCRAPEBADGER_API_KEY environment variable not set'
+      message: 'Loading posts from X is not available right now'
     });
   }
 

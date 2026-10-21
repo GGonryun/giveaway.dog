@@ -297,6 +297,23 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       });
     });
 
+    it('returns a view count that X sends as a string as a number', async () => {
+      m.getById.mockResolvedValue({ ...TWEET, view_count: '500' });
+
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(200);
+      expect((await res.json()).data.viewCount).toBe(500);
+    });
+
+    it('returns a null view count when the tweet has none', async () => {
+      m.getById.mockResolvedValue({ ...TWEET, view_count: null });
+
+      const res = await POST(buildRequest());
+
+      expect((await res.json()).data.viewCount).toBeNull();
+    });
+
     it('looks up the author by the tweet username', async () => {
       await POST(buildRequest());
 
@@ -454,10 +471,30 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       expect(await res.json()).toEqual({
         error: {
           code: 'BAD_GATEWAY',
-          message: 'Invalid ScrapeBadger tweet response'
+          message: 'Could not read the tweet from X'
         }
       });
       expect(m.getByUsername).not.toHaveBeenCalled();
+    });
+
+    it('does not name the scraper in the response', async () => {
+      m.getById.mockResolvedValue({ ...TWEET, view_count: 'many' });
+
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(502);
+      expect((await res.text()).toLowerCase()).not.toContain('scrapebadger');
+    });
+  });
+
+  describe('when ScrapeBadger sends the view count as a string', () => {
+    it('loads the tweet', async () => {
+      m.getById.mockResolvedValue({ ...TWEET, view_count: '500' });
+
+      const res = await POST(buildRequest());
+
+      expect(res.status).toBe(200);
+      expect(m.getByUsername).toHaveBeenCalled();
     });
   });
 
@@ -508,9 +545,17 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       expect(await res.json()).toEqual({
         error: {
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'SCRAPEBADGER_API_KEY environment variable not set'
+          message: 'Loading posts from X is not available right now'
         }
       });
+    });
+
+    it('does not name the scraper or its key when the key is missing', async () => {
+      vi.stubEnv('SCRAPEBADGER_API_KEY', '');
+
+      const res = await POST(buildRequest());
+
+      expect((await res.text()).toLowerCase()).not.toContain('scrapebadger');
     });
 
     it('does not record site metrics', async () => {

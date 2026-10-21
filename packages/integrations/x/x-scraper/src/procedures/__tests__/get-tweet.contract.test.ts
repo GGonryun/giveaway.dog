@@ -55,7 +55,7 @@ describe('ScrapeBadger tweet contract', () => {
       getTweet({ tweetId: scrapeBadgerTweetFixture.id })
     ).rejects.toMatchObject({
       code: 'BAD_GATEWAY',
-      message: 'Invalid ScrapeBadger tweet response'
+      message: 'Could not read the tweet from X'
     });
   });
 });

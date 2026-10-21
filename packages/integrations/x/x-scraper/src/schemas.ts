@@ -31,7 +31,7 @@ export const scrapeBadgerTweetSchema = z.object({
   retweet_count: z.number(),
   reply_count: z.number(),
   quote_count: z.number(),
-  view_count: z.number().nullish()
+  view_count: z.union([z.number(), z.string().regex(/^\d+$/)]).nullish()
 });
 
 export const scrapeBadgerRetweetersSchema = z.object({

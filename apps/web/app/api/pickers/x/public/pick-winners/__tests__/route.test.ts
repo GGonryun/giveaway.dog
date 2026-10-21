@@ -305,7 +305,7 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
       expect(await res.json()).toEqual({
         error: {
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'SCRAPEBADGER_API_KEY environment variable not set'
+          message: 'Loading posts from X is not available right now'
         }
       });
     });
@@ -536,7 +536,7 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
       expect(await res.json()).toEqual({
         error: {
           code: 'BAD_GATEWAY',
-          message: 'Invalid ScrapeBadger retweeters response'
+          message: 'Could not read the retweeters from X'
         }
       });
     });
