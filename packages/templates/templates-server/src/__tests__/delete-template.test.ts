@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { TeamRole } from '@giveaway/db-model';
 import { deleteTemplate } from '../delete-template';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
@@ -6,6 +7,11 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 
 const input = { templateId: 'tpl-1', slug: 'acme' };
+
+const stored = (role: TeamRole = TeamRole.MEMBER) => ({
+  id: 'tpl-1',
+  team: { members: [{ userId: TEST_USER.id, role }] }
+});
 
 describe('deleteTemplate', () => {
   describe('when the caller is not signed in', () => {
@@ -37,7 +43,7 @@ describe('deleteTemplate', () => {
   describe('when the caller can access the template', () => {
     it('looks up the template through a team the caller belongs to', async () => {
       signIn();
-      prismaMock.template.findUnique.mockResolvedValue({ id: 'tpl-1' });
+      prismaMock.template.findUnique.mockResolvedValue(stored());
 
       await deleteTemplate(input);
 
@@ -48,13 +54,23 @@ describe('deleteTemplate', () => {
             slug: 'acme',
             members: { some: { userId: TEST_USER.id } }
           }
+        },
+        include: {
+          team: {
+            select: {
+              members: {
+                where: { userId: TEST_USER.id },
+                select: { userId: true, role: true }
+              }
+            }
+          }
         }
       });
     });
 
     it('deletes the template and reports success', async () => {
       signIn();
-      prismaMock.template.findUnique.mockResolvedValue({ id: 'tpl-1' });
+      prismaMock.template.findUnique.mockResolvedValue(stored());
 
       const result = await deleteTemplate(input);
 
@@ -66,12 +82,29 @@ describe('deleteTemplate', () => {
 
     it('does not revalidate any cache tags', async () => {
       signIn();
-      prismaMock.template.findUnique.mockResolvedValue({ id: 'tpl-1' });
+      prismaMock.template.findUnique.mockResolvedValue(stored());
 
       await deleteTemplate(input);
 
       expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
     });
+  });
+
+  describe('when the caller cannot update giveaways of the team', () => {
+    it.each([TeamRole.GUEST, TeamRole.BLOCKED])(
+      'returns FORBIDDEN and deletes nothing when the caller is a %s',
+      async (role) => {
+        signIn();
+        prismaMock.template.findUnique.mockResolvedValue(stored(role));
+
+        const result = await deleteTemplate(input);
+
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to perform this action. Required permission: UPDATE_SWEEPSTAKES'
+        );
+        expect(prismaMock.template.delete).not.toHaveBeenCalled();
+      }
+    );
   });
 
   describe('when the template is not accessible', () => {
@@ -91,7 +124,7 @@ describe('deleteTemplate', () => {
   describe('when the database fails', () => {
     it('maps a P2025 error from the delete to NOT_FOUND', async () => {
       signIn();
-      prismaMock.template.findUnique.mockResolvedValue({ id: 'tpl-1' });
+      prismaMock.template.findUnique.mockResolvedValue(stored());
       prismaMock.template.delete.mockRejectedValue(knownRequestError('P2025'));
 
       const result = await deleteTemplate(input);

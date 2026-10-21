@@ -3,6 +3,10 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  assertMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 import { findUserSweepstakesQuery } from '@giveaway/sweepstakes-access/shared';
 import { FORM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { toSweepstakesInput } from '@giveaway/sweepstakes-model/input';
@@ -27,6 +31,12 @@ export const convertSweepstakesToTemplate = procedure()
         members: {
           some: { userId: user.id }
         }
+      },
+      include: {
+        members: {
+          where: { userId: user.id },
+          select: { userId: true, role: true }
+        }
       }
     });
 
@@ -36,6 +46,11 @@ export const convertSweepstakesToTemplate = procedure()
         message: 'Team not found or you do not have access.'
       });
     }
+
+    assertMembershipPermission(
+      team.members[0],
+      TeamPermission.UPDATE_SWEEPSTAKES
+    );
 
     const sweepstakes = await db.sweepstakes.findUnique({
       where: findUserSweepstakesQuery({

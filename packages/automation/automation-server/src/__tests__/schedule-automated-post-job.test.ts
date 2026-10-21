@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { TeamRole } from '@giveaway/db-model';
 import { scheduleAutomatedPostJob } from '../schedule-automated-post-job';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
@@ -28,10 +29,16 @@ const discordInput: ScheduleInput = {
 };
 
 const sweepstakesRow = ({
-  team = { id: 'team-1', members: [{ id: 'm-1', userId: TEST_USER.id }] },
+  team = {
+    id: 'team-1',
+    members: [{ id: 'm-1', userId: TEST_USER.id, role: TeamRole.MEMBER }]
+  },
   timing = { startDate: START, endDate: END }
 }: {
-  team?: { id: string; members: { id: string; userId: string }[] } | null;
+  team?: {
+    id: string;
+    members: { id: string; userId: string; role: TeamRole }[];
+  } | null;
   timing?: { startDate: Date | null; endDate: Date | null } | null;
 } = {}) => ({
   id: 'sweep-1',
@@ -190,6 +197,28 @@ describe('scheduleAutomatedPostJob', () => {
       );
       expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
     });
+
+    it.each([TeamRole.GUEST, TeamRole.BLOCKED])(
+      'returns FORBIDDEN and creates nothing when the caller is a %s',
+      async (role) => {
+        prismaMock.sweepstakes.findUnique.mockResolvedValue(
+          sweepstakesRow({
+            team: {
+              id: 'team-1',
+              members: [{ id: 'm-1', userId: TEST_USER.id, role }]
+            }
+          })
+        );
+
+        const result = await scheduleAutomatedPostJob(blueskyInput);
+
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to perform this action. Required permission: UPDATE_SWEEPSTAKES'
+        );
+        expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
+        expect(prismaMock.automatedPostJob.create).not.toHaveBeenCalled();
+      }
+    );
 
     it('returns PRECONDITION_FAILED when the sweepstakes has no timing', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(

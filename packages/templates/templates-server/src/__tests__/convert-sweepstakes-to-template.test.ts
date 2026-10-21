@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { TeamRole } from '@giveaway/db-model';
 import { convertSweepstakesToTemplate } from '../convert-sweepstakes-to-template';
 import {
   DEFAULT_TEMPLATE_IMAGE,
@@ -14,7 +15,8 @@ const team = {
   id: 'team-1',
   name: 'Acme',
   slug: 'acme',
-  logo: 'https://example.com/logo.png'
+  logo: 'https://example.com/logo.png',
+  members: [{ userId: TEST_USER.id, role: TeamRole.MEMBER }]
 };
 
 const input = { id: 'sw-1', slug: 'acme' };
@@ -148,6 +150,12 @@ describe('convertSweepstakesToTemplate', () => {
         where: {
           slug: 'acme',
           members: { some: { userId: TEST_USER.id } }
+        },
+        include: {
+          members: {
+            where: { userId: TEST_USER.id },
+            select: { userId: true, role: true }
+          }
         }
       });
     });
@@ -163,6 +171,25 @@ describe('convertSweepstakesToTemplate', () => {
       );
       expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
     });
+
+    it.each([TeamRole.GUEST, TeamRole.BLOCKED])(
+      'returns FORBIDDEN and creates nothing when the caller is a %s',
+      async (role) => {
+        arrange();
+        prismaMock.team.findUnique.mockResolvedValue({
+          ...team,
+          members: [{ userId: TEST_USER.id, role }]
+        });
+
+        const result = await convertSweepstakesToTemplate(input);
+
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to perform this action. Required permission: UPDATE_SWEEPSTAKES'
+        );
+        expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
+        expect(prismaMock.template.create).not.toHaveBeenCalled();
+      }
+    );
 
     it('loads the sweepstakes from any team the caller belongs to with the form payload', async () => {
       arrange();
