@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
 import { knownBug } from '../../helpers/known-bug';
-import { toPersonaEmail } from '../../helpers/personas';
+import { signInAs, toPersonaEmail } from '../../helpers/personas';
 import { seedWorkerTeam } from '../../helpers/seed';
 
 const SESSION_COOKIE = /^(__Secure-)?authjs\.session-token(\.\d+)?$/;
@@ -33,30 +33,26 @@ test.describe('logout', () => {
   test.describe('as a participant', () => {
     test.use({ storageState: personaState('participant') });
 
-    test(
-      '[AUTH-008] logs out from the avatar menu',
-      knownBug(450),
-      async ({ page }) => {
-        await page.goto('/browse');
+    test.beforeEach(async ({ page }) => {
+      await signInAs(page.request, 'participant');
+    });
 
-        await page.getByRole('button', { name: 'E2E participant' }).click();
-        await page.getByRole('menuitem', { name: /Logout/ }).click();
+    test('[AUTH-008] logs out from the avatar menu', async ({ page }) => {
+      await page.goto('/browse');
 
-        await expectLoggedOut(page);
-      }
-    );
+      await page.getByRole('button', { name: 'E2E participant' }).click();
+      await page.getByRole('menuitem', { name: /Logout/ }).click();
 
-    test(
-      '[AUTH-008] logs out from the account page',
-      knownBug(450),
-      async ({ page }) => {
-        await page.goto('/account');
+      await expectLoggedOut(page);
+    });
 
-        await page.getByRole('button', { name: 'Logout', exact: true }).click();
+    test('[AUTH-008] logs out from the account page', async ({ page }) => {
+      await page.goto('/account');
 
-        await expectLoggedOut(page);
-      }
-    );
+      await page.getByRole('button', { name: 'Logout', exact: true }).click();
+
+      await expectLoggedOut(page);
+    });
 
     test('[AUTH-008] logs out from the logout page', async ({ page }) => {
       await page.goto('/logout');
@@ -85,6 +81,10 @@ test.describe('logout', () => {
 
   test.describe('as a host', () => {
     test.use({ storageState: personaState('host') });
+
+    test.beforeEach(async ({ page }) => {
+      await signInAs(page.request, 'host');
+    });
 
     test('[AUTH-008] logs out from the sidebar of a team', async ({
       page,
