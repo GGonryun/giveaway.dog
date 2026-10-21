@@ -36,10 +36,11 @@ import { environment } from '@giveaway/app-config/environment';
 
 const authConfig = createAuthConfig(() => auth());
 
+const discordProfile = DiscordProvider({}).profile!;
+
 export const { handlers, signIn, signOut, auth } = NextAuth(async (req) => {
   const providers: NextAuthConfig['providers'] = [
     TikTokProvider({
-      allowDangerousEmailAccountLinking: true,
       clientId: process.env.TIKTOK_CLIENT_ID,
       clientSecret: process.env.TIKTOK_CLIENT_SECRET,
 
@@ -48,7 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth(async (req) => {
           id: profile.data.user.open_id,
           name: profile.data.user.display_name || profile.data.user.username,
           image: profile.data.user.avatar_url,
-          email: profile.data.user.email || profile.data.user.username || null
+          email: null
         };
       }
     }),
@@ -115,7 +116,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth(async (req) => {
       allowDangerousEmailAccountLinking: true,
       clientId: process.env.DISCORD_ID,
       clientSecret: process.env.DISCORD_SECRET,
-      authorization: `https://discord.com/api/oauth2/authorize?scope=${REQUIRED_DISCORD_SCOPES.join('+')}`
+      authorization: `https://discord.com/api/oauth2/authorize?scope=${REQUIRED_DISCORD_SCOPES.join('+')}`,
+      async profile(profile, tokens) {
+        return {
+          ...(await discordProfile(profile, tokens)),
+          email: profile.verified === true ? profile.email : null
+        };
+      }
     }),
     TwitchProvider({
       allowDangerousEmailAccountLinking: true,

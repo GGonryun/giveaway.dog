@@ -56,30 +56,30 @@ test.describe('account linking', { tag: TAGS.security }, () => {
     }
   });
 
-  test(
-    '[LINK-002] an unverified Discord email does not sign into another account',
-    knownBug(431),
-    async ({ page, context, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const {
-        users: [victim]
-      } = await seedApi(request).userExtras({
-        ns,
-        users: [{ persona: 'participant' }]
-      });
-      await useMockOAuth(context, 'discord', {
-        id: newDiscordId(),
-        username: `e2e_${ns}`,
-        email: victim.email,
-        verified: false
-      });
+  test('[LINK-002] an unverified Discord email does not sign into another account', async ({
+    page,
+    context,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const {
+      users: [victim]
+    } = await seedApi(request).userExtras({
+      ns,
+      users: [{ persona: 'participant' }]
+    });
+    await useMockOAuth(context, 'discord', {
+      id: newDiscordId(),
+      username: `e2e_${ns}`,
+      email: victim.email,
+      verified: false
+    });
 
-      await page.goto('/login');
-      await page.getByRole('button', { name: 'Login with Discord' }).click();
-      await page.waitForURL(signInEnded, { timeout: 30_000 });
+    await page.goto('/login');
+    await page.getByRole('button', { name: 'Login with Discord' }).click();
+    await page.waitForURL(signInEnded, { timeout: 30_000 });
 
-      const session = await page.request.get('/api/auth/session');
-      expect((await session.json())?.user?.id).not.toBe(victim.userId);
-    }
-  );
+    const session = await page.request.get('/api/auth/session');
+    expect((await session.json())?.user?.id).not.toBe(victim.userId);
+  });
 });
