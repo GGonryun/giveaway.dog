@@ -3,6 +3,7 @@ import 'server-only';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@giveaway/db-client/prisma';
 import { NextAuthConfig } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
 import type {} from './next-auth';
 import {
   isSessionRevoked,
@@ -179,8 +180,8 @@ export const authConfigMiddleware = {
     }
   },
   events: {
-    async signOut(message) {
-      if ('token' in message) await revokeSession(message.token);
+    async signOut({ token }: { token?: JWT | null; session?: unknown }) {
+      await revokeSession(token);
     }
   },
   providers: []

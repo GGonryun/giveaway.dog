@@ -401,6 +401,10 @@ describe('authConfigMiddleware', () => {
       const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
 
       expect(token).toEqual({ id: 'u-1', sid: 'session-1' });
+      expect(console.warn).toHaveBeenCalledWith(
+        '[auth] Failed to check the session revocation',
+        expect.any(Error)
+      );
     });
 
     it('copies the user id onto the token', async () => {

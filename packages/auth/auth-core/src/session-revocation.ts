@@ -10,7 +10,7 @@ const loadRedis = async () => (await import('@giveaway/cache/redis')).redis;
 
 export const newSessionId = () => crypto.randomUUID();
 
-export const revokeSession = async (token: JWT | null) => {
+export const revokeSession = async (token: JWT | null | undefined) => {
   if (!token?.sid) return;
 
   const now = Math.floor(Date.now() / 1000);
