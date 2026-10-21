@@ -61,8 +61,6 @@ vi.mock('@giveaway/auth-core/config-runtime', async (importOriginal) => {
   return { ...actual, createAuthConfig: vi.fn(actual.createAuthConfig) };
 });
 
-vi.mock('@giveaway/cache/redis', () => ({ redis: {} }));
-
 vi.mock('@paralleldrive/cuid2', () => ({ createId: mocks.createId }));
 
 vi.mock('inboundemail', () => ({ default: mocks.Inbound }));

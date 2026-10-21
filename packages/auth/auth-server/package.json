@@ -43,7 +43,6 @@
     "next-auth": "catalog:"
   },
   "devDependencies": {
-    "@giveaway/cache": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",

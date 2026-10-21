@@ -18,7 +18,6 @@ const m = vi.hoisted(() => {
 });
 
 vi.mock('next-auth', () => ({ default: m.NextAuth }));
-vi.mock('@giveaway/cache/redis', () => ({ redis: {} }));
 
 describe('middleware', () => {
   describe('default export', () => {
@@ -35,7 +34,7 @@ describe('middleware', () => {
     it('declares a single negative lookahead matcher', () => {
       expect(config).toEqual({
         matcher: [
-          '/((?!api|_next/static|_next/image|favicon.ico|.well-known/workflow/*|images/|platforms/|hosts/|people/).*)'
+          '/((?!api|_next/static|_next/image|favicon.ico|.well-known/workflow/*|.*\\.(?:avif|gif|ico|jpe?g|png|svg|webp|woff2?)$).*)'
         ]
       });
     });
@@ -65,13 +64,10 @@ describe('middleware', () => {
       '/app/api',
       '/browse',
       '/login',
-      '/favicon.png',
       '/robots.txt',
       '/sitemap.xml',
       '/_next/data/build/index.json',
-      '/.well-known/openid-configuration',
-      '/browse/images',
-      '/logo.png'
+      '/.well-known/openid-configuration'
     ])('runs on %s', (path) => {
       expect(matches(path)).toBe(true);
     });
@@ -82,12 +78,12 @@ describe('middleware', () => {
       '/_next/static/chunks/main.js',
       '/_next/image?url=%2Fdog.png',
       '/favicon.ico',
-      '/.well-known/workflow',
-      '/.well-known/workflow/v1/flow',
+      '/favicon.png',
+      '/platforms/discord.svg',
       '/images/demo-sweepstakes-banner-2.jpg',
-      '/platforms/x.svg',
-      '/hosts/host.png',
-      '/people/person.png'
+      '/fonts/figtree.woff2',
+      '/.well-known/workflow',
+      '/.well-known/workflow/v1/flow'
     ])('skips %s', (path) => {
       expect(matches(path)).toBe(false);
     });

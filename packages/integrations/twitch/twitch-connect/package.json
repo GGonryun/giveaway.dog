@@ -30,6 +30,7 @@
     "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
     "@giveaway/team-server": "workspace:*",
     "@giveaway/twitch-api": "workspace:*",
     "@giveaway/twitch-model": "workspace:*",

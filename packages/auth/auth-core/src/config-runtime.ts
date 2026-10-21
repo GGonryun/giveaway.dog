@@ -2,13 +2,11 @@ import 'server-only';
 
 import prisma from '@giveaway/db-client/prisma';
 import { NextAuthConfig, Session } from 'next-auth';
-import type { JWT } from 'next-auth/jwt';
 import { tryAutoMerge } from './auto-merge';
 import { authConfigMiddleware } from './config-middleware';
 import { getAccountLabel, getAccountLink } from './get-account-data';
 import { pickRandom } from '@giveaway/util-collections/arrays';
 import { DOG_BREEDS } from './dogs';
-import { revokeSession } from './session-revocation';
 import { VERIFIED_EMAIL_PROVIDERS } from '@giveaway/integration-model/scopes';
 import { parseAuthProvider } from '@giveaway/integration-model/providers';
 
@@ -18,10 +16,7 @@ export const createAuthConfig = (getSession: GetSession) =>
   ({
     ...authConfigMiddleware,
     events: {
-      async signOut(message) {
-        const { token } = message as { token?: JWT | null };
-        await revokeSession(token?.sessionId);
-      },
+      ...authConfigMiddleware.events,
       async linkAccount({ user, account, profile }) {
         console.info('linkAccount event for provider:', account, user, profile);
         const label = getAccountLabel(account, profile, user);

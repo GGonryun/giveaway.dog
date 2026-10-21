@@ -1,33 +1,39 @@
 import 'server-only';
 
-import { redis } from '@giveaway/cache/redis';
+import type { JWT } from 'next-auth/jwt';
 
-export const REVOKED_SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
+const SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
 
-const revokedSessionKey = (sessionId: string) =>
-  `auth:revoked-session:${sessionId}`;
+const revokedSessionKey = (sid: string) => `auth:revoked-session:${sid}`;
+
+const loadRedis = async () => (await import('@giveaway/cache/redis')).redis;
 
 export const newSessionId = () => crypto.randomUUID();
 
-export const revokeSession = async (sessionId: unknown) => {
-  if (typeof sessionId !== 'string') return;
+export const revokeSession = async (token: JWT | null | undefined) => {
+  if (!token?.sid) return;
+
+  const now = Math.floor(Date.now() / 1000);
+  const expiresAt = token.exp ?? now + SESSION_MAX_AGE_SECONDS;
 
   try {
-    await redis.set(revokedSessionKey(sessionId), 1, {
-      ex: REVOKED_SESSION_TTL_SECONDS
+    const redis = await loadRedis();
+    await redis.set(revokedSessionKey(token.sid), 1, {
+      ex: Math.max(1, expiresAt - now)
     });
   } catch (error) {
-    console.error('Failed to revoke the session:', error);
+    console.error('[auth] Failed to revoke the session', error);
   }
 };
 
-export const isSessionRevoked = async (sessionId: unknown) => {
-  if (typeof sessionId !== 'string') return false;
+export const isSessionRevoked = async (token: JWT) => {
+  if (!token.sid) return false;
 
   try {
-    return (await redis.exists(revokedSessionKey(sessionId))) > 0;
+    const redis = await loadRedis();
+    return (await redis.exists(revokedSessionKey(token.sid))) > 0;
   } catch (error) {
-    console.error('Failed to read the revoked sessions:', error);
+    console.warn('[auth] Failed to check the session revocation', error);
     return false;
   }
 };

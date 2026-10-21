@@ -5,14 +5,12 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { DOG_BREEDS } from '../dogs';
 import { prismaMock } from '@giveaway/testing-mocks/prisma';
 import { createSession } from '@giveaway/testing-mocks/session';
-import { redis } from '@giveaway/cache/redis';
 
 const getSession = vi.fn<GetSession>();
 
 const authConfig = createAuthConfig(getSession);
 
 type LinkAccountArgs = Parameters<typeof authConfig.events.linkAccount>[0];
-type SignOutArgs = Parameters<typeof authConfig.events.signOut>[0];
 type SignInArgs = Parameters<typeof authConfig.callbacks.signIn>[0];
 
 const NOW = new Date('2026-03-04T05:06:07.000Z');
@@ -87,40 +85,6 @@ describe('authConfig', () => {
       createAuthConfig(getOtherSession);
 
       expect(getOtherSession).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('events.signOut', () => {
-    it('revokes the session of the token that signs out', async () => {
-      await authConfig.events.signOut({
-        token: { id: 'u-1', sessionId: 'session-1' }
-      } as SignOutArgs);
-
-      expect(redis.set).toHaveBeenCalledWith(
-        'auth:revoked-session:session-1',
-        1,
-        { ex: 2_592_000 }
-      );
-    });
-
-    it('revokes nothing for a token without a session id', async () => {
-      await authConfig.events.signOut({ token: { id: 'u-1' } } as SignOutArgs);
-
-      expect(redis.set).not.toHaveBeenCalled();
-    });
-
-    it('revokes nothing when signing out without a token', async () => {
-      await authConfig.events.signOut({ token: null } as SignOutArgs);
-
-      expect(redis.set).not.toHaveBeenCalled();
-    });
-
-    it('revokes nothing for a database session', async () => {
-      await authConfig.events.signOut({
-        session: { sessionToken: 'db-session' }
-      } as SignOutArgs);
-
-      expect(redis.set).not.toHaveBeenCalled();
     });
   });
 
