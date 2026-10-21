@@ -5,7 +5,6 @@ import {
   UserParticipantSheetContent
 } from '@giveaway/sweepstakes-details-participants/user-participant-detail-sheet';
 import { getSweepstakesParticipant } from '@giveaway/participant-server/get-sweepstake-participant';
-import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import { getSweepstakesFormFields } from '@giveaway/participation-server/get-sweepstake-form-field';
 import { getSweepstakesTasks } from '@giveaway/participation-server/get-sweepstake-tasks';
 import { Suspense } from 'react';

@@ -3,7 +3,7 @@
 import { SweepstakesAnalytics } from '@giveaway/sweepstakes-details-analytics/sweepstakes-analytics';
 import { SweepstakesAnalyticsSkeleton } from '@giveaway/sweepstakes-details-analytics/sweepstakes-analytics-skeleton';
 import getSweepstakesEntryTimeSeries from '@giveaway/sweepstakes-insights-server/get-sweepstakes-entry-time-series';
-import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import getTeamSweepstake from '@giveaway/participation-server/get-team-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getSweepstakesAllocations } from '@giveaway/allocation-server/get-sweepstakes-allocations';
@@ -40,7 +40,7 @@ const Wrapper: React.FC<{ id: string; slug: string }> = async ({
   id: sweepstakesId,
   slug
 }) => {
-  const participant = await getParticipantSweepstake({ sweepstakesId });
+  const participant = await getTeamSweepstake({ sweepstakesId, slug });
   const timeseries = await getSweepstakesEntryTimeSeries({
     sweepstakesId,
     slug

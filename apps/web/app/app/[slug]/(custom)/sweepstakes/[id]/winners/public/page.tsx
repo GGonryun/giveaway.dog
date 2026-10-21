@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { PublicWinnerDraw } from '@giveaway/sweepstakes-details-winners/public-winner-draw';
 import { getSweepstakesParticipants } from '@giveaway/participant-server/get-sweepstakes-participants';
-import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import getTeamSweepstake from '@giveaway/participation-server/get-team-sweepstake';
 import getSweepstakePrizes from '@giveaway/sweepstakes-insights-server/get-sweepstake-prizes';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,7 +24,7 @@ interface PageProps {
 export default async function PublicDrawPage({ params }: PageProps) {
   const { id, slug } = await params;
 
-  const result = await getParticipantSweepstake({ sweepstakesId: id });
+  const result = await getTeamSweepstake({ sweepstakesId: id, slug });
   const prizes = await getSweepstakePrizes({ sweepstakesId: id, slug });
   const participants = await getSweepstakesParticipants({
     slug,

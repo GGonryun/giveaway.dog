@@ -2,7 +2,7 @@ import { AutomationCard } from '@giveaway/automation-ui/automation-card';
 import { AutomationCardSkeleton } from '@giveaway/automation-ui/automation-card-skeleton';
 import { getAutomatedPostJobs } from '@giveaway/automation-server/get-automated-post-jobs';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
-import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import getTeamSweepstake from '@giveaway/participation-server/get-team-sweepstake';
 import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
 import React, { Suspense } from 'react';
 
@@ -24,7 +24,7 @@ const Wrapper: React.FC<SweepstakesPageProps> = async ({
   id: sweepstakesId,
   slug
 }) => {
-  const sweepstake = await getParticipantSweepstake({ sweepstakesId });
+  const sweepstake = await getTeamSweepstake({ sweepstakesId, slug });
   const integrations = await getTeamIntegrations({ slug });
   const jobs = await getAutomatedPostJobs({ sweepstakesId, slug });
 
