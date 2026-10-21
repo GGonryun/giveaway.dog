@@ -6,6 +6,9 @@ import {
   taskCompletionSchema,
   toTaskCompletion
 } from '@giveaway/task-model/completions';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
+import { TeamPermission } from '@giveaway/team-permissions';
+import { TeamTier } from '@giveaway/db-model';
 
 import z from 'zod';
 
@@ -15,11 +18,20 @@ export const getTaskCompletions = procedure()
   })
   .input(
     z.object({
+      slug: z.string(),
       userId: z.string()
     })
   )
   .output(taskCompletionSchema.array())
   .handler(async ({ input, db, user }) => {
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.VIEW_SWEEPSTAKES,
+      tier: TeamTier.FREE
+    });
+
     const tasks = await db.taskCompletion.findMany({
       where: {
         participant: {
@@ -27,11 +39,7 @@ export const getTaskCompletions = procedure()
         },
         task: {
           sweepstakes: {
-            team: {
-              members: {
-                some: { userId: user.id }
-              }
-            }
+            teamId: team.id
           }
         }
       },

@@ -22,7 +22,7 @@ export default async function UserDetailEntriesPage({
 }
 
 const Wrapper: React.FC<UserParams> = async ({ userId, slug }) => {
-  const entries = await getTaskCompletions({ userId });
+  const entries = await getTaskCompletions({ slug, userId });
 
   if (!entries.ok) {
     return <div>Error loading entries: {entries.data.message}</div>;
