@@ -6157,6 +6157,9 @@ importers:
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../../infra/rpc-server
+      '@giveaway/team-permissions':
+        specifier: workspace:*
+        version: link:../../../team/team-permissions
       '@giveaway/team-server':
         specifier: workspace:*
         version: link:../../../team/team-server
