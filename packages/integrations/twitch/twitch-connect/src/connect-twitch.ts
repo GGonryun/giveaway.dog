@@ -3,7 +3,9 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
-import { findUserTeamQuery } from '@giveaway/team-server/find-user-team';
+import { TeamTier } from '@giveaway/db-model';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
+import { TeamPermission } from '@giveaway/team-permissions';
 import { datetime } from '@giveaway/util-time/date';
 import {
   TWITCH_CLIENT_ID,
@@ -28,16 +30,13 @@ export const connectTwitch = procedure()
     })
   )
   .handler(async ({ input, user, db }) => {
-    const team = await db.team.findUnique({
-      where: findUserTeamQuery({ slug: input.slug, userId: user.id })
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.UPDATE_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
-
-    if (!team) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Team not found'
-      });
-    }
 
     if (!TWITCH_CLIENT_ID || !TWITCH_REDIRECT_URI) {
       throw new ApplicationError({

@@ -3,6 +3,7 @@ import { disconnectTwitch } from '../disconnect-twitch';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { TeamRole, TeamTier } from '@giveaway/db-model';
 import {
   EVENTSUB_URL,
   TOKEN_URL,
@@ -31,6 +32,15 @@ const routeFetch = (deleteResponse: () => Response) => {
     return deleteResponse();
   });
 };
+
+const teamWithRole = (role: TeamRole = TeamRole.OWNER, slug = 'acme') => ({
+  id: 'team-1',
+  slug,
+  tier: TeamTier.FREE,
+  members: [
+    { id: 'membership-1', teamId: 'team-1', userId: TEST_USER.id, role }
+  ]
+});
 
 const integration = (subscriptions: unknown) => ({
   id: 'integration-1',
@@ -88,13 +98,69 @@ describe('disconnectTwitch', () => {
     });
   });
 
+  describe.each([TeamRole.OWNER, TeamRole.ADMIN, TeamRole.MEMBER])(
+    'when the caller is a %s of the team',
+    (role) => {
+      it('deletes the integration', async () => {
+        signIn();
+        prismaMock.team.findUnique.mockResolvedValue(teamWithRole(role));
+        prismaMock.integration.findFirst.mockResolvedValue(integration([]));
+
+        const result = await disconnectTwitch({ slug: 'acme' });
+
+        expect(expectOk(result)).toEqual({ success: true });
+        expect(prismaMock.integration.delete).toHaveBeenCalledWith({
+          where: { id: 'integration-1' }
+        });
+      });
+    }
+  );
+
+  describe.each([TeamRole.GUEST, TeamRole.BLOCKED])(
+    'when the caller is a %s of the team',
+    (role) => {
+      it('returns FORBIDDEN without touching the integration', async () => {
+        signIn();
+        prismaMock.team.findUnique.mockResolvedValue(teamWithRole(role));
+        prismaMock.integration.findFirst.mockResolvedValue(integration([]));
+
+        const result = await disconnectTwitch({ slug: 'acme' });
+
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to perform this action. Required permission: UPDATE_INTEGRATIONS'
+        );
+        expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
+        expect(prismaMock.integration.delete).not.toHaveBeenCalled();
+      });
+    }
+  );
+
+  describe('when the caller has no membership on the team', () => {
+    it('returns FORBIDDEN without touching the integration', async () => {
+      signIn();
+      prismaMock.team.findUnique.mockResolvedValue({
+        ...teamWithRole(),
+        members: [
+          {
+            id: 'membership-2',
+            teamId: 'team-1',
+            userId: 'someone-else',
+            role: TeamRole.OWNER
+          }
+        ]
+      });
+
+      const result = await disconnectTwitch({ slug: 'acme' });
+
+      expectFailure(result, 'FORBIDDEN');
+      expect(prismaMock.integration.delete).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when the caller belongs to the team', () => {
     beforeEach(() => {
       signIn();
-      prismaMock.team.findUnique.mockResolvedValue({
-        id: 'team-1',
-        slug: 'acme'
-      });
+      prismaMock.team.findUnique.mockResolvedValue(teamWithRole());
     });
 
     it('looks up the team by slug for the signed in member', async () => {
@@ -103,7 +169,8 @@ describe('disconnectTwitch', () => {
       await disconnectTwitch({ slug: 'acme' });
 
       expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'acme', members: { some: { userId: TEST_USER.id } } }
+        where: { slug: 'acme', members: { some: { userId: TEST_USER.id } } },
+        include: { members: true }
       });
     });
 

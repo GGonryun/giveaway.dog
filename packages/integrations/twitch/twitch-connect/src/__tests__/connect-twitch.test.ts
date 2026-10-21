@@ -3,6 +3,7 @@ import { connectTwitch } from '../connect-twitch';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { TeamRole, TeamTier } from '@giveaway/db-model';
 
 vi.hoisted(() => {
   vi.stubEnv('TWITCH_CLIENT_ID', 'client-id');
@@ -12,6 +13,15 @@ vi.hoisted(() => {
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 
 type ConnectInput = Parameters<typeof connectTwitch>[0];
+
+const teamWithRole = (role: TeamRole = TeamRole.OWNER, slug = 'acme') => ({
+  id: 'team-1',
+  slug,
+  tier: TeamTier.FREE,
+  members: [
+    { id: 'membership-1', teamId: 'team-1', userId: TEST_USER.id, role }
+  ]
+});
 
 describe('connectTwitch', () => {
   beforeEach(() => {
@@ -74,10 +84,7 @@ describe('connectTwitch', () => {
   describe('when the caller belongs to the team', () => {
     beforeEach(() => {
       signIn();
-      prismaMock.team.findUnique.mockResolvedValue({
-        id: 'team-1',
-        slug: 'acme'
-      });
+      prismaMock.team.findUnique.mockResolvedValue(teamWithRole());
       prismaMock.state.create.mockResolvedValue({ id: 'state-1' });
     });
 
@@ -85,7 +92,8 @@ describe('connectTwitch', () => {
       await connectTwitch({ slug: 'acme' } as ConnectInput);
 
       expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'acme', members: { some: { userId: TEST_USER.id } } }
+        where: { slug: 'acme', members: { some: { userId: TEST_USER.id } } },
+        include: { members: true }
       });
     });
 
@@ -150,10 +158,9 @@ describe('connectTwitch', () => {
     });
 
     it('uses the slug of the stored team rather than the input', async () => {
-      prismaMock.team.findUnique.mockResolvedValue({
-        id: 'team-1',
-        slug: 'stored-slug'
-      });
+      prismaMock.team.findUnique.mockResolvedValue(
+        teamWithRole(TeamRole.OWNER, 'stored-slug')
+      );
 
       const result = await connectTwitch({ slug: 'acme' } as ConnectInput);
 
@@ -162,10 +169,9 @@ describe('connectTwitch', () => {
     });
 
     it('stores the slug of the stored team rather than the input in the state', async () => {
-      prismaMock.team.findUnique.mockResolvedValue({
-        id: 'team-1',
-        slug: 'stored-slug'
-      });
+      prismaMock.team.findUnique.mockResolvedValue(
+        teamWithRole(TeamRole.OWNER, 'stored-slug')
+      );
 
       await connectTwitch({ slug: 'acme' } as ConnectInput);
 
@@ -187,16 +193,67 @@ describe('connectTwitch', () => {
     });
   });
 
+  describe.each([TeamRole.OWNER, TeamRole.ADMIN, TeamRole.MEMBER])(
+    'when the caller is a %s of the team',
+    (role) => {
+      it('returns the twitch authorize url', async () => {
+        signIn();
+        prismaMock.team.findUnique.mockResolvedValue(teamWithRole(role));
+        prismaMock.state.create.mockResolvedValue({ id: 'state-1' });
+
+        const result = await connectTwitch({ slug: 'acme' } as ConnectInput);
+
+        expect(expectOk(result).authUrl).toMatch(
+          /^https:\/\/id\.twitch\.tv\/oauth2\/authorize\?/
+        );
+      });
+    }
+  );
+
+  describe.each([TeamRole.GUEST, TeamRole.BLOCKED])(
+    'when the caller is a %s of the team',
+    (role) => {
+      it('returns FORBIDDEN without creating state', async () => {
+        signIn();
+        prismaMock.team.findUnique.mockResolvedValue(teamWithRole(role));
+
+        const result = await connectTwitch({ slug: 'acme' } as ConnectInput);
+
+        expectFailure(result, 'FORBIDDEN');
+        expect(prismaMock.state.create).not.toHaveBeenCalled();
+      });
+    }
+  );
+
+  describe('when the caller has no membership on the team', () => {
+    it('returns FORBIDDEN without creating state', async () => {
+      signIn();
+      prismaMock.team.findUnique.mockResolvedValue({
+        ...teamWithRole(),
+        members: [
+          {
+            id: 'membership-2',
+            teamId: 'team-1',
+            userId: 'someone-else',
+            role: TeamRole.OWNER
+          }
+        ]
+      });
+
+      const result = await connectTwitch({ slug: 'acme' } as ConnectInput);
+
+      expectFailure(result, 'FORBIDDEN');
+      expect(prismaMock.state.create).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when the twitch client id is not configured', () => {
     it('returns INTERNAL_SERVER_ERROR without creating state', async () => {
       vi.resetModules();
       vi.stubEnv('TWITCH_CLIENT_ID', '');
       const isolated = await import('../connect-twitch');
       signIn();
-      prismaMock.team.findUnique.mockResolvedValue({
-        id: 'team-1',
-        slug: 'acme'
-      });
+      prismaMock.team.findUnique.mockResolvedValue(teamWithRole());
 
       const result = await isolated.connectTwitch({
         slug: 'acme'
