@@ -31,10 +31,12 @@ const captureError = (fn: () => unknown) => {
 describe('getScrapeBadgerClient', () => {
   beforeEach(() => {
     m.ScrapeBadger.mockClear();
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    vi.restoreAllMocks();
   });
 
   describe('when the API key is configured', () => {
@@ -74,6 +76,24 @@ describe('getScrapeBadgerClient', () => {
         expect(m.ScrapeBadger).not.toHaveBeenCalled();
       }
     );
+
+    it('does not name the scraper or its key in the error that customers see', () => {
+      vi.stubEnv('SCRAPEBADGER_API_KEY', '');
+
+      const error = captureError(() => getScrapeBadgerClient());
+
+      expect(error.message.toLowerCase()).not.toContain('scrapebadger');
+    });
+
+    it('logs the missing variable for the developers', () => {
+      vi.stubEnv('SCRAPEBADGER_API_KEY', '');
+
+      captureError(() => getScrapeBadgerClient());
+
+      expect(console.error).toHaveBeenCalledWith(
+        '[ScrapeBadger] SCRAPEBADGER_API_KEY is not set'
+      );
+    });
   });
 });
 
