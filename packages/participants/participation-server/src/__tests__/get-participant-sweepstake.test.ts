@@ -9,167 +9,19 @@ import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import {
   FIXED_NOW,
-  buildSelectedUser,
   daysFromFixedNow
 } from '@giveaway/testing-server/fixtures-procedures-browse-marketing-pickers';
+import {
+  END,
+  START,
+  bonusConfig,
+  drawRow,
+  prizeRow,
+  sweepstakesRow,
+  taskRow
+} from '../testing/participant-sweepstake';
 
 type Input = Parameters<typeof getParticipantSweepstake>[0];
-
-const START = daysFromFixedNow(-2);
-const END = daysFromFixedNow(5);
-const CREATED_AT = daysFromFixedNow(-10);
-
-const bonusConfig = (title: string, value: number) => ({
-  type: 'BONUS_TASK',
-  title,
-  value,
-  mandatory: false,
-  tasksRequired: 0
-});
-
-const taskRow = (id: string, config: unknown) => ({
-  id,
-  sweepstakesId: 'sw-1',
-  index: 0,
-  config
-});
-
-const drawRow = (
-  id: string,
-  task: ReturnType<typeof taskRow>,
-  winnerId = 'winner-1'
-) => ({
-  id,
-  prizeId: 'prize-1',
-  taskCompletionId: `tc-${id}`,
-  result: 'WINNER',
-  disqualificationReason: null,
-  previousDrawId: null,
-  createdAt: daysFromFixedNow(-1),
-  updatedAt: daysFromFixedNow(-1),
-  taskCompletion: {
-    id: `tc-${id}`,
-    participantId: `participant-${winnerId}`,
-    taskId: task.id,
-    status: 'COMPLETED',
-    proof: null,
-    reason: null,
-    completedAt: daysFromFixedNow(-1),
-    task,
-    participant: {
-      id: `participant-${winnerId}`,
-      userId: winnerId,
-      sweepstakesId: 'sw-1',
-      user: buildSelectedUser({ id: winnerId, name: 'Winner' })
-    }
-  }
-});
-
-type PrizeRow = {
-  id: string;
-  sweepstakesId: string;
-  name: string | null;
-  index: number;
-  quota: number | null;
-  draws: ReturnType<typeof drawRow>[];
-};
-
-const prizeRow = (overrides: Partial<PrizeRow> = {}): PrizeRow => ({
-  id: 'prize-1',
-  sweepstakesId: 'sw-1',
-  name: 'Gift Card',
-  index: 0,
-  quota: 2,
-  draws: [],
-  ...overrides
-});
-
-const sweepstakesRow = (overrides: Record<string, unknown> = {}) => ({
-  id: 'sw-1',
-  status: 'ACTIVE',
-  teamId: 'team-1',
-  createdAt: CREATED_AT,
-  updatedAt: CREATED_AT,
-  team: {
-    id: 'team-1',
-    name: 'Acme',
-    slug: 'acme',
-    logo: 'https://example.com/logo.png',
-    links: null,
-    tier: 'FREE',
-    createdAt: CREATED_AT,
-    updatedAt: CREATED_AT
-  },
-  details: {
-    id: 'details-1',
-    sweepstakesId: 'sw-1',
-    name: 'Great Giveaway',
-    description: 'Win something nice',
-    banner: 'https://example.com/banner.png'
-  },
-  timing: {
-    id: 'timing-1',
-    sweepstakesId: 'sw-1',
-    startDate: START,
-    endDate: END,
-    timeZone: 'UTC'
-  },
-  terms: {
-    id: 'terms-1',
-    sweepstakesId: 'sw-1',
-    type: 'CUSTOM',
-    text: 'Official rules',
-    sponsorName: null,
-    sponsorAddress: null,
-    winnerSelectionMethod: null,
-    notificationTimeframeDays: null,
-    maxEntriesPerUser: null,
-    claimDeadlineDays: null,
-    governingLawCountry: null,
-    privacyPolicyUrl: null,
-    additionalTerms: null
-  },
-  audience: {
-    id: 'audience-1',
-    sweepstakesId: 'sw-1',
-    allowedIdentities: ['TWITTER', 'EMAIL'],
-    requirePreEntryLogin: false,
-    requireEmail: null,
-    regionalRestriction: null,
-    minimumAgeRestriction: null,
-    formFields: []
-  },
-  design: {
-    id: 'design-1',
-    sweepstakesId: 'sw-1',
-    data: {
-      aspectRatio: 'NONE',
-      displayName: true,
-      displayDescription: false,
-      background: { type: 'color', color: '#ffffff' }
-    }
-  },
-  visibility: {
-    id: 'visibility-1',
-    sweepstakesId: 'sw-1',
-    visibility: 'PUBLIC',
-    slug: 'great-giveaway',
-    createdAt: CREATED_AT,
-    updatedAt: CREATED_AT
-  },
-  criteria: {
-    id: 'criteria-1',
-    sweepstakesId: 'sw-1',
-    minTasksCompleted: 2,
-    minQualityScore: 60,
-    allowMultipleWins: true,
-    allowUserSelection: false,
-    externalPlatforms: null
-  },
-  prizes: [prizeRow()],
-  tasks: [taskRow('task-1', bonusConfig('Say hi', 2))],
-  ...overrides
-});
 
 const completionRow = (
   id: string,

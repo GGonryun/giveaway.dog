@@ -1,7 +1,7 @@
 import { SweepstakesWinners } from '@giveaway/sweepstakes-details-winners/sweepstakes-winners';
 import { SweepstakesWinnersSkeleton } from '@giveaway/sweepstakes-details-winners/sweepstakes-winners-skeleton';
 import { getSweepstakesParticipants } from '@giveaway/participant-server/get-sweepstakes-participants';
-import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import getTeamSweepstake from '@giveaway/participation-server/get-team-sweepstake';
 import getSweepstakePrizes from '@giveaway/sweepstakes-insights-server/get-sweepstake-prizes';
 
 import { Suspense } from 'react';
@@ -31,7 +31,7 @@ export default async function WinnersLayout({
 }
 
 const Wrapper: React.FC<Params> = async ({ id, slug }) => {
-  const result = await getParticipantSweepstake({ sweepstakesId: id });
+  const result = await getTeamSweepstake({ sweepstakesId: id, slug });
   const prizes = await getSweepstakePrizes({ sweepstakesId: id, slug });
   const participants = await getSweepstakesParticipants({
     slug,

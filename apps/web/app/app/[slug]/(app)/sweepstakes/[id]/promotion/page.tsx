@@ -1,6 +1,6 @@
 'use server';
 
-import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import getTeamSweepstake from '@giveaway/participation-server/get-team-sweepstake';
 import React, { Suspense } from 'react';
 
 import type { Metadata } from 'next';
@@ -34,7 +34,7 @@ export default async function Page({ params }: PageProps) {
 }
 
 const Wrapper: React.FC<SweepstakesPageProps> = async ({ id, slug }) => {
-  const result = await getParticipantSweepstake({ sweepstakesId: id });
+  const result = await getTeamSweepstake({ sweepstakesId: id, slug });
 
   if (!result.ok) {
     return <div>Failed to load sweepstakes: {result.data.message}</div>;

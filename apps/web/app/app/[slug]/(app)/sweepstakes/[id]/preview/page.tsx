@@ -2,7 +2,7 @@
 
 import { SweepstakesPreview } from '@giveaway/sweepstakes-details-preview/sweepstakes-preview';
 import { SweepstakesLoadingSkeleton } from '@giveaway/sweepstakes-details-shell/sweepstakes-loading-skeleton';
-import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
+import getTeamSweepstake from '@giveaway/participation-server/get-team-sweepstake';
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
@@ -34,7 +34,7 @@ const Wrapper: React.FC<{ params: Promise<SweepstakesPageProps> }> = async ({
   params
 }) => {
   const { id, slug } = await params;
-  const result = await getParticipantSweepstake({ sweepstakesId: id });
+  const result = await getTeamSweepstake({ sweepstakesId: id, slug });
 
   if (!result.ok) {
     return <div>Failed to load sweepstakes details: {result.data.message}</div>;
