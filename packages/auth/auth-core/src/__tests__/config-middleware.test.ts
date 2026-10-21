@@ -171,14 +171,55 @@ describe('authConfigMiddleware', () => {
       expect(prismaMock.user.findFirst).not.toHaveBeenCalled();
     });
 
-    it('looks the user up by email with findFirst', async () => {
+    it('[LINK-001] looks up only a user that has verified the email', async () => {
       prismaMock.user.findFirst.mockResolvedValue(null);
 
       await adapter.getUserByEmail('a@example.com');
 
       expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
-        where: { email: 'a@example.com' }
+        where: { email: 'a@example.com', emailVerified: { not: null } }
       });
+    });
+
+    it('[LINK-001] takes the email from a user that has not verified it before creating the new user', async () => {
+      const created = {
+        id: 'u-2',
+        email: 'a@example.com',
+        emailVerified: null
+      };
+      prismaMock.user.updateMany.mockResolvedValue({ count: 1 });
+      prismaMock.user.create.mockResolvedValue(created);
+
+      const user = await adapter.createUser?.({
+        id: 'ignored',
+        email: 'a@example.com',
+        emailVerified: null
+      });
+
+      expect(user).toEqual(created);
+      expect(prismaMock.user.updateMany).toHaveBeenCalledWith({
+        where: { email: 'a@example.com', emailVerified: null },
+        data: { email: null }
+      });
+      expect(prismaMock.user.create).toHaveBeenCalledWith({
+        data: { email: 'a@example.com', emailVerified: null }
+      });
+      expect(
+        prismaMock.user.updateMany.mock.invocationCallOrder[0]
+      ).toBeLessThan(prismaMock.user.create.mock.invocationCallOrder[0]);
+    });
+
+    it('creates a user without an email without releasing any address', async () => {
+      prismaMock.user.create.mockResolvedValue({ id: 'u-2', email: null });
+
+      await adapter.createUser?.({
+        id: 'ignored',
+        email: '',
+        emailVerified: null
+      });
+
+      expect(prismaMock.user.updateMany).not.toHaveBeenCalled();
+      expect(prismaMock.user.create).toHaveBeenCalledTimes(1);
     });
 
     it('returns the user when it has an email', async () => {

@@ -1,21 +1,42 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { NO_REPLY_EMAIL } from '@giveaway/email/client';
 import updateEmailDefault, { updateEmail } from '../update-email';
-import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
+import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { dbUser } from '@giveaway/user-model/testing/fixtures-procedures-user';
 
+const inbound = vi.hoisted(() => ({
+  send: vi.fn()
+}));
+
+vi.mock('inboundemail', () => ({
+  default: class {
+    emails = { send: inbound.send };
+  }
+}));
+
 type UpdateEmailInput = Parameters<typeof updateEmail>[0];
+
+const sentParams = () => {
+  const match = inbound.send.mock.calls[0][0].text.match(/\/portal\?(\S*)/);
+  return new URLSearchParams(match?.[1]);
+};
 
 describe('updateEmail', () => {
   let consoleError: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
+    inbound.send.mockReset();
+    inbound.send.mockResolvedValue({ id: 'email-1' });
+    prismaMock.verificationToken.create.mockResolvedValue({});
+    vi.stubEnv('INBOUND_SECRET', 'inbound-secret');
     consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
+    vi.unstubAllEnvs();
     vi.restoreAllMocks();
   });
 
@@ -57,8 +78,8 @@ describe('updateEmail', () => {
     });
   });
 
-  describe('when another user already has the email', () => {
-    it('returns CONFLICT without updating', async () => {
+  describe('when another user has verified the email', () => {
+    it('returns CONFLICT without sending a verification', async () => {
       signIn();
       prismaMock.user.findFirst.mockResolvedValue(
         dbUser({ id: 'user-9', email: 'new@example.com' })
@@ -69,7 +90,8 @@ describe('updateEmail', () => {
       expect(expectFailure(result, 'CONFLICT').message).toBe(
         'Email address is already in use'
       );
-      expect(prismaMock.user.update).not.toHaveBeenCalled();
+      expect(prismaMock.verificationToken.create).not.toHaveBeenCalled();
+      expect(inbound.send).not.toHaveBeenCalled();
       expect(consoleError).not.toHaveBeenCalledWith(
         'Email update error:',
         expect.anything()
@@ -81,26 +103,43 @@ describe('updateEmail', () => {
     beforeEach(() => {
       signIn();
       prismaMock.user.findFirst.mockResolvedValue(null);
-      prismaMock.user.update.mockResolvedValue(
-        dbUser({ email: 'new@example.com' })
-      );
     });
 
-    it('looks for other users with the same email', async () => {
+    it('looks only for other users that have verified the email', async () => {
       await updateEmail({ email: 'new@example.com' });
 
       expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
-        where: { email: 'new@example.com', NOT: { id: TEST_USER.id } }
+        where: {
+          email: 'new@example.com',
+          emailVerified: { not: null },
+          NOT: { id: TEST_USER.id }
+        }
       });
     });
 
-    it('stores the new email and resets the verification status', async () => {
+    it('[LINK-001] does not change the email before the new address is verified', async () => {
       await updateEmail({ email: 'new@example.com' });
 
-      expect(prismaMock.user.update).toHaveBeenCalledWith({
-        where: { id: TEST_USER.id },
-        data: { email: 'new@example.com', emailVerified: null }
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
+      expect(prismaMock.user.updateMany).not.toHaveBeenCalled();
+    });
+
+    it('sends a verification link for the signed-in user to the new address', async () => {
+      await updateEmail({
+        email: 'new@example.com',
+        redirectTo: '/account'
       });
+
+      expect(prismaMock.verificationToken.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          identifier: `email-verification:${TEST_USER.id}:new@example.com`
+        })
+      });
+      expect(inbound.send).toHaveBeenCalledWith(
+        expect.objectContaining({ from: NO_REPLY_EMAIL, to: 'new@example.com' })
+      );
+      expect(sentParams().get('email')).toBe('new@example.com');
+      expect(sentParams().get('redirectTo')).toBe('/account');
     });
 
     it('returns a success message', async () => {
@@ -108,7 +147,7 @@ describe('updateEmail', () => {
 
       expect(expectOk(result)).toEqual({
         success: true,
-        message: 'Email updated successfully'
+        message: 'Verification email sent to the new address'
       });
     });
 
@@ -119,7 +158,7 @@ describe('updateEmail', () => {
     });
   });
 
-  describe('when the database fails', () => {
+  describe('when something fails', () => {
     beforeEach(() => {
       signIn();
     });
@@ -136,9 +175,9 @@ describe('updateEmail', () => {
       expect(consoleError).toHaveBeenCalledWith('Email update error:', error);
     });
 
-    it('wraps a P2025 update error as INTERNAL_SERVER_ERROR', async () => {
+    it('returns INTERNAL_SERVER_ERROR when the email cannot be sent', async () => {
       prismaMock.user.findFirst.mockResolvedValue(null);
-      prismaMock.user.update.mockRejectedValue(knownRequestError('P2025'));
+      inbound.send.mockRejectedValue(new Error('provider down'));
 
       const result = await updateEmail({ email: 'new@example.com' });
 

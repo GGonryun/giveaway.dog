@@ -165,27 +165,22 @@ describe('EmailVerification', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('saves the new email and then sends a verification link to it', async () => {
+    it('requests the email change, which sends a verification link to the new address', async () => {
       renderEmailVerification();
       await userEvent.type(emailInput(), 'ada@example.com');
       await userEvent.click(screen.getByRole('button', { name: 'Add Email' }));
 
       expect(await waitForConfirmation()).toBeInTheDocument();
       expect(mocks.updateEmail).toHaveBeenCalledExactlyOnceWith({
-        email: 'ada@example.com'
-      });
-      expect(mocks.sendEmailVerification).toHaveBeenCalledExactlyOnceWith({
         email: 'ada@example.com',
         redirectTo: '/giveaways/summer'
       });
-      expect(mocks.toastSuccess).toHaveBeenCalledWith(
-        'Email updated successfully'
-      );
-      expect(mocks.toastSuccess).toHaveBeenCalledWith(
+      expect(mocks.sendEmailVerification).not.toHaveBeenCalled();
+      expect(mocks.toastSuccess).toHaveBeenCalledExactlyOnceWith(
         'Verification email sent successfully'
       );
       expect(screen.getByText('ada@example.com')).toBeInTheDocument();
-      expect(mocks.refresh).toHaveBeenCalledTimes(2);
+      expect(mocks.refresh).toHaveBeenCalledTimes(1);
     });
 
     it('asks for an email address when the field is empty', async () => {
@@ -303,12 +298,29 @@ describe('EmailVerification', () => {
       await waitForConfirmation();
       expect(screen.getByText('new@example.com')).toBeInTheDocument();
       expect(mocks.updateEmail).toHaveBeenCalledWith({
-        email: 'new@example.com'
-      });
-      expect(mocks.sendEmailVerification).toHaveBeenCalledWith({
         email: 'new@example.com',
         redirectTo: '/giveaways/summer'
       });
+      expect(mocks.sendEmailVerification).not.toHaveBeenCalled();
+    });
+
+    it('resends the email to the new address', async () => {
+      renderEmailVerification({ user: unverifiedUser });
+      await replaceEmail('new@example.com');
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Update Email' })
+      );
+      await waitForConfirmation();
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Resend Email' })
+      );
+
+      await waitFor(() =>
+        expect(mocks.sendEmailVerification).toHaveBeenCalledExactlyOnceWith({
+          email: 'new@example.com',
+          redirectTo: '/giveaways/summer'
+        })
+      );
     });
 
     it('reports a failed verification email and stays on the form', async () => {
@@ -401,7 +413,8 @@ describe('EmailVerification', () => {
       );
       await waitFor(() =>
         expect(mocks.updateEmail).toHaveBeenCalledWith({
-          email: 'new@example.com'
+          email: 'new@example.com',
+          redirectTo: '/giveaways/summer'
         })
       );
     });

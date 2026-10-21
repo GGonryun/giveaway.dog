@@ -72,11 +72,9 @@ export function EmailVerification({
   const updateEmailProcedure = useProcedure({
     action: updateEmail,
     onSuccess() {
-      toast.success('Email updated successfully');
-      // Now send verification email to the new address
-      if (emailInput) {
-        sendVerificationProcedure.run({ email: emailInput, redirectTo });
-      }
+      toast.success('Verification email sent successfully');
+      setEmailSent(true);
+      setSentToEmail(emailInput);
       router.refresh();
     },
     onFailure(error: any) {
@@ -90,9 +88,10 @@ export function EmailVerification({
     sendVerificationProcedure.isLoading || updateEmailProcedure.isLoading;
 
   const handleSendVerification = async () => {
-    if (user.email) {
-      setSentToEmail(user.email);
-      sendVerificationProcedure.run({ email: user.email, redirectTo });
+    const email = sentToEmail || user.email;
+    if (email) {
+      setSentToEmail(email);
+      sendVerificationProcedure.run({ email, redirectTo });
     }
   };
 
@@ -109,7 +108,7 @@ export function EmailVerification({
 
     // If email is different from current, update it first
     if (emailInput !== user.email) {
-      updateEmailProcedure.run({ email: emailInput });
+      updateEmailProcedure.run({ email: emailInput, redirectTo });
     } else {
       // Same email, just send verification
       sendVerificationProcedure.run({ email: emailInput, redirectTo });

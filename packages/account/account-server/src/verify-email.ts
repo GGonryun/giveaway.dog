@@ -2,8 +2,11 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
-import { createHash } from 'crypto';
 import z from 'zod';
+import {
+  emailVerificationIdentifier,
+  hashVerificationToken
+} from './email-verification-token';
 
 const verifyEmailSchema = z.object({
   token: z.string(),
@@ -11,7 +14,7 @@ const verifyEmailSchema = z.object({
 });
 
 export const verifyEmail = procedure()
-  .authorization({ required: false })
+  .authorization({ required: true })
   .input(verifyEmailSchema)
   .output(
     z.object({
@@ -20,20 +23,18 @@ export const verifyEmail = procedure()
       userId: z.string().optional()
     })
   )
-  .handler(async ({ input, db }) => {
+  .handler(async ({ input, user, db }) => {
     const { token, email } = input;
+    const identifier = emailVerificationIdentifier(user.id, email);
+    const hashedToken = hashVerificationToken(token);
 
     try {
-      // Hash the token to match what was stored in the database
-      const hashedToken = createHash('sha256').update(token).digest('hex');
-
-      // Find the verification token
       const verificationToken = await db.verificationToken.findFirst({
         where: {
-          identifier: email,
+          identifier,
           token: hashedToken,
           expires: {
-            gt: new Date() // Token hasn't expired
+            gt: new Date()
           }
         }
       });
@@ -45,34 +46,35 @@ export const verifyEmail = procedure()
         });
       }
 
-      // Find the user with this email
-      const user = await db.user.findFirst({
-        where: { email }
-      });
-
-      if (!user) {
-        throw new ApplicationError({
-          code: 'NOT_FOUND',
-          message: 'User not found'
+      await db.$transaction(async (tx) => {
+        const holder = await tx.user.findFirst({
+          where: { email, NOT: { id: user.id } }
         });
-      }
 
-      // Update user email verification status
-      await db.user.update({
-        where: { id: user.id },
-        data: {
-          emailVerified: new Date()
+        if (holder?.emailVerified) {
+          throw new ApplicationError({
+            code: 'CONFLICT',
+            message: 'Email address is already in use'
+          });
         }
-      });
 
-      // Clean up the verification token
-      await db.verificationToken.delete({
-        where: {
-          identifier_token: {
-            identifier: email,
-            token: hashedToken
+        if (holder) {
+          await tx.user.update({
+            where: { id: holder.id },
+            data: { email: null }
+          });
+        }
+
+        await tx.user.update({
+          where: { id: user.id },
+          data: { email, emailVerified: new Date() }
+        });
+
+        await tx.verificationToken.delete({
+          where: {
+            identifier_token: { identifier, token: hashedToken }
           }
-        }
+        });
       });
 
       return {
