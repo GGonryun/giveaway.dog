@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   PrizeDrawResult,
   SweepstakesJobStatus,
-  SweepstakesJobType
+  SweepstakesJobType,
+  TeamRole
 } from '@giveaway/db-model';
 import completeSweepstakes from '../complete-sweepstakes';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
@@ -30,10 +31,14 @@ const prize = (id: string, quota: number | null, winners: number) => ({
   }))
 });
 
-const sweepstakesWithPrizes = (prizes: ReturnType<typeof prize>[]) => ({
+const sweepstakesWithPrizes = (
+  prizes: ReturnType<typeof prize>[],
+  role: TeamRole = TeamRole.MEMBER
+) => ({
   id: SWEEPSTAKES_ID,
   status: 'ACTIVE',
   teamId: 'team-1',
+  team: { members: [{ userId: TEST_USER.id, role }] },
   prizes
 });
 
@@ -110,6 +115,14 @@ describe('completeSweepstakes', () => {
           }
         },
         include: {
+          team: {
+            select: {
+              members: {
+                where: { userId: TEST_USER.id },
+                select: { userId: true, role: true }
+              }
+            }
+          },
           prizes: {
             include: {
               draws: { where: { result: PrizeDrawResult.WINNER } }
@@ -124,6 +137,51 @@ describe('completeSweepstakes', () => {
 
       expect(prismaMock.$transaction).not.toHaveBeenCalled();
       expect(prismaMock.sweepstakes.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when the caller cannot update giveaways of the team', () => {
+    beforeEach(() => {
+      signIn();
+    });
+
+    it.each([TeamRole.GUEST, TeamRole.BLOCKED])(
+      '[ROLE-007] returns FORBIDDEN and changes nothing for a %s',
+      async (role) => {
+        prismaMock.sweepstakes.findUnique.mockResolvedValue(
+          sweepstakesWithPrizes([prize('p-1', 1, 1)], role)
+        );
+
+        const result = await completeSweepstakes(input);
+
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to perform this action. Required permission: UPDATE_SWEEPSTAKES'
+        );
+        expect(prismaMock.$transaction).not.toHaveBeenCalled();
+        expect(prismaMock.sweepstakes.update).not.toHaveBeenCalled();
+        expect(prismaMock.sweepstakesJob.upsert).not.toHaveBeenCalled();
+      }
+    );
+  });
+
+  describe('when the sweepstakes has no team', () => {
+    beforeEach(() => {
+      signIn();
+    });
+
+    it('returns FORBIDDEN and changes nothing', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue({
+        ...sweepstakesWithPrizes([]),
+        teamId: null,
+        team: null
+      });
+
+      const result = await completeSweepstakes(input);
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        'You are not a member of this team'
+      );
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
     });
   });
 

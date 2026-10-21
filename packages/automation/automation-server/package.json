@@ -36,6 +36,7 @@
     "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/x-api": "workspace:*",
     "nanoid": "catalog:",

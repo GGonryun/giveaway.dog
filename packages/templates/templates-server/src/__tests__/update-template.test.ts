@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { TeamRole } from '@giveaway/db-model';
 import { updateTemplate } from '../update-template';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
@@ -22,7 +23,8 @@ const input = {
 const existing = {
   id: 'tpl-1',
   teamId: 'team-1',
-  createdById: 'someone-else'
+  createdById: 'someone-else',
+  team: { members: [{ userId: TEST_USER.id, role: TeamRole.MEMBER }] }
 };
 
 describe('updateTemplate', () => {
@@ -65,6 +67,26 @@ describe('updateTemplate', () => {
     });
   });
 
+  describe('when the caller cannot update giveaways of the team', () => {
+    it.each([TeamRole.GUEST, TeamRole.BLOCKED])(
+      'returns FORBIDDEN and updates nothing when the caller is a %s',
+      async (role) => {
+        signIn();
+        prismaMock.template.findUnique.mockResolvedValue({
+          ...existing,
+          team: { members: [{ userId: TEST_USER.id, role }] }
+        });
+
+        const result = await updateTemplate(input);
+
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to perform this action. Required permission: UPDATE_SWEEPSTAKES'
+        );
+        expect(prismaMock.template.update).not.toHaveBeenCalled();
+      }
+    );
+  });
+
   describe('when the caller belongs to the owning team', () => {
     it('looks the template up through any team the caller belongs to', async () => {
       signIn();
@@ -76,6 +98,16 @@ describe('updateTemplate', () => {
         where: {
           id: 'tpl-1',
           team: { members: { some: { userId: TEST_USER.id } } }
+        },
+        include: {
+          team: {
+            select: {
+              members: {
+                where: { userId: TEST_USER.id },
+                select: { userId: true, role: true }
+              }
+            }
+          }
         }
       });
     });

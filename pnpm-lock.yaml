@@ -3006,6 +3006,9 @@ importers:
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../tasks/task-model
+      '@giveaway/team-permissions':
+        specifier: workspace:*
+        version: link:../../team/team-permissions
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors
@@ -14158,6 +14161,9 @@ importers:
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-model
+      '@giveaway/team-permissions':
+        specifier: workspace:*
+        version: link:../../team/team-permissions
       '@giveaway/templates-model':
         specifier: workspace:*
         version: link:../templates-model

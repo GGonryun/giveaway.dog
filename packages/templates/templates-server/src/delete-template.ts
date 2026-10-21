@@ -3,6 +3,10 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  assertMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 
 export const deleteTemplate = procedure()
   .authorization({ required: true })
@@ -24,6 +28,16 @@ export const deleteTemplate = procedure()
             some: { userId: user.id }
           }
         }
+      },
+      include: {
+        team: {
+          select: {
+            members: {
+              where: { userId: user.id },
+              select: { userId: true, role: true }
+            }
+          }
+        }
       }
     });
 
@@ -33,6 +47,11 @@ export const deleteTemplate = procedure()
         message: 'Template not found or you do not have access.'
       });
     }
+
+    assertMembershipPermission(
+      template.team.members[0],
+      TeamPermission.UPDATE_SWEEPSTAKES
+    );
 
     await db.template.delete({
       where: { id: input.templateId }

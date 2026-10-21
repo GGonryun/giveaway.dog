@@ -272,37 +272,37 @@ test.describe('roles that check only membership', () => {
     allowedPageErrors: [/Failed to load resource: net::ERR_FAILED/]
   });
 
-  test(
-    '[ROLE-007] a guest or a blocked member cannot complete a giveaway',
-    knownBug(436),
-    async ({ page, request, browser }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedRolesTeam(request, ns);
-      const giveaway = await seedEndedWithWinner(
-        request,
-        ns,
-        team.slug,
-        'participant'
+  test('[ROLE-007] a guest or a blocked member cannot complete a giveaway', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    const giveaway = await seedEndedWithWinner(
+      request,
+      ns,
+      team.slug,
+      'participant'
+    );
+    await signInAs(page.request, 'host', ns);
+    const complete = await captureCompleteAction(page, team.slug, giveaway);
+
+    for (const persona of ['guest', 'blocked'] as const) {
+      const member = await openAs(browser, persona, ns);
+      await member.page.goto('/app?step=1');
+      const result = readActionResult(
+        await replayServerAction(member.page, complete)
       );
-      await signInAs(page.request, 'host', ns);
-      const complete = await captureCompleteAction(page, team.slug, giveaway);
-
-      for (const persona of ['guest', 'blocked'] as const) {
-        const member = await openAs(browser, persona, ns);
-        await member.page.goto('/app?step=1');
-        const result = readActionResult(
-          await replayServerAction(member.page, complete)
-        );
-        expect(result, persona).toMatchObject({
-          ok: false,
-          data: { code: 'FORBIDDEN' }
-        });
-        await member.context.close();
-      }
-
-      expect(await sweepstakesStatus(request, giveaway)).toBe('ACTIVE');
+      expect(result, persona).toMatchObject({
+        ok: false,
+        data: { code: 'FORBIDDEN' }
+      });
+      await member.context.close();
     }
-  );
+
+    expect(await sweepstakesStatus(request, giveaway)).toBe('ACTIVE');
+  });
 
   test('[ROLE-008] a guest cannot draw winners', async ({
     page,
