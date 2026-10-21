@@ -4,6 +4,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@giveaway/db-client/prisma';
 import { NextAuthConfig } from 'next-auth';
 import type {} from './next-auth';
+import { isSessionRevoked, newSessionId } from './session-revocation';
 
 export const authConfigMiddleware = {
   logger: {
@@ -114,6 +115,14 @@ export const authConfigMiddleware = {
       return true;
     },
     async jwt({ token, user, account, trigger }) {
+      if (trigger !== 'signIn' && (await isSessionRevoked(token.sessionId))) {
+        return null;
+      }
+
+      if (trigger === 'signIn' || !token.sessionId) {
+        token.sessionId = newSessionId();
+      }
+
       if (user && user?.id) {
         token.id = user?.id;
       }
