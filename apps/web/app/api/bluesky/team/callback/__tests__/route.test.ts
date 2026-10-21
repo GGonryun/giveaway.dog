@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
-import { IntegrationProvider, IntegrationStatus } from '@prisma/client';
+import {
+  IntegrationProvider,
+  IntegrationStatus,
+  TeamRole
+} from '@prisma/client';
 import { GET } from '../route';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { createSession, TEST_USER } from '@giveaway/testing-server/session';
@@ -37,7 +41,17 @@ vi.mock('@atproto/api', () => ({
 const APP_URL = 'https://app.giveaway.dog';
 const DID = 'did:plc:acme';
 const BLUESKY_SESSION = { did: DID, sub: DID };
-const TEAM = { id: 'team-1', slug: 'acme', name: 'Acme' };
+const TEAM = {
+  id: 'team-1',
+  slug: 'acme',
+  name: 'Acme',
+  members: [{ teamId: 'team-1', userId: TEST_USER.id, role: TeamRole.OWNER }]
+};
+
+const teamWithRole = (role: TeamRole, userId = TEST_USER.id) => ({
+  ...TEAM,
+  members: [{ teamId: TEAM.id, userId, role }]
+});
 const INTEGRATIONS = `${APP_URL}/app/acme/settings/integrations`;
 
 const request = (
@@ -80,10 +94,6 @@ describe('bluesky team callback GET', () => {
     });
     m.Agent.mockClear();
     prismaMock.team.findUnique.mockResolvedValue(TEAM);
-    prismaMock.user.findFirst.mockResolvedValue({
-      id: TEST_USER.id,
-      teams: [{ teamId: TEAM.id }]
-    });
     prismaMock.integration.findFirst.mockResolvedValue({
       id: 'integration-1',
       teamId: TEAM.id
@@ -202,7 +212,8 @@ describe('bluesky team callback GET', () => {
       await GET(request());
 
       expect(prismaMock.team.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'acme' }
+        where: { slug: 'acme' },
+        include: { members: true }
       });
     });
 
@@ -212,33 +223,61 @@ describe('bluesky team callback GET', () => {
       const res = await GET(request());
 
       expect(res.headers.get('location')).toBe(errorLocation('Team not found'));
-      expect(prismaMock.user.findFirst).not.toHaveBeenCalled();
+      expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
     });
   });
 
-  describe('when the user is not a member of the team', () => {
-    it('checks membership for the signed-in user', async () => {
-      await GET(request());
+  describe('when the user may not connect the team integrations', () => {
+    const FORBIDDEN_ROLE =
+      'You do not have permission to perform this action. Required permission: UPDATE_INTEGRATIONS';
 
-      expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
-        where: {
-          id: TEST_USER.id,
-          teams: { some: { teamId: TEAM.id } }
-        },
-        include: { teams: true }
-      });
-    });
-
-    it('redirects with a forbidden error', async () => {
-      prismaMock.user.findFirst.mockResolvedValue(null);
+    it('[TEAM-006] redirects with a forbidden error for a person who is not a member', async () => {
+      prismaMock.team.findUnique.mockResolvedValue(
+        teamWithRole(TeamRole.OWNER, 'someone-else')
+      );
 
       const res = await GET(request());
 
       expect(res.headers.get('location')).toBe(
-        errorLocation('User is not a member of the team')
+        errorLocation('You are not a member of this team')
       );
       expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
+      expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
+
+    const expectRefused = async (role: TeamRole) => {
+      prismaMock.team.findUnique.mockResolvedValue(teamWithRole(role));
+
+      const res = await GET(request());
+
+      expect(res.headers.get('location')).toBe(errorLocation(FORBIDDEN_ROLE));
+      expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
+      expect(m.callback).not.toHaveBeenCalled();
+      expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
+      expect(prismaMock.integration.update).not.toHaveBeenCalled();
+    };
+
+    it('[ROLE-006] does not connect the Bluesky account for a guest', async () => {
+      await expectRefused(TeamRole.GUEST);
+    });
+
+    it('[ROLE-001] does not connect the Bluesky account for a blocked member', async () => {
+      await expectRefused(TeamRole.BLOCKED);
+    });
+
+    it.each([TeamRole.OWNER, TeamRole.ADMIN, TeamRole.MEMBER])(
+      'connects the Bluesky account for the %s of the team',
+      async (role) => {
+        prismaMock.team.findUnique.mockResolvedValue(teamWithRole(role));
+
+        const res = await GET(request());
+
+        expect(prismaMock.integration.update).toHaveBeenCalledTimes(1);
+        expect(res.headers.get('location')).toBe(
+          `${INTEGRATIONS}?success=bluesky_connected&handle=acme.bsky.social`
+        );
+      }
+    );
   });
 
   describe('when completing the Bluesky OAuth exchange', () => {
@@ -533,11 +572,14 @@ describe('bluesky team callback GET', () => {
       },
       {
         scenario: 'the user is not a team member',
-        arrange: () => prismaMock.user.findFirst.mockResolvedValue(null),
+        arrange: () =>
+          prismaMock.team.findUnique.mockResolvedValue(
+            teamWithRole(TeamRole.OWNER, 'someone-else')
+          ),
         cookies: undefined,
         expected: {
           code: 'FORBIDDEN',
-          message: 'User is not a member of the team'
+          message: 'You are not a member of this team'
         }
       },
       {
