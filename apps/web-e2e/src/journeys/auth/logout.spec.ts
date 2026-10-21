@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
 import { knownBug } from '../../helpers/known-bug';
-import { toPersonaEmail } from '../../helpers/personas';
+import { signInAs, toPersonaEmail } from '../../helpers/personas';
 import { seedWorkerTeam } from '../../helpers/seed';
 
 const SESSION_COOKIE = /^(__Secure-)?authjs\.session-token(\.\d+)?$/;
@@ -32,6 +32,10 @@ test.describe('logout', () => {
 
   test.describe('as a participant', () => {
     test.use({ storageState: personaState('participant') });
+
+    test.beforeEach(async ({ page }) => {
+      await signInAs(page.request, 'participant');
+    });
 
     test('[AUTH-008] logs out from the avatar menu', async ({ page }) => {
       await page.goto('/browse');
@@ -77,6 +81,10 @@ test.describe('logout', () => {
 
   test.describe('as a host', () => {
     test.use({ storageState: personaState('host') });
+
+    test.beforeEach(async ({ page }) => {
+      await signInAs(page.request, 'host');
+    });
 
     test('[AUTH-008] logs out from the sidebar of a team', async ({
       page,
