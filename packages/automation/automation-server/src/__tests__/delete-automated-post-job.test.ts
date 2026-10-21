@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import type { AutomatedPostJobStatus } from '@giveaway/db-model';
+import { TeamRole, type AutomatedPostJobStatus } from '@giveaway/db-model';
 import { deleteAutomatedPostJob } from '../delete-automated-post-job';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
@@ -7,11 +7,11 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const jobWithTeam = ({
   status = 'PENDING',
-  members = [{ id: 'm-1', userId: TEST_USER.id }],
+  members = [{ id: 'm-1', userId: TEST_USER.id, role: TeamRole.MEMBER }],
   team = true
 }: {
   status?: AutomatedPostJobStatus;
-  members?: { id: string; userId: string }[];
+  members?: { id: string; userId: string; role: TeamRole }[];
   team?: boolean;
 } = {}) => ({
   id: 'job-1',
@@ -127,6 +127,22 @@ describe('deleteAutomatedPostJob', () => {
       );
       expect(prismaMock.automatedPostJob.delete).not.toHaveBeenCalled();
     });
+
+    it.each([TeamRole.GUEST, TeamRole.BLOCKED])(
+      'returns FORBIDDEN and deletes nothing when the caller is a %s',
+      async (role) => {
+        prismaMock.automatedPostJob.findUnique.mockResolvedValue(
+          jobWithTeam({ members: [{ id: 'm-1', userId: TEST_USER.id, role }] })
+        );
+
+        const result = await deleteAutomatedPostJob({ jobId: 'job-1' });
+
+        expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+          'You do not have permission to perform this action. Required permission: UPDATE_SWEEPSTAKES'
+        );
+        expect(prismaMock.automatedPostJob.delete).not.toHaveBeenCalled();
+      }
+    );
 
     it('returns PRECONDITION_FAILED for a completed job', async () => {
       prismaMock.automatedPostJob.findUnique.mockResolvedValue(

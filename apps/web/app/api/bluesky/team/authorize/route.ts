@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getTeamBlueskyClient } from '@giveaway/bluesky-api/bluesky/team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { environment } from '@giveaway/app-config/environment';
+import { auth } from '@giveaway/auth-server/config';
+import prisma from '@giveaway/db-client/prisma';
+import {
+  assertMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -32,6 +38,32 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    const session = await auth();
+    const userId = session?.user?.id;
+    if (!userId) {
+      throw new ApplicationError({
+        code: 'UNAUTHORIZED',
+        message: 'Authentication required'
+      });
+    }
+
+    const team = await prisma.team.findUnique({
+      where: { slug },
+      include: { members: true }
+    });
+
+    if (!team) {
+      throw new ApplicationError({
+        code: 'NOT_FOUND',
+        message: 'Team not found'
+      });
+    }
+
+    assertMembershipPermission(
+      team.members.find((member) => member.userId === userId),
+      TeamPermission.UPDATE_INTEGRATIONS
+    );
 
     console.info('Bluesky team authorization started', {
       handle,

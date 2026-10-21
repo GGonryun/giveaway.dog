@@ -21,6 +21,7 @@
     "./get-sweepstake-participant": "./src/get-sweepstake-participant.ts",
     "./get-sweepstake-tasks": "./src/get-sweepstake-tasks.ts",
     "./get-sweepstakes-privacy": "./src/get-sweepstakes-privacy.ts",
+    "./get-team-sweepstake": "./src/get-team-sweepstake.ts",
     "./get-user-host-relationship": "./src/get-user-host-relationship.ts",
     "./refresh-sweepstakes": "./src/refresh-sweepstakes.ts"
   },
@@ -35,6 +36,7 @@
     "@giveaway/loyalty-model": "workspace:*",
     "@giveaway/participant-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",

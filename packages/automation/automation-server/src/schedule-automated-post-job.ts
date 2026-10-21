@@ -2,6 +2,7 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
+import { requirePermission, TeamPermission } from '@giveaway/team-permissions';
 import {
   scheduleAutomatedPostSchema,
   toAutomatedPostJobCreateInput
@@ -40,6 +41,11 @@ export const scheduleAutomatedPostJob = procedure()
         message: 'You do not have permission to modify this sweepstakes'
       });
     }
+
+    requirePermission(
+      sweepstakes.team.members[0].role,
+      TeamPermission.UPDATE_SWEEPSTAKES
+    );
 
     if (!sweepstakes.timing?.startDate) {
       throw new ApplicationError({

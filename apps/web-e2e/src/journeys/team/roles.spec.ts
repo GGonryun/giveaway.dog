@@ -203,38 +203,38 @@ test.describe('team roles', () => {
     }
   );
 
-  test(
-    '[ROLE-006] a guest cannot disconnect the team Twitch channel',
-    knownBug(435),
-    async ({ page, request, browser }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedRolesTeam(request, ns);
-      await seedApi(request).integrations({
-        team: team.slug,
-        integrations: [{ provider: 'TWITCH' }]
-      });
-      await signInAs(page.request, 'guest', ns);
-      await page.goto(`/app/${team.slug}/settings/integrations`);
+  test('[ROLE-006] a guest cannot disconnect the team Twitch channel', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    await seedApi(request).integrations({
+      team: team.slug,
+      integrations: [{ provider: 'TWITCH' }]
+    });
+    await signInAs(page.request, 'guest', ns);
+    await page.goto(`/app/${team.slug}/settings/integrations`);
 
-      await page.getByRole('button', { name: 'Disconnect' }).click();
-      await page
-        .getByRole('alertdialog')
-        .getByRole('button', { name: 'Disconnect' })
-        .click();
-      const result = page.getByText(
-        /Twitch disconnected successfully|Failed to disconnect Twitch/
-      );
-      await expect(result).toBeVisible();
-      await expect(result).toHaveText(/Failed to disconnect Twitch/);
+    await page.getByRole('button', { name: 'Disconnect' }).click();
+    await page
+      .getByRole('alertdialog')
+      .getByRole('button', { name: 'Disconnect' })
+      .click();
+    const result = page.getByText(
+      /Twitch disconnected successfully|Failed to disconnect Twitch/
+    );
+    await expect(result).toBeVisible();
+    await expect(result).toHaveText(/Failed to disconnect Twitch/);
 
-      const owner = await openAs(browser, 'host', ns);
-      await owner.page.goto(`/app/${team.slug}/settings/integrations`);
-      await expect(
-        owner.page.getByRole('link', { name: 'Profile', exact: true })
-      ).toBeVisible();
-      await owner.context.close();
-    }
-  );
+    const owner = await openAs(browser, 'host', ns);
+    await owner.page.goto(`/app/${team.slug}/settings/integrations`);
+    await expect(
+      owner.page.getByRole('link', { name: 'Profile', exact: true })
+    ).toBeVisible();
+    await owner.context.close();
+  });
 
   test('[ROLE-006] a guest cannot install the Discord bot or disconnect Discord', async ({
     page,
@@ -272,37 +272,37 @@ test.describe('roles that check only membership', () => {
     allowedPageErrors: [/Failed to load resource: net::ERR_FAILED/]
   });
 
-  test(
-    '[ROLE-007] a guest or a blocked member cannot complete a giveaway',
-    knownBug(436),
-    async ({ page, request, browser }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedRolesTeam(request, ns);
-      const giveaway = await seedEndedWithWinner(
-        request,
-        ns,
-        team.slug,
-        'participant'
+  test('[ROLE-007] a guest or a blocked member cannot complete a giveaway', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    const giveaway = await seedEndedWithWinner(
+      request,
+      ns,
+      team.slug,
+      'participant'
+    );
+    await signInAs(page.request, 'host', ns);
+    const complete = await captureCompleteAction(page, team.slug, giveaway);
+
+    for (const persona of ['guest', 'blocked'] as const) {
+      const member = await openAs(browser, persona, ns);
+      await member.page.goto('/app?step=1');
+      const result = readActionResult(
+        await replayServerAction(member.page, complete)
       );
-      await signInAs(page.request, 'host', ns);
-      const complete = await captureCompleteAction(page, team.slug, giveaway);
-
-      for (const persona of ['guest', 'blocked'] as const) {
-        const member = await openAs(browser, persona, ns);
-        await member.page.goto('/app?step=1');
-        const result = readActionResult(
-          await replayServerAction(member.page, complete)
-        );
-        expect(result, persona).toMatchObject({
-          ok: false,
-          data: { code: 'FORBIDDEN' }
-        });
-        await member.context.close();
-      }
-
-      expect(await sweepstakesStatus(request, giveaway)).toBe('ACTIVE');
+      expect(result, persona).toMatchObject({
+        ok: false,
+        data: { code: 'FORBIDDEN' }
+      });
+      await member.context.close();
     }
-  );
+
+    expect(await sweepstakesStatus(request, giveaway)).toBe('ACTIVE');
+  });
 
   test('[ROLE-008] a guest cannot draw winners', async ({
     page,

@@ -86,40 +86,39 @@ test.describe('cross-team isolation', () => {
     }
   });
 
-  test(
-    "[TEAM-002] the preview and promotion tabs do not show another team's giveaway",
-    knownBug(441),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedRolesTeam(request, ns);
-      const { team: other } = await seedOtherTeam(request, ns);
-      const ended = await seedEndedWithWinner(
-        request,
-        ns,
-        other.slug,
-        'participant2'
-      );
-      const draft = await seedApi(request).sweepstakes({
-        ns,
-        team: other.slug,
-        preset: 'draft'
-      });
-      await signInAs(page.request, 'host', ns);
+  test("[TEAM-002] the preview and promotion tabs do not show another team's giveaway", async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    const { team: other } = await seedOtherTeam(request, ns);
+    const ended = await seedEndedWithWinner(
+      request,
+      ns,
+      other.slug,
+      'participant2'
+    );
+    const draft = await seedApi(request).sweepstakes({
+      ns,
+      team: other.slug,
+      preset: 'draft'
+    });
+    await signInAs(page.request, 'host', ns);
 
-      for (const tab of ['preview', 'promotion']) {
-        await expectNotInPayload(
-          page.request,
-          `/app/${team.slug}/sweepstakes/${ended.id}/${tab}`,
-          { "the other team's winner email": ended.entries[0].email }
-        );
-        await expectNotInPayload(
-          page.request,
-          `/app/${team.slug}/sweepstakes/${draft.id}/${tab}`,
-          { "the other team's draft name": draft.name }
-        );
-      }
+    for (const tab of ['preview', 'promotion']) {
+      await expectNotInPayload(
+        page.request,
+        `/app/${team.slug}/sweepstakes/${ended.id}/${tab}`,
+        { "the other team's winner email": ended.entries[0].email }
+      );
+      await expectNotInPayload(
+        page.request,
+        `/app/${team.slug}/sweepstakes/${draft.id}/${tab}`,
+        { "the other team's draft name": draft.name }
+      );
     }
-  );
+  });
 
   test.describe('user profiles', () => {
     test.use({

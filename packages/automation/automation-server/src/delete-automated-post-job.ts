@@ -3,6 +3,7 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
+import { requirePermission, TeamPermission } from '@giveaway/team-permissions';
 
 export const deleteAutomatedPostJob = procedure()
   .authorization({ required: true })
@@ -43,6 +44,11 @@ export const deleteAutomatedPostJob = procedure()
         message: 'You do not have permission to delete this job'
       });
     }
+
+    requirePermission(
+      job.sweepstakes.team.members[0].role,
+      TeamPermission.UPDATE_SWEEPSTAKES
+    );
 
     // Only allow deleting PENDING or FAILED jobs
     if (job.status !== 'PENDING' && job.status !== 'FAILED') {

@@ -21,7 +21,8 @@
     "./config-no-providers": "./src/config-no-providers.ts",
     "./config-runtime": "./src/config-runtime.ts",
     "./dogs": "./src/dogs.ts",
-    "./get-account-data": "./src/get-account-data.ts"
+    "./get-account-data": "./src/get-account-data.ts",
+    "./session-revocation": "./src/session-revocation.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -30,6 +31,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "catalog:",
+    "@giveaway/cache": "workspace:*",
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",

@@ -33,6 +33,7 @@
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/team-permissions": "workspace:*",
     "@giveaway/templates-model": "workspace:*",
     "@giveaway/util-collections": "workspace:*",
     "@giveaway/util-errors": "workspace:*",

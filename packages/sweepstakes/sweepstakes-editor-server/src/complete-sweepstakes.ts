@@ -2,6 +2,10 @@
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  assertMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 import z from 'zod';
 import {
   PrizeDrawResult,
@@ -32,6 +36,14 @@ const completeSweepstakes = procedure()
         }
       },
       include: {
+        team: {
+          select: {
+            members: {
+              where: { userId: user.id },
+              select: { userId: true, role: true }
+            }
+          }
+        },
         prizes: {
           include: {
             draws: {
@@ -50,6 +62,11 @@ const completeSweepstakes = procedure()
         message: 'Sweepstakes not found'
       });
     }
+
+    assertMembershipPermission(
+      sweepstakes.team?.members[0],
+      TeamPermission.UPDATE_SWEEPSTAKES
+    );
 
     const totalSlots = sweepstakes.prizes.reduce(
       (sum, prize) => sum + (prize.quota ?? 0),

@@ -7,6 +7,10 @@ import {
 } from '@giveaway/templates-model/schemas/template';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  assertMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 
 export const updateTemplate = procedure()
   .authorization({ required: true })
@@ -22,6 +26,16 @@ export const updateTemplate = procedure()
             some: { userId: user.id }
           }
         }
+      },
+      include: {
+        team: {
+          select: {
+            members: {
+              where: { userId: user.id },
+              select: { userId: true, role: true }
+            }
+          }
+        }
       }
     });
 
@@ -31,6 +45,11 @@ export const updateTemplate = procedure()
         message: 'Template not found or you do not have access.'
       });
     }
+
+    assertMembershipPermission(
+      template.team.members[0],
+      TeamPermission.UPDATE_SWEEPSTAKES
+    );
 
     // Update template - convert flattened input to storage format
     const storable = toStorableTemplateSchema(input);

@@ -3,6 +3,10 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  assertMembershipPermission,
+  TeamPermission
+} from '@giveaway/team-permissions';
 import { nanoid } from 'nanoid';
 import {
   toStorableTemplateSchema,
@@ -63,6 +67,12 @@ export const createTemplate = procedure()
         members: {
           some: { userId: user.id }
         }
+      },
+      include: {
+        members: {
+          where: { userId: user.id },
+          select: { userId: true, role: true }
+        }
       }
     });
 
@@ -72,6 +82,11 @@ export const createTemplate = procedure()
         message: 'Team not found or you do not have access.'
       });
     }
+
+    assertMembershipPermission(
+      team.members[0],
+      TeamPermission.UPDATE_SWEEPSTAKES
+    );
 
     // If customizing from an existing template
     if (input.sourceTemplateId) {
