@@ -5,11 +5,16 @@ import { authConfigMiddleware } from '../config-middleware';
 import { prismaMock } from '@giveaway/testing-mocks/prisma';
 import { createSession } from '@giveaway/testing-mocks/session';
 
-const { logger, adapter, callbacks } = authConfigMiddleware;
+const redis = vi.hoisted(() => ({ exists: vi.fn(), set: vi.fn() }));
+
+vi.mock('@giveaway/cache/redis', () => ({ redis }));
+
+const { logger, adapter, callbacks, events } = authConfigMiddleware;
 
 type AuthorizedArgs = Parameters<typeof callbacks.authorized>[0];
 type JwtArgs = Parameters<typeof callbacks.jwt>[0];
 type SessionArgs = Parameters<typeof callbacks.session>[0];
+type SignOutArgs = Parameters<typeof events.signOut>[0];
 
 const authorize = (url: string, user: Partial<Session['user']> | null = null) =>
   callbacks.authorized({
@@ -31,6 +36,8 @@ const participant = { onboarded: true, accountType: 'PARTICIPANT' as const };
 const notOnboarded = { onboarded: false, accountType: 'HOST' as const };
 
 beforeEach(() => {
+  redis.exists.mockReset();
+  redis.set.mockReset();
   vi.spyOn(console, 'error').mockImplementation(() => {});
   vi.spyOn(console, 'warn').mockImplementation(() => {});
   vi.spyOn(console, 'debug').mockImplementation(() => {});
@@ -334,34 +341,98 @@ describe('authConfigMiddleware', () => {
 
   describe('callbacks.jwt', () => {
     const jwt = (args: Record<string, unknown>) =>
-      callbacks.jwt({ token: {}, account: null, ...args } as JwtArgs);
+      callbacks.jwt({
+        token: { sid: 'session-1' },
+        account: null,
+        ...args
+      } as JwtArgs);
+
+    beforeEach(() => {
+      redis.exists.mockResolvedValue(0);
+    });
+
+    it('gives a new session id to a token on sign in', async () => {
+      const token = await jwt({ user: { id: 'u-1' }, trigger: 'signIn' });
+
+      expect(token?.sid).toEqual(expect.any(String));
+      expect(token?.sid).not.toBe('session-1');
+      expect(redis.exists).not.toHaveBeenCalled();
+    });
+
+    it('keeps the session id of a token that is not revoked', async () => {
+      const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
+
+      expect(redis.exists).toHaveBeenCalledWith(
+        'auth:revoked-session:session-1'
+      );
+      expect(token).toEqual({ id: 'u-1', sid: 'session-1' });
+    });
+
+    it('gives a session id to a token that has none', async () => {
+      const token = await jwt({ token: { id: 'u-1' } });
+
+      expect(redis.exists).not.toHaveBeenCalled();
+      expect(token).toEqual({ id: 'u-1', sid: expect.any(String) });
+    });
+
+    it('ends a session that was signed out', async () => {
+      redis.exists.mockResolvedValue(1);
+
+      const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
+
+      expect(token).toBeNull();
+    });
+
+    it('ends a signed out session on update too', async () => {
+      redis.exists.mockResolvedValue(1);
+
+      const token = await jwt({
+        token: { id: 'u-1', sid: 'session-1' },
+        trigger: 'update'
+      });
+
+      expect(token).toBeNull();
+      expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('keeps the session when the revocation check fails', async () => {
+      redis.exists.mockRejectedValue(new Error('down'));
+
+      const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
+
+      expect(token).toEqual({ id: 'u-1', sid: 'session-1' });
+    });
 
     it('copies the user id onto the token', async () => {
       const token = await jwt({ user: { id: 'u-1' } });
 
-      expect(token).toEqual({ id: 'u-1' });
+      expect(token).toEqual({ id: 'u-1', sid: 'session-1' });
     });
 
     it('does not overwrite the token id when the user has no id', async () => {
       const token = await jwt({
-        token: { id: 'existing' },
+        token: { id: 'existing', sid: 'session-1' },
         user: { id: null }
       });
 
-      expect(token).toEqual({ id: 'existing' });
+      expect(token).toEqual({ id: 'existing', sid: 'session-1' });
     });
 
     it('copies the account provider onto the token', async () => {
       const token = await jwt({
-        token: { id: 'u-1' },
+        token: { id: 'u-1', sid: 'session-1' },
         account: { provider: 'discord' }
       });
 
-      expect(token).toEqual({ id: 'u-1', provider: 'discord' });
+      expect(token).toEqual({
+        id: 'u-1',
+        sid: 'session-1',
+        provider: 'discord'
+      });
     });
 
     it('returns the same token object it was given', async () => {
-      const original = { id: 'u-1' };
+      const original = { id: 'u-1', sid: 'session-1' };
 
       expect(await jwt({ token: original })).toBe(original);
     });
@@ -375,7 +446,10 @@ describe('authConfigMiddleware', () => {
           username: 'host-user'
         });
 
-        const token = await jwt({ token: { id: 'u-1' }, trigger });
+        const token = await jwt({
+          token: { id: 'u-1', sid: 'session-1' },
+          trigger
+        });
 
         expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
           where: { id: 'u-1' },
@@ -383,6 +457,7 @@ describe('authConfigMiddleware', () => {
         });
         expect(token).toEqual({
           id: 'u-1',
+          sid: expect.any(String),
           onboarded: true,
           accountType: 'HOST',
           username: 'host-user'
@@ -403,13 +478,16 @@ describe('authConfigMiddleware', () => {
     it('leaves the token unchanged when the user no longer exists', async () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
-      const token = await jwt({ token: { id: 'u-1' }, trigger: 'update' });
+      const token = await jwt({
+        token: { id: 'u-1', sid: 'session-1' },
+        trigger: 'update'
+      });
 
-      expect(token).toEqual({ id: 'u-1' });
+      expect(token).toEqual({ id: 'u-1', sid: 'session-1' });
     });
 
     it('skips the lookup when the token has no id', async () => {
-      await jwt({ trigger: 'signIn' });
+      await jwt({ token: {}, trigger: 'signIn' });
 
       expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     });
@@ -424,6 +502,74 @@ describe('authConfigMiddleware', () => {
       await jwt({ token: { id: 'u-1' } });
 
       expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('events.signOut', () => {
+    const signOut = (message: unknown) =>
+      events.signOut(message as SignOutArgs);
+
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    const now = Date.parse('2026-01-01T00:00:00.000Z') / 1000;
+
+    it('revokes the session until its token expires', async () => {
+      await signOut({ token: { sid: 'session-1', exp: now + 600 } });
+
+      expect(redis.set).toHaveBeenCalledExactlyOnceWith(
+        'auth:revoked-session:session-1',
+        1,
+        { ex: 600 }
+      );
+    });
+
+    it('revokes a token without an expiry for the session max age', async () => {
+      await signOut({ token: { sid: 'session-1' } });
+
+      expect(redis.set).toHaveBeenCalledWith(
+        'auth:revoked-session:session-1',
+        1,
+        { ex: 30 * 24 * 60 * 60 }
+      );
+    });
+
+    it('keeps the revocation for at least one second', async () => {
+      await signOut({ token: { sid: 'session-1', exp: now - 10 } });
+
+      expect(redis.set).toHaveBeenCalledWith(
+        'auth:revoked-session:session-1',
+        1,
+        { ex: 1 }
+      );
+    });
+
+    it.each([
+      ['a token without a session id', { token: { id: 'u-1' } }],
+      ['no token', { token: null }],
+      ['a database session', { session: { sessionToken: 't' } }]
+    ])('revokes nothing for %s', async (_, message) => {
+      await signOut(message);
+
+      expect(redis.set).not.toHaveBeenCalled();
+    });
+
+    it('logs and swallows a failed revocation', async () => {
+      redis.set.mockRejectedValue(new Error('down'));
+
+      await expect(
+        signOut({ token: { sid: 'session-1', exp: now + 600 } })
+      ).resolves.toBeUndefined();
+      expect(console.error).toHaveBeenCalledWith(
+        '[auth] Failed to revoke the session',
+        expect.any(Error)
+      );
     });
   });
 

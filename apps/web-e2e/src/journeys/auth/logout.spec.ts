@@ -33,30 +33,22 @@ test.describe('logout', () => {
   test.describe('as a participant', () => {
     test.use({ storageState: personaState('participant') });
 
-    test(
-      '[AUTH-008] logs out from the avatar menu',
-      knownBug(450),
-      async ({ page }) => {
-        await page.goto('/browse');
+    test('[AUTH-008] logs out from the avatar menu', async ({ page }) => {
+      await page.goto('/browse');
 
-        await page.getByRole('button', { name: 'E2E participant' }).click();
-        await page.getByRole('menuitem', { name: /Logout/ }).click();
+      await page.getByRole('button', { name: 'E2E participant' }).click();
+      await page.getByRole('menuitem', { name: /Logout/ }).click();
 
-        await expectLoggedOut(page);
-      }
-    );
+      await expectLoggedOut(page);
+    });
 
-    test(
-      '[AUTH-008] logs out from the account page',
-      knownBug(450),
-      async ({ page }) => {
-        await page.goto('/account');
+    test('[AUTH-008] logs out from the account page', async ({ page }) => {
+      await page.goto('/account');
 
-        await page.getByRole('button', { name: 'Logout', exact: true }).click();
+      await page.getByRole('button', { name: 'Logout', exact: true }).click();
 
-        await expectLoggedOut(page);
-      }
-    );
+      await expectLoggedOut(page);
+    });
 
     test('[AUTH-008] logs out from the logout page', async ({ page }) => {
       await page.goto('/logout');
