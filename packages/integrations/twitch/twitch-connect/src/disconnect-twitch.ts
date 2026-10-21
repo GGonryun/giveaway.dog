@@ -3,8 +3,9 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import z from 'zod';
-import { findUserTeamQuery } from '@giveaway/team-server/find-user-team';
-import { IntegrationProvider } from '@giveaway/db-model';
+import { findUserTeam } from '@giveaway/team-server/find-user-team';
+import { TeamPermission } from '@giveaway/team-permissions';
+import { IntegrationProvider, TeamTier } from '@giveaway/db-model';
 import { deleteAllEventSubSubscriptions } from '@giveaway/twitch-api/delete-eventsub-subscription';
 
 export const disconnectTwitch = procedure()
@@ -17,16 +18,13 @@ export const disconnectTwitch = procedure()
     })
   )
   .handler(async ({ input, user, db }) => {
-    const team = await db.team.findUnique({
-      where: findUserTeamQuery({ slug: input.slug, userId: user.id })
+    const { team } = await findUserTeam({
+      db,
+      user,
+      slug: input.slug,
+      permission: TeamPermission.UPDATE_INTEGRATIONS,
+      tier: TeamTier.FREE
     });
-
-    if (!team) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Team not found'
-      });
-    }
 
     const integration = await db.integration.findFirst({
       where: {
