@@ -3,9 +3,11 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
+import { sendVerificationLink } from './email-verification-token';
 
 const updateEmailSchema = z.object({
-  email: z.string().email()
+  email: z.string().email(),
+  redirectTo: z.string().optional()
 });
 
 export const updateEmail = procedure()
@@ -18,13 +20,13 @@ export const updateEmail = procedure()
     })
   )
   .handler(async ({ input, user, db }) => {
-    const { email } = input;
+    const { email, redirectTo } = input;
 
     try {
-      // Check if email is already taken by another user
       const existingUser = await db.user.findFirst({
         where: {
           email,
+          emailVerified: { not: null },
           NOT: { id: user.id }
         }
       });
@@ -36,18 +38,11 @@ export const updateEmail = procedure()
         });
       }
 
-      // Update user email and reset verification status
-      await db.user.update({
-        where: { id: user.id },
-        data: {
-          email,
-          emailVerified: null // Reset verification status for new email
-        }
-      });
+      await sendVerificationLink({ db, user, email, redirectTo });
 
       return {
         success: true,
-        message: 'Email updated successfully'
+        message: 'Verification email sent to the new address'
       };
     } catch (error) {
       if (error instanceof ApplicationError) {

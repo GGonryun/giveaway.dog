@@ -16,42 +16,45 @@ const signInEnded = (url: URL) =>
 test.describe('account linking', { tag: TAGS.security }, () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
-  test(
-    '[LINK-001] an unverified email change does not capture a magic-link sign-in',
-    knownBug(430),
-    async ({ page, browser, request, freshPersona }, testInfo) => {
-      await skipWithoutEmailFake(request);
-      const attacker = await freshPersona('participant');
-      await seedApi(request).userExtras({
-        ns: attacker.ns,
-        users: [{ persona: 'participant', emailVerified: false }]
-      });
-      const victim = toPersonaEmail(
-        'newbie',
-        freshNamespace(testInfo.workerIndex)
-      );
+  test('[LINK-001] an unverified email change does not capture a magic-link sign-in', async ({
+    page,
+    browser,
+    request,
+    freshPersona
+  }, testInfo) => {
+    await skipWithoutEmailFake(request);
+    const attacker = await freshPersona('participant');
+    await seedApi(request).userExtras({
+      ns: attacker.ns,
+      users: [{ persona: 'participant', emailVerified: false }]
+    });
+    const victim = toPersonaEmail(
+      'newbie',
+      freshNamespace(testInfo.workerIndex)
+    );
 
-      await page.goto('/account');
-      await page.getByPlaceholder('Enter your email address').fill(victim);
-      await page.getByRole('button', { name: 'Update Email' }).click();
-      await expect(page.getByText('Email updated successfully')).toBeVisible();
+    await page.goto('/account');
+    await page.getByPlaceholder('Enter your email address').fill(victim);
+    await page.getByRole('button', { name: 'Update Email' }).click();
+    await expect(
+      page.getByRole('heading', { name: 'Check Your Email' })
+    ).toBeVisible();
 
-      const owner = await browser.newContext({ storageState: BYPASS_STATE });
-      try {
-        await blockThirdParties(owner);
-        const ownerPage = await owner.newPage();
-        await ownerPage.goto('/login');
-        const link = await requestMagicLink(ownerPage, request, victim);
-        await ownerPage.goto(link);
-        await ownerPage.waitForURL(signInEnded, { timeout: 30_000 });
+    const owner = await browser.newContext({ storageState: BYPASS_STATE });
+    try {
+      await blockThirdParties(owner);
+      const ownerPage = await owner.newPage();
+      await ownerPage.goto('/login');
+      const link = await requestMagicLink(ownerPage, request, victim);
+      await ownerPage.goto(link);
+      await ownerPage.waitForURL(signInEnded, { timeout: 30_000 });
 
-        const session = await ownerPage.request.get('/api/auth/session');
-        expect((await session.json())?.user?.id).not.toBe(attacker.id);
-      } finally {
-        await owner.close();
-      }
+      const session = await ownerPage.request.get('/api/auth/session');
+      expect((await session.json())?.user?.id).not.toBe(attacker.id);
+    } finally {
+      await owner.close();
     }
-  );
+  });
 
   test(
     '[LINK-002] an unverified Discord email does not sign into another account',

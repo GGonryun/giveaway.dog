@@ -5,6 +5,8 @@ import prisma from '@giveaway/db-client/prisma';
 import { NextAuthConfig } from 'next-auth';
 import type {} from './next-auth';
 
+const prismaAdapter = PrismaAdapter(prisma);
+
 export const authConfigMiddleware = {
   logger: {
     error(error: any) {
@@ -36,12 +38,23 @@ export const authConfigMiddleware = {
     strategy: 'jwt'
   },
   adapter: {
-    ...PrismaAdapter(prisma),
+    ...prismaAdapter,
     async getUserByEmail(email) {
       if (!email) return null;
-      const user = await prisma.user.findFirst({ where: { email } });
+      const user = await prisma.user.findFirst({
+        where: { email, emailVerified: { not: null } }
+      });
       if (user?.email) return { ...user, email: user.email };
       return null;
+    },
+    async createUser(user) {
+      if (user.email) {
+        await prisma.user.updateMany({
+          where: { email: user.email, emailVerified: null },
+          data: { email: null }
+        });
+      }
+      return prismaAdapter.createUser!(user);
     }
   },
   callbacks: {

@@ -6,7 +6,7 @@ import sendEmailVerificationDefault, {
 import { NO_REPLY_EMAIL } from '@giveaway/email/client';
 import { getVerificationEmailContent } from '@giveaway/email/templates';
 import { prismaMock } from '@giveaway/testing-server/prisma';
-import { signIn } from '@giveaway/testing-server/session';
+import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 const inbound = vi.hoisted(() => ({
@@ -113,14 +113,14 @@ describe('sendEmailVerification', () => {
       signIn();
     });
 
-    it('stores the sha256 hash of the emailed token with a 15 minute expiry', async () => {
+    it('[LINK-001] stores the sha256 hash of the emailed token for the signed-in user with a 15 minute expiry', async () => {
       await sendEmailVerification({ email: EMAIL });
 
       const token = sentParams().get('token') ?? '';
       expect(token).toMatch(/^[0-9a-f]{64}$/);
       expect(prismaMock.verificationToken.create).toHaveBeenCalledWith({
         data: {
-          identifier: EMAIL,
+          identifier: `email-verification:${TEST_USER.id}:${EMAIL}`,
           token: createHash('sha256').update(token).digest('hex'),
           expires: new Date('2026-10-01T12:15:00.000Z')
         }
@@ -210,6 +210,12 @@ describe('sendEmailVerification', () => {
       await sendEmailVerification({ email: EMAIL });
 
       expect(sentParams(0).get('token')).not.toBe(sentParams(1).get('token'));
+    });
+
+    it('does not change the email of the user', async () => {
+      await sendEmailVerification({ email: EMAIL });
+
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
     });
 
     it('returns a success message', async () => {
