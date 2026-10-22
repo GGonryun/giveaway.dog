@@ -291,7 +291,11 @@ export const UrlSlugField = <
             render={({ field }) => (
               <FormItem>
                 <FormControl className="mt-3">
-                  <Input {...field} value={field.value || ''} />
+                  <Input
+                    {...field}
+                    value={field.value || ''}
+                    aria-label="URL slug"
+                  />
                 </FormControl>
                 {slugStatus === 'checking' && (
                   <FormDescription className="flex items-center gap-1.5 text-muted-foreground">
