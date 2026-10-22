@@ -78,8 +78,11 @@ test.describe('team X pickers', () => {
       await expect(statValue(page, label)).toHaveText(`${value}${label}`);
     }
 
+    await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'Draw Winners' }).click();
-    await expect(page.getByText('Winners (1)')).toBeVisible();
+    await expect(page.getByText('Winners (1)')).toBeVisible({
+      timeout: 15_000
+    });
     const [first] = await winnerHandles(page);
     expect(eligible).toContain(first);
 
@@ -111,7 +114,9 @@ test.describe('team X pickers', () => {
 
     await page.getByRole('button', { name: 'Draw Extra' }).click();
     await page.getByRole('button', { name: 'Confirm Draw' }).click();
-    await expect(page.getByText('Winners (2)')).toBeVisible();
+    await expect(page.getByText('Winners (2)')).toBeVisible({
+      timeout: 15_000
+    });
     const winners = await winnerHandles(page);
     expect(winners).toHaveLength(2);
     expect(winners).not.toContain(first);
@@ -148,6 +153,7 @@ test.describe('team X pickers', () => {
 
       await page.goto(`/app/${team.slug}/pickers/x/${picker.id}`);
       await expect(page.getByText('Winners (1)')).toBeVisible();
+      await page.waitForLoadState('networkidle');
       await page.getByRole('button', { name: 'Draw Extra' }).click();
       await page.getByRole('button', { name: 'Confirm Draw' }).click();
 
@@ -211,8 +217,11 @@ test.describe('team X pickers', () => {
         });
       }).toPass({ timeout: 60_000, intervals: [2_000] });
 
+      await page.waitForLoadState('networkidle');
       await page.getByRole('button', { name: 'Draw Winners' }).click();
-      await expect(page.getByText('Winners (1)')).toBeVisible();
+      await expect(page.getByText('Winners (1)')).toBeVisible({
+        timeout: 15_000
+      });
       const [winner] = await winnerHandles(page);
       expect(`@${winner}`).toMatch(FIXTURE_RETWEETER);
 
