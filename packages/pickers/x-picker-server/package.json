@@ -37,13 +37,13 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
-    "@giveaway/app-config": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/team-permissions": "workspace:*",
     "@giveaway/team-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/x-picker-model": "workspace:*",
+    "@giveaway/x-picker-workflow": "workspace:*",
     "@giveaway/x-scraper": "workspace:*",
     "nanoid": "catalog:",
     "server-only": "catalog:",

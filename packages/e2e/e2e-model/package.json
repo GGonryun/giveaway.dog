@@ -16,6 +16,7 @@
     }
   },
   "exports": {
+    "./credits": "./src/credits.ts",
     "./extras": "./src/extras.ts",
     "./fakes": "./src/fakes.ts",
     "./jobs": "./src/jobs.ts",
