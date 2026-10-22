@@ -168,7 +168,10 @@ export const SweepstakesEntries = ({
                 </TableCell>
 
                 <TableCell>
-                  <span className="text-xs text-muted-foreground">
+                  <span
+                    className="text-xs text-muted-foreground"
+                    suppressHydrationWarning
+                  >
                     {formatDistanceToNowStrict(completion.completedAt, {
                       addSuffix: true
                     })}
@@ -178,7 +181,12 @@ export const SweepstakesEntries = ({
                 <TableCell onClick={(e) => e.stopPropagation()}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        aria-label="Entry actions"
+                      >
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
