@@ -96,6 +96,7 @@ exports[`UrlSlugField > when there is a custom slug > matches the snapshot 1`] =
           <input
             aria-describedby=":id4:-form-item-description"
             aria-invalid="false"
+            aria-label="URL slug"
             class="file:text-foreground placeholder:text-muted-foreground bg-white selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-white file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive mt-3"
             data-slot="input"
             id=":id4:-form-item"
@@ -259,10 +260,13 @@ exports[`VisibilityTypeField > matches the snapshot 1`] = `
     <button
       aria-autocomplete="none"
       aria-controls="radix-:id3:"
+      aria-describedby=":id1:-form-item-description"
       aria-expanded="false"
+      aria-invalid="false"
       class="flex h-9 shadow-xs w-full items-center justify-between rounded-md border border-input bg-white dark:bg-input/30 px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
       data-state="closed"
       dir="ltr"
+      id=":id1:-form-item"
       role="combobox"
       type="button"
     >
