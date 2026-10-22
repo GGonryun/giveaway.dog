@@ -163,6 +163,13 @@ describe('ProviderDots', () => {
     expect(screen.getAllByRole('button')).toHaveLength(3);
   });
 
+  it('names each dot after its provider', () => {
+    render(<ProviderDots identities={identities} onSubmit={onSubmit} />);
+    expect(
+      screen.getAllByRole('button').map((button) => button.ariaLabel)
+    ).toEqual(['Google', 'Discord', 'YouTube']);
+  });
+
   it('calls onSubmit with the provider of the clicked dot', async () => {
     render(<ProviderDots identities={identities} onSubmit={onSubmit} />);
     await userEvent.click(screen.getAllByRole('button')[1]);

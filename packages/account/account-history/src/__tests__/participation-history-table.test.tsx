@@ -71,7 +71,9 @@ const openActions = async (
   user: ReturnType<typeof userEvent.setup>,
   name: string
 ) => {
-  await user.click(within(rowFor(name)).getByRole('button'));
+  await user.click(
+    within(rowFor(name)).getByRole('button', { name: 'Row actions' })
+  );
 };
 
 describe('ParticipationHistoryTable', () => {
