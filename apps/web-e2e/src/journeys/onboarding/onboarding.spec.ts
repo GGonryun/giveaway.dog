@@ -112,8 +112,8 @@ test.describe('onboarding replay', () => {
 });
 
 test.describe('onboarding journeys', () => {
-  test.fixme('[ONBOARD-001] a newbie finishes onboarding as a participant');
-  test.fixme('[ONBOARD-002] a newbie finishes onboarding as a host');
-  test.fixme('[ONBOARD-003] a newbie cannot take a username that is taken');
-  test.fixme('[ONBOARD-004] a newbie returns to the giveaway after onboarding');
+  test.fixme('[ONBOARD-001] a newbie finishes onboarding as a participant', () => {});
+  test.fixme('[ONBOARD-002] a newbie finishes onboarding as a host', () => {});
+  test.fixme('[ONBOARD-003] a newbie cannot take a username that is taken', () => {});
+  test.fixme('[ONBOARD-004] a newbie returns to the giveaway after onboarding', () => {});
 });
