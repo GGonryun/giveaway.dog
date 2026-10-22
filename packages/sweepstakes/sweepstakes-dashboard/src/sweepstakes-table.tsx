@@ -245,6 +245,7 @@ export function SweepstakesTable({ data, filters }: SweepstakesTableProps) {
                           variant="ghost"
                           size="icon"
                           className="p-0 m-0 size-8"
+                          aria-label="Giveaway actions"
                         >
                           <MoreHorizontal />
                         </Button>
