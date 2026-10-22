@@ -10,10 +10,13 @@ import {
   E2E_MAX_PICKER_USERS,
   E2E_MAX_PICKER_WINNERS,
   E2E_MAX_SCOPES,
+  E2E_MAX_TEMPLATES,
   E2E_MAX_TEXT_LENGTH,
+  e2eAutomatedPostsRequestSchema,
   e2eIntegrationsRequestSchema,
   e2eInvitesRequestSchema,
   e2ePickerRequestSchema,
+  e2eTemplatesRequestSchema,
   e2eUserExtrasRequestSchema,
   toE2eUserNamespace
 } from '../extras';
@@ -624,5 +627,108 @@ describe('e2ePickerRequestSchema', () => {
     expect(pathsOf({ users, draws: [...draws, { user: 0 }] })).toEqual([
       'draws'
     ]);
+  });
+});
+
+describe('e2eTemplatesRequestSchema', () => {
+  const { parse, pathsOf } = helpers(e2eTemplatesRequestSchema, {
+    team: 'e2e-abc123-w0'
+  });
+
+  it('accepts templates with a name and an optional description', () => {
+    const request = {
+      templates: [{ name: 'Template A' }, { name: 'B', description: 'About B' }]
+    };
+
+    expect(parse(request).data).toEqual({ team: 'e2e-abc123-w0', ...request });
+  });
+
+  it(`accepts at most ${E2E_MAX_TEMPLATES} templates, and at least one`, () => {
+    const named = (count: number) =>
+      many(count, (index) => ({ name: `T${index}` }));
+
+    expect(parse({ templates: named(E2E_MAX_TEMPLATES) }).success).toBe(true);
+    expect(pathsOf({ templates: named(E2E_MAX_TEMPLATES + 1) })).toEqual([
+      'templates'
+    ]);
+    expect(pathsOf({ templates: [] })).toEqual(['templates']);
+  });
+
+  it('rejects an empty or long name, a long description and unknown fields', () => {
+    expect(pathsOf({ templates: [{ name: ' ' }] })).toEqual([
+      'templates.0.name'
+    ]);
+    expect(
+      pathsOf({ templates: [{ name: 'x'.repeat(E2E_MAX_LABEL_LENGTH + 1) }] })
+    ).toEqual(['templates.0.name']);
+    expect(
+      pathsOf({
+        templates: [
+          { name: 'T', description: 'x'.repeat(E2E_MAX_TEXT_LENGTH + 1) }
+        ]
+      })
+    ).toEqual(['templates.0.description']);
+    expect(pathsOf({ templates: [{ name: 'T', content: {} }] })).toEqual([
+      'templates.0'
+    ]);
+  });
+
+  it('rejects a team that is not an e2e team', () => {
+    expect(pathsOf({ team: 'real-team', templates: [{ name: 'T' }] })).toEqual([
+      'team'
+    ]);
+  });
+});
+
+describe('e2eAutomatedPostsRequestSchema', () => {
+  const { parse, pathsOf } = helpers(e2eAutomatedPostsRequestSchema, {
+    sweepstakesId: 'sw-1'
+  });
+
+  it('fills in a pending status', () => {
+    expect(parse({ posts: [{ type: 'POST_TO_BLUESKY' }] }).data).toEqual({
+      sweepstakesId: 'sw-1',
+      posts: [{ type: 'POST_TO_BLUESKY', status: 'PENDING' }]
+    });
+  });
+
+  it('accepts a text and another status', () => {
+    const posts = [{ type: 'POST_TO_BLUESKY', text: 'Hi', status: 'FAILED' }];
+
+    expect(parse({ posts }).data).toEqual({ sweepstakesId: 'sw-1', posts });
+  });
+
+  it('rejects the types it cannot seed, an empty or long text and unknown fields', () => {
+    for (const type of ['POST_TO_DISCORD', 'POST_TO_TWITTER']) {
+      expect(pathsOf({ posts: [{ type }] })).toEqual(['posts.0.type']);
+    }
+    expect(pathsOf({ posts: [{ type: 'POST_TO_BLUESKY', text: '' }] })).toEqual(
+      ['posts.0.text']
+    );
+    expect(
+      pathsOf({
+        posts: [
+          { type: 'POST_TO_BLUESKY', text: 'x'.repeat(E2E_MAX_TEXT_LENGTH + 1) }
+        ]
+      })
+    ).toEqual(['posts.0.text']);
+    expect(
+      pathsOf({ posts: [{ type: 'POST_TO_BLUESKY', runAt: 'now' }] })
+    ).toEqual(['posts.0']);
+  });
+
+  it('rejects no post, and two posts of one type', () => {
+    expect(pathsOf({ posts: [] })).toEqual(['posts']);
+    expect(
+      pathsOf({
+        posts: [{ type: 'POST_TO_BLUESKY' }, { type: 'POST_TO_BLUESKY' }]
+      })
+    ).toEqual(['posts']);
+  });
+
+  it('rejects a giveaway id that is not an id', () => {
+    expect(
+      pathsOf({ sweepstakesId: '../x', posts: [{ type: 'POST_TO_BLUESKY' }] })
+    ).toEqual(['sweepstakesId']);
   });
 });

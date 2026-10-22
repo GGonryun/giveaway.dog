@@ -144,6 +144,17 @@ const readDraws = async (db: PrismaClient, id: string) => {
   };
 };
 
+const readTemplates = async (db: PrismaClient, slug: string) => {
+  const team = await findE2eTeam(db, slug);
+  const templates = await db.template.findMany({
+    where: { teamId: team.id },
+    select: { id: true, name: true, createdAt: true },
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+    take: MAX_ROWS
+  });
+  return { templates };
+};
+
 const readAccounts = async (
   db: PrismaClient,
   persona: E2eRowsQuery & { view: 'accounts' }
@@ -198,6 +209,8 @@ export const readE2eRows = ({
       return readCompletions(db, query.id);
     case 'draws':
       return readDraws(db, query.id);
+    case 'templates':
+      return readTemplates(db, query.slug);
     case 'accounts':
       return readAccounts(db, query);
     default:

@@ -1,8 +1,10 @@
 import type { APIRequestContext, TestInfo } from '@playwright/test';
 import type {
+  E2eAutomatedPostsRequestInput,
   E2eIntegrationsRequestInput,
   E2eInvitesRequestInput,
   E2ePickerRequestInput,
+  E2eTemplatesRequestInput,
   E2eUserExtrasRequestInput
 } from '@giveaway/e2e-model/extras';
 import type {
@@ -112,6 +114,16 @@ export type SeededPicker = {
   draws: { id: string; userId: string; disqualified: string | null }[];
 };
 
+export type SeededTemplates = {
+  team: string;
+  templates: { id: string; name: string }[];
+};
+
+export type SeededAutomatedPosts = {
+  sweepstakesId: string;
+  posts: { id: string; type: string; status: string; runAt: string }[];
+};
+
 export type SeededJob = {
   id: string;
   status: string;
@@ -198,6 +210,10 @@ export const seedApi = (request: APIRequestContext) => ({
     call<SeededInvites>(request, 'POST', 'invites', body),
   picker: (body: E2ePickerRequestInput) =>
     call<SeededPicker>(request, 'POST', 'pickers', body),
+  templates: (body: E2eTemplatesRequestInput) =>
+    call<SeededTemplates>(request, 'POST', 'templates', body),
+  automatedPosts: (body: E2eAutomatedPostsRequestInput) =>
+    call<SeededAutomatedPosts>(request, 'POST', 'automated-posts', body),
   jobs: (sweepstakesId: string) =>
     call<SeededJobs>(
       request,
@@ -216,6 +232,14 @@ export const seedApi = (request: APIRequestContext) => ({
       'GET',
       `rows?${new URLSearchParams({ view: 'team', slug })}`
     ),
+  templateRows: async (slug: string) =>
+    (
+      await call<{ templates: { id: string; name: string }[] }>(
+        request,
+        'GET',
+        `rows?${new URLSearchParams({ view: 'templates', slug })}`
+      )
+    ).templates,
   outbox: async ({ channel, target }: E2eOutboxQuery) =>
     (
       await call<{ entries: E2eOutboxEntry[] }>(

@@ -9,9 +9,11 @@ import {
   verifyE2eSecret
 } from '@giveaway/e2e-gate/gate';
 import {
+  e2eAutomatedPostsRequestSchema,
   e2eIntegrationsRequestSchema,
   e2eInvitesRequestSchema,
   e2ePickerRequestSchema,
+  e2eTemplatesRequestSchema,
   e2eUserExtrasRequestSchema
 } from '@giveaway/e2e-model/extras';
 import { e2eOutboxQuerySchema } from '@giveaway/e2e-model/fakes';
@@ -36,6 +38,8 @@ import { seedE2eTeam } from './teams';
 import { seedE2eIntegrations } from './integrations';
 import { seedE2eInvites } from './invites';
 import { seedE2ePicker } from './pickers';
+import { seedE2eTemplates } from './templates';
+import { seedE2eAutomatedPosts } from './automated-posts';
 import { seedE2eUserExtras } from './users';
 import { authorizeE2eOAuth } from './oauth';
 import { readE2eJobs, runE2eJobs } from './jobs';
@@ -131,6 +135,23 @@ const ROUTES: E2eRoute[] = [
     write: true,
     handle: ({ db, body, now }) =>
       seedE2ePicker({ db, request: e2ePickerRequestSchema.parse(body), now })
+  },
+  {
+    method: 'POST',
+    path: ['templates'],
+    write: true,
+    handle: ({ db, body }) =>
+      seedE2eTemplates({ db, request: e2eTemplatesRequestSchema.parse(body) })
+  },
+  {
+    method: 'POST',
+    path: ['automated-posts'],
+    write: true,
+    handle: ({ db, body }) =>
+      seedE2eAutomatedPosts({
+        db,
+        request: e2eAutomatedPostsRequestSchema.parse(body)
+      })
   },
   {
     method: 'GET',

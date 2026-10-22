@@ -3542,6 +3542,9 @@ importers:
       '@giveaway/team-model':
         specifier: workspace:*
         version: link:../../team/team-model
+      '@giveaway/templates-model':
+        specifier: workspace:*
+        version: link:../../templates/templates-model
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors

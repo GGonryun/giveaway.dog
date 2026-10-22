@@ -110,6 +110,66 @@ test.describe('team page access', () => {
     await visitor.dispose();
   });
 
+  test("[TEAM-001] a non-member who replays the navigation request of a team's Entries tab gets none of its entrants", async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedRolesTeam(request, ns);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns,
+      team: team.slug,
+      entries: [{ persona: 'participant', completions: [{ task: 0 }] }]
+    });
+    const {
+      users: [entrant]
+    } = await seedApi(request).userExtras({
+      ns,
+      users: [
+        {
+          persona: 'participant',
+          location: { country: 'United States', countryCode: 'US' }
+        }
+      ]
+    });
+    await signInAs(page.request, 'host', ns);
+    await page.goto(`/app/${team.slug}/sweepstakes/${giveaway.id}/winners`);
+
+    const [navigation] = await Promise.all([
+      page.waitForRequest(
+        (sent) =>
+          sent.method() === 'GET' &&
+          sent.headers().rsc === '1' &&
+          !sent.headers()['next-router-prefetch'] &&
+          new URL(sent.url()).pathname.endsWith('/entries')
+      ),
+      page.getByRole('tab', { name: 'Entries' }).click()
+    ]);
+    const { cookie, ...headers } = navigation.headers();
+    expect(cookie).toBeTruthy();
+    expect(headers['next-router-state-tree']).toBeTruthy();
+
+    const own = await page.request.get(navigation.url(), { headers });
+    expect(own.status()).toBe(200);
+    expect(await own.text()).toContain(entrant.email);
+
+    const host2 = await openAs(browser, 'host2', ns);
+    const session = await host2.page.request.get('/api/auth/session');
+    expect((await session.json()).user.email).toBe(host2.user!.email);
+    const replay = await host2.page.request.get(navigation.url(), {
+      headers
+    });
+    const body = await replay.text();
+    for (const [name, value] of Object.entries({
+      "the entrant's email": entrant.email,
+      "the entrant's IP address": entrant.ip!
+    })) {
+      expect(body.includes(value), `The replay contains ${name}`).toBe(false);
+    }
+    await host2.context.close();
+  });
+
   test.describe('blocked member', () => {
     test.use({ allowedPageErrors: [/ClientFetchError|is blocked from team/] });
 
