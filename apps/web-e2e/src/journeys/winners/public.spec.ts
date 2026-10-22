@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { expectAfterReloads } from '../../helpers/poll';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import { openAs } from '../../helpers/teams';
@@ -19,11 +18,8 @@ const DISQUALIFY_REASON = 'Bot account';
 
 const taskTitle = (task: unknown) => (task as { title: string }).title;
 
-const expectWinnersAnnounced = async (page: Page) => {
-  await expect(
-    page.getByRole('heading', { name: 'Winners Announced!' })
-  ).toBeVisible({ timeout: 2_000 });
-};
+const winnersAnnounced = (page: Page) =>
+  page.getByRole('heading', { name: 'Winners Announced!' });
 
 test.describe('the winners on the public giveaway page', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
@@ -32,61 +28,63 @@ test.describe('the winners on the public giveaway page', () => {
     allowedPageErrors: [/ClientFetchError/]
   });
 
-  test(
-    'a visitor sees the winners once the host draws them and completes the giveaway',
-    knownBug(482),
-    async ({ browser, page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const ns = freshNamespace(testInfo.workerIndex);
-      const giveaway = await seedApi(request).sweepstakes(
-        endedGiveaway({
-          ns,
-          team: team.slug,
-          prizes: [{ name: PRIZE, quota: 1 }],
-          entries: eligibleEntries(['participant'])
+  test('a visitor sees the winners once the host draws them and completes the giveaway', async ({
+    browser,
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const ns = freshNamespace(testInfo.workerIndex);
+    const giveaway = await seedApi(request).sweepstakes(
+      endedGiveaway({
+        ns,
+        team: team.slug,
+        prizes: [{ name: PRIZE, quota: 1 }],
+        entries: eligibleEntries(['participant'])
+      })
+    );
+
+    const visitor = await openAs(browser, null, ns);
+    try {
+      await visitor.page.goto(`/browse/${giveaway.id}`);
+      await expect(
+        visitor.page.getByText('Winners Being Selected')
+      ).toBeVisible();
+
+      await page.goto(winnersPage(team.slug, giveaway.id));
+      await page.getByRole('button', { name: 'Pick All Winners' }).click();
+      await expect(
+        page.getByText('All winners selected', { exact: true })
+      ).toBeVisible();
+      await page.getByRole('button', { name: 'Mark as Completed' }).click();
+      await page
+        .getByRole('button', { name: 'Yes, Complete Sweepstakes' })
+        .click();
+      await expect(page).toHaveURL(new RegExp(`/app/${team.slug}$`), {
+        timeout: 30_000
+      });
+
+      await visitor.page.reload();
+      await expectAfterReloads(visitor.page, () =>
+        expect(winnersAnnounced(visitor.page)).toBeVisible({
+          timeout: 2_000
         })
       );
-
-      const visitor = await openAs(browser, null, ns);
-      try {
-        await visitor.page.goto(`/browse/${giveaway.id}`);
-        await expect(
-          visitor.page.getByText('Winners Being Selected')
-        ).toBeVisible();
-
-        await page.goto(winnersPage(team.slug, giveaway.id));
-        await page.getByRole('button', { name: 'Pick All Winners' }).click();
-        await expect(
-          page.getByText('All winners selected', { exact: true })
-        ).toBeVisible();
-        await page.getByRole('button', { name: 'Mark as Completed' }).click();
-        await page
-          .getByRole('button', { name: 'Yes, Complete Sweepstakes' })
-          .click();
-        await expect(page).toHaveURL(new RegExp(`/app/${team.slug}$`), {
-          timeout: 30_000
-        });
-
-        await visitor.page.reload();
-        await expectAfterReloads(visitor.page, () =>
-          expectWinnersAnnounced(visitor.page)
-        );
-        await visitor.page
-          .getByRole('button', { name: new RegExp(PRIZE) })
-          .click();
-        await expect(
-          visitor.page.getByText('1 winner', { exact: true })
-        ).toBeVisible();
-        await expect(
-          visitor.page
-            .getByRole('row')
-            .filter({ hasText: personaName('participant') })
-        ).toContainText(taskTitle(giveaway.tasks[0]));
-      } finally {
-        await visitor.context.close();
-      }
+      await visitor.page
+        .getByRole('button', { name: new RegExp(PRIZE) })
+        .click();
+      await expect(
+        visitor.page.getByText('1 winner', { exact: true })
+      ).toBeVisible();
+      await expect(
+        visitor.page
+          .getByRole('row')
+          .filter({ hasText: personaName('participant') })
+      ).toContainText(taskTitle(giveaway.tasks[0]));
+    } finally {
+      await visitor.context.close();
     }
-  );
+  });
 
   test('the winner, a loser and a visitor see the result of a completed giveaway with prize selection', async ({
     browser,
@@ -127,7 +125,7 @@ test.describe('the winners on the public giveaway page', () => {
     const loser = await openAs(browser, 'participant2', ns);
     try {
       await visitor.page.goto(`/browse/${giveaway.id}`);
-      await expectWinnersAnnounced(visitor.page);
+      await expect(winnersAnnounced(visitor.page)).toBeVisible();
       await visitor.page
         .getByRole('button', { name: new RegExp(PRIZE) })
         .click();

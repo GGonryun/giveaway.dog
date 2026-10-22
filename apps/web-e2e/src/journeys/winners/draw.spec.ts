@@ -75,12 +75,10 @@ test.describe('drawing the winners of a giveaway', () => {
     ).toBeVisible();
 
     await page.reload();
-    await expect(
-      page.getByText('2 / 2 winners selected', { exact: true })
-    ).toBeVisible();
-    await expect(
-      page.getByText('1 / 1 winner selected', { exact: true })
-    ).toBeVisible();
+    await expect(page.getByText(/^\d+ \/ \d+ winners? selected$/)).toHaveText([
+      '2 / 2 winners selected',
+      '1 / 1 winner selected'
+    ]);
     await expect(page.getByText('Complete', { exact: true })).toHaveCount(2);
     for (const persona of ELIGIBLE_PERSONAS) {
       await expect(drawRow(page, personaName(persona))).toContainText('Winner');
