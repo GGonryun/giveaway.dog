@@ -5,6 +5,7 @@ import { clickUntilUrl } from '../../helpers/editor';
 import { seedSweepstakes } from '../../helpers/jobs';
 import { knownBug } from '../../helpers/known-bug';
 import { freshSlug, seedApi, seedWorkerTeam } from '../../helpers/seed';
+import { TAGS } from '../../helpers/tags';
 
 const DRAFT_URL = /\/sweepstakes\/([^/]+)\/create$/;
 const TEMPLATE_URL = /\/templates\/([^/?]+)\/(create|edit)/;
@@ -218,7 +219,7 @@ test.describe('team templates', () => {
 
   test(
     'a host creates two giveaways from a template that sets a custom slug',
-    knownBug(513),
+    knownBug(513, { tag: TAGS.slow }),
     async ({ page, request }, testInfo) => {
       const seed = seedApi(request);
       const { team } = await seedWorkerTeam(request, testInfo);
