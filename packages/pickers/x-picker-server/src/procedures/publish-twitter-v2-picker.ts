@@ -7,7 +7,7 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
-import { environment } from '@giveaway/app-config/environment';
+import { startScrapeTwitter } from '@giveaway/x-picker-workflow/scrape-twitter/start';
 
 export const publishTwitterV2Picker = procedure()
   .authorization({
@@ -43,23 +43,7 @@ export const publishTwitterV2Picker = procedure()
       });
     }
 
-    const base = environment.appUrl();
-    const response = await fetch(`${base}/api/workflows/twitter/scrape/start`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.CRON_SECRET}`
-      },
-      body: JSON.stringify({ pickerId, slug, data })
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new ApplicationError({
-        code: 'CONFLICT',
-        message: error.error || 'Failed to start scrape workflow'
-      });
-    }
+    await startScrapeTwitter({ picker, data });
 
     return { success: true };
   });

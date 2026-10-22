@@ -17,6 +17,7 @@
   },
   "exports": {
     "./scrape-twitter/shared": "./src/scrape-twitter/shared.ts",
+    "./scrape-twitter/start": "./src/scrape-twitter/start.ts",
     "./scrape-twitter/steps/store-retweeters": "./src/scrape-twitter/steps/store-retweeters.ts",
     "./scrape-twitter/steps/store-tweet-data": "./src/scrape-twitter/steps/store-tweet-data.ts",
     "./scrape-twitter/steps/update-picker-status": "./src/scrape-twitter/steps/update-picker-status.ts",
@@ -31,6 +32,8 @@
   "dependencies": {
     "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/x-model": "workspace:*",
+    "@giveaway/x-picker-model": "workspace:*",
     "@giveaway/x-scraper": "workspace:*",
     "server-only": "catalog:",
     "workflow": "catalog:"
