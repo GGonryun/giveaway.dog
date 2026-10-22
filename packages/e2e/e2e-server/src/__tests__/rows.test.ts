@@ -354,6 +354,39 @@ describe('readE2eRows', () => {
     }
   );
 
+  it('reads the templates of an e2e team', async () => {
+    prismaMock.team.findUnique.mockResolvedValue(teamRow());
+    const templates = [{ id: 'tpl-1', name: 'Template A', createdAt: NOW }];
+    prismaMock.template.findMany.mockResolvedValue(templates);
+
+    expect(
+      await readE2eRows({
+        db,
+        query: { view: 'templates', slug: 'e2e-abc123-w0' }
+      })
+    ).toEqual({ templates });
+    expect(prismaMock.template.findMany).toHaveBeenCalledWith({
+      where: { teamId: 'team-e2e-abc123-w0' },
+      select: { id: true, name: true, createdAt: true },
+      orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+      take: 500
+    });
+  });
+
+  it('refuses the templates of a team with a member who is not an e2e user', async () => {
+    prismaMock.team.findUnique.mockResolvedValue(
+      teamRow({ members: [{ role: 'OWNER', user: realUser() }] })
+    );
+
+    await expect(
+      readE2eRows({
+        db,
+        query: { view: 'templates', slug: 'e2e-abc123-w0' }
+      })
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    expect(prismaMock.template.findMany).not.toHaveBeenCalled();
+  });
+
   it('reads the accounts of a persona', async () => {
     const user = {
       id: 'user-participant',

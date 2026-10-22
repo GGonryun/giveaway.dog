@@ -239,14 +239,14 @@ describe('Setup', () => {
   describe('time zone', () => {
     it('shows the stored time zone', () => {
       renderSetup();
-      expect(screen.getByRole('combobox')).toHaveTextContent(
-        '(GMT+09:00) Japan Time (Tokyo)'
-      );
+      expect(
+        screen.getByRole('combobox', { name: 'Timezone' })
+      ).toHaveTextContent('(GMT+09:00) Japan Time (Tokyo)');
     });
 
     it('stores the chosen time zone', async () => {
       const { form } = renderSetup();
-      await userEvent.click(screen.getByRole('combobox'));
+      await userEvent.click(screen.getByRole('combobox', { name: 'Timezone' }));
       await userEvent.click(
         screen.getByRole('option', {
           name: '(GMT+00:00) Greenwich Mean Time (Reykjavík)'
@@ -254,9 +254,9 @@ describe('Setup', () => {
       );
 
       expect(form.getValues('timing.timeZone')).toBe('Atlantic/Reykjavik');
-      expect(screen.getByRole('combobox')).toHaveTextContent(
-        '(GMT+00:00) Greenwich Mean Time (Reykjavík)'
-      );
+      expect(
+        screen.getByRole('combobox', { name: 'Timezone' })
+      ).toHaveTextContent('(GMT+00:00) Greenwich Mean Time (Reykjavík)');
     });
   });
 

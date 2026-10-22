@@ -105,18 +105,18 @@ export const VisibilityTypeField = <
             }
           />
         </div>
-        <FormControl>
-          <Select value={field.value} onValueChange={field.onChange}>
+        <Select value={field.value} onValueChange={field.onChange}>
+          <FormControl>
             <SelectTrigger>
               <SelectValue placeholder="Select visibility type" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
-              <SelectItem value={VisibilityType.PRIVATE}>Private</SelectItem>
-              <SelectItem value={VisibilityType.UNLISTED}>Unlisted</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormControl>
+          </FormControl>
+          <SelectContent>
+            <SelectItem value={VisibilityType.PUBLIC}>Public</SelectItem>
+            <SelectItem value={VisibilityType.PRIVATE}>Private</SelectItem>
+            <SelectItem value={VisibilityType.UNLISTED}>Unlisted</SelectItem>
+          </SelectContent>
+        </Select>
 
         <FormMessage />
       </FormItem>

@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  E2E_CLOSED_GATES,
+  E2E_TEST_SECRET,
+  stubE2eFakeEnvironment
+} from '@giveaway/e2e-fakes/testing/env';
 import { checkAndConsumeCredits } from '../credits';
 
 const m = vi.hoisted(() => ({
@@ -33,6 +38,7 @@ describe('checkAndConsumeCredits', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllEnvs();
   });
 
   describe('client identification', () => {
@@ -70,6 +76,75 @@ describe('checkAndConsumeCredits', () => {
       await checkAndConsumeCredits(headers, 1);
 
       expect(m.limit).toHaveBeenCalledWith('ip:', { rate: 1 });
+    });
+  });
+
+  describe('the e2e credit pool', () => {
+    const poolHeaders = (cookie: string) =>
+      new Headers({ cookie, 'x-forwarded-for': '203.0.113.5' });
+
+    const cookies = (secret = E2E_TEST_SECRET, pool = 'run123-pool') =>
+      `theme=dark; e2e-credits=${secret}; e2e-credits-pool=${pool}; other=1`;
+
+    it.each(['preview', 'development'] as const)(
+      'uses the pool of the cookies where the gate is open (%s)',
+      async (environment) => {
+        stubE2eFakeEnvironment(environment);
+
+        await checkAndConsumeCredits(poolHeaders(cookies()), 1);
+
+        expect(m.limit).toHaveBeenCalledWith('e2e:run123-pool', { rate: 1 });
+      }
+    );
+
+    it('reads a secret that contains an equals sign', async () => {
+      const secret = `${E2E_TEST_SECRET}==`;
+      stubE2eFakeEnvironment('preview');
+      vi.stubEnv('E2E_LOGIN_SECRET', secret);
+
+      await checkAndConsumeCredits(poolHeaders(cookies(secret)), 1);
+
+      expect(m.limit).toHaveBeenCalledWith('e2e:run123-pool', { rate: 1 });
+    });
+
+    it.each(E2E_CLOSED_GATES)(
+      'uses the address where the gate is closed (%s)',
+      async (environment) => {
+        stubE2eFakeEnvironment(environment);
+
+        await checkAndConsumeCredits(poolHeaders(cookies()), 1);
+
+        expect(m.limit).toHaveBeenCalledWith('ip:203.0.113.5', { rate: 1 });
+      }
+    );
+
+    it.each([
+      ['a wrong secret', cookies('a-wrong-secret-with-at-least-32-chars')],
+      ['no secret', 'e2e-credits-pool=run123-pool'],
+      [
+        'the secret in another cookie',
+        `x${cookies().slice('theme=dark; '.length)}`
+      ],
+      ['no pool', `e2e-credits=${E2E_TEST_SECRET}`],
+      ['a pool that the schema refuses', cookies(E2E_TEST_SECRET, 'ip:1')],
+      ['an empty pool', cookies(E2E_TEST_SECRET, '')]
+    ])('uses the address with %s', async (_, cookie) => {
+      stubE2eFakeEnvironment('preview');
+
+      await checkAndConsumeCredits(poolHeaders(cookie), 1);
+
+      expect(m.limit).toHaveBeenCalledWith('ip:203.0.113.5', { rate: 1 });
+    });
+
+    it('uses the address without a cookie header', async () => {
+      stubE2eFakeEnvironment('preview');
+
+      await checkAndConsumeCredits(
+        new Headers({ 'x-forwarded-for': '203.0.113.5' }),
+        1
+      );
+
+      expect(m.limit).toHaveBeenCalledWith('ip:203.0.113.5', { rate: 1 });
     });
   });
 

@@ -3542,6 +3542,9 @@ importers:
       '@giveaway/team-model':
         specifier: workspace:*
         version: link:../../team/team-model
+      '@giveaway/templates-model':
+        specifier: workspace:*
+        version: link:../../templates/templates-model
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors
@@ -9029,9 +9032,6 @@ importers:
 
   packages/pickers/x-picker-server:
     dependencies:
-      '@giveaway/app-config':
-        specifier: workspace:*
-        version: link:../../infra/app-config
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
@@ -9050,6 +9050,9 @@ importers:
       '@giveaway/x-picker-model':
         specifier: workspace:*
         version: link:../x-picker-model
+      '@giveaway/x-picker-workflow':
+        specifier: workspace:*
+        version: link:../x-picker-workflow
       '@giveaway/x-scraper':
         specifier: workspace:*
         version: link:../../integrations/x/x-scraper
@@ -9099,6 +9102,12 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/x-model':
+        specifier: workspace:*
+        version: link:../../integrations/x/x-model
+      '@giveaway/x-picker-model':
+        specifier: workspace:*
+        version: link:../x-picker-model
       '@giveaway/x-scraper':
         specifier: workspace:*
         version: link:../../integrations/x/x-scraper
@@ -29561,7 +29570,7 @@ snapshots:
       eslint: 9.39.5(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.10
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@9.39.5(jiti@2.6.1))
       eslint-plugin-react-hooks: 7.1.1(eslint@9.39.5(jiti@2.6.1))
@@ -29594,7 +29603,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.12.2
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -29609,7 +29618,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)))(eslint@9.39.5(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.6.1))(typescript@6.0.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.2.0

@@ -42,6 +42,20 @@ export const openAs = async (
   return { context, page, user };
 };
 
+export const memberRow = (page: Page, name: string) =>
+  page.getByRole('row').filter({ hasText: name });
+
+export const openMemberAction = async (
+  page: Page,
+  name: string,
+  action: 'Edit Member' | 'Remove Member'
+) => {
+  await memberRow(page, name)
+    .getByRole('button', { name: 'Member actions' })
+    .click();
+  await page.getByRole('menuitem', { name: action }).click();
+};
+
 export const seedEndedWithWinner = (
   request: APIRequestContext,
   ns: string,

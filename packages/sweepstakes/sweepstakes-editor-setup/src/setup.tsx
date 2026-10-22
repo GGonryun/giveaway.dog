@@ -120,14 +120,14 @@ export const Setup = () => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Timezone</FormLabel>
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a timezone" />
                   <MemoTimezone />
                 </SelectTrigger>
-              </Select>
-            </FormControl>
+              </FormControl>
+            </Select>
             <FormMessage />
           </FormItem>
         )}

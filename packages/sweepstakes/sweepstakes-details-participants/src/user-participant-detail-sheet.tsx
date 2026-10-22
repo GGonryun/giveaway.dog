@@ -73,8 +73,10 @@ export const UserParticipantSheetContent: React.FC<{
                 {participant.user.name ?? UNKNOWN_USER_NAME}
               </span>
             </SheetTitle>
-            <SheetDescription className="flex items-center space-x-2">
-              <ObfuscatedEmail email={participant.user.email} />
+            <SheetDescription asChild>
+              <div className="flex items-center space-x-2">
+                <ObfuscatedEmail email={participant.user.email} />
+              </div>
             </SheetDescription>
             <div className="my-2">
               <UserProviders providers={participant.user.providers} />

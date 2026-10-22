@@ -13,6 +13,14 @@ import {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+const m = vi.hoisted(() => ({
+  startScrapeTwitter: vi.fn()
+}));
+
+vi.mock('@giveaway/x-picker-workflow/scrape-twitter/start', () => ({
+  startScrapeTwitter: m.startScrapeTwitter
+}));
+
 type PublishInput = Parameters<typeof publishTwitterV2Picker>[0];
 
 const input = (overrides: Partial<PublishInput> = {}): PublishInput => ({
@@ -22,29 +30,15 @@ const input = (overrides: Partial<PublishInput> = {}): PublishInput => ({
   ...overrides
 });
 
-const jsonResponse = (body: unknown, init: ResponseInit = {}) =>
-  new Response(JSON.stringify(body), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-    ...init
-  });
-
 describe('publishTwitterV2Picker', () => {
-  const fetchMock = vi.fn<typeof fetch>();
-
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
-    fetchMock.mockReset();
-    vi.stubGlobal('fetch', fetchMock);
-    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://giveaway.test');
-    vi.stubEnv('CRON_SECRET', 'cron-secret');
+    m.startScrapeTwitter.mockReset();
   });
 
   afterEach(() => {
     vi.useRealTimers();
-    vi.unstubAllGlobals();
-    vi.unstubAllEnvs();
   });
 
   describe('when the caller is not signed in', () => {
@@ -54,7 +48,7 @@ describe('publishTwitterV2Picker', () => {
       expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
         'Invalid session'
       );
-      expect(fetchMock).not.toHaveBeenCalled();
+      expect(m.startScrapeTwitter).not.toHaveBeenCalled();
     });
   });
 
@@ -65,7 +59,7 @@ describe('publishTwitterV2Picker', () => {
         buildTeam({ tier: TeamTier.FREE })
       );
       prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
-      fetchMock.mockResolvedValue(jsonResponse({ runId: 'run-1' }));
+      m.startScrapeTwitter.mockResolvedValue({ runId: 'run-1' });
     });
 
     describe('with invalid input', () => {
@@ -80,7 +74,7 @@ describe('publishTwitterV2Picker', () => {
           expectFailure(result, 'UNPROCESSABLE_CONTENT').message
         ).toContain('At least one post URL is required');
         expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
-        expect(fetchMock).not.toHaveBeenCalled();
+        expect(m.startScrapeTwitter).not.toHaveBeenCalled();
       });
 
       it('rejects a run date in the past', async () => {
@@ -99,7 +93,7 @@ describe('publishTwitterV2Picker', () => {
         expect(
           expectFailure(result, 'UNPROCESSABLE_CONTENT').message
         ).toContain('Run date must be in the future');
-        expect(fetchMock).not.toHaveBeenCalled();
+        expect(m.startScrapeTwitter).not.toHaveBeenCalled();
       });
 
       it('rejects a run date beyond the schedule window', async () => {
@@ -159,7 +153,7 @@ describe('publishTwitterV2Picker', () => {
         expect(expectFailure(result, 'NOT_FOUND').message).toBe(
           'Team not found'
         );
-        expect(fetchMock).not.toHaveBeenCalled();
+        expect(m.startScrapeTwitter).not.toHaveBeenCalled();
       });
 
       it('returns FORBIDDEN for a guest member', async () => {
@@ -172,7 +166,7 @@ describe('publishTwitterV2Picker', () => {
         expect(expectFailure(result, 'FORBIDDEN').message).toBe(
           'You do not have permission to perform this action. Required permission: UPDATE_PICKERS'
         );
-        expect(fetchMock).not.toHaveBeenCalled();
+        expect(m.startScrapeTwitter).not.toHaveBeenCalled();
       });
 
       it('looks the picker up within the team', async () => {
@@ -191,29 +185,22 @@ describe('publishTwitterV2Picker', () => {
         expect(expectFailure(result, 'NOT_FOUND').message).toBe(
           'Picker not found'
         );
-        expect(fetchMock).not.toHaveBeenCalled();
+        expect(m.startScrapeTwitter).not.toHaveBeenCalled();
       });
     });
 
     describe('starting the scrape workflow', () => {
-      it('posts the parsed request to the workflow start endpoint', async () => {
+      it('starts the workflow in process with the picker and the parsed form', async () => {
+        const picker = buildPicker();
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(picker);
+
         await publishTwitterV2Picker(input());
 
-        expect(fetchMock).toHaveBeenCalledWith(
-          'https://giveaway.test/api/workflows/twitter/scrape/start',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: 'Bearer cron-secret'
-            },
-            body: JSON.stringify({
-              pickerId: 'picker-1',
-              slug: 'acme',
-              data: buildFormInput()
-            })
-          }
-        );
+        expect(m.startScrapeTwitter).toHaveBeenCalledTimes(1);
+        expect(m.startScrapeTwitter).toHaveBeenCalledWith({
+          picker,
+          data: buildFormInput()
+        });
       });
 
       it('sends the form with schema defaults applied', async () => {
@@ -228,8 +215,7 @@ describe('publishTwitterV2Picker', () => {
           })
         );
 
-        const [, init] = fetchMock.mock.calls[0];
-        expect(JSON.parse(String(init?.body)).data).toEqual({
+        expect(m.startScrapeTwitter.mock.calls[0][0].data).toEqual({
           setup: { postUrls: [{ url: 'https://x.com/a/status/1' }] },
           actions: { repost: true, reply: false },
           winners: { quota: 1 },
@@ -256,29 +242,20 @@ describe('publishTwitterV2Picker', () => {
           })
         );
 
-        const [, init] = fetchMock.mock.calls[0];
-        expect(JSON.parse(String(init?.body)).data.timing).toEqual({
+        expect(m.startScrapeTwitter.mock.calls[0][0].data.timing).toEqual({
           runAt,
           timeZone: 'UTC'
         });
       });
 
-      it('builds the url on the deployment URL and the token from an unset secret as "undefined"', async () => {
-        vi.stubEnv('NEXT_PUBLIC_APP_URL', undefined);
-        vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', undefined);
-        vi.stubEnv('VERCEL_URL', 'giveaway-abc123-team.vercel.app');
-        vi.stubEnv('CRON_SECRET', undefined);
+      it('makes no HTTP request to the deployment', async () => {
+        const fetchMock = vi.fn<typeof fetch>();
+        vi.stubGlobal('fetch', fetchMock);
 
         await publishTwitterV2Picker(input());
 
-        const [url, init] = fetchMock.mock.calls[0];
-        expect(url).toBe(
-          'https://giveaway-abc123-team.vercel.app/api/workflows/twitter/scrape/start'
-        );
-        expect(init?.headers).toEqual({
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer undefined'
-        });
+        expect(fetchMock).not.toHaveBeenCalled();
+        vi.unstubAllGlobals();
       });
 
       it('returns success when the workflow starts', async () => {
@@ -295,59 +272,13 @@ describe('publishTwitterV2Picker', () => {
     });
 
     describe('when the workflow fails to start', () => {
-      it('returns CONFLICT with the endpoint error message', async () => {
-        fetchMock.mockResolvedValue(
-          jsonResponse({ error: 'Picker already running' }, { status: 409 })
-        );
-
-        const result = await publishTwitterV2Picker(input());
-
-        expect(expectFailure(result, 'CONFLICT').message).toBe(
-          'Picker already running'
-        );
-      });
-
-      it('returns CONFLICT with a default message when the endpoint gives none', async () => {
-        fetchMock.mockResolvedValue(jsonResponse({}, { status: 500 }));
-
-        const result = await publishTwitterV2Picker(input());
-
-        expect(expectFailure(result, 'CONFLICT').message).toBe(
-          'Failed to start scrape workflow'
-        );
-      });
-
-      it('returns CONFLICT with a default message for an empty error', async () => {
-        fetchMock.mockResolvedValue(
-          jsonResponse({ error: '' }, { status: 400 })
-        );
-
-        const result = await publishTwitterV2Picker(input());
-
-        expect(expectFailure(result, 'CONFLICT').message).toBe(
-          'Failed to start scrape workflow'
-        );
-      });
-
-      it('returns INTERNAL_SERVER_ERROR when the error body is not JSON', async () => {
-        fetchMock.mockResolvedValue(
-          new Response('<html>Bad Gateway</html>', { status: 502 })
-        );
-
-        const result = await publishTwitterV2Picker(input());
-
-        expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toMatch(
-          /JSON/
-        );
-      });
-
-      it('returns INTERNAL_SERVER_ERROR when the request itself fails', async () => {
-        fetchMock.mockRejectedValue(new Error('fetch failed'));
+      it('returns INTERNAL_SERVER_ERROR with the error message', async () => {
+        m.startScrapeTwitter.mockRejectedValue(new Error('world unavailable'));
 
         const result = await publishTwitterV2Picker(input());
 
         expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
-          'fetch failed'
+          'world unavailable'
         );
       });
     });

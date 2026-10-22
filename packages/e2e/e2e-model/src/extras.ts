@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import {
   AccountStatus,
+  AutomatedPostJobStatus,
+  AutomatedPostJobType,
   IdentityProvider,
   IntegrationProvider,
   IntegrationStatus,
@@ -12,7 +14,11 @@ import {
 import { twitchIntegrationSettingsSchema } from '@giveaway/twitch-model/integration';
 import { e2eNamespaceSchema, e2ePersonaSchema } from './personas';
 import { e2eTeamSlugSchema } from './naming';
-import { E2E_MAX_OFFSET_SECONDS, E2E_RUN_ID_LENGTH } from './requests';
+import {
+  E2E_MAX_OFFSET_SECONDS,
+  E2E_RUN_ID_LENGTH,
+  e2eSweepstakesIdSchema
+} from './requests';
 
 export const E2E_MAX_EXTRA_USERS = 50;
 export const E2E_MAX_ACCOUNTS = 5;
@@ -24,6 +30,7 @@ export const E2E_MAX_PICKER_POSTS = 10;
 export const E2E_MAX_PICKER_DRAWS = 50;
 export const E2E_MAX_PICKER_WINNERS = 50;
 export const E2E_MAX_TEXT_LENGTH = 280;
+export const E2E_MAX_TEMPLATES = 10;
 export const E2E_IP_PREFIX = '2001:db8:e2e:';
 
 const labelSchema = z.string().trim().min(1).max(E2E_MAX_LABEL_LENGTH);
@@ -354,3 +361,58 @@ export const e2ePickerRequestSchema = z
 export type E2ePickerRequest = z.infer<typeof e2ePickerRequestSchema>;
 
 export type E2ePickerRequestInput = z.input<typeof e2ePickerRequestSchema>;
+
+export const e2eTemplatesRequestSchema = z
+  .object({
+    team: e2eTeamSlugSchema,
+    templates: z
+      .array(
+        z
+          .object({
+            name: labelSchema,
+            description: textSchema.optional()
+          })
+          .strict()
+      )
+      .min(1)
+      .max(E2E_MAX_TEMPLATES)
+  })
+  .strict();
+
+export type E2eTemplatesRequest = z.infer<typeof e2eTemplatesRequestSchema>;
+
+export type E2eTemplatesRequestInput = z.input<
+  typeof e2eTemplatesRequestSchema
+>;
+
+export const E2E_AUTOMATED_POST_TYPES = [
+  AutomatedPostJobType.POST_TO_BLUESKY
+] as const;
+
+export const e2eAutomatedPostsRequestSchema = z
+  .object({
+    sweepstakesId: e2eSweepstakesIdSchema,
+    posts: z
+      .array(
+        z
+          .object({
+            type: z.enum(E2E_AUTOMATED_POST_TYPES),
+            text: textSchema.min(1).optional(),
+            status: z
+              .nativeEnum(AutomatedPostJobStatus)
+              .default(AutomatedPostJobStatus.PENDING)
+          })
+          .strict()
+      )
+      .min(1)
+      .max(E2E_AUTOMATED_POST_TYPES.length)
+  })
+  .strict();
+
+export type E2eAutomatedPostsRequest = z.infer<
+  typeof e2eAutomatedPostsRequestSchema
+>;
+
+export type E2eAutomatedPostsRequestInput = z.input<
+  typeof e2eAutomatedPostsRequestSchema
+>;

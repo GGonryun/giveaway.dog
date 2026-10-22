@@ -5,6 +5,8 @@ import { E2E_MAX_BODY_BYTES, handleE2eRequest } from '../router';
 import { seedE2eIntegrations } from '../integrations';
 import { seedE2eInvites } from '../invites';
 import { seedE2ePicker } from '../pickers';
+import { seedE2eTemplates } from '../templates';
+import { seedE2eAutomatedPosts } from '../automated-posts';
 import { seedE2eSweepstakes } from '../sweepstakes';
 import { seedE2eUserExtras } from '../users';
 import { readE2eJobs, runE2eJobs } from '../jobs';
@@ -23,6 +25,8 @@ vi.mock('../users', () => ({
 vi.mock('../integrations', () => ({ seedE2eIntegrations: vi.fn() }));
 vi.mock('../invites', () => ({ seedE2eInvites: vi.fn() }));
 vi.mock('../pickers', () => ({ seedE2ePicker: vi.fn() }));
+vi.mock('../templates', () => ({ seedE2eTemplates: vi.fn() }));
+vi.mock('../automated-posts', () => ({ seedE2eAutomatedPosts: vi.fn() }));
 vi.mock('../jobs', () => ({ readE2eJobs: vi.fn(), runE2eJobs: vi.fn() }));
 vi.mock('../scoring', () => ({ scoreE2eUser: vi.fn() }));
 vi.mock(
@@ -80,6 +84,19 @@ const WRITES: [string, string, string?][] = [
   ],
   ['POST', 'invites', JSON.stringify({ ns: 'abc123', team: 'e2e-abc123-w0' })],
   ['POST', 'pickers', JSON.stringify({ team: 'e2e-abc123-w0' })],
+  [
+    'POST',
+    'templates',
+    JSON.stringify({ team: 'e2e-abc123-w0', templates: [{ name: 'T' }] })
+  ],
+  [
+    'POST',
+    'automated-posts',
+    JSON.stringify({
+      sweepstakesId: 'sw-1',
+      posts: [{ type: 'POST_TO_BLUESKY' }]
+    })
+  ],
   ['POST', 'jobs/run', JSON.stringify({ sweepstakesId: 'sw-1' })],
   [
     'POST',
@@ -100,6 +117,7 @@ const READS: [string, string][] = [
 const ROW_VIEWS: [string, string][] = [
   ['GET', 'rows?view=completions&id=sw-1'],
   ['GET', 'rows?view=draws&id=sw-1'],
+  ['GET', 'rows?view=templates&slug=e2e-abc123-w0'],
   ['GET', 'rows?view=accounts&persona=participant&ns=abc123']
 ];
 
@@ -336,6 +354,43 @@ describe('handleE2eRequest', () => {
           draws: []
         },
         now: expect.any(Date)
+      });
+    });
+
+    it('passes the parsed templates to the builder', async () => {
+      vi.mocked(seedE2eTemplates).mockResolvedValue({ ok: 1 } as never);
+
+      const response = await call('POST', 'templates', {
+        body: JSON.stringify({
+          team: 'e2e-abc123-w0',
+          templates: [{ name: 'Template A' }]
+        })
+      });
+
+      expect(await response.json()).toEqual({ ok: 1 });
+      expect(seedE2eTemplates).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: { team: 'e2e-abc123-w0', templates: [{ name: 'Template A' }] }
+      });
+    });
+
+    it('passes the parsed automated posts to the builder', async () => {
+      vi.mocked(seedE2eAutomatedPosts).mockResolvedValue({ ok: 1 } as never);
+
+      const response = await call('POST', 'automated-posts', {
+        body: JSON.stringify({
+          sweepstakesId: 'sw-1',
+          posts: [{ type: 'POST_TO_BLUESKY' }]
+        })
+      });
+
+      expect(await response.json()).toEqual({ ok: 1 });
+      expect(seedE2eAutomatedPosts).toHaveBeenCalledWith({
+        db: prismaMock,
+        request: {
+          sweepstakesId: 'sw-1',
+          posts: [{ type: 'POST_TO_BLUESKY', status: 'PENDING' }]
+        }
       });
     });
 

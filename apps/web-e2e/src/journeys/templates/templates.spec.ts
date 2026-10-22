@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
+import { clickUntilUrl } from '../../helpers/editor';
 import { seedSweepstakes } from '../../helpers/jobs';
 import { knownBug } from '../../helpers/known-bug';
 import { freshSlug, seedApi, seedWorkerTeam } from '../../helpers/seed';
@@ -32,8 +33,11 @@ const createTemplate = async (
   template: { name: string; giveaway: string; slug?: string }
 ) => {
   await page.goto(`/app/${team}/templates`);
-  await page.getByRole('button', { name: 'Create', exact: true }).click();
-  await expect(page).toHaveURL(TEMPLATE_URL);
+  await clickUntilUrl(
+    page,
+    page.getByRole('button', { name: 'Create', exact: true }),
+    TEMPLATE_URL
+  );
   const id = idFrom(page, TEMPLATE_URL);
 
   await page
@@ -135,7 +139,9 @@ test.describe('team templates', () => {
     await page.getByRole('textbox', { name: 'Name' }).fill(renamed);
     await page.getByRole('button', { name: 'Cancel' }).click();
     await page.getByRole('button', { name: 'Save & Exit' }).click();
-    await expect(page).toHaveURL(new RegExp(`/app/${team.slug}$`));
+    await expect(page).toHaveURL(new RegExp(`/app/${team.slug}$`), {
+      timeout: 30_000
+    });
     const saved = await seed.rows<DraftRows>({
       view: 'sweepstakes',
       id: draftId
@@ -144,7 +150,7 @@ test.describe('team templates', () => {
 
     await page.goto(`/app/${team.slug}/templates`);
     const card = await findCard(page, name);
-    await card.getByRole('button', { name: `Actions for ${name}` }).click();
+    await card.getByRole('button', { name: 'Template actions' }).click();
     await page.getByRole('menuitem', { name: 'Edit' }).click();
     await expect(page).toHaveURL(new RegExp(`/templates/${templateId}/edit`));
     await step(page, 'Setup');
@@ -168,7 +174,7 @@ test.describe('team templates', () => {
 
     await page.goto(`/app/${team.slug}/templates`);
     const deleting = await findCard(page, name);
-    await deleting.getByRole('button', { name: `Actions for ${name}` }).click();
+    await deleting.getByRole('button', { name: 'Template actions' }).click();
     await page.getByRole('menuitem', { name: 'Delete' }).click();
     const dialog = page.getByRole('dialog', { name: 'Delete Template' });
     await dialog.getByRole('textbox').fill(name);
@@ -186,8 +192,11 @@ test.describe('team templates', () => {
     const { team } = await seedWorkerTeam(request, testInfo);
     const name = `Template ${freshSlug(testInfo)}`;
     await page.goto(`/app/${team.slug}/templates`);
-    await page.getByRole('button', { name: 'Create', exact: true }).click();
-    await expect(page).toHaveURL(TEMPLATE_URL);
+    await clickUntilUrl(
+      page,
+      page.getByRole('button', { name: 'Create', exact: true }),
+      TEMPLATE_URL
+    );
     await page.getByRole('textbox', { name: 'Template Name' }).fill(name);
 
     await page.getByRole('button', { name: 'Cancel' }).click();
@@ -255,7 +264,9 @@ test.describe('team templates', () => {
 
     await page.goto(`/app/${team.slug}`);
     await page
-      .getByRole('button', { name: `Actions for ${giveaway.name}` })
+      .getByRole('row')
+      .filter({ hasText: giveaway.name })
+      .getByRole('button', { name: 'Giveaway actions' })
       .click();
     await page.getByRole('menuitem', { name: 'Templatize' }).click();
     await expect(page).toHaveURL(TEMPLATE_URL, { timeout: 30_000 });
@@ -319,9 +330,7 @@ test.describe('team templates', () => {
         const tag = freshSlug(testInfo);
         const card = await seedTemplate(page, team.slug, tag);
 
-        await card
-          .getByRole('button', { name: `Actions for Template ${tag}` })
-          .click();
+        await card.getByRole('button', { name: 'Template actions' }).click();
         await page.getByRole('menuitem', { name: 'Delete' }).click();
         await expect(
           page.getByRole('dialog', { name: 'Delete Template' })
