@@ -716,10 +716,13 @@ exports[`Design > matches the snapshot 1`] = `
         <button
           aria-autocomplete="none"
           aria-controls="radix-:id8:"
+          aria-describedby=":id7:-form-item-description"
           aria-expanded="false"
+          aria-invalid="false"
           class="flex h-9 shadow-xs w-full items-center justify-between rounded-md border border-input bg-white dark:bg-input/30 px-3 py-2 text-sm ring-offset-background data-placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
           data-state="closed"
           dir="ltr"
+          id=":id7:-form-item"
           role="combobox"
           type="button"
         >
