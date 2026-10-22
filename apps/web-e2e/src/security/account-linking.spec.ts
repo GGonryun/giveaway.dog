@@ -82,4 +82,6 @@ test.describe('account linking', { tag: TAGS.security }, () => {
     const session = await page.request.get('/api/auth/session');
     expect((await session.json())?.user?.id).not.toBe(victim.userId);
   });
+
+  test.fixme('[LINK-003] a TikTok sign-in with a recycled username does not sign into another account', async () => {});
 });

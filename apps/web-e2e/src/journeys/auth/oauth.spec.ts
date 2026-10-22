@@ -72,4 +72,6 @@ test.describe('mock OAuth sign-in', () => {
       expect((await session.json()).user.onboarded).toBe(false);
     }
   );
+
+  test.fixme('[AUTH-015] a TikTok user is signed in and opens their account page', async () => {});
 });
