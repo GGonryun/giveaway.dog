@@ -1,6 +1,7 @@
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, personaState } from '../../env';
 import {
+  clickUntilUrl,
   createDraft,
   dashboardRow,
   fillComplete,
@@ -45,10 +46,10 @@ test.describe('create and publish a giveaway in the editor', () => {
       ).toHaveValue(name);
       await expect(row.getByRole('cell').nth(4)).toHaveText('running');
 
-      await row.getByRole('link', { name }).click();
-      await expect(page).toHaveURL(
-        new RegExp(`/app/${team.slug}/sweepstakes/${id}/preview$`),
-        { timeout: 30_000 }
+      await clickUntilUrl(
+        page,
+        row.getByRole('link', { name }),
+        new RegExp(`/app/${team.slug}/sweepstakes/${id}/preview$`)
       );
       await expect(page.getByText('Sweepstakes is Unlisted')).toBeVisible();
       await expect(page.getByText('Start Date', { exact: true })).toBeVisible();

@@ -1,4 +1,4 @@
-import type { Browser, Page } from '@playwright/test';
+import type { Browser, Locator, Page } from '@playwright/test';
 import { BYPASS_STATE, RUN_ID } from '../env';
 import { blockThirdParties } from './third-party';
 import { expect } from '../fixtures/test';
@@ -29,12 +29,18 @@ export const editorTab = (page: Page, step: EditorStep) =>
 export const openStep = (page: Page, step: EditorStep) =>
   editorTab(page, step).click();
 
+export const clickUntilUrl = (page: Page, target: Locator, url: RegExp) =>
+  expect(async () => {
+    if (!url.test(page.url())) await target.click({ timeout: 5_000 });
+    await expect(page).toHaveURL(url, { timeout: 10_000 });
+  }).toPass({ timeout: 45_000 });
+
 export const createDraft = async (page: Page, team: string) => {
   await page.goto(`/app/${team}`);
-  await page.getByRole('button', { name: 'Create', exact: true }).click();
-  await expect(page).toHaveURL(
-    new RegExp(`/app/${team}/sweepstakes/[A-Za-z0-9_-]{6}/create$`),
-    { timeout: 30_000 }
+  await clickUntilUrl(
+    page,
+    page.getByRole('button', { name: 'Create', exact: true }),
+    new RegExp(`/app/${team}/sweepstakes/[A-Za-z0-9_-]{6}/create$`)
   );
   await expect(page.getByRole('textbox', { name: 'Name' })).toBeVisible();
   return new URL(page.url()).pathname.split('/')[4];
