@@ -33,7 +33,7 @@ exports[`UserParticipantSheetContent > matches the snapshot 1`] = `
             Jane Doe
           </span>
         </h2>
-        <p
+        <div
           class="text-muted-foreground text-sm flex items-center space-x-2"
           data-slot="sheet-description"
           id="generated-id"
@@ -75,7 +75,7 @@ exports[`UserParticipantSheetContent > matches the snapshot 1`] = `
               </svg>
             </button>
           </div>
-        </p>
+        </div>
         <div
           class="my-2"
         >
