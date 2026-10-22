@@ -130,6 +130,7 @@ exports[`ProviderDots > matches the snapshot 1`] = `
     class=""
   >
     <button
+      aria-label="Google"
       data-slot="tooltip-trigger"
       data-state="closed"
     >
@@ -162,6 +163,7 @@ exports[`ProviderDots > matches the snapshot 1`] = `
     class="opacity-50"
   >
     <button
+      aria-label="Discord"
       data-slot="tooltip-trigger"
       data-state="closed"
     >
