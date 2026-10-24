@@ -46,7 +46,7 @@ test.describe('create a giveaway from a template', () => {
       await expect(page.getByRole('img', { name: 'Preview' })).toBeVisible();
       const name = giveawayName(testInfo, 'template');
       await nameField.fill(name);
-      await setTiming(page, { startsIn: 0, endsIn: 10 });
+      await setTiming(page, { startsIn: -1, endsIn: 10 });
       await openStep(page, 'Tasks');
       await expect(page.getByText('Visit URL', { exact: true })).toBeVisible();
       await expect(

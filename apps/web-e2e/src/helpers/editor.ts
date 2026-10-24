@@ -82,10 +82,17 @@ export const pickDate = async (
   const calendar = page.getByRole('dialog').filter({
     has: page.getByRole('grid')
   });
-  const next = calendar.getByRole('button', { name: 'Go to the Next Month' });
-  await expect(calendar.getByRole('grid')).toBeVisible();
+  const grid = calendar.getByRole('grid');
+  await expect(grid).toBeVisible();
+  const target = Date.parse(`1 ${month}`);
   while (!(await calendar.getByRole('grid', { name: month }).isVisible())) {
-    await next.click();
+    const shown = Date.parse(`1 ${await grid.getAttribute('aria-label')}`);
+    await calendar
+      .getByRole('button', {
+        name:
+          shown < target ? 'Go to the Next Month' : 'Go to the Previous Month'
+      })
+      .click();
   }
   const year = month.split(' ')[1];
   await calendar
