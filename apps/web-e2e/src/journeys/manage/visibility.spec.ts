@@ -15,7 +15,6 @@ import {
 import { expectAfterReloads } from '../../helpers/poll';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
-const SLUG_CACHE_BUG = 531;
 const PRIVACY_CACHE_BUG = 532;
 
 const seedUnlisted = async (
@@ -96,26 +95,26 @@ test.describe('a published giveaway on its public page', () => {
     await visitor.context.close();
   });
 
-  test(
-    '[EDIT-006] a visitor sees the host’s edit at the custom slug URL',
-    knownBug(SLUG_CACHE_BUG),
-    async ({ page, request, browser }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedUnlisted(request, team.slug, testInfo);
-      const slug = giveaway.slug!;
-      const visitor = await warmPublicPages(
-        browser,
-        [`/browse/${slug}`],
-        giveaway.name
-      );
+  test('[EDIT-006] a visitor sees the host’s edit at the custom slug URL', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedUnlisted(request, team.slug, testInfo);
+    const slug = giveaway.slug!;
+    const visitor = await warmPublicPages(
+      browser,
+      [`/browse/${slug}`],
+      giveaway.name
+    );
 
-      const renamed = `${giveaway.name} renamed`;
-      await renameInEditor(page, team.slug, giveaway.id, renamed);
+    const renamed = `${giveaway.name} renamed`;
+    await renameInEditor(page, team.slug, giveaway.id, renamed);
 
-      await expectHeadingAfterReloads(visitor.page, `/browse/${slug}`, renamed);
-      await visitor.context.close();
-    }
-  );
+    await expectHeadingAfterReloads(visitor.page, `/browse/${slug}`, renamed);
+    await visitor.context.close();
+  });
 
   test(
     '[VIS-005] a giveaway made private from the preview tab is not found at once',
