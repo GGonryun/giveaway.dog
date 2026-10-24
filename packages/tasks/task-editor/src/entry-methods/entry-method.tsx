@@ -112,12 +112,14 @@ export const EntryMethod: React.FC<{
                     onRemove();
                   }}
                   icon={Trash2Icon}
+                  label={`Remove ${TASK_LABEL[type]}`}
                 />
                 <IconButton
                   onClick={() => {
                     onCopy();
                   }}
                   icon={CopyIcon}
+                  label={`Copy ${TASK_LABEL[type]}`}
                 />
                 <IconButton icon={open ? ChevronUpIcon : ChevronDownIcon} />
               </div>

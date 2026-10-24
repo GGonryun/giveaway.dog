@@ -5,7 +5,8 @@ import { useCallback } from 'react';
 export const IconButton: React.FC<{
   onClick?: (e: React.MouseEvent) => void;
   icon: LucideIcon;
-}> = ({ onClick, icon: LucideIcon }) => {
+  label?: string;
+}> = ({ onClick, icon: LucideIcon, label }) => {
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       if (onClick) {
@@ -22,6 +23,7 @@ export const IconButton: React.FC<{
       type="button"
       size="icon"
       className="h-8 w-8"
+      aria-label={label}
       onClick={handleClick}
     >
       <LucideIcon />

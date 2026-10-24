@@ -47,18 +47,36 @@ const readParticipants = async (db: PrismaClient, id: string) => {
       id: true,
       createdAt: true,
       user: { select: { id: true, email: true } },
+      formValues: {
+        select: { fieldId: true, value: true },
+        orderBy: { fieldId: 'asc' }
+      },
+      referrals: {
+        select: {
+          taskId: true,
+          code: true,
+          _count: { select: { referredUsers: true } }
+        },
+        orderBy: { taskId: 'asc' }
+      },
       _count: { select: { taskCompletions: true } }
     },
     orderBy: { createdAt: 'asc' },
     take: MAX_ROWS
   });
   return {
-    participants: participants.map(({ user, _count, ...participant }) => ({
-      ...participant,
-      userId: user.id,
-      email: isE2eEmail(user.email) ? user.email : null,
-      completions: _count.taskCompletions
-    }))
+    participants: participants.map(
+      ({ user, _count, referrals, ...participant }) => ({
+        ...participant,
+        userId: user.id,
+        email: isE2eEmail(user.email) ? user.email : null,
+        completions: _count.taskCompletions,
+        referrals: referrals.map(({ _count, ...referral }) => ({
+          ...referral,
+          referred: _count.referredUsers
+        }))
+      })
+    )
   };
 };
 

@@ -101,12 +101,14 @@ export const Prize: React.FC<{
                     onRemove();
                   }}
                   icon={Trash2Icon}
+                  label={`Remove Prize ${index + 1}`}
                 />
                 <IconButton
                   onClick={() => {
                     onCopy();
                   }}
                   icon={CopyIcon}
+                  label={`Copy Prize ${index + 1}`}
                 />
                 <IconButton icon={open ? ChevronUpIcon : ChevronDownIcon} />
               </div>
