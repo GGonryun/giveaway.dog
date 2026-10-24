@@ -122,12 +122,14 @@ export const FormFieldComponent = <
                     onRemove();
                   }}
                   icon={Trash2Icon}
+                  label={`Remove ${label}`}
                 />
                 <IconButton
                   onClick={() => {
                     onCopy();
                   }}
                   icon={CopyIcon}
+                  label={`Copy ${label}`}
                 />
                 <IconButton icon={open ? ChevronUpIcon : ChevronDownIcon} />
               </div>

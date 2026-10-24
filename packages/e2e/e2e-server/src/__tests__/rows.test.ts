@@ -111,12 +111,18 @@ describe('readE2eRows', () => {
         id: 'p-1',
         createdAt: NOW,
         user: e2eUser('participant'),
+        formValues: [{ fieldId: 'field-1', value: 'goodboy' }],
+        referrals: [
+          { taskId: 'task-1', code: 'ref-1', _count: { referredUsers: 3 } }
+        ],
         _count: { taskCompletions: 2 }
       },
       {
         id: 'p-2',
         createdAt: NOW,
         user: realUser(),
+        formValues: [],
+        referrals: [],
         _count: { taskCompletions: 0 }
       }
     ]);
@@ -130,14 +136,18 @@ describe('readE2eRows', () => {
           createdAt: NOW,
           userId: 'user-participant',
           email: 'e2e-participant-abc123@example.com',
-          completions: 2
+          formValues: [{ fieldId: 'field-1', value: 'goodboy' }],
+          completions: 2,
+          referrals: [{ taskId: 'task-1', code: 'ref-1', referred: 3 }]
         },
         {
           id: 'p-2',
           createdAt: NOW,
           userId: 'user-real',
           email: null,
-          completions: 0
+          formValues: [],
+          completions: 0,
+          referrals: []
         }
       ]
     });
@@ -147,6 +157,18 @@ describe('readE2eRows', () => {
         id: true,
         createdAt: true,
         user: { select: { id: true, email: true } },
+        formValues: {
+          select: { fieldId: true, value: true },
+          orderBy: { fieldId: 'asc' }
+        },
+        referrals: {
+          select: {
+            taskId: true,
+            code: true,
+            _count: { select: { referredUsers: true } }
+          },
+          orderBy: { taskId: 'asc' }
+        },
         _count: { select: { taskCompletions: true } }
       },
       orderBy: { createdAt: 'asc' },
