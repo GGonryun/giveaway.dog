@@ -122,31 +122,32 @@ test.describe('referrals', () => {
     await expect(page.getByText('Your entries: 4')).toBeVisible();
   });
 
-  test(
-    'the referral panel lists the friend who entered',
-    knownBug(519),
-    async ({ page, browser, request, freshPersona }, testInfo) => {
-      const { ns } = await freshPersona('participant');
-      const { team } = await seedWorkerTeam(request, testInfo);
+  test('the referral panel lists the friend who entered', async ({
+    page,
+    browser,
+    request,
+    freshPersona
+  }, testInfo) => {
+    const { ns } = await freshPersona('participant');
+    const { team } = await seedWorkerTeam(request, testInfo);
 
-      await referAFriend({
-        page,
-        browser,
-        request,
-        ns,
-        friendNs: freshNamespace(testInfo.workerIndex),
-        team: team.slug
-      });
+    await referAFriend({
+      page,
+      browser,
+      request,
+      ns,
+      friendNs: freshNamespace(testInfo.workerIndex),
+      team: team.slug
+    });
 
-      await page.getByRole('heading', { name: REFER }).click();
-      const referrals = page.getByRole('button', {
-        name: /^1 \/ 2 referrals/
-      });
-      await expect(referrals).toBeVisible();
-      await referrals.click();
-      await expect(page.getByText('E2E participant2')).toBeVisible();
-    }
-  );
+    await page.getByRole('heading', { name: REFER }).click();
+    const referrals = page.getByRole('button', {
+      name: /^1 \/ 2 referrals/
+    });
+    await expect(referrals).toBeVisible();
+    await referrals.click();
+    await expect(page.getByText('E2E participant2')).toBeVisible();
+  });
 
   test(
     'a participant earns the referral when the giveaway has the automatic profile bonus',

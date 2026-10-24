@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Prisma } from '@giveaway/db-model';
 import { validateReferral } from '../referral';
 import { prismaMock } from '@giveaway/testing-server/prisma';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import {
   BASE_TASK,
   FIXED_DATE,
@@ -191,6 +192,7 @@ describe('validateReferral', () => {
       expect(runtime.deleteCookie).toHaveBeenCalledWith('referral_code');
       expect(prismaMock.$transaction).not.toHaveBeenCalled();
       expect(prismaMock.referredUser.create).not.toHaveBeenCalled();
+      expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
     });
   });
 
@@ -221,6 +223,16 @@ describe('validateReferral', () => {
       });
     });
 
+    it("expires the cache of the referrer's referral panel at once", async () => {
+      await validate();
+
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(1);
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        'user-user-referrer-referral',
+        { expire: 0 }
+      );
+    });
+
     it('clears the cookie afterwards', async () => {
       await validate();
 
@@ -247,6 +259,10 @@ describe('validateReferral', () => {
       expect(prismaMock.referredUser.create).toHaveBeenCalledTimes(1);
       expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
       expect(runtime.deleteCookie).toHaveBeenCalledWith('referral_code');
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        'user-user-referrer-referral',
+        { expire: 0 }
+      );
     });
 
     it.each([
@@ -287,6 +303,7 @@ describe('validateReferral', () => {
 
     await expect(validate()).rejects.toThrow('db down');
     expect(runtime.deleteCookie).not.toHaveBeenCalled();
+    expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
   });
 
   describe('logging', () => {
