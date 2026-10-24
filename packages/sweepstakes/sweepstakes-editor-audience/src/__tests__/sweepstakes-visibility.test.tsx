@@ -59,12 +59,16 @@ describe('VisibilityTypeField', () => {
     ['UNLISTED', 'Unlisted']
   ] as const)('shows the %s visibility as %s', (visibility, label) => {
     renderVisibility(visibility);
-    expect(screen.getByRole('combobox')).toHaveTextContent(label);
+    expect(
+      screen.getByRole('combobox', { name: 'Visibility Type' })
+    ).toHaveTextContent(label);
   });
 
   it('offers the public, private and unlisted visibilities', async () => {
     renderVisibility();
-    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(
+      screen.getByRole('combobox', { name: 'Visibility Type' })
+    );
 
     expect(
       screen.getAllByRole('option').map((option) => option.textContent)
@@ -73,7 +77,9 @@ describe('VisibilityTypeField', () => {
 
   it('updates the form when another visibility is chosen', async () => {
     const { form } = renderVisibility('UNLISTED');
-    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(
+      screen.getByRole('combobox', { name: 'Visibility Type' })
+    );
     await userEvent.click(screen.getByRole('option', { name: 'Public' }));
 
     expect(form.getValues('visibility.visibility')).toBe('PUBLIC');
@@ -111,7 +117,9 @@ describe('UrlSlugField', () => {
     screen.getByRole('switch', { name: 'Custom URL Slug' });
 
   const changeSlug = (slug: string) =>
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: slug } });
+    fireEvent.change(screen.getByRole('textbox', { name: 'URL slug' }), {
+      target: { value: slug }
+    });
 
   const advance = (ms: number) =>
     act(async () => {
@@ -125,7 +133,9 @@ describe('UrlSlugField', () => {
     it('hides the slug input', () => {
       renderSlug(null);
       expect(getSwitch()).not.toBeChecked();
-      expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('textbox', { name: 'URL slug' })
+      ).not.toBeInTheDocument();
     });
 
     it('starts from the sweepstakes id without checking it when turned on', async () => {
@@ -133,7 +143,9 @@ describe('UrlSlugField', () => {
       fireEvent.click(getSwitch());
 
       expect(form.getValues('visibility.slug')).toBe('sweepstakes-1');
-      expect(screen.getByRole('textbox')).toHaveValue('sweepstakes-1');
+      expect(screen.getByRole('textbox', { name: 'URL slug' })).toHaveValue(
+        'sweepstakes-1'
+      );
       expect(screen.getByText(hint)).toBeInTheDocument();
 
       await advance(500);
@@ -185,7 +197,7 @@ describe('UrlSlugField', () => {
       expect(
         screen.getByText('The slug "summer-fun" is available')
       ).toBeInTheDocument();
-      expect(screen.getByRole('textbox')).toHaveAttribute(
+      expect(screen.getByRole('textbox', { name: 'URL slug' })).toHaveAttribute(
         'aria-invalid',
         'false'
       );
@@ -201,7 +213,7 @@ describe('UrlSlugField', () => {
           'The slug "summer-fun" is already taken. Please choose another one.'
         )
       ).toBeInTheDocument();
-      expect(screen.getByRole('textbox')).toHaveAttribute(
+      expect(screen.getByRole('textbox', { name: 'URL slug' })).toHaveAttribute(
         'aria-invalid',
         'true'
       );

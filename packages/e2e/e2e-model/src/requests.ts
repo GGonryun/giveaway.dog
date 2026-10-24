@@ -730,6 +730,7 @@ export const e2eRowsQuerySchema = z.union([
     .object({ view: z.literal('completions'), id: e2eSweepstakesIdSchema })
     .strict(),
   z.object({ view: z.literal('draws'), id: e2eSweepstakesIdSchema }).strict(),
+  z.object({ view: z.literal('templates'), slug: e2eTeamSlugSchema }).strict(),
   z
     .object({
       view: z.literal('accounts'),

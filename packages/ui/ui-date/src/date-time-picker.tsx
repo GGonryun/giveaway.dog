@@ -723,6 +723,9 @@ type DateTimePickerProps = {
    * Default is false.
    **/
   modal?: boolean;
+  id?: string;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean;
 } & Pick<
   DayPickerProps,
   'locale' | 'weekStartsOn' | 'showWeekNumber' | 'showOutsideDays'
@@ -751,6 +754,9 @@ const DateTimePicker = React.forwardRef<
       placeholder = 'Pick a date',
       className,
       modal = false,
+      id,
+      'aria-describedby': ariaDescribedBy,
+      'aria-invalid': ariaInvalid,
       ...props
     },
     ref
@@ -851,6 +857,9 @@ const DateTimePicker = React.forwardRef<
               className
             )}
             ref={buttonRef}
+            id={id}
+            aria-describedby={ariaDescribedBy}
+            aria-invalid={ariaInvalid}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {displayDate ? (

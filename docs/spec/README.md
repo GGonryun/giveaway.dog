@@ -20,6 +20,7 @@ One file for each domain. Each rule is a list item that starts with its ID in ba
 | [`auth.md`](auth.md)               | `AUTH`: sign-in and sign-out, `ROUTE`: route protection, `LINK`: account linking                |
 | [`teams.md`](teams.md)             | `TEAM`: isolation between teams, `ROLE`: what each team role may do, `INVITE`: team invites     |
 | [`public-data.md`](public-data.md) | `LEAK`: what a public page may send, `VIS`: giveaway visibility, `TRACK`: visitor tracking      |
+| [`account.md`](account.md)         | `ONBOARD`: onboarding, `ACCOUNT`: account settings                                              |
 | [`giveaways.md`](giveaways.md)     | `EDIT`, `COPY`, `DELETE`, `LIST`: what the host does with a giveaway after publishing it        |
 
 - **IDs**: a prefix of capital letters, a dash and three digits. An ID never changes and is never used again for another rule. To remove a rule, delete its line and its ID with it

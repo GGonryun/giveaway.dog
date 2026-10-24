@@ -149,7 +149,7 @@ export const ThemedProviderIcon: React.FC<ProviderIconProps> = ({
 
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger aria-label={IDENTITY_PROVIDER_LABEL[type]}>
         <div
           className={cn(
             'cursor-pointer inline-flex items-center justify-center rounded-full p-3',

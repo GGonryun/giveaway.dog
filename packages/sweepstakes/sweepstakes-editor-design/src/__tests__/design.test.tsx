@@ -147,12 +147,14 @@ describe('BackgroundColor', () => {
     [gradient(), 'Gradient']
   ])('shows the background type %#', (background, label) => {
     renderType(background);
-    expect(screen.getByRole('combobox')).toHaveTextContent(label);
+    expect(
+      screen.getByRole('combobox', { name: 'Background' })
+    ).toHaveTextContent(label);
   });
 
   it('switches to the default gradient', async () => {
     const { form } = renderType({ type: 'color', color: '#123456' });
-    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(screen.getByRole('combobox', { name: 'Background' }));
     await userEvent.click(screen.getByRole('option', { name: 'Gradient' }));
 
     expect(form.getValues('design.background')).toEqual(
@@ -162,7 +164,7 @@ describe('BackgroundColor', () => {
 
   it('switches to the default solid color', async () => {
     const { form } = renderType(gradient());
-    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(screen.getByRole('combobox', { name: 'Background' }));
     await userEvent.click(screen.getByRole('option', { name: 'Solid Color' }));
 
     expect(form.getValues('design.background')).toEqual(

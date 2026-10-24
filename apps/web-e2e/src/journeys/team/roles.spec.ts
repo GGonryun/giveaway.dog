@@ -14,7 +14,9 @@ import {
 import { seedApi } from '../../helpers/seed';
 import {
   captureCompleteAction,
+  memberRow,
   openAs,
+  openMemberAction,
   seedEndedWithWinner,
   seedRolesTeam,
   sweepstakesStatus
@@ -36,20 +38,6 @@ const expectTeamName = async (page: Page, slug: string, name: string) => {
   await expect(page.getByRole('textbox', { name: 'My Team' })).toHaveValue(
     name
   );
-};
-
-const memberRow = (page: Page, name: string) =>
-  page.getByRole('row').filter({ hasText: name });
-
-const openMemberAction = async (
-  page: Page,
-  name: string,
-  action: 'Edit Member' | 'Remove Member'
-) => {
-  await memberRow(page, name)
-    .getByRole('button', { name: 'Member actions' })
-    .click();
-  await page.getByRole('menuitem', { name: action }).click();
 };
 
 test.describe('team roles', () => {

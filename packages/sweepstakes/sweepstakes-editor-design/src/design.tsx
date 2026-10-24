@@ -174,30 +174,30 @@ export const BackgroundColor = <
       render={({ field }) => (
         <FormItem>
           <FormLabel>Background</FormLabel>
-          <FormControl>
-            <Select
-              value={
-                field.value.type ?? DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND.type
+          <Select
+            value={
+              field.value.type ?? DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND.type
+            }
+            onValueChange={(type) => {
+              if (type === 'color') {
+                field.onChange(DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND);
+              } else if (type === 'gradient') {
+                field.onChange(DEFAULT_GRADIENT_DESIGN_BACKGROUND);
               }
-              onValueChange={(type) => {
-                if (type === 'color') {
-                  field.onChange(DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND);
-                } else if (type === 'gradient') {
-                  field.onChange(DEFAULT_GRADIENT_DESIGN_BACKGROUND);
-                }
-              }}
-            >
+            }}
+          >
+            <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Select background type" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="color">Solid Color</SelectItem>
-                  <SelectItem value="gradient">Gradient</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </FormControl>
+            </FormControl>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="color">Solid Color</SelectItem>
+                <SelectItem value="gradient">Gradient</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
           <FormMessage />
         </FormItem>
       )}

@@ -447,7 +447,7 @@ describe('DateTimePicker', () => {
     expect(getTrigger()).toHaveTextContent('2024-01-15 14:30');
   });
 
-  it.fails('puts the id from its form control on the trigger', () => {
+  it('puts the id from its form control on the trigger', () => {
     const formControlProps = { id: 'start-date' };
     render(
       <>
