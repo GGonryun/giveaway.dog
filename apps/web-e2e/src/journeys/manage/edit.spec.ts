@@ -13,7 +13,6 @@ import {
 } from '../../helpers/manage';
 import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
-import { TAGS } from '../../helpers/tags';
 import {
   eligibleEntries,
   endedGiveaway,
@@ -84,65 +83,65 @@ const seedEnteredGiveaway = async (
 
 test.describe('editing a published giveaway', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
+  test.slow();
   test.use({ storageState: personaState('host') });
 
-  test(
-    '[EDIT-001] the host edits a live giveaway and keeps its participants, entries, answers and referrals',
-    { tag: TAGS.slow },
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedEnteredGiveaway(
-        request,
-        team.slug,
-        freshNamespace(testInfo.workerIndex)
-      );
-      const completions = await completionKeys(request, giveaway.id);
-      const participants = await participantKeys(request, giveaway.id);
-      expect(completions).toHaveLength(6);
-      expect(participants.flatMap((p) => p.referrals)).toHaveLength(1);
+  test('[EDIT-001] the host edits a live giveaway and keeps its participants, entries, answers and referrals', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedEnteredGiveaway(
+      request,
+      team.slug,
+      freshNamespace(testInfo.workerIndex)
+    );
+    const completions = await completionKeys(request, giveaway.id);
+    const participants = await participantKeys(request, giveaway.id);
+    expect(completions).toHaveLength(6);
+    expect(participants.flatMap((p) => p.referrals)).toHaveLength(1);
 
-      await openEditor(page, team.slug, giveaway.id);
-      const renamed = `${giveaway.name} renamed`;
-      await page.getByRole('textbox', { name: 'Name' }).fill(renamed);
-      await openStep(page, 'Tasks');
-      await addTask(page, 'Bonus');
-      await openStep(page, 'Prizes');
-      await addPrize(page);
-      await saveChanges(page);
-      await expectSaved(page);
+    await openEditor(page, team.slug, giveaway.id);
+    const renamed = `${giveaway.name} renamed`;
+    await page.getByRole('textbox', { name: 'Name' }).fill(renamed);
+    await openStep(page, 'Tasks');
+    await addTask(page, 'Bonus');
+    await openStep(page, 'Prizes');
+    await addPrize(page);
+    await saveChanges(page);
+    await expectSaved(page);
 
-      await expect
-        .poll(async () => (await readSweepstakes(request, giveaway.id)).details)
-        .toEqual({ name: renamed });
-      expect(await readSweepstakes(request, giveaway.id)).toMatchObject({
-        _count: { participants: 3, tasks: 4, prizes: 2 }
-      });
-      expect(await completionKeys(request, giveaway.id)).toEqual(completions);
-      expect(await participantKeys(request, giveaway.id)).toEqual(participants);
+    await expect
+      .poll(async () => (await readSweepstakes(request, giveaway.id)).details)
+      .toEqual({ name: renamed });
+    expect(await readSweepstakes(request, giveaway.id)).toMatchObject({
+      _count: { participants: 3, tasks: 4, prizes: 2 }
+    });
+    expect(await completionKeys(request, giveaway.id)).toEqual(completions);
+    expect(await participantKeys(request, giveaway.id)).toEqual(participants);
 
-      await openEditor(page, team.slug, giveaway.id);
-      await openStep(page, 'Tasks');
-      await removeEntryMethod(page, 'Visit URL');
-      await openStep(page, 'Audience');
-      await removeEntryMethod(page, 'Age');
-      await saveChanges(page);
-      await expectSaved(page);
+    await openEditor(page, team.slug, giveaway.id);
+    await openStep(page, 'Tasks');
+    await removeEntryMethod(page, 'Visit URL');
+    await openStep(page, 'Audience');
+    await removeEntryMethod(page, 'Age');
+    await saveChanges(page);
+    await expectSaved(page);
 
-      const [, visitUrl] = giveaway.tasks;
-      const [, age] = giveaway.formFields;
-      await expect
-        .poll(() => completionKeys(request, giveaway.id))
-        .toEqual(completions.filter((c) => c.taskId !== visitUrl.id));
-      expect(await participantKeys(request, giveaway.id)).toEqual(
-        participants.map((participant) => ({
-          ...participant,
-          formValues: participant.formValues.filter(
-            (value) => value.fieldId !== age.id
-          )
-        }))
-      );
-    }
-  );
+    const [, visitUrl] = giveaway.tasks;
+    const [, age] = giveaway.formFields;
+    await expect
+      .poll(() => completionKeys(request, giveaway.id))
+      .toEqual(completions.filter((c) => c.taskId !== visitUrl.id));
+    expect(await participantKeys(request, giveaway.id)).toEqual(
+      participants.map((participant) => ({
+        ...participant,
+        formValues: participant.formValues.filter(
+          (value) => value.fieldId !== age.id
+        )
+      }))
+    );
+  });
 
   test(
     '[EDIT-002] the host edits an ended giveaway and keeps its winners and re-roll history',

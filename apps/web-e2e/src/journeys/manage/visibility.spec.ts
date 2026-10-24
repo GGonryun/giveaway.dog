@@ -33,7 +33,7 @@ const warmPublicPages = async (
   name: string
 ) => {
   const visitor = await openAsVisitor(browser, paths[0]);
-  for (const path of paths) {
+  for (const path of [...paths, ...paths]) {
     await visitor.page.goto(path);
     await expect(
       visitor.page.getByRole('heading', { name, level: 1 })
@@ -69,6 +69,7 @@ const renameInEditor = async (
 
 test.describe('a published giveaway on its public page', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
+  test.slow();
   test.use({ storageState: personaState('host') });
 
   test('[EDIT-006] a visitor sees the host’s edit at the id URL', async ({

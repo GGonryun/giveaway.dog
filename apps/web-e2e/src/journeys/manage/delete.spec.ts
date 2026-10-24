@@ -35,6 +35,7 @@ const confirmDelete = async (page: Page, name: string) => {
 
 test.describe('deleting a giveaway', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
+  test.slow();
   test.use({ storageState: personaState('host') });
 
   test('[DELETE-001] the host deletes a giveaway only after typing its name', async ({
@@ -105,7 +106,7 @@ test.describe('deleting a giveaway', () => {
       });
       const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
       const visitor = await openAsVisitor(browser, paths[0]);
-      for (const path of paths) {
+      for (const path of [...paths, ...paths]) {
         await visitor.page.goto(path);
         await expect(
           visitor.page.getByRole('heading', { name: giveaway.name, level: 1 })

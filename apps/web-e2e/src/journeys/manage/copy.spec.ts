@@ -56,6 +56,7 @@ const copyFromDashboard = async (page: Page, team: string, name: string) => {
 
 test.describe('copying a giveaway', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
+  test.slow();
   test.use({ storageState: personaState('host') });
 
   test(
