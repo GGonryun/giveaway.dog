@@ -6,6 +6,7 @@ import {
 } from '@giveaway/referrals-model/cookies';
 import { Prisma, PrismaClient } from '@giveaway/db-model';
 import { cookies } from 'next/headers';
+import { revalidateTag } from 'next/cache';
 import { toTaskSchema } from '@giveaway/task-model/schemas';
 
 export type ValidateReferralArgs = {
@@ -169,5 +170,6 @@ export const validateReferral = async (
     }
   });
 
+  revalidateTag(`user-${referral.participant.userId}-referral`, { expire: 0 });
   clearReferralCodeCookie();
 };
