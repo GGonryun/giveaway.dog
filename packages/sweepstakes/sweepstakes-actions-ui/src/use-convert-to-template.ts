@@ -15,7 +15,6 @@ export function useConvertToTemplate() {
     onSuccess: (data) => {
       toast.success('Sweepstakes converted to template successfully!');
       router.push(`/app/${slug}/templates/${data.id}/edit`);
-      router.refresh();
     },
     onFailure: (error) => {
       toast.error(`Failed to convert to template: ${error.message}`);
