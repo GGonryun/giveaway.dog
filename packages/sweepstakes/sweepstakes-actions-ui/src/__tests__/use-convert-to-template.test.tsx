@@ -61,7 +61,7 @@ describe('useConvertToTemplate', () => {
     expect(toast.success).toHaveBeenCalledWith(
       'Sweepstakes converted to template successfully!'
     );
-    expect(navigation.router.refresh).toHaveBeenCalledTimes(1);
+    expect(navigation.router.refresh).not.toHaveBeenCalled();
   });
 
   it('reports a failed conversion', async () => {
