@@ -15,6 +15,7 @@ What the public pages may send, who can open a giveaway that is not public, and 
 - `VIS-002` A private giveaway opens for a member of its team.
 - `VIS-003` The page of a private or draft giveaway gives a bot none of its name, description or banner.
 - `VIS-004` Opening the page of a private, draft, scheduled or ended giveaway does not make the visitor a participant of it.
+- `VIS-005` A giveaway that its host makes private is not found for anyone outside its team as soon as the change is saved, at its id URL and at its custom slug URL.
 
 ## Tracking
 
