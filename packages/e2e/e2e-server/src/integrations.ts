@@ -22,6 +22,11 @@ export const E2E_INTEGRATION_SCOPES: Record<IntegrationProvider, string[]> = {
 
 const toLogin = (slug: string) => slug.replace(/-/g, '_');
 
+export const toE2eAccountId = (slug: string, provider: IntegrationProvider) =>
+  provider === IntegrationProvider.BLUESKY
+    ? `did:plc:${Buffer.from(slug).toString('hex')}`
+    : `${slug}-${provider.toLowerCase()}`;
+
 export const toE2eIntegrationSettings = (
   provider: IntegrationProvider,
   slug: string
@@ -49,7 +54,7 @@ export const seedE2eIntegrations = async ({
     provider: integration.provider,
     teamId: team.id,
     ownerId: owner.id,
-    account_id: `${team.slug}-${integration.provider.toLowerCase()}`,
+    account_id: toE2eAccountId(team.slug, integration.provider),
     status: integration.status,
     label: integration.label ?? toLogin(team.slug),
     scope: (
