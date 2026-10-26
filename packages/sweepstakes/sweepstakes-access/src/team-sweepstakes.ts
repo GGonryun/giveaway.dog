@@ -34,6 +34,7 @@ export const findTeamSweepstakes = async ({
     },
     select: {
       id: true,
+      status: true,
       team: {
         select: {
           members: {

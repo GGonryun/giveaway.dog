@@ -44,13 +44,18 @@ const lurker = buildParticipant({
   completions: []
 });
 
-const renderParticipants = (participants = [jane, lurker], totalTasks = 4) =>
+const renderParticipants = (
+  participants = [jane, lurker],
+  totalTasks = 4,
+  readOnly?: boolean
+) =>
   render(
     <SweepstakesParticipants
       slug="acme"
       sweepstakesId="sweep-1"
       totalTasks={totalTasks}
       participants={participants}
+      readOnly={readOnly}
     />
   );
 
@@ -161,6 +166,20 @@ describe('SweepstakesParticipants', () => {
       expect(navigation.router.push).toHaveBeenCalledWith(
         '/app/acme/sweepstakes/sweep-1/participants/user-1'
       );
+    });
+  });
+
+  describe('when read-only', () => {
+    it('keeps the views and offers no disqualification', async () => {
+      renderParticipants([jane, lurker], 4, true);
+      await openActions(0);
+
+      expect(
+        screen.getByRole('menuitem', { name: 'Quick View' })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('menuitem', { name: 'Disqualify Participant' })
+      ).not.toBeInTheDocument();
     });
   });
 

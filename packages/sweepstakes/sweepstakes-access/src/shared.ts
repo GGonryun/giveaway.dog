@@ -22,6 +22,7 @@ import {
   TeamPermission
 } from '@giveaway/team-permissions';
 import { assertMinimumTeamTier } from '@giveaway/team-model/team/util';
+import { assertNotCompleted } from './completed';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -145,12 +146,7 @@ export const applySweepstakesChanges = async ({
     }
   }
 
-  if (sweepstakes.status === 'COMPLETED') {
-    throw new ApplicationError({
-      code: 'FORBIDDEN',
-      message: 'Completed sweepstakes cannot be modified.'
-    });
-  }
+  assertNotCompleted(sweepstakes);
 
   // TODO: Optimize this process.
   // WARNING: sweepstakes objects are too complex to update directly, instead we
