@@ -18,6 +18,8 @@ interface CreateSkeetResponse {
   cid: string;
 }
 
+const toHex = (value: string) => Buffer.from(value).toString('hex');
+
 export const createSkeet = async (
   tx: Tx,
   input: CreateSkeetInput
@@ -36,7 +38,7 @@ export const createSkeet = async (
       payload: { text: input.text, imageUrl: input.imageUrl ?? null }
     });
     return {
-      uri: `at://${entry.id}/app.bsky.feed.post/${entry.id}`,
+      uri: `at://did:plc:${toHex(input.teamId)}/app.bsky.feed.post/${toHex(entry.id)}`,
       cid: entry.id
     };
   }

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBlueskyClient } from '@giveaway/bluesky-api/bluesky/bluesky-client';
 import { environment } from '@giveaway/app-config/environment';
+import { toSafeRedirect } from '@giveaway/user-model/redirect';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const handle = searchParams.get('handle');
-  const redirectTo = searchParams.get('redirectTo');
-  const returnTo = searchParams.get('returnTo') ?? '/';
+  const redirectTo = toSafeRedirect(searchParams.get('redirectTo'), '');
+  const returnTo = toSafeRedirect(searchParams.get('returnTo'), '/');
 
   try {
     if (!handle) {
