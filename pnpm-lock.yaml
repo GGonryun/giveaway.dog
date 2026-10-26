@@ -1955,6 +1955,9 @@ importers:
       '@giveaway/app-config':
         specifier: workspace:*
         version: link:../../infra/app-config
+      '@giveaway/auth-core':
+        specifier: workspace:*
+        version: link:../../auth/auth-core
       '@giveaway/auth-server':
         specifier: workspace:*
         version: link:../../auth/auth-server
