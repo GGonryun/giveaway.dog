@@ -21,7 +21,6 @@ import {
   winnersPage
 } from '../../helpers/winners';
 
-const REFERRAL_BUG = 529;
 const CREATED_AT_BUG = 530;
 
 const completionKeys = async (request: APIRequestContext, id: string) =>
@@ -175,32 +174,31 @@ test.describe('editing a published giveaway', () => {
     expect((await readDraws(request, giveaway.id)).draws).toEqual(before.draws);
   });
 
-  test(
-    '[EDIT-004] the host removes a referral task that already has referrals',
-    knownBug(REFERRAL_BUG),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedEnteredGiveaway(
-        request,
-        team.slug,
-        freshNamespace(testInfo.workerIndex)
-      );
-      const [, , referral] = giveaway.tasks;
-      const completions = await completionKeys(request, giveaway.id);
+  test('[EDIT-004] the host removes a referral task that already has referrals', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedEnteredGiveaway(
+      request,
+      team.slug,
+      freshNamespace(testInfo.workerIndex)
+    );
+    const [, , referral] = giveaway.tasks;
+    const completions = await completionKeys(request, giveaway.id);
 
-      await openEditor(page, team.slug, giveaway.id);
-      await openStep(page, 'Tasks');
-      await removeEntryMethod(page, 'Refer a Friend');
-      await saveChanges(page);
-      await expectSaved(page);
+    await openEditor(page, team.slug, giveaway.id);
+    await openStep(page, 'Tasks');
+    await removeEntryMethod(page, 'Refer a Friend');
+    await saveChanges(page);
+    await expectSaved(page);
 
-      await expect
-        .poll(() => completionKeys(request, giveaway.id))
-        .toEqual(completions.filter((c) => c.taskId !== referral.id));
-      const participants = await readParticipants(request, giveaway.id);
-      expect(participants.flatMap((p) => p.referrals)).toEqual([]);
-    }
-  );
+    await expect
+      .poll(() => completionKeys(request, giveaway.id))
+      .toEqual(completions.filter((c) => c.taskId !== referral.id));
+    const participants = await readParticipants(request, giveaway.id);
+    expect(participants.flatMap((p) => p.referrals)).toEqual([]);
+  });
 
   test(
     '[EDIT-005] the host edits a giveaway and it keeps its creation date',
