@@ -297,7 +297,7 @@ describe('instagram user link GET', () => {
       );
     });
 
-    it('redirects to an absolute redirectTo as given', async () => {
+    it('ignores an absolute redirectTo and redirects to the account page', async () => {
       await expect(
         GET(
           request({
@@ -307,7 +307,7 @@ describe('instagram user link GET', () => {
           })
         )
       ).rejects.toMatchObject({
-        digest: redirectDigest('https://evil.example/phish')
+        digest: redirectDigest('/account')
       });
     });
 
