@@ -140,12 +140,31 @@ export const buildTeamSweepstakes = (
 
 type SweepstakesLookupArgs = {
   include?: { criteria?: boolean; team?: unknown };
+  select?: { timing?: boolean };
 };
+
+const HOUR = 60 * 60 * 1000;
+
+export const sweepstakesTiming = (
+  endsIn: number,
+  status: 'DRAFT' | 'ACTIVE' | 'COMPLETED' = 'ACTIVE'
+) => ({
+  status,
+  timing: {
+    startDate: new Date(Date.now() + endsIn - 2 * HOUR),
+    endDate: new Date(Date.now() + endsIn)
+  }
+});
+
+export const endedSweepstakes = () => sweepstakesTiming(-HOUR);
+
+export const runningSweepstakes = () => sweepstakesTiming(HOUR);
 
 export const givenSweepstakesLookups = (
   options: {
     criteria?: Record<string, unknown> | null;
     team?: ReturnType<typeof buildTeamSweepstakes> | null;
+    timing?: ReturnType<typeof sweepstakesTiming>;
   } = {}
 ) => {
   const criteria =
@@ -159,6 +178,9 @@ export const givenSweepstakesLookups = (
       }
       if (args.include?.team) {
         return team;
+      }
+      if (args.select?.timing) {
+        return options.timing ?? endedSweepstakes();
       }
       return null;
     }

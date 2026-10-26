@@ -70,6 +70,7 @@ export type SweepstakesFixture = {
     Prisma.SweepstakesWinnerCriteriaCreateWithoutSweepstakesInput,
     'id'
   >;
+  timing?: { startDate: Date; endDate: Date };
 };
 
 export const createSweepstakes = async ({
@@ -79,7 +80,8 @@ export const createSweepstakes = async ({
   visibility = 'PUBLIC',
   prizes = [{ name: 'Prize', quota: 1 }],
   tasks = [bonusTask()],
-  criteria = {}
+  criteria = {},
+  timing
 }: SweepstakesFixture) => {
   const id = nextId('sweepstakes');
   const now = Date.now();
@@ -91,8 +93,8 @@ export const createSweepstakes = async ({
       details: { create: { name } },
       timing: {
         create: {
-          startDate: new Date(now - DAY),
-          endDate: new Date(now + DAY),
+          startDate: timing?.startDate ?? new Date(now - DAY),
+          endDate: timing?.endDate ?? new Date(now + DAY),
           timeZone: 'UTC'
         }
       },

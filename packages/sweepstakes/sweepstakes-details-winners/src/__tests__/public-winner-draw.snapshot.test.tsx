@@ -85,6 +85,7 @@ const drawElement = (props: Partial<DrawProps> = {}) => (
     sweepstakesId="sweep-1"
     slug="acme"
     criteria={buildCriteria({ minQualityScore: 50, minTasksCompleted: 1 })}
+    hasEnded
     {...props}
   />
 );

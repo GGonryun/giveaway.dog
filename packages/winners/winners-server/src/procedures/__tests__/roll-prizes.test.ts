@@ -19,6 +19,8 @@ import {
 import {
   buildCompletion,
   givenSweepstakesLookups,
+  runningSweepstakes,
+  sweepstakesTiming,
   inputIssuePaths,
   omitField
 } from '../../testing/fixtures-sweepstakes-winners-email';
@@ -89,6 +91,29 @@ describe('rollPrizes', () => {
       prismaMock.prizeDraw.createMany
     ]
   );
+
+  describe('when the giveaway has not ended', () => {
+    it.each([
+      ['running', runningSweepstakes()],
+      ['scheduled', sweepstakesTiming(3 * 60 * 60 * 1000)],
+      ['draft', sweepstakesTiming(-60 * 60 * 1000, 'DRAFT')]
+    ])(
+      'returns PRECONDITION_FAILED for a %s giveaway without writing',
+      async (_, timing) => {
+        signIn();
+        givenHappyPath();
+        givenSweepstakesLookups({ timing });
+
+        const result = await rollPrizes(input());
+
+        expect(expectFailure(result, 'PRECONDITION_FAILED').message).toBe(
+          'Winners can only be drawn after the giveaway ends'
+        );
+        expect(prismaMock.taskCompletion.findMany).not.toHaveBeenCalled();
+        expect(prismaMock.prizeDraw.createMany).not.toHaveBeenCalled();
+      }
+    );
+  });
 
   describe('authorization and validation', () => {
     it.each(['sweepstakesId', 'slug'])(

@@ -26,6 +26,7 @@ interface PublicWinnerDrawProps {
   sweepstakesId: string;
   slug: string;
   criteria: SweepstakesWinnerCriteriaSchema;
+  hasEnded: boolean;
 }
 
 interface PrizeCard {
@@ -46,7 +47,8 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
   participants,
   sweepstakesId,
   slug,
-  criteria
+  criteria,
+  hasEnded
 }) => {
   const router = useRouter();
   const [prizeCards, setPrizeCards] = useState<PrizeCard[]>([]);
@@ -296,6 +298,11 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
                 ? 'participant'
                 : 'participants'}
             </p>
+            {!hasEnded && (
+              <p className="text-sm sm:text-base font-medium">
+                Winners can be drawn after the giveaway ends
+              </p>
+            )}
           </div>
 
           {/* Prize Cards Grid */}
@@ -413,7 +420,9 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
               <Button
                 onClick={handleDrawAllWinners}
                 size="lg"
-                disabled={rollPrizesProcedure.isLoading || isRevealing}
+                disabled={
+                  !hasEnded || rollPrizesProcedure.isLoading || isRevealing
+                }
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 sm:py-6 text-base sm:text-lg font-semibold"
               >
                 {rollPrizesProcedure.isLoading || isRevealing ? (

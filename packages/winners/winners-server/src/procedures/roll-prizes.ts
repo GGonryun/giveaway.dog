@@ -5,6 +5,7 @@ import z from 'zod';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { findTeamSweepstakes } from '@giveaway/sweepstakes-access/team-sweepstakes';
 import { TeamPermission } from '@giveaway/team-permissions';
+import { assertSweepstakesEnded } from '../ended';
 import { getSweepstakesCriteria } from '@giveaway/winners-model/criteria';
 import { getEligibleCompletions } from '../completions';
 import {
@@ -33,6 +34,8 @@ export const rollPrizes = procedure()
       slug,
       permission: TeamPermission.UPDATE_SWEEPSTAKES
     });
+
+    await assertSweepstakesEnded({ db, sweepstakesId });
 
     const criteria = await getSweepstakesCriteria({
       db,

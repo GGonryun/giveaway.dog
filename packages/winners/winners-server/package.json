@@ -35,6 +35,7 @@
     "@giveaway/db-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/sweepstakes-access": "workspace:*",
+    "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/team-permissions": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
@@ -49,7 +50,6 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
-    "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/testing-integration": "workspace:*",
     "@giveaway/testing-postgres": "workspace:*",
     "@giveaway/testing-server": "workspace:*",

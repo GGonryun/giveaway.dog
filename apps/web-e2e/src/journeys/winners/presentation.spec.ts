@@ -1,7 +1,6 @@
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import { openAs } from '../../helpers/teams';
 import {
@@ -67,33 +66,32 @@ test.describe('the winner draw presentation page', () => {
     expect((await readDraws(request, giveaway.id)).draws).toEqual([]);
   });
 
-  test(
-    'the host cannot draw the winners of a running giveaway from the presentation page',
-    knownBug(483),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const ns = freshNamespace(testInfo.workerIndex);
-      const giveaway = await seedApi(request).sweepstakes({
-        ...endedGiveaway({ ns, team: team.slug }),
-        preset: 'running',
-        entries: eligibleEntries(ELIGIBLE_PERSONAS)
-      });
+  test('the host cannot draw the winners of a running giveaway from the presentation page', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const ns = freshNamespace(testInfo.workerIndex);
+    const giveaway = await seedApi(request).sweepstakes({
+      ...endedGiveaway({ ns, team: team.slug }),
+      preset: 'running',
+      entries: eligibleEntries(ELIGIBLE_PERSONAS)
+    });
 
-      await page.goto(presentationPage(team.slug, giveaway.id));
+    await page.goto(presentationPage(team.slug, giveaway.id));
+    await expect(
+      page.getByRole('heading', { name: giveaway.name })
+    ).toBeVisible();
+    const draw = page.getByRole('button', { name: 'Draw All Winners' });
+    if (await draw.isEnabled()) {
+      await draw.click();
       await expect(
-        page.getByRole('heading', { name: giveaway.name })
-      ).toBeVisible();
-      const draw = page.getByRole('button', { name: 'Draw All Winners' });
-      if (await draw.isEnabled()) {
-        await draw.click();
-        await expect(
-          page.getByRole('button', {
-            name: /Draw All Winners|Return to Sweepstakes/
-          })
-        ).toBeVisible({ timeout: 15_000 });
-      }
-
-      expect((await readDraws(request, giveaway.id)).draws).toEqual([]);
+        page.getByRole('button', {
+          name: /Draw All Winners|Return to Sweepstakes/
+        })
+      ).toBeVisible({ timeout: 15_000 });
     }
-  );
+
+    expect((await readDraws(request, giveaway.id)).draws).toEqual([]);
+  });
 });
