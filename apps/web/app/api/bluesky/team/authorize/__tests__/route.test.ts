@@ -437,13 +437,23 @@ describe('bluesky team authorize GET', () => {
       expect(res.headers.getSetCookie()).toEqual([]);
     });
 
-    it('follows an absolute returnTo to another origin', async () => {
+    it('ignores an absolute returnTo to another origin', async () => {
       const res = await GET(
         request({ ...validParams, returnTo: 'https://evil.example/phish' })
       );
 
       expect(res.headers.get('location')).toBe(
-        'https://evil.example/phish?error=bluesky_auth_failed'
+        'https://app.giveaway.dog/?error=bluesky_auth_failed'
+      );
+    });
+
+    it('ignores a protocol-relative returnTo', async () => {
+      const res = await GET(
+        request({ ...validParams, returnTo: '//evil.example/phish' })
+      );
+
+      expect(res.headers.get('location')).toBe(
+        'https://app.giveaway.dog/?error=bluesky_auth_failed'
       );
     });
 

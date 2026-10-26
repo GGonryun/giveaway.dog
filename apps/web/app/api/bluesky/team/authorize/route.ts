@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getTeamBlueskyClient } from '@giveaway/bluesky-api/bluesky/team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { environment } from '@giveaway/app-config/environment';
+import { toSafeRedirect } from '@giveaway/user-model/redirect';
 import { auth } from '@giveaway/auth-server/config';
 import prisma from '@giveaway/db-client/prisma';
 import {
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest) {
   const handle = searchParams.get('handle');
   const slug = searchParams.get('slug');
   const scope = searchParams.get('scope');
-  const returnTo = searchParams.get('returnTo') ?? '/';
+  const returnTo = toSafeRedirect(searchParams.get('returnTo'), '/');
 
   try {
     if (!slug) {
