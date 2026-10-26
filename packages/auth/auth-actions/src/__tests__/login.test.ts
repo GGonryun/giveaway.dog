@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { IdentityProvider } from '@giveaway/db-model';
 import login from '../login';
-import { signIn as signInSession } from '@giveaway/testing-server/session';
+import {
+  signIn as signInSession,
+  TEST_USER
+} from '@giveaway/testing-server/session';
+import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 type LoginInput = Parameters<typeof login>[0];
@@ -230,7 +234,22 @@ describe('login', () => {
       );
     });
 
-    it('redirects to the instagram link route with the normalized profile', async () => {
+    it('refuses a visitor who is not signed in', async () => {
+      const result = await run({
+        provider: IdentityProvider.INSTAGRAM,
+        instagramProfileUrl: 'https://instagram.com/the.user'
+      });
+
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Sign in to connect your Instagram profile.'
+      );
+      expect(prismaMock.account.create).not.toHaveBeenCalled();
+      expect(mocks.redirect).not.toHaveBeenCalled();
+    });
+
+    it('links the normalized profile to the user and redirects to the portal', async () => {
+      signInSession();
+
       await expect(
         run({
           provider: IdentityProvider.INSTAGRAM,
@@ -239,15 +258,118 @@ describe('login', () => {
         })
       ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
-      const params = new URLSearchParams({
-        profileUrl: 'https://instagram.com/the.user',
-        username: 'the.user',
-        redirectTo: portal({ redirectTo: '/done', provider: 'instagram' })
+      expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
+        where: {
+          provider_providerAccountId: {
+            provider: 'instagram',
+            providerAccountId: 'the.user'
+          }
+        }
+      });
+      expect(prismaMock.account.create).toHaveBeenCalledWith({
+        data: {
+          userId: TEST_USER.id,
+          provider: 'instagram',
+          providerAccountId: 'the.user',
+          type: 'oauth',
+          label: '@the.user',
+          link: 'https://instagram.com/the.user',
+          scope: ''
+        }
       });
       expect(mocks.redirect).toHaveBeenCalledWith(
-        `/api/instagram/user/link?${params.toString()}`
+        portal({ redirectTo: '/done', provider: 'instagram' })
       );
       expect(mocks.signIn).not.toHaveBeenCalled();
+    });
+
+    it('updates a profile that the user already linked', async () => {
+      signInSession();
+      prismaMock.account.findUnique.mockResolvedValue({
+        userId: TEST_USER.id
+      });
+
+      await expect(
+        run({
+          provider: IdentityProvider.INSTAGRAM,
+          instagramProfileUrl: 'instagram.com/the.user'
+        })
+      ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
+
+      expect(prismaMock.account.update).toHaveBeenCalledWith({
+        where: {
+          provider_providerAccountId: {
+            provider: 'instagram',
+            providerAccountId: 'the.user'
+          }
+        },
+        data: {
+          label: '@the.user',
+          link: 'https://instagram.com/the.user',
+          updatedAt: expect.any(Date)
+        }
+      });
+      expect(prismaMock.account.create).not.toHaveBeenCalled();
+    });
+
+    it('refuses a profile that another user already linked', async () => {
+      signInSession();
+      prismaMock.account.findUnique.mockResolvedValue({ userId: 'other' });
+
+      const result = await run({
+        provider: IdentityProvider.INSTAGRAM,
+        instagramProfileUrl: 'instagram.com/the.user'
+      });
+
+      expect(expectFailure(result, 'CONFLICT').message).toBe(
+        'This Instagram profile is already linked to another account.'
+      );
+      expect(prismaMock.account.update).not.toHaveBeenCalled();
+      expect(prismaMock.account.create).not.toHaveBeenCalled();
+      expect(mocks.redirect).not.toHaveBeenCalled();
+    });
+
+    it('refuses a profile that another user links at the same time', async () => {
+      signInSession();
+      prismaMock.account.create.mockRejectedValue(knownRequestError('P2002'));
+
+      const result = await run({
+        provider: IdentityProvider.INSTAGRAM,
+        instagramProfileUrl: 'instagram.com/the.user'
+      });
+
+      expect(expectFailure(result, 'CONFLICT').message).toBe(
+        'This Instagram profile is already linked to another account.'
+      );
+      expect(mocks.redirect).not.toHaveBeenCalled();
+    });
+
+    it('passes on other database errors', async () => {
+      signInSession();
+      prismaMock.account.create.mockRejectedValue(knownRequestError('P2003'));
+
+      const result = await run({
+        provider: IdentityProvider.INSTAGRAM,
+        instagramProfileUrl: 'instagram.com/the.user'
+      });
+
+      expectFailure(result, 'INTERNAL_SERVER_ERROR');
+      expect(mocks.redirect).not.toHaveBeenCalled();
+    });
+
+    it('does not read an error that is not from Prisma as a linked profile', async () => {
+      signInSession();
+      prismaMock.account.create.mockRejectedValue(
+        Object.assign(new Error('Not Prisma'), { code: 'P2002' })
+      );
+
+      const outcome = await run({
+        provider: IdentityProvider.INSTAGRAM,
+        instagramProfileUrl: 'instagram.com/the.user'
+      }).catch((error: unknown) => error);
+
+      expect(outcome).not.toMatchObject({ data: { code: 'CONFLICT' } });
+      expect(mocks.redirect).not.toHaveBeenCalled();
     });
   });
 
@@ -271,7 +393,21 @@ describe('login', () => {
       );
     });
 
-    it('redirects to the facebook link route with the identifier', async () => {
+    it('refuses a visitor who is not signed in', async () => {
+      const result = await run({
+        provider: IdentityProvider.FACEBOOK,
+        facebookProfileUrl: 'facebook.com/jane.doe'
+      });
+
+      expect(expectFailure(result, 'UNAUTHORIZED').message).toBe(
+        'Sign in to connect your Facebook profile.'
+      );
+      expect(prismaMock.account.create).not.toHaveBeenCalled();
+    });
+
+    it('links an id profile with an id label', async () => {
+      signInSession();
+
       await expect(
         run({
           provider: IdentityProvider.FACEBOOK,
@@ -279,17 +415,25 @@ describe('login', () => {
         })
       ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
-      const params = new URLSearchParams({
-        profileUrl: 'https://facebook.com/profile.php?id=42',
-        identifier: '42',
-        redirectTo: portal({ provider: 'facebook' })
+      expect(prismaMock.account.create).toHaveBeenCalledWith({
+        data: {
+          userId: TEST_USER.id,
+          provider: 'facebook',
+          providerAccountId: '42',
+          type: 'oauth',
+          label: 'ID: 42',
+          link: 'https://facebook.com/profile.php?id=42',
+          scope: ''
+        }
       });
       expect(mocks.redirect).toHaveBeenCalledWith(
-        `/api/facebook/user/link?${params.toString()}`
+        portal({ provider: 'facebook' })
       );
     });
 
     it('lowercases a username identifier', async () => {
+      signInSession();
+
       await expect(
         run({
           provider: IdentityProvider.FACEBOOK,
@@ -297,10 +441,45 @@ describe('login', () => {
         })
       ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
-      const [url] = mocks.redirect.mock.calls[0];
-      const params = new URLSearchParams(url.split('?').slice(1).join('?'));
-      expect(params.get('profileUrl')).toBe('https://facebook.com/jane.doe');
-      expect(params.get('identifier')).toBe('jane.doe');
+      expect(prismaMock.account.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          providerAccountId: 'jane.doe',
+          label: '@jane.doe',
+          link: 'https://facebook.com/jane.doe'
+        })
+      });
+    });
+
+    it.each(['1.jane', 'jane.1'])(
+      'labels the username %s that has digits as a username',
+      async (identifier) => {
+        signInSession();
+
+        await expect(
+          run({
+            provider: IdentityProvider.FACEBOOK,
+            facebookProfileUrl: `facebook.com/${identifier}`
+          })
+        ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
+
+        expect(prismaMock.account.create).toHaveBeenCalledWith({
+          data: expect.objectContaining({ label: `@${identifier}` })
+        });
+      }
+    );
+
+    it('refuses a profile that another user already linked', async () => {
+      signInSession();
+      prismaMock.account.findUnique.mockResolvedValue({ userId: 'other' });
+
+      const result = await run({
+        provider: IdentityProvider.FACEBOOK,
+        facebookProfileUrl: 'facebook.com/jane.doe'
+      });
+
+      expect(expectFailure(result, 'CONFLICT').message).toBe(
+        'This Facebook profile is already linked to another account.'
+      );
     });
   });
 
