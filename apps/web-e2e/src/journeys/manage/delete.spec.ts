@@ -2,16 +2,12 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, personaState } from '../../env';
 import { dashboardRow, openAsVisitor } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import {
   expectNotFoundAfterReloads,
   freshGiveawayNamespace,
   openRowMenu
 } from '../../helpers/manage';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
-
-const DELETED_ROW_BUG = 534;
-const DELETED_CACHE_BUG = 535;
 
 const deleteDialog = (page: Page) =>
   page.getByRole('dialog', { name: 'Delete Sweepstakes' });
@@ -73,53 +69,52 @@ test.describe('deleting a giveaway', () => {
     await expect(dashboardRow(page, giveaway.name)).toHaveCount(0);
   });
 
-  test(
-    '[DELETE-002] a deleted giveaway leaves the dashboard without a reload',
-    knownBug(DELETED_ROW_BUG),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const { ns } = freshGiveawayNamespace(testInfo);
-      const giveaway = await seedApi(request).sweepstakes({
-        ns,
-        team: team.slug
-      });
+  test('[DELETE-002] a deleted giveaway leaves the dashboard without a reload', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const { ns } = freshGiveawayNamespace(testInfo);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns,
+      team: team.slug
+    });
 
-      await openDeleteDialog(page, team.slug, giveaway.name);
-      await confirmDelete(page, giveaway.name);
+    await openDeleteDialog(page, team.slug, giveaway.name);
+    await confirmDelete(page, giveaway.name);
 
-      await expect(dashboardRow(page, giveaway.name)).toHaveCount(0, {
-        timeout: 10_000
-      });
+    await expect(dashboardRow(page, giveaway.name)).toHaveCount(0, {
+      timeout: 10_000
+    });
+  });
+
+  test('[DELETE-003] a deleted giveaway is not found at its id URL or its custom slug URL', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const { ns, slug } = freshGiveawayNamespace(testInfo);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns,
+      team: team.slug,
+      slug
+    });
+    const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
+    const visitor = await openAsVisitor(browser, paths[0]);
+    for (const path of [...paths, ...paths]) {
+      await visitor.page.goto(path);
+      await expect(
+        visitor.page.getByRole('heading', { name: giveaway.name, level: 1 })
+      ).toBeVisible();
     }
-  );
 
-  test(
-    '[DELETE-003] a deleted giveaway is not found at its id URL or its custom slug URL',
-    knownBug(DELETED_CACHE_BUG),
-    async ({ page, request, browser }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const { ns, slug } = freshGiveawayNamespace(testInfo);
-      const giveaway = await seedApi(request).sweepstakes({
-        ns,
-        team: team.slug,
-        slug
-      });
-      const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
-      const visitor = await openAsVisitor(browser, paths[0]);
-      for (const path of [...paths, ...paths]) {
-        await visitor.page.goto(path);
-        await expect(
-          visitor.page.getByRole('heading', { name: giveaway.name, level: 1 })
-        ).toBeVisible();
-      }
+    await openDeleteDialog(page, team.slug, giveaway.name);
+    await confirmDelete(page, giveaway.name);
 
-      await openDeleteDialog(page, team.slug, giveaway.name);
-      await confirmDelete(page, giveaway.name);
-
-      for (const path of paths) {
-        await expectNotFoundAfterReloads(visitor.page, path);
-      }
-      await visitor.context.close();
+    for (const path of paths) {
+      await expectNotFoundAfterReloads(visitor.page, path);
     }
-  );
+    await visitor.context.close();
+  });
 });
