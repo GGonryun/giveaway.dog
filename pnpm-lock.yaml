@@ -9750,6 +9750,9 @@ importers:
       '@giveaway/rpc-client':
         specifier: workspace:*
         version: link:../../infra/rpc-client
+      '@giveaway/rpc-model':
+        specifier: workspace:*
+        version: link:../../infra/rpc-model
       '@giveaway/sweepstakes-editor-server':
         specifier: workspace:*
         version: link:../sweepstakes-editor-server

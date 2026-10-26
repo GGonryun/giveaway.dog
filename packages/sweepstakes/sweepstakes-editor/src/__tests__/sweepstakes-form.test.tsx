@@ -10,7 +10,7 @@ import React from 'react';
 import { toast } from 'sonner';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MockTeamProvider } from '@giveaway/team-context/mock-team-provider';
-import deleteSweepstakes from '@giveaway/sweepstakes-editor-server/delete-sweepstakes';
+import deleteDraft from '@giveaway/sweepstakes-editor-server/delete-draft';
 import publishSweepstakes from '@giveaway/sweepstakes-editor-server/publish-sweepstakes';
 import updateSweepstakes from '@giveaway/sweepstakes-editor-server/update-sweepstakes';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
@@ -93,6 +93,10 @@ vi.mock('@giveaway/sweepstakes-editor-server/delete-sweepstakes', () => ({
   default: vi.fn()
 }));
 
+vi.mock('@giveaway/sweepstakes-editor-server/delete-draft', () => ({
+  default: vi.fn()
+}));
+
 vi.mock('@giveaway/sweepstakes-editor-server/verify-slug', () => ({
   default: vi.fn()
 }));
@@ -152,7 +156,7 @@ describe('SweepstakesForm', () => {
     vi.setSystemTime(FIXED_NOW);
     vi.mocked(updateSweepstakes).mockReset().mockResolvedValue(succeed);
     vi.mocked(publishSweepstakes).mockReset().mockResolvedValue(succeed);
-    vi.mocked(deleteSweepstakes).mockReset().mockResolvedValue(succeed);
+    vi.mocked(deleteDraft).mockReset().mockResolvedValue(succeed);
     vi.mocked(toast.success).mockClear();
     vi.mocked(toast.info).mockClear();
     navigation.router.push.mockReset();
@@ -303,7 +307,7 @@ describe('SweepstakesForm', () => {
       );
 
       await waitFor(() =>
-        expect(deleteSweepstakes).toHaveBeenCalledWith({ id: 'sweepstakes-1' })
+        expect(deleteDraft).toHaveBeenCalledWith({ id: 'sweepstakes-1' })
       );
       await waitFor(() =>
         expect(navigation.router.push).toHaveBeenCalledWith('/app/demo-team')
@@ -379,7 +383,7 @@ describe('SweepstakesForm', () => {
         screen.getByRole('button', { name: 'Discard Changes' })
       );
       expect(navigation.router.push).toHaveBeenCalledWith(detailsPage);
-      expect(deleteSweepstakes).not.toHaveBeenCalled();
+      expect(deleteDraft).not.toHaveBeenCalled();
     });
   });
 
