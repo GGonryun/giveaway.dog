@@ -98,7 +98,7 @@ describe('DeleteConfirmationModal', () => {
       const user = userEvent.setup();
       vi.mocked(deleteSweepstakes).mockResolvedValue({
         ok: true,
-        data: { slug: 'acme' }
+        data: { slug: 'acme', sweepstakesSlug: null }
       });
       const { onClose } = renderModal();
 
@@ -117,7 +117,11 @@ describe('DeleteConfirmationModal', () => {
       let finishDeleting = () => {};
       vi.mocked(deleteSweepstakes).mockReturnValue(
         new Promise((resolve) => {
-          finishDeleting = () => resolve({ ok: true, data: { slug: 'acme' } });
+          finishDeleting = () =>
+            resolve({
+              ok: true,
+              data: { slug: 'acme', sweepstakesSlug: null }
+            });
         })
       );
       const { onClose } = renderModal();

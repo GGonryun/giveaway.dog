@@ -141,7 +141,12 @@ describe('SweepstakesForm', () => {
     vi.setSystemTime(FIXED_NOW);
     vi.mocked(updateSweepstakes).mockReset().mockResolvedValue(succeed);
     vi.mocked(publishSweepstakes).mockReset().mockResolvedValue(succeed);
-    vi.mocked(deleteSweepstakes).mockReset().mockResolvedValue(succeed);
+    vi.mocked(deleteSweepstakes)
+      .mockReset()
+      .mockResolvedValue({
+        ok: true,
+        data: { slug: 'summer', sweepstakesSlug: null }
+      });
     vi.mocked(toast.success).mockClear();
     vi.mocked(toast.info).mockClear();
     navigation.router.push.mockReset();

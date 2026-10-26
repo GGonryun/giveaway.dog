@@ -3,6 +3,7 @@ import { TeamRole } from '@giveaway/db-model';
 import deleteSweepstakes from '../delete-sweepstakes';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import {
@@ -128,21 +129,54 @@ describe('deleteSweepstakes', () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         withRole(TeamRole.OWNER)
       );
-      prismaMock.sweepstakes.delete.mockResolvedValue({ id: SWEEPSTAKES_ID });
-    });
-
-    it('deletes the sweepstakes by id', async () => {
-      await deleteSweepstakes({ id: SWEEPSTAKES_ID });
-
-      expect(prismaMock.sweepstakes.delete).toHaveBeenCalledWith({
-        where: { id: SWEEPSTAKES_ID }
+      prismaMock.sweepstakes.delete.mockResolvedValue({
+        id: SWEEPSTAKES_ID,
+        visibility: { slug: 'custom-slug' }
       });
     });
 
-    it('returns the team slug', async () => {
+    it('deletes the sweepstakes by id and reads its custom slug', async () => {
+      await deleteSweepstakes({ id: SWEEPSTAKES_ID });
+
+      expect(prismaMock.sweepstakes.delete).toHaveBeenCalledWith({
+        where: { id: SWEEPSTAKES_ID },
+        include: { visibility: { select: { slug: true } } }
+      });
+    });
+
+    it('returns the team slug and the custom slug of the sweepstakes', async () => {
       const result = await deleteSweepstakes({ id: SWEEPSTAKES_ID });
 
-      expect(expectOk(result)).toEqual({ slug: TEAM_SLUG });
+      expect(expectOk(result)).toEqual({
+        slug: TEAM_SLUG,
+        sweepstakesSlug: 'custom-slug'
+      });
+    });
+
+    it('[DELETE-003] invalidates the cache of the sweepstakes at its id and its custom slug', async () => {
+      await deleteSweepstakes({ id: SWEEPSTAKES_ID });
+
+      expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+        [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
+        [`sweepstakes-${SWEEPSTAKES_ID}-privacy`, 'max'],
+        ['sweepstakes-custom-slug', 'max'],
+        ['sweepstakes-custom-slug-privacy', 'max']
+      ]);
+    });
+
+    it('invalidates only the id tags when the sweepstakes has no custom slug', async () => {
+      prismaMock.sweepstakes.delete.mockResolvedValue({
+        id: SWEEPSTAKES_ID,
+        visibility: null
+      });
+
+      const result = await deleteSweepstakes({ id: SWEEPSTAKES_ID });
+
+      expect(expectOk(result).sweepstakesSlug).toBeNull();
+      expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+        [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
+        [`sweepstakes-${SWEEPSTAKES_ID}-privacy`, 'max']
+      ]);
     });
 
     it('deletes using the id of the loaded record', async () => {
@@ -154,7 +188,8 @@ describe('deleteSweepstakes', () => {
       await deleteSweepstakes({ id: SWEEPSTAKES_ID });
 
       expect(prismaMock.sweepstakes.delete).toHaveBeenCalledWith({
-        where: { id: 'loaded-id' }
+        where: { id: 'loaded-id' },
+        include: { visibility: { select: { slug: true } } }
       });
     });
   });

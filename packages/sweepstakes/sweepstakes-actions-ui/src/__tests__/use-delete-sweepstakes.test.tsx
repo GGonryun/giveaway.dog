@@ -29,7 +29,7 @@ describe('useDeleteSweepstakes', () => {
     const onSuccess = vi.fn();
     vi.mocked(deleteSweepstakes).mockResolvedValue({
       ok: true,
-      data: { slug: 'acme' }
+      data: { slug: 'acme', sweepstakesSlug: null }
     });
     const { result } = renderHook(() => useDeleteSweepstakes(onSuccess));
 

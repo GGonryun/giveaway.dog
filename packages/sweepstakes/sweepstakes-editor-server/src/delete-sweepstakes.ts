@@ -17,10 +17,15 @@ const deleteSweepstakes = procedure()
   )
   .output(
     z.object({
-      slug: z.string()
+      slug: z.string(),
+      sweepstakesSlug: z.string().nullable()
     })
   )
-
+  .invalidate(async ({ input, output }) =>
+    [input.id, output.sweepstakesSlug]
+      .filter((key): key is string => !!key)
+      .flatMap((key) => [`sweepstakes-${key}`, `sweepstakes-${key}-privacy`])
+  )
   .handler(async ({ input, db, user }) => {
     const { team, sweepstakes } = await findUserSweepstakes({
       db,
@@ -34,6 +39,9 @@ const deleteSweepstakes = procedure()
     const deleted = await db.sweepstakes.delete({
       where: {
         id: sweepstakes.id
+      },
+      include: {
+        visibility: { select: { slug: true } }
       }
     });
 
@@ -45,6 +53,9 @@ const deleteSweepstakes = procedure()
       });
     }
 
-    return { slug: team.slug };
+    return {
+      slug: team.slug,
+      sweepstakesSlug: deleted.visibility?.slug ?? null
+    };
   });
 export default deleteSweepstakes;

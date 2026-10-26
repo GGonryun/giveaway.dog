@@ -115,7 +115,8 @@ describe('deleteSweepstakes', () => {
     signIn({ id: host.id });
 
     expect(expectOk(await deleteSweepstakes({ id: deleted.id }))).toEqual({
-      slug: team.slug
+      slug: team.slug,
+      sweepstakesSlug: deleted.id
     });
 
     expect(await countRows(deleted.id)).toEqual(NO_ROWS);
