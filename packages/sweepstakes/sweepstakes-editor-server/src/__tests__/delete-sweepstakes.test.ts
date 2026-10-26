@@ -4,6 +4,7 @@ import deleteSweepstakes from '../delete-sweepstakes';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import {
   buildMember,
@@ -118,6 +119,7 @@ describe('deleteSweepstakes', () => {
           'You do not have permission to perform this action. Required permission: DELETE_SWEEPSTAKES'
         );
         expect(prismaMock.sweepstakes.delete).not.toHaveBeenCalled();
+        expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
       }
     );
   });
@@ -143,6 +145,16 @@ describe('deleteSweepstakes', () => {
       const result = await deleteSweepstakes({ id: SWEEPSTAKES_ID });
 
       expect(expectOk(result)).toEqual({ slug: TEAM_SLUG });
+    });
+
+    it('expires the cached public page and privacy check of the sweepstakes', async () => {
+      await deleteSweepstakes({ id: SWEEPSTAKES_ID });
+
+      expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+        [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
+        [`sweepstakes-${SWEEPSTAKES_ID}-privacy`, 'max'],
+        ['participant-sweepstake', 'max']
+      ]);
     });
 
     it('deletes using the id of the loaded record', async () => {

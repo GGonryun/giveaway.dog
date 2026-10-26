@@ -11,7 +11,6 @@ import {
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
 const DELETED_ROW_BUG = 534;
-const DELETED_CACHE_BUG = 535;
 
 const deleteDialog = (page: Page) =>
   page.getByRole('dialog', { name: 'Delete Sweepstakes' });
@@ -93,33 +92,33 @@ test.describe('deleting a giveaway', () => {
     }
   );
 
-  test(
-    '[DELETE-003] a deleted giveaway is not found at its id URL or its custom slug URL',
-    knownBug(DELETED_CACHE_BUG),
-    async ({ page, request, browser }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const { ns, slug } = freshGiveawayNamespace(testInfo);
-      const giveaway = await seedApi(request).sweepstakes({
-        ns,
-        team: team.slug,
-        slug
-      });
-      const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
-      const visitor = await openAsVisitor(browser, paths[0]);
-      for (const path of [...paths, ...paths]) {
-        await visitor.page.goto(path);
-        await expect(
-          visitor.page.getByRole('heading', { name: giveaway.name, level: 1 })
-        ).toBeVisible();
-      }
-
-      await openDeleteDialog(page, team.slug, giveaway.name);
-      await confirmDelete(page, giveaway.name);
-
-      for (const path of paths) {
-        await expectNotFoundAfterReloads(visitor.page, path);
-      }
-      await visitor.context.close();
+  test('[DELETE-003] a deleted giveaway is not found at its id URL or its custom slug URL', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const { ns, slug } = freshGiveawayNamespace(testInfo);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns,
+      team: team.slug,
+      slug
+    });
+    const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
+    const visitor = await openAsVisitor(browser, paths[0]);
+    for (const path of [...paths, ...paths]) {
+      await visitor.page.goto(path);
+      await expect(
+        visitor.page.getByRole('heading', { name: giveaway.name, level: 1 })
+      ).toBeVisible();
     }
-  );
+
+    await openDeleteDialog(page, team.slug, giveaway.name);
+    await confirmDelete(page, giveaway.name);
+
+    for (const path of paths) {
+      await expectNotFoundAfterReloads(visitor.page, path);
+    }
+    await visitor.context.close();
+  });
 });
