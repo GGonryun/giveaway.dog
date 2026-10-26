@@ -10,7 +10,8 @@ import {
 import {
   applySweepstakesChanges,
   findUserSweepstakes,
-  findUserSweepstakesQuery
+  findUserSweepstakesQuery,
+  retainDraws
 } from '../shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
@@ -363,6 +364,20 @@ describe('applySweepstakesChanges', () => {
       expect(prismaMock.sweepstakesAllocation.findMany).toHaveBeenCalledWith({
         where: { participant: { sweepstakesId: SWEEPSTAKES_ID } }
       });
+      expect(prismaMock.taskProgress.findMany).toHaveBeenCalledWith({
+        where: { task: { sweepstakesId: SWEEPSTAKES_ID } }
+      });
+      expect(prismaMock.prizeDraw.findMany).toHaveBeenCalledWith({
+        where: { prize: { sweepstakesId: SWEEPSTAKES_ID } }
+      });
+      const deleteOrder =
+        prismaMock.sweepstakes.delete.mock.invocationCallOrder[0];
+      expect(
+        prismaMock.taskProgress.findMany.mock.invocationCallOrder[0]
+      ).toBeLessThan(deleteOrder);
+      expect(
+        prismaMock.prizeDraw.findMany.mock.invocationCallOrder[0]
+      ).toBeLessThan(deleteOrder);
     });
 
     it('deletes the sweepstakes, recreates it, then restores participants in order', async () => {
@@ -563,6 +578,76 @@ describe('applySweepstakesChanges', () => {
       expect(prismaMock.taskCompletion.createMany).toHaveBeenCalledWith({
         data: []
       });
+    });
+
+    it('[EDIT-003] restores the task progress of tasks that still exist', async () => {
+      stubSweepstakesRewrite(prismaMock, { tasks: [{ id: 'task-keep' }] });
+      prismaMock.taskProgress.findMany.mockResolvedValue([
+        { id: 'tp-1', participantId: 'p-1', taskId: 'task-keep', count: 3 },
+        { id: 'tp-2', participantId: 'p-1', taskId: 'task-gone', count: 1 }
+      ]);
+
+      await apply();
+
+      expect(prismaMock.taskProgress.createMany).toHaveBeenCalledWith({
+        data: [
+          { id: 'tp-1', participantId: 'p-1', taskId: 'task-keep', count: 3 }
+        ]
+      });
+    });
+
+    it('does not restore task progress when none of its tasks survive', async () => {
+      stubSweepstakesRewrite(prismaMock, { tasks: [{ id: 'task-keep' }] });
+      prismaMock.taskProgress.findMany.mockResolvedValue([
+        { id: 'tp-2', participantId: 'p-1', taskId: 'task-gone', count: 1 }
+      ]);
+
+      await apply();
+
+      expect(prismaMock.taskProgress.createMany).not.toHaveBeenCalled();
+    });
+
+    it('[EDIT-002] restores the draws of surviving prizes and completions after the completions', async () => {
+      stubSweepstakesRewrite(prismaMock, {
+        tasks: [{ id: 'task-keep' }],
+        prizes: [{ id: 'prize-keep' }]
+      });
+      prismaMock.taskCompletion.findMany.mockResolvedValue([
+        { id: 'c-1', taskId: 'task-keep', proof: null },
+        { id: 'c-2', taskId: 'task-keep', proof: null }
+      ]);
+      const draws = [
+        {
+          id: 'd-2',
+          prizeId: 'prize-keep',
+          taskCompletionId: 'c-2',
+          previousDrawId: 'd-1'
+        },
+        {
+          id: 'd-1',
+          prizeId: 'prize-keep',
+          taskCompletionId: 'c-1',
+          previousDrawId: null
+        }
+      ];
+      prismaMock.prizeDraw.findMany.mockResolvedValue(draws);
+
+      await apply();
+
+      expect(prismaMock.prizeDraw.createMany).toHaveBeenCalledWith({
+        data: [draws[1], draws[0]]
+      });
+      expect(
+        prismaMock.taskCompletion.createMany.mock.invocationCallOrder[0]
+      ).toBeLessThan(
+        prismaMock.prizeDraw.createMany.mock.invocationCallOrder[0]
+      );
+    });
+
+    it('does not restore draws when there are none', async () => {
+      await apply();
+
+      expect(prismaMock.prizeDraw.createMany).not.toHaveBeenCalled();
     });
 
     it('restores only form values whose field still exists', async () => {
@@ -913,5 +998,59 @@ describe('applySweepstakesChanges', () => {
 
       expect(prismaMock.sweepstakesJob.upsert).not.toHaveBeenCalled();
     });
+  });
+});
+
+describe('retainDraws', () => {
+  const draw = (
+    id: string,
+    previousDrawId: string | null = null,
+    prizeId = 'prize-1',
+    taskCompletionId = `c-${id}`
+  ) => ({ id, prizeId, taskCompletionId, previousDrawId });
+
+  const retain = (
+    draws: ReturnType<typeof draw>[],
+    prizeIds = ['prize-1'],
+    completionIds = draws.map((d) => d.taskCompletionId)
+  ) =>
+    retainDraws({
+      draws,
+      prizeIds: new Set(prizeIds),
+      completionIds: new Set(completionIds)
+    }).map((d) => d.id);
+
+  it('keeps every draw whose prize and completion still exist', () => {
+    expect(retain([draw('a'), draw('b')])).toEqual(['a', 'b']);
+  });
+
+  it('orders each re-roll after the draw it replaced', () => {
+    expect(retain([draw('c', 'b'), draw('b', 'a'), draw('a')])).toEqual([
+      'a',
+      'b',
+      'c'
+    ]);
+  });
+
+  it('drops a draw whose prize no longer exists', () => {
+    expect(retain([draw('a', null, 'prize-gone'), draw('b')])).toEqual(['b']);
+  });
+
+  it('drops a draw whose completion no longer exists', () => {
+    expect(retain([draw('a'), draw('b')], ['prize-1'], ['c-b'])).toEqual(['b']);
+  });
+
+  it('drops every re-roll of a dropped draw', () => {
+    expect(
+      retain(
+        [draw('a'), draw('b', 'a'), draw('c', 'b'), draw('d')],
+        ['prize-1'],
+        ['c-b', 'c-c', 'c-d']
+      )
+    ).toEqual(['d']);
+  });
+
+  it('drops a re-roll whose previous draw is unknown', () => {
+    expect(retain([draw('b', 'missing')])).toEqual([]);
   });
 });

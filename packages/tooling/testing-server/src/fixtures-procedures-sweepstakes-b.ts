@@ -82,6 +82,8 @@ export const stubSweepstakesRewrite = (
   mock.referral.findMany.mockResolvedValue([]);
   mock.referredUser.findMany.mockResolvedValue([]);
   mock.sweepstakesAllocation.findMany.mockResolvedValue([]);
+  mock.taskProgress.findMany.mockResolvedValue([]);
+  mock.prizeDraw.findMany.mockResolvedValue([]);
   mock.sweepstakes.delete.mockResolvedValue({ id: SWEEPSTAKES_ID });
   mock.sweepstakes.create.mockResolvedValue({
     id: SWEEPSTAKES_ID,

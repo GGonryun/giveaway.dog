@@ -22,7 +22,6 @@ import {
 } from '../../helpers/winners';
 
 const REFERRAL_BUG = 529;
-const DRAWS_BUG = 528;
 const CREATED_AT_BUG = 530;
 
 const completionKeys = async (request: APIRequestContext, id: string) =>
@@ -143,43 +142,38 @@ test.describe('editing a published giveaway', () => {
     );
   });
 
-  test(
-    '[EDIT-002] the host edits an ended giveaway and keeps its winners and re-roll history',
-    knownBug(DRAWS_BUG),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedApi(request).sweepstakes(
-        endedGiveaway({
-          ns: freshNamespace(testInfo.workerIndex),
-          team: team.slug,
-          prizes: [{ name: 'Golden Bone', quota: 2 }],
-          entries: eligibleEntries(['participant', 'participant2', 'newbie']),
-          draws: [
-            { entry: 0, prize: 0, result: 'DISQUALIFIED', reason: 'No reply' },
-            { entry: 1, prize: 0, previous: 0 },
-            { entry: 2, prize: 0 }
-          ]
-        })
-      );
-      const before = await readDraws(request, giveaway.id);
-      expect(before.byResult).toEqual({ WINNER: 2, DISQUALIFIED: 1 });
+  test('[EDIT-002] the host edits an ended giveaway and keeps its winners and re-roll history', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedApi(request).sweepstakes(
+      endedGiveaway({
+        ns: freshNamespace(testInfo.workerIndex),
+        team: team.slug,
+        prizes: [{ name: 'Golden Bone', quota: 2 }],
+        entries: eligibleEntries(['participant', 'participant2', 'newbie']),
+        draws: [
+          { entry: 0, prize: 0, result: 'DISQUALIFIED', reason: 'No reply' },
+          { entry: 1, prize: 0, previous: 0 },
+          { entry: 2, prize: 0 }
+        ]
+      })
+    );
+    const before = await readDraws(request, giveaway.id);
+    expect(before.byResult).toEqual({ WINNER: 2, DISQUALIFIED: 1 });
 
-      await openEditor(page, team.slug, giveaway.id);
-      await pickDate(page, 'End Date', 3);
-      await saveChanges(page);
-      await expectSaved(page);
+    await openEditor(page, team.slug, giveaway.id);
+    await pickDate(page, 'End Date', 3);
+    await saveChanges(page);
+    await expectSaved(page);
 
-      await page.goto(winnersPage(team.slug, giveaway.id));
-      await expect(
-        page.getByText('2 / 2 winners selected', { exact: true })
-      ).toBeVisible();
-      expect((await readDraws(request, giveaway.id)).draws).toEqual(
-        before.draws
-      );
-    }
-  );
-
-  test.fixme("[EDIT-003] the host edits a giveaway and keeps each participant's secret-code attempts (#528)", () => {});
+    await page.goto(winnersPage(team.slug, giveaway.id));
+    await expect(
+      page.getByText('2 / 2 winners selected', { exact: true })
+    ).toBeVisible();
+    expect((await readDraws(request, giveaway.id)).draws).toEqual(before.draws);
+  });
 
   test(
     '[EDIT-004] the host removes a referral task that already has referrals',

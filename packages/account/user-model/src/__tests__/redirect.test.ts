@@ -1,6 +1,46 @@
 import { describe, it, expect } from 'vitest';
 import { UserAccountType } from '@giveaway/db-model';
-import { getUserAuthRedirect } from '../redirect';
+import { getUserAuthRedirect, toSafeRedirect } from '../redirect';
+
+describe('toSafeRedirect', () => {
+  it.each([
+    ['a path', '/app', '/app'],
+    ['the root', '/', '/'],
+    [
+      'a path with a query and a hash',
+      '/browse/abc?tab=tasks#top',
+      '/browse/abc?tab=tasks#top'
+    ],
+    [
+      'an encoded double slash in the path',
+      '/%2F%2Fexample.org',
+      '/%2F%2Fexample.org'
+    ],
+    ['a path with dot segments', '/a/../app', '/app']
+  ])('keeps %s', (_label, value, expected) => {
+    expect(toSafeRedirect(value, '/fallback')).toBe(expected);
+  });
+
+  it.each([
+    ['undefined', undefined],
+    ['null', null],
+    ['an empty string', ''],
+    ['whitespace only', '   '],
+    ['an absolute url', 'https://example.org'],
+    ['an absolute url with a path', 'https://example.org/app'],
+    ['a protocol-relative url', '//example.org'],
+    ['a backslash after the slash', '/\\example.org'],
+    ['a javascript url', 'javascript:alert(1)'],
+    ['an encoded double slash', '%2F%2Fexample.org'],
+    ['a relative path', 'app/settings'],
+    ['a path after whitespace', '  /app/settings'],
+    ['a tab between the slashes', '/\t/example.org'],
+    ['a newline between the slashes', '/\n/example.org'],
+    ['a backslash after a tab', '/\t\\example.org']
+  ])('returns the fallback for %s', (_label, value) => {
+    expect(toSafeRedirect(value, '/fallback')).toBe('/fallback');
+  });
+});
 
 describe('getUserAuthRedirect', () => {
   describe('when a redirect target is provided', () => {
@@ -22,16 +62,19 @@ describe('getUserAuthRedirect', () => {
       ).toBe('/giveaways/abc');
     });
 
-    it('returns the redirect target untrimmed', () => {
-      expect(getUserAuthRedirect({ redirectTo: '  /app/settings ' })).toBe(
-        '  /app/settings '
-      );
+    it.each([
+      ['an absolute url', 'https://evil.example.com'],
+      ['a protocol-relative url', '//evil.example.com']
+    ])('sends a host to /app for %s', (_label, redirectTo) => {
+      expect(
+        getUserAuthRedirect({ redirectTo, accountType: UserAccountType.HOST })
+      ).toBe('/app');
     });
 
-    it('returns an absolute external url as is', () => {
+    it('sends a user without an account type to /browse for an absolute url', () => {
       expect(
         getUserAuthRedirect({ redirectTo: 'https://evil.example.com' })
-      ).toBe('https://evil.example.com');
+      ).toBe('/browse');
     });
   });
 

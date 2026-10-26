@@ -1,6 +1,19 @@
 import { UserAccountType } from '@giveaway/db-model';
 
-// Determine final redirect URL
+const SAFE_REDIRECT_BASE = 'http://giveaway.invalid';
+
+export const toSafeRedirect = (
+  value: string | null | undefined,
+  fallback: string
+) => {
+  if (!value || !value.startsWith('/')) return fallback;
+
+  const url = new URL(value, SAFE_REDIRECT_BASE);
+  if (url.origin !== SAFE_REDIRECT_BASE) return fallback;
+
+  return `${url.pathname}${url.search}${url.hash}`;
+};
+
 export const getUserAuthRedirect = ({
   redirectTo,
   accountType
@@ -8,12 +21,7 @@ export const getUserAuthRedirect = ({
   redirectTo?: string;
   accountType?: UserAccountType;
 }) => {
-  // If a specific redirect was requested, honor that first
-  if (redirectTo && redirectTo.trim() !== '') return redirectTo;
+  const fallback = accountType === UserAccountType.HOST ? '/app' : '/browse';
 
-  // Redirect based on account type
-  if (accountType === UserAccountType.HOST) return '/app';
-
-  // default fallback for participating
-  return '/browse';
+  return toSafeRedirect(redirectTo, fallback);
 };

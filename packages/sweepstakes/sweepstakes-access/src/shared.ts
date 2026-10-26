@@ -80,6 +80,43 @@ export const findUserSweepstakes = async ({
   return { sweepstakes, team, membership };
 };
 
+export const retainDraws = <
+  T extends {
+    id: string;
+    prizeId: string;
+    taskCompletionId: string;
+    previousDrawId: string | null;
+  }
+>({
+  draws,
+  prizeIds,
+  completionIds
+}: {
+  draws: T[];
+  prizeIds: Set<string>;
+  completionIds: Set<string>;
+}): T[] => {
+  const retained: T[] = [];
+  const kept = new Set<string>();
+  const isReady = (d: T) =>
+    d.previousDrawId === null || kept.has(d.previousDrawId);
+  let pending = draws.filter(
+    (d) => prizeIds.has(d.prizeId) && completionIds.has(d.taskCompletionId)
+  );
+  let ready = pending.filter(isReady);
+
+  while (ready.length > 0) {
+    for (const draw of ready) {
+      retained.push(draw);
+      kept.add(draw.id);
+    }
+    pending = pending.filter((d) => !kept.has(d.id));
+    ready = pending.filter(isReady);
+  }
+
+  return retained;
+};
+
 export const applySweepstakesChanges = async ({
   db,
   user,
@@ -185,6 +222,22 @@ export const applySweepstakesChanges = async ({
         }
       });
 
+      const progress = await tx.taskProgress.findMany({
+        where: {
+          task: {
+            sweepstakesId: sweepstakes.id
+          }
+        }
+      });
+
+      const draws = await tx.prizeDraw.findMany({
+        where: {
+          prize: {
+            sweepstakesId: sweepstakes.id
+          }
+        }
+      });
+
       // delete existing sweepstakes and all nested properties
       await tx.sweepstakes.delete({
         where: { id: sweepstakes.id }
@@ -212,6 +265,14 @@ export const applySweepstakesChanges = async ({
       await tx.taskCompletion.createMany({
         data: filtered.map((d) => ({ ...d, proof: d.proof ?? undefined }))
       });
+
+      const filteredProgress = progress.filter((p) => taskIds.has(p.taskId));
+
+      if (filteredProgress.length > 0) {
+        await tx.taskProgress.createMany({
+          data: filteredProgress.map((d) => ({ ...d }))
+        });
+      }
 
       // we only want to retain form values for fields that still exist
       const formFieldIds = new Set(
@@ -266,6 +327,18 @@ export const applySweepstakesChanges = async ({
           data: allocations
             .map((d) => ({ ...d }))
             .filter((a) => prizeIds.has(a.prizeId))
+        });
+      }
+
+      const retainedDraws = retainDraws({
+        draws,
+        prizeIds: new Set(created.prizes?.map((p) => p.id)),
+        completionIds: new Set(filtered.map((c) => c.id))
+      });
+
+      if (retainedDraws.length > 0) {
+        await tx.prizeDraw.createMany({
+          data: retainedDraws.map((d) => ({ ...d }))
         });
       }
 
