@@ -51,6 +51,10 @@ export default async function PublicDrawPage({ params }: PageProps) {
       sweepstakesId={id}
       slug={slug}
       criteria={result.data.sweepstakes.criteria}
+      hasEnded={
+        result.data.sweepstakes.status === 'EXPIRED' ||
+        result.data.sweepstakes.status === 'COMPLETED'
+      }
     />
   );
 }

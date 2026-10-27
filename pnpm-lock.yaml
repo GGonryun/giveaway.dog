@@ -15558,6 +15558,9 @@ importers:
       '@giveaway/sweepstakes-access':
         specifier: workspace:*
         version: link:../../sweepstakes/sweepstakes-access
+      '@giveaway/sweepstakes-model':
+        specifier: workspace:*
+        version: link:../../sweepstakes/sweepstakes-model
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../tasks/task-model
@@ -15589,9 +15592,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/sweepstakes-model':
-        specifier: workspace:*
-        version: link:../../sweepstakes/sweepstakes-model
       '@giveaway/testing-integration':
         specifier: workspace:*
         version: link:../../tooling/testing-integration

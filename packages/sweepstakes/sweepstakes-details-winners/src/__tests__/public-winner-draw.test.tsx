@@ -88,6 +88,7 @@ const drawElement = (props: Partial<DrawProps> = {}) => (
     sweepstakesId="sweep-1"
     slug="acme"
     criteria={buildCriteria({ minQualityScore: 50, minTasksCompleted: 1 })}
+    hasEnded
     {...props}
   />
 );
@@ -134,6 +135,30 @@ describe('PublicWinnerDraw', () => {
       screen.getByRole('heading', { level: 1, name: 'Summer Giveaway' })
     ).toBeInTheDocument();
     expect(screen.getByText('2 eligible participants')).toBeInTheDocument();
+  });
+
+  it('does not offer to draw the winners before the giveaway ends', async () => {
+    render(drawElement({ hasEnded: false }));
+    await advance(950);
+    expect(
+      screen.getByText('Winners can be drawn after the giveaway ends')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Draw All Winners' })
+    ).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: 'Draw All Winners' }));
+    expect(rollPrizes).not.toHaveBeenCalled();
+  });
+
+  it('does not show the end notice once the giveaway ended', async () => {
+    render(drawElement());
+    await advance(950);
+    expect(
+      screen.queryByText('Winners can be drawn after the giveaway ends')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Draw All Winners' })
+    ).toBeEnabled();
   });
 
   it('uses the singular for one eligible participant', () => {

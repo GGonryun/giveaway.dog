@@ -941,7 +941,7 @@ export const SweepstakesWinners = ({
               <Button
                 variant="outline"
                 onClick={handlePublicDraw}
-                disabled={isRolling || !isEditable}
+                disabled={isRolling || !isEditable || !hasEnded}
                 className="w-full sm:w-auto"
               >
                 <Trophy className="h-4 w-4 mr-2" />
@@ -949,7 +949,7 @@ export const SweepstakesWinners = ({
               </Button>
               <Button
                 onClick={handlePickWinners}
-                disabled={isRolling || !isEditable}
+                disabled={isRolling || !isEditable || !hasEnded}
                 className="w-full sm:w-auto"
               >
                 <Shuffle className="h-4 w-4 mr-2" />

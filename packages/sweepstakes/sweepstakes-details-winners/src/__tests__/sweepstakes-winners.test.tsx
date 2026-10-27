@@ -493,6 +493,16 @@ describe('SweepstakesWinners', () => {
         screen.getByRole('button', { name: 'Pick Remaining Winners' })
       ).toBeEnabled();
     });
+
+    it('does not pick the remaining winners before the giveaway ends', () => {
+      renderWinners({ endDate: RUNNING_UNTIL });
+      expect(
+        screen.getByRole('button', { name: 'Pick Remaining Winners' })
+      ).toBeDisabled();
+      expect(
+        screen.getByRole('button', { name: 'Roll with public picker' })
+      ).toBeDisabled();
+    });
   });
 
   describe('with every winner picked', () => {

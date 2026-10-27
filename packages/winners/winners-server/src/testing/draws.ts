@@ -5,14 +5,23 @@ import {
   createSweepstakes
 } from '@giveaway/testing-integration/fixtures';
 
+const HOUR = 60 * 60 * 1000;
+
+const endedTiming = () => ({
+  startDate: new Date(Date.now() - 2 * HOUR),
+  endDate: new Date(Date.now() - HOUR)
+});
+
 export const createDrawableSweepstakes = async ({
   quotas,
   entries,
-  allowMultipleWins = false
+  allowMultipleWins = false,
+  ended = true
 }: {
   quotas: number[];
   entries: number;
   allowMultipleWins?: boolean;
+  ended?: boolean;
 }) => {
   const { user, team } = await createHost();
   const sweepstakes = await createSweepstakes({
@@ -21,7 +30,8 @@ export const createDrawableSweepstakes = async ({
       name: `Prize ${index + 1}`,
       quota
     })),
-    criteria: { allowMultipleWins }
+    criteria: { allowMultipleWins },
+    timing: ended ? endedTiming() : undefined
   });
   await createEntries({
     sweepstakesId: sweepstakes.id,
