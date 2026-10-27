@@ -16,7 +16,7 @@ const AVATAR_HOSTS = [
   'cdn.discordapp.com'
 ];
 
-const PIXEL_PNG = Buffer.from(
+export const PIXEL_PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
   'base64'
 );
