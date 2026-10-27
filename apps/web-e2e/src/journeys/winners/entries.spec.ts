@@ -3,7 +3,6 @@ import type { E2ePersona } from '@giveaway/e2e-model/personas';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import {
   drawRow,
@@ -125,66 +124,65 @@ test.describe('reviewing the entries of a giveaway', () => {
     ).toBeEnabled();
   });
 
-  test(
-    'deleting the entry of a re-rolled winner keeps the winner that replaced them',
-    knownBug(484),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const ns = freshNamespace(testInfo.workerIndex);
-      const giveaway = await seedApi(request).sweepstakes(
-        endedGiveaway({
-          ns,
-          team: team.slug,
-          entries: [
-            {
-              persona: 'participant',
-              completions: [
-                {
-                  task: 0,
-                  status: 'REJECTED',
-                  reason: 'Participant disqualified: No reply'
-                }
-              ],
-              quality: 100
-            },
-            {
-              persona: 'participant2',
-              completions: [{ task: 0 }],
-              quality: 100
-            }
-          ],
-          draws: [
-            {
-              entry: 0,
-              prize: 0,
-              result: 'DISQUALIFIED',
-              reason: 'No reply'
-            },
-            { entry: 1, prize: 0, previous: 0 }
-          ]
-        })
-      );
-      const replacement = giveaway.draws[1];
+  test('deleting the entry of a re-rolled winner keeps the winner that replaced them', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const ns = freshNamespace(testInfo.workerIndex);
+    const giveaway = await seedApi(request).sweepstakes(
+      endedGiveaway({
+        ns,
+        team: team.slug,
+        entries: [
+          {
+            persona: 'participant',
+            completions: [
+              {
+                task: 0,
+                status: 'REJECTED',
+                reason: 'Participant disqualified: No reply'
+              }
+            ],
+            quality: 100
+          },
+          {
+            persona: 'participant2',
+            completions: [{ task: 0 }],
+            quality: 100
+          }
+        ],
+        draws: [
+          {
+            entry: 0,
+            prize: 0,
+            result: 'DISQUALIFIED',
+            reason: 'No reply'
+          },
+          { entry: 1, prize: 0, previous: 0 }
+        ]
+      })
+    );
+    const replacement = giveaway.draws[1];
 
-      await page.goto(entriesPage(team.slug, giveaway.id));
-      await entryRow(page, 'participant')
-        .getByRole('button', { name: 'Entry actions' })
-        .click();
-      await page.getByRole('menuitem', { name: 'Delete Entry' }).click();
-      const dialog = page.getByRole('dialog', { name: 'Delete Entry' });
-      await dialog.getByRole('button', { name: 'Delete Entry' }).click();
-      await expect(dialog).toBeHidden();
-      await expect(entryRow(page, 'participant')).toHaveCount(0);
+    await page.goto(entriesPage(team.slug, giveaway.id));
+    await entryRow(page, 'participant')
+      .getByRole('button', { name: 'Entry actions' })
+      .click();
+    await page.getByRole('menuitem', { name: 'Delete Entry' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Delete Entry' });
+    await dialog.getByRole('button', { name: 'Delete Entry' }).click();
+    await expect(dialog).toBeHidden();
+    await expect(entryRow(page, 'participant')).toHaveCount(0);
 
-      const { draws } = await readDraws(request, giveaway.id);
-      expect(draws).toContainEqual(
-        expect.objectContaining({ id: replacement.id, result: 'WINNER' })
-      );
+    const { draws } = await readDraws(request, giveaway.id);
+    expect(draws).toContainEqual(
+      expect.objectContaining({ id: replacement.id, result: 'WINNER' })
+    );
 
-      await page.goto(winnersPage(team.slug, giveaway.id));
-      await expect(drawRow(page, personaName('participant2'))).toContainText(
-        'Winner'
-      );
-    }
-  );
+    await page.goto(winnersPage(team.slug, giveaway.id));
+    await expect(drawRow(page, personaName('participant2'))).toContainText(
+      'Winner'
+    );
+  });
 });
