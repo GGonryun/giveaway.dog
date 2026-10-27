@@ -204,7 +204,7 @@ export const seedE2eSweepstakes = async ({
     now
   });
 
-  expireE2eSweepstakesTags([id], { lists: isPublic });
+  expireE2eSweepstakesTags([id], { lists: isPublic && request.expireLists });
 
   return {
     id,

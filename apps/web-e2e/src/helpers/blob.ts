@@ -1,5 +1,6 @@
 import type { Page, Route } from '@playwright/test';
 import { BASE_URL } from '../env';
+import { PIXEL_PNG } from './third-party';
 
 export const STUB_CLIENT_TOKEN = 'vercel_blob_client_e2e';
 
@@ -54,4 +55,15 @@ export const stubBlobUploads = async (
   });
 
   return uploads;
+};
+
+const isImageOf = (url: string) => (requested: URL) =>
+  requested.href === url ||
+  (requested.pathname === '/_next/image' &&
+    requested.searchParams.get('url') === url);
+
+export const stubBlobImage = async (page: Page, url: string) => {
+  await page.route(isImageOf(url), (route: Route) =>
+    route.fulfill({ status: 200, contentType: 'image/png', body: PIXEL_PNG })
+  );
 };

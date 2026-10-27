@@ -695,7 +695,7 @@ describe('toStorableSweepstakes', () => {
     ...overrides
   });
 
-  it('adds the stored id, team, and status to the update payload', () => {
+  it('adds the stored id, team, creation date, and status to the update payload', () => {
     const result = toStorableSweepstakes(sweepstakes(), {
       id: 'ignored',
       setup: { name: 'Giveaway' }
@@ -721,6 +721,7 @@ describe('toStorableSweepstakes', () => {
       criteria: undefined,
       id: 'sweep-1',
       teamId: 'team-1',
+      createdAt: NOW,
       status: 'ACTIVE'
     });
   });

@@ -45,6 +45,7 @@ export function AllGiveawaysSearch({
               type="button"
               variant="ghost"
               size="sm"
+              aria-label="Clear search"
               onClick={handleClear}
               className="h-6 w-6 p-0"
             >

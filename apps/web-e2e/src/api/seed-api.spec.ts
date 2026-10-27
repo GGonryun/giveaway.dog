@@ -48,7 +48,8 @@ test.describe('seed API', { tag: '@security' }, () => {
       environment: expect.stringMatching(/^(preview|development)$/),
       writes: expect.any(Boolean),
       allowPublic: expect.any(Boolean),
-      fakes: expect.any(Array)
+      fakes: expect.any(Array),
+      twitchOAuth: expect.any(Boolean)
     });
   });
 

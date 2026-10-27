@@ -68,9 +68,9 @@ const search = (text: string) =>
 describe('RegionalRestrictionRegions', () => {
   it('shows the placeholder when no region is selected', () => {
     renderRegions([]);
-    expect(
-      screen.getByRole('button', { name: 'Select options' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Regions' })).toHaveTextContent(
+      'Select options'
+    );
   });
 
   it('shows the names of the selected continents and countries', () => {

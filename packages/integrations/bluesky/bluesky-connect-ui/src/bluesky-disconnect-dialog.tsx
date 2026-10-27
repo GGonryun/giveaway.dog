@@ -33,19 +33,21 @@ export function BlueskyDisconnectDialog({
             </div>
             <AlertDialogTitle>Disconnect Bluesky Integration?</AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="space-y-3 pt-2">
-            <p>
-              Disconnecting this Bluesky integration could break any ongoing:
-            </p>
-            <ul className="list-disc list-inside space-y-1 text-sm pl-2">
-              <li>Sweepstakes using Bluesky tasks</li>
-              <li>Pickers tracking Bluesky engagement</li>
-              <li>Active import jobs for likes and reposts</li>
-            </ul>
-            <p className="font-medium text-foreground">
-              Please only disconnect if you're sure this won't impact any of
-              your ongoing giveaways.
-            </p>
+          <AlertDialogDescription asChild>
+            <div className="space-y-3 pt-2">
+              <p>
+                Disconnecting this Bluesky integration could break any ongoing:
+              </p>
+              <ul className="list-disc list-inside space-y-1 text-sm pl-2">
+                <li>Sweepstakes using Bluesky tasks</li>
+                <li>Pickers tracking Bluesky engagement</li>
+                <li>Active import jobs for likes and reposts</li>
+              </ul>
+              <p className="font-medium text-foreground">
+                Please only disconnect if you're sure this won't impact any of
+                your ongoing giveaways.
+              </p>
+            </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

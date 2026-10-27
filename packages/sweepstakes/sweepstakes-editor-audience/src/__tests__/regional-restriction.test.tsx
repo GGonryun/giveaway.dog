@@ -117,9 +117,7 @@ describe('RegionalRestriction', () => {
     it('clears the region error once a region is selected', async () => {
       const { container } = renderRestriction(null, true);
       await userEvent.click(getSwitch());
-      await userEvent.click(
-        screen.getByRole('button', { name: /Select options/ })
-      );
+      await userEvent.click(screen.getByRole('button', { name: 'Regions' }));
       fireEvent.change(screen.getByPlaceholderText('Search...'), {
         target: { value: 'Canada' }
       });

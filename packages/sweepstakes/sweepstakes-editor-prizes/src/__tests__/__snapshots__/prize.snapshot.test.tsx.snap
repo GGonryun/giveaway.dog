@@ -8,6 +8,7 @@ exports[`Prize > when collapsed > matches the snapshot 1`] = `
     <div
       aria-describedby=""
       aria-disabled="false"
+      aria-label="Reorder Prize 2"
       aria-roledescription="sortable"
       class="absolute -left-8 text-muted-foreground w-8 h-10 flex items-center justify-end opacity-0 transition-opacity group-hover:opacity-100"
       role="button"
@@ -230,6 +231,7 @@ exports[`Prize > when expanded > matches the snapshot 1`] = `
     <div
       aria-describedby=""
       aria-disabled="false"
+      aria-label="Reorder Prize 2"
       aria-roledescription="sortable"
       class="absolute -left-8 text-muted-foreground w-8 h-10 flex items-center justify-end opacity-0 transition-opacity group-hover:opacity-100"
       role="button"

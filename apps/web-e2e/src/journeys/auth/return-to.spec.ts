@@ -1,12 +1,12 @@
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
-import { E2E_SECRET } from '../../env';
+import { E2E_SECRET, RUN_ID } from '../../env';
 import { knownBug } from '../../helpers/known-bug';
 import {
   requestMagicLink,
   skipWithoutEmailFake
 } from '../../helpers/magic-link';
-import { seedApi } from '../../helpers/seed';
+import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
 test.describe('return after sign-in', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
@@ -31,4 +31,26 @@ test.describe('return after sign-in', () => {
       await expect(page).toHaveURL(/\/account\/history$/);
     }
   );
+
+  test('[AUTH-016] a participant whose sign-in ends on a giveaway lands on it', async ({
+    page,
+    request,
+    freshPersona
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns: RUN_ID,
+      team: team.slug
+    });
+    await freshPersona('participant');
+
+    await page.goto(
+      `/portal?${new URLSearchParams({ redirectTo: `/browse/${giveaway.id}` })}`
+    );
+
+    const giveawayUrl = new RegExp(`/browse/${giveaway.id}$`);
+    await expect(page).toHaveURL(giveawayUrl, { timeout: 15_000 });
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveURL(giveawayUrl);
+  });
 });

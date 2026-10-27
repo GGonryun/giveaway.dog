@@ -650,6 +650,7 @@ export const e2eSweepstakesRequestSchema = z
       .max(E2E_MAX_DESCRIPTION_LENGTH)
       .optional(),
     visibility: z.nativeEnum(VisibilityType).default(VisibilityType.UNLISTED),
+    expireLists: z.boolean().default(false),
     slug: z
       .string()
       .max(50)
