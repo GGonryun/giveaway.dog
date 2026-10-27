@@ -28,10 +28,15 @@ permissions:
 
 jobs:
   e2e:
-    name: Playwright
+    name: Playwright ${{ matrix.shard }}/3
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     env:
+      SHARD: ${{ matrix.shard }}/3
       SHA: ${{ inputs.sha || github.sha }}
       DEPLOYMENT_URL: ${{ inputs.url }}
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -55,6 +60,7 @@ jobs:
           exit $failed
 
       - name: Report a pending status on the commit
+        if: ${{ matrix.shard == 1 }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -83,7 +89,6 @@ jobs:
           path: .e2e-workflow
           sparse-checkout: |
             .github/scripts/same-app-preview.sh
-            .github/scripts/e2e-summary.mjs
           sparse-checkout-cone-mode: false
           persist-credentials: false
 
@@ -115,7 +120,7 @@ jobs:
 
       - name: Pick the run id
         run: |
-          run_id=$(node -e 'const [id, attempt] = process.argv.slice(1).map(BigInt); console.log(((id * 100n + attempt) % 36n ** 6n).toString(36).padStart(6, "0"))' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT")
+          run_id=$(node -e 'const [id, attempt, shard] = process.argv.slice(1).map(BigInt); console.log((((id * 100n + attempt) * 10n + shard) % 36n ** 6n).toString(36).padStart(6, "0"))' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "${{ matrix.shard }}")
           echo "E2E_RUN_ID=$run_id" >> "$GITHUB_ENV"
 
       - name: Pick the deployment to test
@@ -145,29 +150,62 @@ jobs:
             http://* | https://*) E2E_BASE_URL="$DEPLOYMENT_URL" ;;
             *) E2E_BASE_URL="https://$DEPLOYMENT_URL" ;;
           esac
-          echo "Testing $E2E_BASE_URL at $SHA with the run id $E2E_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
-          E2E_BASE_URL="$E2E_BASE_URL" pnpm run test:e2e
+          echo "Testing $E2E_BASE_URL at $SHA, shard $SHARD, with the run id $E2E_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
+          E2E_BASE_URL="$E2E_BASE_URL" pnpm --filter web-e2e exec playwright test --shard="$SHARD"
 
-      - name: Summarize the results
-        if: ${{ !cancelled() }}
-        shell: bash
-        run: node .e2e-workflow/.github/scripts/e2e-summary.mjs apps/web-e2e/.playwright-results/results.json | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Upload the JSON report
+        if: ${{ !cancelled() && hashFiles('apps/web-e2e/.playwright-results/results.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results-${{ matrix.shard }}
+          path: apps/web-e2e/.playwright-results/results.json
+          include-hidden-files: true
+          overwrite: true
+          retention-days: 14
 
       - name: Upload the Playwright report
         if: ${{ !cancelled() && hashFiles('apps/web-e2e/playwright-report/**') != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ github.run_attempt }}
+          name: playwright-report-${{ matrix.shard }}-${{ github.run_attempt }}
           path: apps/web-e2e/playwright-report/
           retention-days: 14
 
+  report:
+    name: Report
+    needs: e2e
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    env:
+      SHA: ${{ inputs.sha || github.sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Check out the summary script
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/scripts/e2e-summary.mjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Download the JSON reports
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: e2e-results-*
+          path: results
+
+      - name: Summarize the results
+        shell: bash
+        run: node .github/scripts/e2e-summary.mjs results/e2e-results-{1,2,3}/results.json | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: Report the result on the commit
-        if: ${{ (success() || failure()) && env.SHA != '' }}
+        if: ${{ env.SHA != '' && needs.e2e.result != 'cancelled' }}
         env:
           GH_TOKEN: ${{ github.token }}
-          JOB_STATUS: ${{ job.status }}
+          RESULT: ${{ needs.e2e.result }}
         run: |
-          if [ "$JOB_STATUS" = success ]; then
+          if [ "$RESULT" = success ]; then
             state=success
             description='The preview deployment passed'
           else

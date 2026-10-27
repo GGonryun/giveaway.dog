@@ -1,23 +1,29 @@
 import fs from 'node:fs';
 
-const [report] = process.argv.slice(2);
-if (!report) {
-  console.error('Usage: node e2e-summary.mjs <playwright-json-report>');
+const reports = process.argv.slice(2);
+if (reports.length === 0) {
+  console.error('Usage: node e2e-summary.mjs <playwright-json-report>...');
   process.exit(1);
 }
 
-if (!fs.existsSync(report)) {
+const found = reports.filter((report) => fs.existsSync(report));
+const missing = reports.filter((report) => !found.includes(report));
+
+if (found.length === 0) {
   console.log(
     '## E2E tests\n\nNo Playwright report: the run stopped before the tests ended, or the tested commit does not write one.'
   );
   process.exit(0);
 }
 
-const {
-  suites = [],
-  stats,
-  errors = []
-} = JSON.parse(fs.readFileSync(report, 'utf8'));
+const parsed = found.map((report) =>
+  JSON.parse(fs.readFileSync(report, 'utf8'))
+);
+const suites = parsed.flatMap((report) => report.suites ?? []);
+const errors = parsed.flatMap((report) => report.errors ?? []);
+const duration = Math.max(
+  ...parsed.map((report) => report.stats?.duration ?? 0)
+);
 
 const ANSI = /\u001b\[[0-9;]*m/g;
 
@@ -112,7 +118,7 @@ const knownViolations = tests.flatMap((test) =>
   })
 );
 
-const seconds = Math.round((stats?.duration ?? 0) / 1000);
+const seconds = Math.round(duration / 1000);
 const lines = [
   '## E2E tests',
   '',
@@ -178,6 +184,17 @@ table(
     issueLink(issue)
   ]
 );
+
+if (missing.length > 0) {
+  lines.push(
+    '',
+    '### Missing reports',
+    '',
+    'These shards stopped before their tests ended, so their tests are not counted above:',
+    ''
+  );
+  for (const report of missing) lines.push(`- \`${report}\``);
+}
 
 if (errors.length > 0) {
   lines.push('', '### Errors outside the tests', '');
