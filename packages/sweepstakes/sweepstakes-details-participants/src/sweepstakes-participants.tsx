@@ -324,7 +324,12 @@ const SweepstakeParticipant: React.FC<{
       <TableCell onClick={(e) => e.stopPropagation()}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="size-7">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-7"
+              aria-label="Participant actions"
+            >
               <MoreVertical />
             </Button>
           </DropdownMenuTrigger>

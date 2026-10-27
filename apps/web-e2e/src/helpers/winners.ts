@@ -82,6 +82,25 @@ export const endedGiveaway = ({
 export const winnersPage = (team: string, id: string) =>
   `/app/${team}/sweepstakes/${id}/winners`;
 
+export const presentationPage = (team: string, id: string) =>
+  `/app/${team}/sweepstakes/${id}/winners/public`;
+
+export const entriesPage = (team: string, id: string) =>
+  `/app/${team}/sweepstakes/${id}/entries`;
+
+export const participantsPage = (team: string, id: string) =>
+  `/app/${team}/sweepstakes/${id}/participants`;
+
+export const entryRow = (page: Page, persona: E2ePersona) =>
+  page.getByRole('row').filter({
+    has: page.getByRole('button', { name: personaName(persona), exact: true })
+  });
+
+export const participantRow = (page: Page, persona: E2ePersona) =>
+  page.getByRole('row').filter({
+    has: page.getByText(personaName(persona), { exact: true })
+  });
+
 export const drawRow = (scope: Page | Locator, name: string) =>
   scope
     .getByRole('row')
