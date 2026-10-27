@@ -27,7 +27,8 @@ const REQUIRED_TASK_FIELDS: Record<string, object> = {
   VISIT_URL: { href: 'https://example.com/' },
   ASK_QUESTION: { question: 'Why?' },
   SINGLE_CHOICE: { question: 'Which one?' },
-  MULTIPLE_CHOICE: { question: 'Which ones?' }
+  MULTIPLE_CHOICE: { question: 'Which ones?' },
+  INSTAGRAM_VISIT: { profileUrl: 'https://www.instagram.com/giveawaydog/' }
 };
 
 const ENTRIES_REQUEST = {
@@ -524,6 +525,7 @@ describe('the e2e seed API against a real database', () => {
           persona: 'participant',
           source: 'TWITTER_IMPORT',
           emailVerified: false,
+          username: 'alice_e2e',
           birthday: '2009-06-15',
           accounts: [
             { identity: 'TWITTER', status: 'ERROR', label: 'alice' },
@@ -544,11 +546,17 @@ describe('the e2e seed API against a real database', () => {
     expect(
       await db.user.findUniqueOrThrow({
         where: { id: seeded.userId },
-        select: { source: true, emailVerified: true, birthday: true }
+        select: {
+          source: true,
+          emailVerified: true,
+          username: true,
+          birthday: true
+        }
       })
     ).toEqual({
       source: 'TWITTER_IMPORT',
       emailVerified: null,
+      username: 'alice_e2e',
       birthday: new Date('2009-06-15T00:00:00Z')
     });
     expect(
@@ -879,6 +887,24 @@ describe('the e2e seed API against a real database', () => {
     expect(await db.team.count({ where: { id: real.team.id } })).toBe(1);
     expect(await db.user.count({ where: { id: real.user.id } })).toBe(1);
     expect(await db.user.count({ where: { id: sharedHost.id } })).toBe(1);
+  });
+
+  it('deletes an anonymous user, and keeps a user that is not anonymous', async () => {
+    const anonymous = await db.user.create({
+      data: { name: 'Anonymous', source: 'ANONYMOUS' }
+    });
+    const upgraded = await db.user.create({
+      data: { name: 'Anonymous', source: 'ANONYMOUS', email: 'a@example.org' }
+    });
+    const real = await createHost();
+
+    for (const user of [anonymous, upgraded, real.user]) {
+      await call('DELETE', `users/anonymous/${user.id}`);
+    }
+
+    expect(await db.user.count({ where: { id: anonymous.id } })).toBe(0);
+    expect(await db.user.count({ where: { id: upgraded.id } })).toBe(1);
+    expect(await db.user.count({ where: { id: real.user.id } })).toBe(1);
   });
 
   it('keeps a team of the run that has a real member', async () => {

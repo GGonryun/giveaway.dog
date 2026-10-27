@@ -83,6 +83,8 @@ const refineNamespaces = (
   }
 };
 
+export const e2eUserIdSchema = z.string().regex(/^[a-z0-9]{20,32}$/);
+
 export const e2eAccountRequestSchema = z
   .object({
     identity: z.nativeEnum(IdentityProvider),
@@ -116,6 +118,11 @@ export const e2eUserExtrasSchema = z
     ns: e2eNamespaceSchema.optional(),
     source: z.nativeEnum(UserSource).optional(),
     emailVerified: z.boolean().optional(),
+    username: z
+      .string()
+      .regex(/^[a-z0-9_]{3,30}$/)
+      .nullable()
+      .optional(),
     birthday: z
       .string()
       .refine(

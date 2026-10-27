@@ -14,7 +14,8 @@ import {
   e2eInvitesRequestSchema,
   e2ePickerRequestSchema,
   e2eTemplatesRequestSchema,
-  e2eUserExtrasRequestSchema
+  e2eUserExtrasRequestSchema,
+  e2eUserIdSchema
 } from '@giveaway/e2e-model/extras';
 import { e2eOutboxQuerySchema } from '@giveaway/e2e-model/fakes';
 import {
@@ -31,7 +32,7 @@ import {
 } from '@giveaway/e2e-model/requests';
 import { ApplicationError, codeToStatus } from '@giveaway/util-errors';
 import { ZodError } from 'zod';
-import { deleteE2eRun, sweepE2eData } from './cleanup';
+import { deleteE2eAnonymousUser, deleteE2eRun, sweepE2eData } from './cleanup';
 import { readE2eRows } from './rows';
 import { seedE2eSweepstakes } from './sweepstakes';
 import { seedE2eTeam } from './teams';
@@ -103,6 +104,16 @@ const ROUTES: E2eRoute[] = [
         db,
         request: e2eUserExtrasRequestSchema.parse(body),
         now
+      })
+  },
+  {
+    method: 'DELETE',
+    path: ['users', 'anonymous', ':userId'],
+    write: true,
+    handle: ({ db, params }) =>
+      deleteE2eAnonymousUser({
+        db,
+        userId: e2eUserIdSchema.parse(params.userId)
       })
   },
   {

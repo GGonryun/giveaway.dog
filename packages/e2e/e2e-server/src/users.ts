@@ -26,6 +26,7 @@ export const deleteOrphanE2eIpAddresses = (
 
 const toUserUpdate = (extras: E2eUserExtras, now: Date) => ({
   source: extras.source,
+  username: extras.username,
   ...(extras.emailVerified !== undefined && {
     emailVerified: extras.emailVerified ? now : null
   }),

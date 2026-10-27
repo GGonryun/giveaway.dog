@@ -222,7 +222,8 @@ describe('e2eSweepstakesRequestSchema tasks', () => {
     VISIT_URL: { href: 'https://example.com/' },
     ASK_QUESTION: { question: 'Why?' },
     SINGLE_CHOICE: { question: 'Which one?' },
-    MULTIPLE_CHOICE: { question: 'Which ones?' }
+    MULTIPLE_CHOICE: { question: 'Which ones?' },
+    INSTAGRAM_VISIT: { profileUrl: 'https://www.instagram.com/giveawaydog/' }
   };
 
   const parseTasks = (tasks: unknown[]) =>

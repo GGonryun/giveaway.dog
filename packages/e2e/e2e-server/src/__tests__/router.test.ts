@@ -104,6 +104,7 @@ const WRITES: [string, string, string?][] = [
     JSON.stringify({ persona: 'participant', ns: 'abc123' })
   ],
   ['DELETE', 'runs/abc123'],
+  ['DELETE', 'users/anonymous/anon123anon123anon123anon'],
   ['POST', 'janitor']
 ];
 
@@ -254,6 +255,27 @@ describe('handleE2eRequest', () => {
           }
         })
       );
+    });
+
+    it('deletes the anonymous user that the path names', async () => {
+      prismaMock.user.deleteMany.mockResolvedValue({ count: 1 });
+
+      const response = await call(
+        'DELETE',
+        'users/anonymous/anon123anon123anon123anon'
+      );
+
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({
+        userId: 'anon123anon123anon123anon',
+        deleted: 1
+      });
+      expect(prismaMock.user.deleteMany).toHaveBeenCalledWith({
+        where: expect.objectContaining({
+          id: 'anon123anon123anon123anon',
+          source: 'ANONYMOUS'
+        })
+      });
     });
 
     it('ignores a body on a DELETE', async () => {
@@ -677,6 +699,13 @@ describe('handleE2eRequest', () => {
       expect(body.issues.map((issue: { path: string }) => issue.path)).toEqual([
         'members.0.role'
       ]);
+    });
+
+    it('refuses a user id that is not an id', async () => {
+      const response = await call('DELETE', 'users/anonymous/anon%25');
+
+      expect(response.status).toBe(400);
+      expect(prismaMock.user.deleteMany).not.toHaveBeenCalled();
     });
 
     it('refuses a bad run id', async () => {
