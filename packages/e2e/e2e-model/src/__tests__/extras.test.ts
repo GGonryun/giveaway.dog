@@ -240,6 +240,18 @@ describe('e2eUserExtrasRequestSchema', () => {
     expect(pathsOf(request('  '))).toEqual(['users.0.accounts.0.label']);
   });
 
+  it(`accepts a name of at most ${E2E_MAX_LABEL_LENGTH} characters`, () => {
+    const name = 'x'.repeat(E2E_MAX_LABEL_LENGTH);
+
+    expect(parse({ users: [user({ name })] }).success).toBe(true);
+    expect(pathsOf({ users: [user({ name: `${name}x` })] })).toEqual([
+      'users.0.name'
+    ]);
+    expect(pathsOf({ users: [user({ name: '  ' })] })).toEqual([
+      'users.0.name'
+    ]);
+  });
+
   it.each(['de', 'DEU', 'D'])('rejects the country code %s', (countryCode) => {
     expect(
       pathsOf({
