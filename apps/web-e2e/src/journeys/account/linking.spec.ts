@@ -1,4 +1,4 @@
-import type { Browser, Page } from '@playwright/test';
+import type { Browser, BrowserContext, Page } from '@playwright/test';
 import type { E2eDiscordProfile } from '@giveaway/e2e-model/oauth';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
@@ -29,27 +29,20 @@ const discordProfile = (ns: string): E2eDiscordProfile => ({
   email: toPersonaEmail('newbie', ns)
 });
 
-const useDiscordSignIn = async (
-  browser: Browser,
-  profile: E2eDiscordProfile
-) => {
+const newVisitor = async (browser: Browser) => {
   const context = await browser.newContext({ storageState: BYPASS_STATE });
   await blockThirdParties(context);
-  await useMockOAuth(context, 'discord', profile);
+  return context;
+};
+
+const signInWithDiscord = async (context: BrowserContext) => {
   const page = await context.newPage();
   await page.goto('/login');
   await page.getByRole('button', { name: 'Login with Discord' }).click();
   await expect(page).not.toHaveURL(/\/(login|api\/)/, {
     timeout: SIGN_IN_TIMEOUT
   });
-  return { context, page };
-};
-
-const useImportedUser = async (browser: Browser, ns: string) => {
-  const profile = discordProfile(ns);
-  const { context } = await useDiscordSignIn(browser, profile);
-  await context.close();
-  return profile;
+  return page;
 };
 
 const markImported = (page: Page, ns: string) =>
@@ -90,7 +83,11 @@ test.describe('account linking', () => {
     freshPersona
   }, testInfo) => {
     const importedNs = freshNamespace(testInfo.workerIndex);
-    const profile = await useImportedUser(browser, importedNs);
+    const profile = discordProfile(importedNs);
+    const importer = await newVisitor(browser);
+    await useMockOAuth(importer, 'discord', profile);
+    await signInWithDiscord(importer);
+    await importer.close();
     const imported = await readAccounts(page, importedNs);
     const { team } = await seedWorkerTeam(request, testInfo);
     const giveaway = await seedApi(request).sweepstakes({
@@ -133,22 +130,28 @@ test.describe('account linking', () => {
     page
   }, testInfo) => {
     const ns = freshNamespace(testInfo.workerIndex);
-    const profile = await useImportedUser(browser, ns);
+    const profile = discordProfile(ns);
+    const importer = await newVisitor(browser);
+    await useMockOAuth(importer, 'discord', profile);
+    await signInWithDiscord(importer);
+    await importer.close();
     const imported = await readAccounts(page, ns);
     await markImported(page, ns);
 
-    const visitor = await useDiscordSignIn(browser, profile);
+    const visitor = await newVisitor(browser);
+    await useMockOAuth(visitor, 'discord', profile);
+    const visitorPage = await signInWithDiscord(visitor);
 
-    await expect(visitor.page).toHaveURL(/\/onboarding/, {
+    await expect(visitorPage).toHaveURL(/\/onboarding/, {
       timeout: SIGN_IN_TIMEOUT
     });
-    const session = await visitor.page.request.get('/api/auth/session');
+    const session = await visitorPage.request.get('/api/auth/session');
     expect((await session.json()).user.id).toBe(imported.user.id);
     expect((await readAccounts(page, ns)).user).toMatchObject({
       id: imported.user.id,
       source: 'SIGNUP'
     });
-    await visitor.context.close();
+    await visitor.close();
   });
 });
 
