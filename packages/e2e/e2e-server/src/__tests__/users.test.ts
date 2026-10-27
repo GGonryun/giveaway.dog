@@ -128,6 +128,15 @@ describe('seedE2eUserExtras', () => {
     });
   });
 
+  it('renames the user', async () => {
+    await seed([{ persona: 'participant', name: 'E2E abc123w0 winner' }]);
+
+    expect(prismaMock.user.update).toHaveBeenCalledWith({
+      where: { id: 'user-e2e-participant-abc123w0' },
+      data: { name: 'E2E abc123w0 winner' }
+    });
+  });
+
   it('replaces the accounts of the user with one account of each identity', async () => {
     await seed([
       {

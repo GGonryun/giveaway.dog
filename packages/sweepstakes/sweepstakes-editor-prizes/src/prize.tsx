@@ -67,6 +67,7 @@ export const Prize: React.FC<{
         <div
           {...attributes}
           {...listeners}
+          aria-label={`Reorder Prize ${index + 1}`}
           className={cn(
             'absolute -left-8 text-muted-foreground w-8 h-10 flex items-center justify-end opacity-0 transition-opacity group-hover:opacity-100'
           )}

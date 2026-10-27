@@ -121,6 +121,9 @@ describe('GiveawayFiltersSheet', () => {
       const { sheet } = await openSheet();
       expect(within(sheet).getByText('Hosts')).toBeInTheDocument();
       expect(within(sheet).getByText('Select hosts...')).toBeInTheDocument();
+      expect(
+        within(sheet).getByRole('button', { name: 'Hosts' })
+      ).toBeInTheDocument();
     });
 
     it('hides the host filter without hosts', async () => {

@@ -116,6 +116,7 @@ export const e2eUserExtrasSchema = z
   .object({
     persona: e2ePersonaSchema,
     ns: e2eNamespaceSchema.optional(),
+    name: labelSchema.optional(),
     source: z.nativeEnum(UserSource).optional(),
     emailVerified: z.boolean().optional(),
     username: z

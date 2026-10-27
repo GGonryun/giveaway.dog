@@ -19,6 +19,7 @@ How people sign in and out, which pages they can open, and how a sign-in finds t
 - `AUTH-013` A Bluesky sign-in that cannot start sends the visitor back to the login page with an error message.
 - `AUTH-014` Deleting an account ends every session of that account, on every device.
 - `AUTH-015` A user who signed in through a provider that gives no email address is shown as signed in and opens their account page.
+- `AUTH-016` A user whose sign-in ends on a giveaway page lands on that giveaway.
 
 ## Route protection
 

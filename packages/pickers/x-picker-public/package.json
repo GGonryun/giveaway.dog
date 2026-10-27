@@ -32,7 +32,9 @@
     "./x-pickers-upgrade-cta": "./src/x-pickers-upgrade-cta.tsx"
   },
   "scripts": {
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend"
   },
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
@@ -59,9 +61,12 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "typescript": "catalog:",

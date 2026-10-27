@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -147,8 +147,8 @@ export function WinnersLeaderboard({
                   {winners.map((winner, index) => {
                     const isExpanded = expandedWinners.has(winner.userId);
                     return (
-                      <>
-                        <TableRow key={winner.userId}>
+                      <Fragment key={winner.userId}>
+                        <TableRow>
                           <TableCell className="font-bold text-muted-foreground">
                             #{(currentPage - 1) * WINNERS_PAGE_SIZE + index + 1}
                           </TableCell>
@@ -211,6 +211,8 @@ export function WinnersLeaderboard({
                               <Button
                                 variant="ghost"
                                 size="sm"
+                                aria-label="All prizes"
+                                aria-expanded={isExpanded}
                                 onClick={() => toggleExpanded(winner.userId)}
                               >
                                 {isExpanded ? (
@@ -223,7 +225,7 @@ export function WinnersLeaderboard({
                           </TableCell>
                         </TableRow>
                         {isExpanded && (
-                          <TableRow key={`${winner.userId}-expanded`}>
+                          <TableRow>
                             <TableCell colSpan={5} className="bg-muted/30">
                               <div className="space-y-1 py-2">
                                 <div className="text-sm font-semibold mb-2">
@@ -257,7 +259,7 @@ export function WinnersLeaderboard({
                             </TableCell>
                           </TableRow>
                         )}
-                      </>
+                      </Fragment>
                     );
                   })}
                 </TableBody>

@@ -43,7 +43,7 @@ export const RegionalRestrictionFilterField = <
                 field.onChange(value);
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger aria-label="Region filter">
                 <SelectValue placeholder="Select a filter" />
               </SelectTrigger>
               <SelectContent>

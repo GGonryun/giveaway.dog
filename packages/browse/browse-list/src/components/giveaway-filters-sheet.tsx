@@ -291,6 +291,7 @@ export function GiveawayFiltersSheet({
             <div className="space-y-3">
               <Label>Hosts</Label>
               <MultiSelect
+                aria-label="Hosts"
                 options={hostOptions}
                 defaultValue={currentHosts}
                 onValueChange={(value) =>

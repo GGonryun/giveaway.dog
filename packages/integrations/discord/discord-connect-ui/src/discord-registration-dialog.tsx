@@ -43,7 +43,6 @@ export function DiscordRegistrationDialog({
   onOpenChange,
   integration
 }: DiscordRegistrationDialogProps) {
-  const authUrl = getDiscordInstallUrl();
   const router = useRouter();
 
   const disconnect = useProcedure({
@@ -65,7 +64,7 @@ export function DiscordRegistrationDialog({
   });
 
   const handleInstall = () => {
-    window.open(authUrl, '_blank');
+    window.open(getDiscordInstallUrl(), '_blank');
   };
 
   const handleDisconnect = () => {

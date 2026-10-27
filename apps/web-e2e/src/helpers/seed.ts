@@ -31,6 +31,7 @@ export type SeedHealth = {
   writes: boolean;
   allowPublic: boolean;
   fakes: E2eFakeService[];
+  twitchOAuth: boolean;
 };
 
 export type SeededTeamRows = {

@@ -111,3 +111,40 @@ export const expectRetweeters = async (links: Locator, count: number) => {
   expect(new Set(handles).size, 'The winners are distinct').toBe(count);
   return handles;
 };
+
+export const seedPickerTeam = (
+  request: APIRequestContext,
+  ns: string,
+  tier: 'FREE' | 'PRO' = 'PRO'
+) =>
+  seedApi(request).team({
+    ns,
+    suffix: 'xp',
+    name: `Pickers ${ns}`,
+    tier
+  });
+
+export const teamPickerPostUrl = (tweetId: string) =>
+  `https://x.com/e2e_fixture/status/${tweetId}`;
+
+export const pickerActions = (page: Page) =>
+  page.getByRole('button', { name: 'Picker actions' });
+
+export const pickerRow = (page: Page, pickerId: string) =>
+  page.getByRole('row').filter({ hasText: pickerId });
+
+export const publishFromHeader = (page: Page) =>
+  page
+    .locator('header')
+    .getByRole('button', { name: 'Publish', exact: true })
+    .click();
+
+export const publishDialog = (page: Page) =>
+  page.getByRole('dialog', { name: 'Ready to Publish?' });
+
+export const createTeamPicker = async (page: Page, slug: string) => {
+  await page.goto(`/app/${slug}/pickers/x`);
+  await page.getByRole('button', { name: 'Create', exact: true }).click();
+  await page.waitForURL(/\/pickers\/x\/[^/]+\/create$/);
+  return page.url().split('/').at(-2)!;
+};

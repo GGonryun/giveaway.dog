@@ -54,6 +54,9 @@ describe('AllGiveawaysSearch', () => {
     expect(screen.getAllByRole('button')).toHaveLength(1);
     await user.type(searchBox(), 'h');
     expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(
+      screen.getByRole('button', { name: 'Clear search' })
+    ).toBeInTheDocument();
   });
 
   it('clears the query and notifies the parent', async () => {

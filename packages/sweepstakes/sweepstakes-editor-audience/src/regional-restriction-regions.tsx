@@ -25,6 +25,7 @@ export const RegionalRestrictionRegions = <
         <FormItem className="flex flex-row items-center justify-between">
           <FormControl>
             <MultiSelect
+              aria-label="Regions"
               options={[...continents, ...countries]}
               defaultValue={field.value}
               value={field.value}

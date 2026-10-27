@@ -118,6 +118,31 @@ describe('updateSweepstakes', () => {
     expect(await readProgress(sweepstakes.id)).toEqual(before);
   });
 
+  it('[EDIT-005] keeps the creation date of the giveaway', async () => {
+    const { host, sweepstakes } = await setup();
+    const createdAt = new Date(Date.now() - 7 * DAY);
+    await db.sweepstakes.update({
+      where: { id: sweepstakes.id },
+      data: { createdAt }
+    });
+    const input = await readInput(sweepstakes.id);
+    signIn({ id: host.id });
+
+    expectOk(
+      await updateSweepstakes({
+        ...input,
+        setup: { ...input.setup, name: 'Renamed' }
+      })
+    );
+
+    expect(
+      await db.sweepstakes.findUniqueOrThrow({
+        where: { id: sweepstakes.id },
+        select: { createdAt: true }
+      })
+    ).toEqual({ createdAt });
+  });
+
   it('drops the draws and progress of a removed task', async () => {
     const { host, sweepstakes } = await setup();
     const input = await readInput(sweepstakes.id);

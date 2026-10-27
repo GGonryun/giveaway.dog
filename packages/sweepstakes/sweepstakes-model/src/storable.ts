@@ -291,6 +291,7 @@ export const toStorableSweepstakes = (
     ...toStorableSweepstakesUpdate(input, status),
     id: sweepstakes.id,
     teamId: sweepstakes.teamId,
+    createdAt: sweepstakes.createdAt,
     status
   };
 };
