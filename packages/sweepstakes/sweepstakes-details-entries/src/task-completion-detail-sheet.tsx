@@ -52,7 +52,9 @@ export const TaskCompletionDetailSheetContent: React.FC<{
   const taskCompletionId = searchParams.get('active');
   const { activeTeam } = useTeams();
   const [selectedTaskCompletion, setSelectedTaskCompletion] =
-    useState<UserEntriesSchema | null>(null);
+    useState<UserEntriesSchema | null>(
+      () => entries.find((tc) => tc.id === taskCompletionId) ?? null
+    );
   const [showProofDialog, setShowProofDialog] = useState(false);
   const [showVerifyDialog, setShowVerifyDialog] = useState(false);
 
@@ -72,7 +74,13 @@ export const TaskCompletionDetailSheetContent: React.FC<{
   };
 
   if (!selectedTaskCompletion)
-    return <div className="p-4">No task completion selected.</div>;
+    return (
+      <SheetHeader className="px-0">
+        <SheetTitle className="text-lg">
+          No task completion selected.
+        </SheetTitle>
+      </SheetHeader>
+    );
 
   // Calculate statistics for the selected task
   const sameTaskCompletions = entries.filter(
@@ -382,6 +390,12 @@ const useTaskIdFromPath = (root?: 'entries' | 'winners') => {
   const match = pathname.match(regex);
   return match ? match[1] : undefined;
 };
+
+export const TaskCompletionDetailSheetLoading: React.FC = () => (
+  <SheetHeader className="px-0">
+    <SheetTitle className="text-lg">Loading...</SheetTitle>
+  </SheetHeader>
+);
 
 export const TaskCompletionDetailSheet: React.FC<{
   sweepstakesId: string;

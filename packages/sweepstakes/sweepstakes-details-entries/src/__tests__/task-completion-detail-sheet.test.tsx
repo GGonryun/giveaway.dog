@@ -12,7 +12,8 @@ import {
 } from '@giveaway/sweepstakes-ui-testing/testing/fixtures';
 import {
   TaskCompletionDetailSheet,
-  TaskCompletionDetailSheetContent
+  TaskCompletionDetailSheetContent,
+  TaskCompletionDetailSheetLoading
 } from '../task-completion-detail-sheet';
 import { VerificationInstructionsDialog } from '../verification-instructions-dialog';
 
@@ -149,7 +150,19 @@ describe('TaskCompletionDetailSheetContent', () => {
   it('asks for a selection without an active completion', () => {
     renderContent(null);
     expect(
-      screen.getByText('No task completion selected.')
+      screen.getByRole('dialog', { name: 'No task completion selected.' })
+    ).toBeInTheDocument();
+  });
+
+  it('names the sheet while its entries load', () => {
+    navigation.pathname = '/app/acme/sweepstakes/sweep-1/entries/task/task-1';
+    render(
+      <Providers>
+        <TaskCompletionDetailSheetLoading />
+      </Providers>
+    );
+    expect(
+      screen.getByRole('dialog', { name: 'Loading...' })
     ).toBeInTheDocument();
   });
 

@@ -317,6 +317,12 @@ export const ParticipatingUserSheet: React.PC<{
   );
 };
 
+export const ParticipatingUserSheetLoading: React.FC = () => (
+  <SheetHeader className="pb-0">
+    <SheetTitle>Loading...</SheetTitle>
+  </SheetHeader>
+);
+
 const ParticipatingUserSheetLayout: React.PC<{
   open: boolean;
   onOpenChange: (open: boolean) => void;

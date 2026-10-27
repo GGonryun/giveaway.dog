@@ -88,7 +88,10 @@ test.describe('drawing winners when participants choose their prize', () => {
     await expect(dialog).toBeHidden();
     await page.reload();
     await expect(
-      page.getByText('Prize Selection:', { exact: true }).locator('..')
+      page
+        .getByText('Prize Selection:', { exact: true })
+        .locator('..')
+        .filter({ visible: true })
     ).toHaveText('Prize Selection:No');
 
     await page.getByRole('button', { name: 'Pick Remaining Winners' }).click();

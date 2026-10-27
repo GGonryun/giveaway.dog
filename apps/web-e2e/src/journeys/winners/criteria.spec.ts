@@ -12,7 +12,10 @@ import {
 } from '../../helpers/winners';
 
 const criterion = (page: Page, name: string) =>
-  page.getByText(`${name}:`, { exact: true }).locator('..');
+  page
+    .getByText(`${name}:`, { exact: true })
+    .locator('..')
+    .filter({ visible: true });
 
 const expectCriteria = async (
   page: Page,

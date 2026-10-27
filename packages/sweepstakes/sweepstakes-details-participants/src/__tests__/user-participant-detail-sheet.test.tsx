@@ -18,6 +18,7 @@ import type { SweepstakesParticipantSchema } from '@giveaway/participant-model/s
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import {
   ParticipatingUserSheet,
+  ParticipatingUserSheetLoading,
   UserDetailSheet,
   UserParticipantSheetContent
 } from '../user-participant-detail-sheet';
@@ -252,6 +253,22 @@ describe('ParticipatingUserSheet', () => {
   ] as const)('opens for a user under the %s root', (root, pathname) => {
     renderSheet(pathname, root);
     expect(screen.getByRole('dialog')).toHaveTextContent('sheet body');
+  });
+
+  it('names the sheet while its user loads', () => {
+    navigation.pathname = '/app/acme/sweepstakes/sweep-1/participants/user-1';
+    render(
+      <ParticipatingUserSheet
+        slug="acme"
+        sweepstakesId="sweep-1"
+        root="participants"
+      >
+        <ParticipatingUserSheetLoading />
+      </ParticipatingUserSheet>
+    );
+    expect(
+      screen.getByRole('dialog', { name: 'Loading...' })
+    ).toBeInTheDocument();
   });
 
   it('stays closed without a user in the path', () => {

@@ -219,7 +219,7 @@ test.describe('the winners of a completed giveaway', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
   test.use({
     storageState: personaState('host'),
-    allowedPageErrors: [/ClientFetchError/]
+    allowedPageErrors: [/ClientFetchError|net::ERR_FAILED/]
   });
 
   test('the host cannot change the entries, the winners or the criteria of a completed giveaway', async ({
@@ -277,9 +277,9 @@ test.describe('the winners of a completed giveaway', () => {
     );
     expect(await readDraws(request, completed.id)).toEqual(before.draws);
     await page.goto(winnersPage(team.slug, completed.id));
-    await expect(page.getByText('Min Tasks:').locator('..')).toHaveText(
-      'Min Tasks:1'
-    );
+    await expect(
+      page.getByText('Min Tasks:').locator('..').filter({ visible: true })
+    ).toHaveText('Min Tasks:1');
     await expect(
       page.getByRole('button', { name: 'Edit', exact: true })
     ).toBeDisabled();

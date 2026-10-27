@@ -2,7 +2,8 @@
 
 import {
   TaskCompletionDetailSheet,
-  TaskCompletionDetailSheetContent
+  TaskCompletionDetailSheetContent,
+  TaskCompletionDetailSheetLoading
 } from '@giveaway/sweepstakes-details-entries/task-completion-detail-sheet';
 import getSweepstakeEntry from '@giveaway/sweepstakes-insights-server/get-sweepstake-task-entries';
 import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
@@ -20,7 +21,7 @@ const Page: React.FC<{
 
   return (
     <TaskCompletionDetailSheet sweepstakesId={id} slug={slug}>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<TaskCompletionDetailSheetLoading />}>
         <Wrapper sweepstakesId={id} taskId={taskId} slug={slug} />
       </Suspense>
     </TaskCompletionDetailSheet>
