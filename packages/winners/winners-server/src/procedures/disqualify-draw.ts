@@ -24,6 +24,10 @@ export const disqualifyDraw = procedure()
     })
   )
   .output(z.object({ success: z.boolean() }))
+  .invalidate(async ({ input }) => [
+    `sweepstakes-${input.sweepstakesId}`,
+    'winners-leaderboard'
+  ])
   .handler(
     async ({
       input: { sweepstakesId, slug, drawId, disqualificationReason },

@@ -329,10 +329,14 @@ describe('reverifyTaskCompletion', () => {
       });
     });
 
-    it('does not invalidate any cache tags', async () => {
+    it('expires the giveaway cache tag', async () => {
       await reverifyTaskCompletion(INPUT);
 
-      expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(1);
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        `sweepstakes-${SWEEPSTAKES_ID}`,
+        'max'
+      );
     });
   });
 

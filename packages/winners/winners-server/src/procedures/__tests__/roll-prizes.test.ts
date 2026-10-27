@@ -3,6 +3,7 @@ import { rollPrizes } from '../roll-prizes';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import {
   buildAllocation,
   buildCriteriaRow
@@ -230,6 +231,20 @@ describe('rollPrizes', () => {
 
     it('returns success', async () => {
       expect(expectOk(await rollPrizes(input()))).toEqual({ success: true });
+    });
+
+    it('expires the giveaway and winners leaderboard cache tags', async () => {
+      await rollPrizes(input());
+
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(2);
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        `sweepstakes-${SWEEPSTAKES_ID}`,
+        'max'
+      );
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        'winners-leaderboard',
+        'max'
+      );
     });
 
     it('loads slots for every prize of the sweepstakes', async () => {

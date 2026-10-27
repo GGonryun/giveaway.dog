@@ -9,7 +9,10 @@ const updateSweepstakes = procedure()
   .authorization({ required: true })
   .input(sweepstakesInputSchema)
   .output(z.object({ slug: z.string() }))
-  .invalidate(async ({ input }) => [`sweepstakes-${input.id}`])
+  .invalidate(async ({ input }) => [
+    `sweepstakes-${input.id}`,
+    'participant-sweepstake'
+  ])
   .handler(async ({ db, user, input }) => {
     const { team } = await applySweepstakesChanges({
       db,

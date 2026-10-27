@@ -271,10 +271,18 @@ describe('completeSweepstakes', () => {
       });
     });
 
-    it('does not revalidate any cache tags', async () => {
+    it('expires the giveaway and winners leaderboard cache tags', async () => {
       await completeSweepstakes(input);
 
-      expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(2);
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        `sweepstakes-${SWEEPSTAKES_ID}`,
+        'max'
+      );
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        'winners-leaderboard',
+        'max'
+      );
     });
   });
 

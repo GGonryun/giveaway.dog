@@ -651,7 +651,7 @@ model PrizeDraw {
   result                 PrizeDrawResult @default(WINNER)
   disqualificationReason String?
   previousDrawId         String?         @unique
-  previousDraw           PrizeDraw?      @relation("PrizeDraw", fields: [previousDrawId], references: [id], onDelete: Cascade)
+  previousDraw           PrizeDraw?      @relation("PrizeDraw", fields: [previousDrawId], references: [id], onDelete: SetNull)
   nextDraw               PrizeDraw?      @relation("PrizeDraw")
 
   createdAt DateTime @default(now())

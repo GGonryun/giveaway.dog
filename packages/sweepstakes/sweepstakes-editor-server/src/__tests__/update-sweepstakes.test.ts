@@ -134,14 +134,13 @@ describe('updateSweepstakes', () => {
       expect(prismaMock.sweepstakesJob.upsert).not.toHaveBeenCalled();
     });
 
-    it('invalidates the sweepstakes cache tag', async () => {
+    it('invalidates the sweepstakes and participant page cache tags', async () => {
       await updateSweepstakes({ id: SWEEPSTAKES_ID });
 
-      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(1);
-      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
-        `sweepstakes-${SWEEPSTAKES_ID}`,
-        'max'
-      );
+      expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+        [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
+        ['participant-sweepstake', 'max']
+      ]);
     });
   });
 

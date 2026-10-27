@@ -1,6 +1,6 @@
 'use server';
 
-import { SweepstakeFormPage } from '@giveaway/sweepstakes-editor/sweepstakes-form-page';
+import { SweepstakeCreateFormPage } from '@giveaway/sweepstakes-editor/sweepstakes-form-page';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -14,4 +14,4 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default SweepstakeFormPage;
+export default SweepstakeCreateFormPage;

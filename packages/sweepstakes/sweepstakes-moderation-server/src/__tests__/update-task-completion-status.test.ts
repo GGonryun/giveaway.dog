@@ -5,6 +5,7 @@ import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import {
   SWEEPSTAKES_ID,
   buildMembership,
@@ -196,6 +197,18 @@ describe('updateTaskCompletionStatus', () => {
           }
         }
       });
+    });
+
+    it('expires the giveaway cache tag', async () => {
+      await updateTaskCompletionStatus(
+        input({ status: CompletionStatus.COMPLETED })
+      );
+
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(1);
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        `sweepstakes-${SWEEPSTAKES_ID}`,
+        'max'
+      );
     });
 
     it('does not touch prize draws', async () => {

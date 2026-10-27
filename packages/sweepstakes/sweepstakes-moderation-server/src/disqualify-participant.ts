@@ -18,6 +18,7 @@ export const disqualifyParticipant = procedure()
     })
   )
   .output(z.object({ success: z.boolean() }))
+  .invalidate(async ({ input }) => [`sweepstakes-${input.sweepstakesId}`])
   .handler(async ({ db, input, user }) => {
     const { sweepstakes } = await findUserSweepstakes({
       db,
