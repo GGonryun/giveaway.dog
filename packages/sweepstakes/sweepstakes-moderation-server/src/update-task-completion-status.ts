@@ -4,6 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { CompletionStatus, TeamTier } from '@giveaway/db-model';
+import { assertNotCompleted } from '@giveaway/sweepstakes-access/completed';
 import {
   findUserSweepstakes,
   findUserSweepstakesQuery
@@ -29,6 +30,8 @@ export const updateTaskCompletionStatus = procedure()
       permission: TeamPermission.UPDATE_SWEEPSTAKES,
       tier: TeamTier.FREE
     });
+
+    assertNotCompleted(sweepstakes);
 
     const taskCompletion = await db.taskCompletion.findFirst({
       where: {

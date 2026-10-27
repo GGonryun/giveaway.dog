@@ -13,6 +13,10 @@ const nextAuth = vi.hoisted(() => ({
 
 vi.mock('@giveaway/auth-server/config', () => nextAuth);
 
+const revocation = vi.hoisted(() => ({ revokeUserSessions: vi.fn() }));
+
+vi.mock('@giveaway/auth-core/session-revocation', () => revocation);
+
 const redirectError = () =>
   Object.assign(new Error('NEXT_REDIRECT'), {
     digest: 'NEXT_REDIRECT;replace;/;307;'
@@ -22,6 +26,8 @@ describe('deleteUser', () => {
   beforeEach(() => {
     nextAuth.signOut.mockReset();
     nextAuth.signOut.mockResolvedValue(undefined);
+    revocation.revokeUserSessions.mockReset();
+    revocation.revokeUserSessions.mockResolvedValue(undefined);
     prismaMock.user.deleteMany.mockResolvedValue({ count: 1 });
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -39,6 +45,7 @@ describe('deleteUser', () => {
       );
       expect(prismaMock.user.deleteMany).not.toHaveBeenCalled();
       expect(nextAuth.signOut).not.toHaveBeenCalled();
+      expect(revocation.revokeUserSessions).not.toHaveBeenCalled();
     });
   });
 
@@ -53,6 +60,34 @@ describe('deleteUser', () => {
       expect(prismaMock.user.deleteMany).toHaveBeenCalledWith({
         where: { id: TEST_USER.id }
       });
+    });
+
+    it('[AUTH-014] ends every session of the user', async () => {
+      await deleteUser();
+
+      expect(revocation.revokeUserSessions).toHaveBeenCalledExactlyOnceWith(
+        TEST_USER.id
+      );
+    });
+
+    it('ends the sessions before deleting the user', async () => {
+      await deleteUser();
+
+      expect(
+        revocation.revokeUserSessions.mock.invocationCallOrder[0]
+      ).toBeLessThan(prismaMock.user.deleteMany.mock.invocationCallOrder[0]);
+    });
+
+    it('does not delete the user when the sessions cannot be ended', async () => {
+      revocation.revokeUserSessions.mockRejectedValue(new Error('redis down'));
+
+      const result = await deleteUser();
+
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+        'redis down'
+      );
+      expect(prismaMock.user.deleteMany).not.toHaveBeenCalled();
+      expect(nextAuth.signOut).not.toHaveBeenCalled();
     });
 
     it('signs the user out and redirects to the home page', async () => {

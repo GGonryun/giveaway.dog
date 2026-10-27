@@ -13,6 +13,7 @@ import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION
 } from '@giveaway/sweepstakes-model/defaults';
+import { assertNotCompleted } from '@giveaway/sweepstakes-access/completed';
 import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 
@@ -31,13 +32,15 @@ const updateWinnerCriteria = procedure()
   .input(updateWinnerCriteriaInput)
   .output(sweepstakesWinnerCriteriaSchema)
   .handler(async ({ db, user, input }) => {
-    await findUserSweepstakes({
+    const { sweepstakes } = await findUserSweepstakes({
       db,
       user,
       id: input.sweepstakesId,
       permission: TeamPermission.UPDATE_SWEEPSTAKES,
       tier: TeamTier.FREE
     });
+
+    assertNotCompleted(sweepstakes);
 
     const updated = await db.sweepstakesWinnerCriteria.update({
       where: {

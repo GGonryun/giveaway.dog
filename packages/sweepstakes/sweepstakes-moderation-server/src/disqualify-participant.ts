@@ -3,6 +3,7 @@
 import z from 'zod';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
+import { assertNotCompleted } from '@giveaway/sweepstakes-access/completed';
 import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
@@ -32,6 +33,8 @@ export const disqualifyParticipant = procedure()
         message: 'Sweepstakes not found or you do not have access.'
       });
     }
+
+    assertNotCompleted(sweepstakes);
 
     const participant = await db.sweepstakesParticipant.findFirst({
       where: {

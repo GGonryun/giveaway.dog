@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integrations';
 import { getPublishedSweepstakes } from '@giveaway/sweepstakes-editor-server/get-published-sweepstakes';
@@ -8,12 +8,18 @@ import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweeps
 import { SweepstakesForm } from '../sweepstakes-form';
 import { DerivedSweepstakeStatus } from '@giveaway/sweepstakes-model/sweepstakes';
 import { ApplicationErrorCode } from '@giveaway/util-errors';
-import { SweepstakeFormPage } from '../sweepstakes-form-page';
+import {
+  SweepstakeCreateFormPage,
+  SweepstakeFormPage
+} from '../sweepstakes-form-page';
 import { buildFormValues } from '@giveaway/sweepstakes-editor-setup/testing/form-harness';
 
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(() => {
     throw new Error('NEXT_NOT_FOUND');
+  }),
+  redirect: vi.fn((url: string) => {
+    throw new Error(`NEXT_REDIRECT ${url}`);
   })
 }));
 
@@ -70,6 +76,7 @@ const renderPage = async () => {
 describe('SweepstakeFormPage', () => {
   beforeEach(() => {
     vi.mocked(notFound).mockClear();
+    vi.mocked(redirect).mockClear();
     vi.mocked(SweepstakesForm).mockClear();
     succeed();
   });
@@ -170,5 +177,43 @@ describe('SweepstakeFormPage', () => {
     expect(
       screen.getByText('Sweepstakes with status "COMPLETED" cannot be edited.')
     ).toBeInTheDocument();
+  });
+});
+
+describe('SweepstakeCreateFormPage', () => {
+  const renderCreatePage = async () => {
+    const page = await SweepstakeCreateFormPage({
+      params: Promise.resolve({ id: 'sweepstakes-1', slug: 'acme' })
+    });
+    return render(page);
+  };
+
+  beforeEach(() => {
+    vi.mocked(redirect).mockClear();
+    vi.mocked(SweepstakesForm).mockClear();
+    succeed();
+  });
+
+  it('renders the editor for a draft', async () => {
+    await renderCreatePage();
+    expect(screen.getByText('Sweepstakes form')).toBeInTheDocument();
+    expect(redirect).not.toHaveBeenCalled();
+  });
+
+  it.each(['RUNNING', 'SCHEDULED', 'EXPIRED', 'ERROR', 'COMPLETED'] as const)(
+    'sends a %s sweepstakes to the edit page',
+    async (status) => {
+      succeed(status);
+      await expect(renderCreatePage()).rejects.toThrow(
+        'NEXT_REDIRECT /app/acme/sweepstakes/sweepstakes-1/edit'
+      );
+      expect(SweepstakesForm).not.toHaveBeenCalled();
+    }
+  );
+
+  it('does not redirect when the edit page renders a published sweepstakes', async () => {
+    succeed('RUNNING');
+    await renderPage();
+    expect(redirect).not.toHaveBeenCalled();
   });
 });

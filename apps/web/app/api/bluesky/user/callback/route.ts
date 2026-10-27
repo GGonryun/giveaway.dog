@@ -4,7 +4,10 @@ import prisma from '@giveaway/db-client/prisma';
 import { createId } from '@paralleldrive/cuid2';
 import { Agent } from '@atproto/api';
 import { REQUIRED_BLUESKY_SCOPES } from '@giveaway/integration-model/scopes';
-import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
+import {
+  getUserAuthRedirect,
+  toSafeRedirect
+} from '@giveaway/user-model/redirect';
 import { auth, signIn } from '@giveaway/auth-server/config';
 import { createBlueskyLoginToken } from '@giveaway/auth-server/bluesky-login-token';
 import { redirect } from 'next/navigation';
@@ -16,7 +19,10 @@ export async function GET(req: NextRequest) {
   const client = await getBlueskyClient();
 
   // Retrieve redirectTo from cookie
-  const redirectTo = req.cookies.get('bluesky_redirect')?.value || '';
+  const redirectTo = toSafeRedirect(
+    req.cookies.get('bluesky_redirect')?.value,
+    ''
+  );
 
   // Check if user is already authenticated (account linking scenario)
   const currentSession = await auth();

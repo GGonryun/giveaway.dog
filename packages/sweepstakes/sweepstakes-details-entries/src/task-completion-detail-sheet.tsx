@@ -45,7 +45,8 @@ import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 export const TaskCompletionDetailSheetContent: React.FC<{
   entries: UserEntriesSchema[];
   sweepstakesId: string;
-}> = ({ entries, sweepstakesId }) => {
+  readOnly?: boolean;
+}> = ({ entries, sweepstakesId, readOnly = false }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const taskCompletionId = searchParams.get('active');
@@ -284,15 +285,17 @@ export const TaskCompletionDetailSheetContent: React.FC<{
 
       {/* Fixed Action Buttons */}
       <div className="border-t pt-4 mt-4 shrink-0 space-y-2">
-        <Button
-          size="sm"
-          variant="default"
-          className="w-full"
-          onClick={() => setShowVerifyDialog(true)}
-        >
-          <Shield className="h-4 w-4 mr-2" />
-          Verify Entry
-        </Button>
+        {!readOnly && (
+          <Button
+            size="sm"
+            variant="default"
+            className="w-full"
+            onClick={() => setShowVerifyDialog(true)}
+          >
+            <Shield className="h-4 w-4 mr-2" />
+            Verify Entry
+          </Button>
+        )}
         <Button
           size="sm"
           variant="outline"

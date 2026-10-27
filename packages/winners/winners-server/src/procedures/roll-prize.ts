@@ -4,7 +4,9 @@ import z from 'zod';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { findTeamSweepstakes } from '@giveaway/sweepstakes-access/team-sweepstakes';
+import { assertNotCompleted } from '@giveaway/sweepstakes-access/completed';
 import { TeamPermission } from '@giveaway/team-permissions';
+import { assertSweepstakesEnded } from '../ended';
 import { getSweepstakesCriteria } from '@giveaway/winners-model/criteria';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
 import {
@@ -27,13 +29,17 @@ export const rollPrize = procedure()
   )
   .output(z.object({ success: z.boolean() }))
   .handler(async ({ input: { sweepstakesId, slug, prizeId }, db, user }) => {
-    await findTeamSweepstakes({
+    const sweepstakes = await findTeamSweepstakes({
       db,
       userId: user.id,
       sweepstakesId,
       slug,
       permission: TeamPermission.UPDATE_SWEEPSTAKES
     });
+
+    assertNotCompleted(sweepstakes);
+
+    await assertSweepstakesEnded({ db, sweepstakesId });
 
     const criteria = await getSweepstakesCriteria({
       db,

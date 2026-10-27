@@ -41,6 +41,22 @@ describe('rollPrizes', () => {
     expect(new Set(winners).size).toBe(3);
   });
 
+  it('draws no winner while the giveaway is still running', async () => {
+    const { input, first } = await setup({
+      quotas: [1],
+      entries: 2,
+      ended: false
+    });
+
+    expectFailure(await rollPrizes(input), 'PRECONDITION_FAILED');
+    expectFailure(
+      await rollPrize({ ...input, prizeId: first.id }),
+      'PRECONDITION_FAILED'
+    );
+
+    expect(await countWinners(input.sweepstakesId)).toEqual({});
+  });
+
   it('returns CONFLICT when every prize slot is already filled', async () => {
     const { input } = await setup({ quotas: [1], entries: 2 });
     expectOk(await rollPrizes(input));

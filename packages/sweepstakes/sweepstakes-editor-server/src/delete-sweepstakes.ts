@@ -20,6 +20,11 @@ const deleteSweepstakes = procedure()
       slug: z.string()
     })
   )
+  .invalidate(async ({ input }) => [
+    `sweepstakes-${input.id}`,
+    `sweepstakes-${input.id}-privacy`,
+    'participant-sweepstake'
+  ])
 
   .handler(async ({ input, db, user }) => {
     const { team, sweepstakes } = await findUserSweepstakes({

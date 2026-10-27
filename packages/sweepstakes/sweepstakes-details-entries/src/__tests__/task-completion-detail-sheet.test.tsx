@@ -108,7 +108,11 @@ const Providers = ({ children }: { children: ReactNode }) => (
   </TeamsProvider>
 );
 
-const renderContent = (active: string | null, list = entries) => {
+const renderContent = (
+  active: string | null,
+  list = entries,
+  readOnly?: boolean
+) => {
   navigation.pathname = '/app/acme/sweepstakes/sweep-1/entries/task/task-1';
   navigation.searchParams = new URLSearchParams(
     active ? `active=${active}` : ''
@@ -118,6 +122,7 @@ const renderContent = (active: string | null, list = entries) => {
       <TaskCompletionDetailSheetContent
         entries={list}
         sweepstakesId="sweep-1"
+        readOnly={readOnly}
       />
     </Providers>
   );
@@ -275,6 +280,17 @@ describe('TaskCompletionDetailSheetContent', () => {
   });
 
   describe('actions', () => {
+    it('offers no verification when read-only', () => {
+      renderContent('entry-2', entries, true);
+
+      expect(
+        screen.queryByRole('button', { name: 'Verify Entry' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Close Details' })
+      ).toBeInTheDocument();
+    });
+
     it('opens the verification dialog for the completion', async () => {
       const user = userEvent.setup();
       renderContent('entry-2');

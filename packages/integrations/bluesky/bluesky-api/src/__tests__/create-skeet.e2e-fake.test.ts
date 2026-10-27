@@ -9,6 +9,7 @@ import {
   readE2eOutbox
 } from '@giveaway/e2e-fakes/testing/outbox';
 import { asPrismaClient } from '@giveaway/testing-server/prisma';
+import { blueskyPostRefineUrl } from '@giveaway/bluesky-model/bluesky-helpers';
 import { createSkeet } from '../create-skeet';
 import { getLatestTeamBlueskyCredentials } from '../bluesky/get-latest-team-bluesky-agent';
 
@@ -53,9 +54,23 @@ describe('createSkeet with the bluesky fake', () => {
       imageUrl: 'https://cdn.giveaway.test/prize.png'
     });
     expect(result).toEqual({
-      uri: `at://${entry.id}/app.bsky.feed.post/${entry.id}`,
+      uri: `at://did:plc:7465616d2d31/app.bsky.feed.post/${Buffer.from(entry.id).toString('hex')}`,
       cid: entry.id
     });
+  });
+
+  it('returns a URI whose post URL the app accepts', async () => {
+    stubE2eFakeEnvironment('preview', 'bluesky');
+
+    const { uri } = await createSkeet(asPrismaClient(), {
+      teamId: 'team-1',
+      text: 'Hi'
+    });
+
+    const [, did, , rkey] = uri.replace('at://', '').split('/');
+    expect(
+      blueskyPostRefineUrl(`https://bsky.app/profile/${did}/post/${rkey}`)
+    ).toBe(true);
   });
 
   it('reads no credentials and fetches nothing', async () => {
