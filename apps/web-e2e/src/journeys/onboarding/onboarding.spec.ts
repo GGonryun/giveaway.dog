@@ -257,4 +257,42 @@ test.describe('onboarding journeys', () => {
       await expect(page).toHaveURL(new RegExp(`/browse/${giveaway.id}$`));
     }
   );
+
+  test(
+    '[ONBOARD-005] a newbie who picks hosting and reloads the profile step finishes as a host',
+    knownBug(565),
+    async ({ page, freshPersona }) => {
+      const { ns } = await freshPersona('newbie');
+      await page.goto('/onboarding');
+      await page.getByText('Host Giveaways').click();
+      await page.getByRole('button', { name: 'Continue' }).click();
+      await expect(page).toHaveURL(/\/onboarding\?step=2$/);
+
+      await page.reload();
+      await page.getByLabel('Username').fill(toUsername(ns));
+      await completeSetup(page);
+
+      await expect(page).toHaveURL(/\/app$/);
+      expect(await readSession(page)).toMatchObject({
+        onboarded: true,
+        accountType: 'HOST'
+      });
+    }
+  );
+
+  test(
+    '[ONBOARD-006] an onboarded host who opens the onboarding page stays a host',
+    knownBug(566),
+    async ({ page, freshPersona }) => {
+      await freshPersona('host');
+
+      await page.goto('/onboarding');
+
+      await expect(page).toHaveURL(/\/app$/);
+      expect(await readSession(page)).toMatchObject({
+        onboarded: true,
+        accountType: 'HOST'
+      });
+    }
+  );
 });
