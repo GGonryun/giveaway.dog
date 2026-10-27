@@ -1,23 +1,29 @@
 import fs from 'node:fs';
 
-const [report] = process.argv.slice(2);
-if (!report) {
-  console.error('Usage: node e2e-summary.mjs <playwright-json-report>');
+const reports = process.argv.slice(2);
+if (reports.length === 0) {
+  console.error('Usage: node e2e-summary.mjs <playwright-json-report>...');
   process.exit(1);
 }
 
-if (!fs.existsSync(report)) {
+const found = reports.filter((report) => fs.existsSync(report));
+const missing = reports.filter((report) => !found.includes(report));
+
+if (found.length === 0) {
   console.log(
     '## E2E tests\n\nNo Playwright report: the run stopped before the tests ended, or the tested commit does not write one.'
   );
   process.exit(0);
 }
 
-const {
-  suites = [],
-  stats,
-  errors = []
-} = JSON.parse(fs.readFileSync(report, 'utf8'));
+const parsed = found.map((report) =>
+  JSON.parse(fs.readFileSync(report, 'utf8'))
+);
+const suites = parsed.flatMap((report) => report.suites ?? []);
+const errors = parsed.flatMap((report) => report.errors ?? []);
+const duration = Math.max(
+  ...parsed.map((report) => report.stats?.duration ?? 0)
+);
 
 const ANSI = /\u001b\[[0-9;]*m/g;
 
@@ -76,6 +82,9 @@ const tests = suites
             .map((annotation) => annotation.description)
         )
       ],
+      file: spec.file,
+      duration: last?.duration ?? 0,
+      total: results.reduce((sum, result) => sum + (result.duration ?? 0), 0),
       lastStatus: last?.status,
       lastError: errorOf(last),
       firstError: errorOf(results.find((result) => result.status !== 'passed'))
@@ -112,7 +121,37 @@ const knownViolations = tests.flatMap((test) =>
   })
 );
 
-const seconds = Math.round((stats?.duration ?? 0) / 1000);
+const formatDuration = (ms) => {
+  const total = Math.round(ms / 1000);
+  return total < 60 ? `${total}s` : `${Math.floor(total / 60)}m ${total % 60}s`;
+};
+
+const SLOWEST_TESTS = 25;
+const SLOWEST_FILES = 15;
+
+const ran = tests.filter((test) => test.status !== 'skipped');
+const slowestTests = [...ran]
+  .sort((a, b) => b.total - a.total)
+  .slice(0, SLOWEST_TESTS);
+const files = [
+  ...ran
+    .reduce((byFile, test) => {
+      const file = byFile.get(test.file) ?? {
+        file: test.file,
+        tests: 0,
+        total: 0
+      };
+      file.tests += 1;
+      file.total += test.total;
+      return byFile.set(test.file, file);
+    }, new Map())
+    .values()
+];
+const slowestFiles = files
+  .sort((a, b) => b.total - a.total)
+  .slice(0, SLOWEST_FILES);
+
+const seconds = Math.round(duration / 1000);
 const lines = [
   '## E2E tests',
   '',
@@ -178,6 +217,34 @@ table(
     issueLink(issue)
   ]
 );
+
+table(
+  `Slowest tests (the ${SLOWEST_TESTS} longest, with their retries)`,
+  slowestTests,
+  ['Test', 'Project', 'Location', 'Time', 'Last attempt'],
+  (test) => [
+    ...where(test),
+    formatDuration(test.total),
+    formatDuration(test.duration)
+  ]
+);
+table(
+  `Slowest files (the ${SLOWEST_FILES} longest, every project and retry)`,
+  slowestFiles,
+  ['File', 'Tests', 'Time'],
+  (file) => [`\`${file.file}\``, file.tests, formatDuration(file.total)]
+);
+
+if (missing.length > 0) {
+  lines.push(
+    '',
+    '### Missing reports',
+    '',
+    'These shards stopped before their tests ended, so their tests are not counted above:',
+    ''
+  );
+  for (const report of missing) lines.push(`- \`${report}\``);
+}
 
 if (errors.length > 0) {
   lines.push('', '### Errors outside the tests', '');
