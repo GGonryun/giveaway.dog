@@ -31,6 +31,7 @@ const updateWinnerCriteria = procedure()
   .authorization({ required: true })
   .input(updateWinnerCriteriaInput)
   .output(sweepstakesWinnerCriteriaSchema)
+  .invalidate(async ({ input }) => [`sweepstakes-${input.sweepstakesId}`])
   .handler(async ({ db, user, input }) => {
     const { sweepstakes } = await findUserSweepstakes({
       db,

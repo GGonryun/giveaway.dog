@@ -264,10 +264,14 @@ describe('updateWinnerCriteria', () => {
       ).toBe(Prisma.JsonNull);
     });
 
-    it('does not invalidate any cache tags', async () => {
+    it('expires the giveaway cache tag', async () => {
       await updateWinnerCriteria(input());
 
-      expect(nextCacheMock.revalidateTag).not.toHaveBeenCalled();
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(1);
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        `sweepstakes-${SWEEPSTAKES_ID}`,
+        'max'
+      );
     });
 
     it('returns NOT_FOUND when the criteria row does not exist', async () => {

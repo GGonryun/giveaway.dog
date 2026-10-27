@@ -29,6 +29,7 @@ export const reverifyTaskCompletion = procedure()
       error: z.string().optional()
     })
   )
+  .invalidate(async ({ input }) => [`sweepstakes-${input.sweepstakesId}`])
   .handler(async ({ db, input, user }) => {
     const { sweepstakes, team } = await findUserSweepstakes({
       db,

@@ -27,6 +27,10 @@ export const rollPrizes = procedure()
     })
   )
   .output(z.object({ success: z.boolean() }))
+  .invalidate(async ({ input }) => [
+    `sweepstakes-${input.sweepstakesId}`,
+    'winners-leaderboard'
+  ])
   .handler(async ({ input: { sweepstakesId, slug }, db, user }) => {
     const sweepstakes = await findTeamSweepstakes({
       db,

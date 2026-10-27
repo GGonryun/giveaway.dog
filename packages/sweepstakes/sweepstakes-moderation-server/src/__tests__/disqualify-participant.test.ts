@@ -4,6 +4,7 @@ import { disqualifyParticipant } from '../disqualify-participant';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { TEAM_SWEEPSTAKES_PAYLOAD } from '@giveaway/sweepstakes-model/db';
 import {
   buildMember,
@@ -151,6 +152,16 @@ describe('disqualifyParticipant', () => {
       const result = await disqualifyParticipant(input);
 
       expect(expectOk(result)).toEqual({ success: true });
+    });
+
+    it('expires the giveaway cache tag', async () => {
+      await disqualifyParticipant(input);
+
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(1);
+      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
+        `sweepstakes-${SWEEPSTAKES_ID}`,
+        'max'
+      );
     });
 
     it('runs both updates in one transaction', async () => {
