@@ -11,6 +11,7 @@ exports[`RegionalRestrictionRegions > matches the snapshot 1`] = `
       aria-expanded="false"
       aria-haspopup="dialog"
       aria-invalid="false"
+      aria-label="Regions"
       class="cursor-pointer gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 [&_svg]:mr-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-primary-foreground shadow-xs has-[>svg]:px-3 flex w-full p-1 rounded-md border min-h-9 h-auto items-center justify-between hover:bg-foreground/5 [&_svg]:pointer-events-auto bg-background"
       data-slot="popover-trigger"
       data-state="closed"
