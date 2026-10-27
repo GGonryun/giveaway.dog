@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { Prisma, PrismaClient } from '@giveaway/db-model';
+import { Prisma, PrismaClient, UserSource } from '@giveaway/db-model';
 import {
   E2E_TEAM_SLUG_PREFIX,
   isE2eNamespaceOfRun,
@@ -158,4 +158,23 @@ export const sweepE2eData = async ({
       accept: () => true
     }))
   };
+};
+
+export const deleteE2eAnonymousUser = async ({
+  db,
+  userId
+}: {
+  db: PrismaClient;
+  userId: string;
+}) => {
+  const { count } = await db.user.deleteMany({
+    where: {
+      id: userId,
+      source: UserSource.ANONYMOUS,
+      email: null,
+      accounts: { none: {} },
+      teams: { none: {} }
+    }
+  });
+  return { userId, deleted: count };
 };

@@ -7,11 +7,9 @@ import {
   ELIGIBLE_PERSONAS,
   eligibleEntries,
   endedGiveaway,
+  presentationPage,
   readDraws
 } from '../../helpers/winners';
-
-const presentationPage = (team: string, id: string) =>
-  `/app/${team}/sweepstakes/${id}/winners/public`;
 
 test.describe('the winner draw presentation page', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');

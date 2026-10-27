@@ -96,15 +96,21 @@ describe('seedE2eUserExtras', () => {
     });
   });
 
-  it('sets the source, the verified email and the birthday', async () => {
+  it('sets the source, the verified email, the username and the birthday', async () => {
     await seed([
       {
         persona: 'participant',
         source: 'DISCORD_IMPORT',
         emailVerified: true,
+        username: 'alice_e2e',
         birthday: '2008-12-31'
       },
-      { persona: 'participant2', emailVerified: false, birthday: null }
+      {
+        persona: 'participant2',
+        emailVerified: false,
+        username: null,
+        birthday: null
+      }
     ]);
 
     expect(prismaMock.user.update).toHaveBeenNthCalledWith(1, {
@@ -112,12 +118,13 @@ describe('seedE2eUserExtras', () => {
       data: {
         source: 'DISCORD_IMPORT',
         emailVerified: NOW,
+        username: 'alice_e2e',
         birthday: new Date('2008-12-31T00:00:00.000Z')
       }
     });
     expect(prismaMock.user.update).toHaveBeenNthCalledWith(2, {
       where: { id: 'user-e2e-participant2-abc123w0' },
-      data: { emailVerified: null, birthday: null }
+      data: { emailVerified: null, username: null, birthday: null }
     });
   });
 

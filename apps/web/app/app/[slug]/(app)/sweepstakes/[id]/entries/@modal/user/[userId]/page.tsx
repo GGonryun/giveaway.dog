@@ -2,6 +2,7 @@
 
 import {
   ParticipatingUserSheet,
+  ParticipatingUserSheetLoading,
   UserParticipantSheetContent
 } from '@giveaway/sweepstakes-details-participants/user-participant-detail-sheet';
 import { getSweepstakesParticipant } from '@giveaway/participant-server/get-sweepstake-participant';
@@ -21,7 +22,7 @@ const Page: React.FC<{
 
   return (
     <ParticipatingUserSheet root="entries" slug={slug} sweepstakesId={id}>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<ParticipatingUserSheetLoading />}>
         <Wrapper sweepstakesId={id} userId={userId} slug={slug} />
       </Suspense>
     </ParticipatingUserSheet>

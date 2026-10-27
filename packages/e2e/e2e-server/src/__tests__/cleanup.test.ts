@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import {
+  deleteE2eAnonymousUser,
   deleteE2eRun,
   E2E_TEAM_BATCH,
   E2E_USER_BATCH,
@@ -281,5 +282,35 @@ describe('sweepE2eData', () => {
     expect(prismaMock.user.deleteMany).toHaveBeenCalledWith({
       where: { id: { in: ['id-e2e-host-old123@example.com'] } }
     });
+  });
+});
+
+describe('deleteE2eAnonymousUser', () => {
+  it('deletes the user only while it is anonymous, with no email, account or team', async () => {
+    prismaMock.user.deleteMany.mockResolvedValue({ count: 1 });
+
+    const result = await deleteE2eAnonymousUser({
+      db,
+      userId: 'anon123anon123anon123anon'
+    });
+
+    expect(prismaMock.user.deleteMany).toHaveBeenCalledWith({
+      where: {
+        id: 'anon123anon123anon123anon',
+        source: 'ANONYMOUS',
+        email: null,
+        accounts: { none: {} },
+        teams: { none: {} }
+      }
+    });
+    expect(result).toEqual({ userId: 'anon123anon123anon123anon', deleted: 1 });
+  });
+
+  it('reports that it deleted nothing when the user is not anonymous', async () => {
+    prismaMock.user.deleteMany.mockResolvedValue({ count: 0 });
+
+    expect(
+      await deleteE2eAnonymousUser({ db, userId: 'real123real123real123real' })
+    ).toEqual({ userId: 'real123real123real123real', deleted: 0 });
   });
 });

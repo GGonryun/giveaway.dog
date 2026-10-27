@@ -18,6 +18,7 @@ import {
   e2ePickerRequestSchema,
   e2eTemplatesRequestSchema,
   e2eUserExtrasRequestSchema,
+  e2eUserIdSchema,
   toE2eUserNamespace
 } from '../extras';
 
@@ -62,6 +63,26 @@ describe('toE2eUserNamespace', () => {
   });
 });
 
+describe('e2eUserIdSchema', () => {
+  it.each(['a'.repeat(20), 'p71srtuomw3idnb9rzpo7tkr', '0'.repeat(32)])(
+    'accepts the id %s',
+    (id) => {
+      expect(e2eUserIdSchema.safeParse(id).success).toBe(true);
+    }
+  );
+
+  it.each([
+    'a'.repeat(19),
+    'a'.repeat(33),
+    'p71srtuomw3idnb9rzpo7tkR',
+    '-p71srtuomw3idnb9rzpo7tkr',
+    'p71srtuomw3idnb9rzpo7tkr-',
+    '../p71srtuomw3idnb9rzpo7tk'
+  ])('rejects the id %s', (id) => {
+    expect(e2eUserIdSchema.safeParse(id).success).toBe(false);
+  });
+});
+
 describe('e2eUserExtrasRequestSchema', () => {
   const { parse, issuesOf, pathsOf } = helpers(e2eUserExtrasRequestSchema, {
     ns: 'abc123w0'
@@ -78,6 +99,7 @@ describe('e2eUserExtrasRequestSchema', () => {
           ns: 'abc123p1',
           source: 'TWITTER_IMPORT',
           emailVerified: false,
+          username: 'alice_e2e',
           birthday: '2010-02-28',
           accounts: [
             {
@@ -121,6 +143,19 @@ describe('e2eUserExtrasRequestSchema', () => {
   it('accepts no birthday, to remove it', () => {
     expect(parse({ users: [user({ birthday: null })] }).success).toBe(true);
   });
+
+  it('accepts no username, to remove it', () => {
+    expect(parse({ users: [user({ username: null })] }).success).toBe(true);
+  });
+
+  it.each(['ab', 'Alice', 'alice e2e', 'a'.repeat(31)])(
+    'rejects the username %s',
+    (username) => {
+      expect(pathsOf({ users: [user({ username })] })).toEqual([
+        'users.0.username'
+      ]);
+    }
+  );
 
   it.each(['2010-2-28', '28-02-2010', '2010-02-28T00:00:00Z', '2010-13-45'])(
     'rejects the birthday %s',

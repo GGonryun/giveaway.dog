@@ -7,6 +7,8 @@ import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import {
   drawRow,
   endedGiveaway,
+  entriesPage,
+  entryRow,
   personaName,
   readCompletions,
   readDraws,
@@ -14,14 +16,6 @@ import {
 } from '../../helpers/winners';
 
 const REJECT_REASON = 'The proof is a screenshot of another account';
-
-const entriesPage = (team: string, id: string) =>
-  `/app/${team}/sweepstakes/${id}/entries`;
-
-const entryRow = (page: Page, persona: E2ePersona) =>
-  page.getByRole('row').filter({
-    has: page.getByRole('button', { name: personaName(persona), exact: true })
-  });
 
 const openVerifyDialog = async (page: Page, persona: E2ePersona) => {
   await entryRow(page, persona)

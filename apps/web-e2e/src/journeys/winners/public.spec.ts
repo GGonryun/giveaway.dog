@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, personaState } from '../../env';
+import { knownBug } from '../../helpers/known-bug';
 import { expectAfterReloads } from '../../helpers/poll';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import { openAs } from '../../helpers/teams';
@@ -169,4 +170,34 @@ test.describe('the winners on the public giveaway page', () => {
       );
     }
   });
+
+  test(
+    'the winner of a completed giveaway without prize selection sees that they won',
+    knownBug(587),
+    async ({ browser, request }, testInfo) => {
+      const { team } = await seedWorkerTeam(request, testInfo);
+      const ns = freshNamespace(testInfo.workerIndex);
+      const giveaway = await seedApi(request).sweepstakes(
+        endedGiveaway({
+          ns,
+          team: team.slug,
+          preset: 'completed',
+          prizes: [{ name: PRIZE, quota: 1 }],
+          entries: eligibleEntries(['participant', 'participant2']),
+          draws: [{ entry: 0, prize: 0 }]
+        })
+      );
+
+      const winner = await openAs(browser, 'participant', ns);
+      try {
+        await winner.page.goto(`/browse/${giveaway.id}`);
+        await expect(winnersAnnounced(winner.page)).toBeVisible();
+        await expect(
+          winner.page.getByText(`Congratulations! You won ${PRIZE}!`)
+        ).toBeVisible();
+      } finally {
+        await winner.context.close();
+      }
+    }
+  );
 });
