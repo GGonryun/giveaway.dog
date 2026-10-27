@@ -2,13 +2,14 @@ import { NextRequest } from 'next/server';
 import prisma from '@giveaway/db-client/prisma';
 import { auth } from '@giveaway/auth-server/config';
 import { redirect } from 'next/navigation';
+import { toSafeRedirect } from '@giveaway/user-model/redirect';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   const profileUrl = searchParams.get('profileUrl');
   const username = searchParams.get('username');
-  const redirectTo = searchParams.get('redirectTo') || '/account';
+  const redirectTo = toSafeRedirect(searchParams.get('redirectTo'), '/account');
 
   console.info('Instagram link request started', {
     username,

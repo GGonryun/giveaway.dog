@@ -2,13 +2,14 @@ import { NextRequest } from 'next/server';
 import prisma from '@giveaway/db-client/prisma';
 import { auth } from '@giveaway/auth-server/config';
 import { redirect } from 'next/navigation';
+import { toSafeRedirect } from '@giveaway/user-model/redirect';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
   const profileUrl = searchParams.get('profileUrl');
   const identifier = searchParams.get('identifier');
-  const redirectTo = searchParams.get('redirectTo') || '/account';
+  const redirectTo = toSafeRedirect(searchParams.get('redirectTo'), '/account');
 
   console.info('Facebook link request started', {
     identifier,
