@@ -351,8 +351,28 @@ describe('seedE2eSweepstakes', () => {
     ]);
   });
 
-  it('also expires the browse lists for a PUBLIC giveaway', async () => {
+  it('expires the browse lists of a PUBLIC giveaway only when the request asks', async () => {
     await seed({ visibility: 'PUBLIC' }, true);
+
+    expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+      [`sweepstakes-${ID}`, { expire: 0 }],
+      [`sweepstakes-${ID}-privacy`, { expire: 0 }],
+      ['participant-sweepstake', { expire: 0 }],
+      ['winners-leaderboard', { expire: 0 }]
+    ]);
+  });
+
+  it('never expires the browse lists of an UNLISTED giveaway', async () => {
+    await seed({ expireLists: true });
+
+    expect(nextCacheMock.revalidateTag).not.toHaveBeenCalledWith(
+      'public-sweepstakes-list',
+      expect.anything()
+    );
+  });
+
+  it('also expires the browse lists of a PUBLIC giveaway with expireLists', async () => {
+    await seed({ visibility: 'PUBLIC', expireLists: true }, true);
 
     expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
       [`sweepstakes-${ID}`, { expire: 0 }],

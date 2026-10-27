@@ -468,6 +468,7 @@ describe('handleE2eRequest', () => {
             preset: 'running',
             name: 'Giveaway',
             visibility: 'UNLISTED',
+            expireLists: false,
             tasks: [
               {
                 type: 'BONUS_TASK',

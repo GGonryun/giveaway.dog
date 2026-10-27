@@ -4,10 +4,15 @@ import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../../env';
 import { seedSweepstakes } from '../../helpers/jobs';
 import { knownBug } from '../../helpers/known-bug';
-import { freshSlug, seedApi, seedWorkerTeam } from '../../helpers/seed';
+import {
+  cardLabels,
+  DAY,
+  giveawayCard,
+  HOUR,
+  requirePublicSeeds
+} from '../../helpers/browse';
+import { freshSlug, seedWorkerTeam } from '../../helpers/seed';
 
-const HOUR = 60 * 60;
-const DAY = 24 * HOUR;
 const OVER_A_DAY_AGO = -(DAY + 2 * HOUR);
 
 type Giveaway = Omit<E2eSweepstakesRequestInput, 'ns' | 'team' | 'name'>;
@@ -54,37 +59,13 @@ const seedGiveaways = async (
   return { token, giveaways };
 };
 
-const cards = (page: Page) =>
-  page
-    .getByRole('main')
-    .getByRole('link')
-    .filter({ has: page.getByRole('heading', { level: 3 }) });
-
-const cardOf = (page: Page, name: string) =>
-  cards(page).filter({
-    has: page.getByRole('heading', { level: 3, name, exact: true })
-  });
-
-const kindsOnPage = async (page: Page, token: string) => {
-  const names = await cards(page)
-    .getByRole('heading', { level: 3 })
-    .allTextContents();
-  return names
-    .map((name) => name.match(new RegExp(`${token} (\\w+)$`))?.[1])
-    .filter((kind) => kind !== undefined)
-    .sort();
-};
+const kindsOnPage = async (page: Page, token: string) =>
+  (await cardLabels(page, token)).sort();
 
 test.describe('the public giveaway lists', { tag: '@slow' }, () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
 
-  test.beforeEach(async ({ request }) => {
-    const health = await seedApi(request).health();
-    test.skip(
-      !health?.allowPublic,
-      'Set E2E_ALLOW_PUBLIC=1 on the deployment to seed PUBLIC giveaways'
-    );
-  });
+  test.beforeEach(({ request }) => requirePublicSeeds(request));
 
   test('[VIS-001] /browse shows exactly the open, upcoming and recently ended public giveaways', async ({
     page,
@@ -112,7 +93,7 @@ test.describe('the public giveaway lists', { tag: '@slow' }, () => {
     ];
     for (const [kind, badge] of badges) {
       const giveaway = giveaways[kind]!;
-      const card = cardOf(page, giveaway.name);
+      const card = giveawayCard(page, giveaway.name);
       await expect(card.getByText(badge, { exact: true })).toBeVisible();
       await expect(card).toHaveAttribute(
         'href',

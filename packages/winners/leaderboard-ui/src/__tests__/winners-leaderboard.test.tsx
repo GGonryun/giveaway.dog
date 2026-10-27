@@ -108,6 +108,21 @@ describe('WinnersLeaderboard', () => {
   });
 
   describe('when there are winners', () => {
+    it('gives each winner a key, so React logs no key warning', async () => {
+      const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+      renderLeaderboard();
+      await userEvent.click(
+        within(screen.getByRole('row', { name: /Ada Lovelace/ })).getByRole(
+          'button',
+          { name: 'All prizes', expanded: false }
+        )
+      );
+
+      expect(screen.getByText('All Prizes')).toBeInTheDocument();
+      expect(error).not.toHaveBeenCalled();
+      error.mockRestore();
+    });
+
     it('ranks winners from the top of the first page', () => {
       renderLeaderboard();
 
@@ -233,11 +248,13 @@ describe('WinnersLeaderboard', () => {
       renderLeaderboard();
       const toggle = within(
         screen.getByRole('row', { name: /Ada Lovelace/ })
-      ).getByRole('button');
+      ).getByRole('button', { name: 'All prizes' });
 
       await user.click(toggle);
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
       await user.click(toggle);
 
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
       expect(screen.queryByText('All Prizes')).not.toBeInTheDocument();
     });
   });

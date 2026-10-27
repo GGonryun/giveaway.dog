@@ -117,7 +117,10 @@ export const UserEntries = ({ slug, entries }: UserEntriesProps) => {
                 </TableCell>
 
                 <TableCell>
-                  <span className="text-xs text-muted-foreground">
+                  <span
+                    className="text-xs text-muted-foreground"
+                    suppressHydrationWarning
+                  >
                     {formatDistanceToNowStrict(
                       completion.completedAt ?? Date.now(),
                       {
