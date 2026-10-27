@@ -33,6 +33,7 @@
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
     "@giveaway/rpc-client": "workspace:*",
+    "@giveaway/rpc-model": "workspace:*",
     "@giveaway/sweepstakes-editor-server": "workspace:*",
     "@giveaway/sweepstakes-routes": "workspace:*",
     "@giveaway/team-context": "workspace:*",

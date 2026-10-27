@@ -18,7 +18,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { SweepstakesFormPreview } from '@giveaway/sweepstakes-editor-preview/sweepstakes-editor-preview';
 import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
-import { useDeleteSweepstakes } from '@giveaway/sweepstakes-actions-ui/use-delete-sweepstakes';
+import { useDeleteDraft } from '@giveaway/sweepstakes-actions-ui/use-delete-sweepstakes';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateSweepstakes from '@giveaway/sweepstakes-editor-server/update-sweepstakes';
 import publishSweepstakes from '@giveaway/sweepstakes-editor-server/publish-sweepstakes';
@@ -116,7 +116,7 @@ const FormContent: React.FC<{
 
   const form = useFormContext<GiveawayFormSchema>();
 
-  const deleteSweepstakes = useDeleteSweepstakes(() => {
+  const deleteDraft = useDeleteDraft(() => {
     toast.success('Sweepstakes deleted successfully!');
     sweepstakesPage.navigateTo();
   });
@@ -192,11 +192,11 @@ const FormContent: React.FC<{
     }
 
     if (action === 'create') {
-      deleteSweepstakes.run({ id });
+      deleteDraft.run({ id });
     } else {
       returnToPage();
     }
-  }, [deleteSweepstakes.run, action, id]);
+  }, [deleteDraft.run, action, id]);
 
   const handlePublish = useCallback(async () => {
     if (action === 'demo') {
@@ -230,7 +230,7 @@ const FormContent: React.FC<{
           id={id}
           title={name}
           disabled={
-            deleteSweepstakes.isLoading ||
+            deleteDraft.isLoading ||
             updateSweepstakesProcedure.isLoading ||
             publishSweepstakesProcedure.isLoading
           }
@@ -255,7 +255,7 @@ const FormContent: React.FC<{
           onClose={() => setShowCancelModal(false)}
           open={showCancelModal}
           isLoading={
-            deleteSweepstakes.isLoading || updateSweepstakesProcedure.isLoading
+            deleteDraft.isLoading || updateSweepstakesProcedure.isLoading
           }
           action={action}
           onDiscard={handleDiscardChanges}

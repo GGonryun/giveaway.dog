@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import getSweepstakesForm from '@giveaway/sweepstakes-editor-server/get-sweepstakes-form';
 import { SweepstakesForm } from './sweepstakes-form';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
 import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';
 import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
@@ -12,9 +12,11 @@ import { getTeamIntegrations } from '@giveaway/integration-server/get-team-integ
 import { getPublishedSweepstakes } from '@giveaway/sweepstakes-editor-server/get-published-sweepstakes';
 
 export const SweepstakeFormPage = async ({
-  params
+  params,
+  mode = 'edit'
 }: {
   params: Promise<SweepstakesPageProps>;
+  mode?: 'create' | 'edit';
 }) => {
   const { id, slug } = await params;
   const [form, info, integrations, completed] = await Promise.all([
@@ -36,6 +38,10 @@ export const SweepstakeFormPage = async ({
 
   if (!integrations.ok) {
     return <div>Failed to load integrations: {integrations.data.code}</div>;
+  }
+
+  if (mode === 'create' && info.data.status !== 'DRAFT') {
+    redirect(`/app/${slug}/sweepstakes/${id}/edit`);
   }
 
   const isEditable = EDITABLE_DERIVED_STATUS[info.data.status];
@@ -68,3 +74,9 @@ export const SweepstakeFormPage = async ({
     </Suspense>
   );
 };
+
+export const SweepstakeCreateFormPage = async ({
+  params
+}: {
+  params: Promise<SweepstakesPageProps>;
+}) => SweepstakeFormPage({ params, mode: 'create' });

@@ -19,6 +19,7 @@
     "./complete-sweepstakes": "./src/complete-sweepstakes.ts",
     "./copy-sweepstakes": "./src/copy-sweepstakes.ts",
     "./create-sweepstakes": "./src/create-sweepstakes.ts",
+    "./delete-draft": "./src/delete-draft.ts",
     "./delete-sweepstakes": "./src/delete-sweepstakes.ts",
     "./get-published-sweepstakes": "./src/get-published-sweepstakes.ts",
     "./get-sweepstakes-form": "./src/get-sweepstakes-form.ts",
