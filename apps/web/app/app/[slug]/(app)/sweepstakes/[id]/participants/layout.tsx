@@ -4,6 +4,8 @@ import { SweepstakesParticipants } from '@giveaway/sweepstakes-details-participa
 import { SweepstakesParticipantsSkeleton } from '@giveaway/sweepstakes-details-participants/sweepstakes-participants-skeleton';
 import { getSweepstakesParticipants } from '@giveaway/participant-server/get-sweepstakes-participants';
 import { getSweepstakesTasks } from '@giveaway/participation-server/get-sweepstake-tasks';
+import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
+import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';
 
 import React, { Suspense } from 'react';
 
@@ -36,6 +38,7 @@ const Wrapper: React.FC<Params> = async ({ slug, id: sweepstakesId }) => {
     slug,
     sweepstakesId
   });
+  const status = await getSweepstakesStatus({ id: sweepstakesId });
 
   if (!tasks.ok) {
     return <div>Failed to load sweepstakes info: {tasks.data.message}</div>;
@@ -47,12 +50,16 @@ const Wrapper: React.FC<Params> = async ({ slug, id: sweepstakesId }) => {
       </div>
     );
   }
+  if (!status.ok) {
+    return <div>Failed to load sweepstakes status: {status.data.message}</div>;
+  }
   return (
     <SweepstakesParticipants
       slug={slug}
       sweepstakesId={sweepstakesId}
       totalTasks={tasks.data.length}
       participants={participants.data.users}
+      readOnly={!EDITABLE_DERIVED_STATUS[status.data.status]}
     />
   );
 };

@@ -72,7 +72,8 @@ export const SweepstakesParticipants: React.FC<{
   sweepstakesId: string;
   totalTasks: number;
   participants: SweepstakesParticipantSchema[];
-}> = ({ participants, slug, sweepstakesId, totalTasks }) => {
+  readOnly?: boolean;
+}> = ({ participants, slug, sweepstakesId, totalTasks, readOnly = false }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [disqualifyDialogOpen, setDisqualifyDialogOpen] = useState(false);
@@ -166,7 +167,9 @@ export const SweepstakesParticipants: React.FC<{
                         sweepstakesId={sweepstakesId}
                         totalTasks={totalTasks}
                         participant={participant}
-                        onDisqualify={handleDisqualifyParticipant}
+                        onDisqualify={
+                          readOnly ? undefined : handleDisqualifyParticipant
+                        }
                       />
                     ))}
                   </TableBody>
@@ -254,7 +257,7 @@ const SweepstakeParticipant: React.FC<{
   sweepstakesId: string;
   participant: SweepstakesParticipantSchema;
   totalTasks: number | null;
-  onDisqualify: (participant: SweepstakesParticipantSchema) => void;
+  onDisqualify?: (participant: SweepstakesParticipantSchema) => void;
 }> = ({ sweepstakesId, slug, participant, totalTasks, onDisqualify }) => {
   const router = useRouter();
 
@@ -351,17 +354,21 @@ const SweepstakeParticipant: React.FC<{
               <Eye />
               Quick View
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDisqualify(participant);
-              }}
-            >
-              <Ban />
-              Disqualify Participant
-            </DropdownMenuItem>
+            {onDisqualify && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-red-600"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDisqualify(participant);
+                  }}
+                >
+                  <Ban />
+                  Disqualify Participant
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>

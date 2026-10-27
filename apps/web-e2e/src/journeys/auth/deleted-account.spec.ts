@@ -2,7 +2,6 @@ import type { Browser, Page } from '@playwright/test';
 import type { E2ePersona } from '@giveaway/e2e-model/personas';
 import { expect, test } from '../../fixtures/test';
 import { BYPASS_STATE, E2E_SECRET } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { signInAs, type SignedInPersona } from '../../helpers/personas';
 import { blockThirdParties } from '../../helpers/third-party';
 
@@ -49,22 +48,22 @@ test.describe('a deleted account', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
   for (const { persona, path } of CASES) {
-    test(
-      `[AUTH-014] a ${persona} is signed out on another device`,
-      knownBug(476),
-      async ({ page, browser, freshPersona }) => {
-        const user = await freshPersona(persona);
+    test(`[AUTH-014] a ${persona} is signed out on another device`, async ({
+      page,
+      browser,
+      freshPersona
+    }) => {
+      const user = await freshPersona(persona);
 
-        await withOtherDevice(browser, user, async (other) => {
-          await other.goto(path);
-          await expect(other).toHaveURL(new RegExp(`${path}$`));
+      await withOtherDevice(browser, user, async (other) => {
+        await other.goto(path);
+        await expect(other).toHaveURL(new RegExp(`${path}$`));
 
-          await deleteAccount(page);
+        await deleteAccount(page);
 
-          await other.goto(path);
-          await expectSignedOut(other);
-        });
-      }
-    );
+        await other.goto(path);
+        await expectSignedOut(other);
+      });
+    });
   }
 });

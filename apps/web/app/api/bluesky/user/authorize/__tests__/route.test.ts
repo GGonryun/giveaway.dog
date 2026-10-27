@@ -131,12 +131,23 @@ describe('bluesky user authorize GET', () => {
       expect(res.cookies.get('bluesky_redirect')).toBeUndefined();
     });
 
+    it.each([['https://evil.example/phish'], ['//evil.example/phish']])(
+      'does not set the redirect cookie when redirectTo is %s',
+      async (redirectTo) => {
+        const res = await GET(
+          request({ handle: 'alice.bsky.social', redirectTo })
+        );
+
+        expect(res.cookies.get('bluesky_redirect')).toBeUndefined();
+      }
+    );
+
     it('logs the start of the authorization', async () => {
       await GET(request({ handle: 'alice.bsky.social' }));
 
       expect(consoleInfo).toHaveBeenCalledWith(
         'Bluesky authorization started',
-        { handle: 'alice.bsky.social', redirectTo: null, returnTo: '/' }
+        { handle: 'alice.bsky.social', redirectTo: '', returnTo: '/' }
       );
     });
 
@@ -239,7 +250,7 @@ describe('bluesky user authorize GET', () => {
       );
     });
 
-    it('follows an absolute returnTo to another origin', async () => {
+    it('ignores an absolute returnTo to another origin', async () => {
       m.authorize.mockRejectedValue(new Error('handle not found'));
 
       const res = await GET(
@@ -250,7 +261,7 @@ describe('bluesky user authorize GET', () => {
       );
 
       expect(res.headers.get('location')).toBe(
-        'https://evil.example/phish?error=bluesky_auth_failed'
+        'https://app.giveaway.dog/?error=bluesky_auth_failed'
       );
     });
 

@@ -16,7 +16,10 @@ import verifyEmail from '@giveaway/account-server/verify-email';
 import { toast } from 'sonner';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { useAccountPage } from '@giveaway/account-settings/use-account-page';
-import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
+import {
+  getUserAuthRedirect,
+  toSafeRedirect
+} from '@giveaway/user-model/redirect';
 import { CheckCircle } from 'lucide-react';
 import { UserAccountType } from '@giveaway/db-model';
 
@@ -70,7 +73,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     onSuccess() {
       setVerificationSuccess(true);
       toast.success('Email verified successfully!');
-      router.push(redirectTo || '/');
+      router.push(toSafeRedirect(redirectTo, '/'));
     },
     onFailure(error) {
       console.error('Email verification failed:', error);
@@ -105,7 +108,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     // Wait for session to load
     if (status === 'loading') return;
     if (provider === 'anonymous') {
-      router.push(redirectTo || '/');
+      router.push(toSafeRedirect(redirectTo, '/'));
       return;
     }
     // If not authenticated, redirect to login
@@ -195,7 +198,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
         </CardHeader>
         <CardContent className="text-center">
           <button
-            onClick={() => router.push(redirectTo || '/login')}
+            onClick={() => router.push(toSafeRedirect(redirectTo, '/login'))}
             className="text-primary hover:underline"
           >
             {token && email ? 'Continue to site' : 'Try signing in again'}

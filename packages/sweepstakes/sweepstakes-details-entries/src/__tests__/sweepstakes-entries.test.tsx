@@ -60,9 +60,14 @@ const manyEntries = Array.from({ length: 30 }, (_, index) =>
   buildUserEntry({ id: `entry-${index + 1}`, completedAt: NOW.getTime() })
 );
 
-const renderEntries = (list = entries) =>
+const renderEntries = (list = entries, readOnly?: boolean) =>
   render(
-    <SweepstakesEntries slug="acme" sweepstakesId="sweep-1" entries={list} />
+    <SweepstakesEntries
+      slug="acme"
+      sweepstakesId="sweep-1"
+      entries={list}
+      readOnly={readOnly}
+    />
   );
 
 const bodyRows = () => screen.getAllByRole('row').slice(1);
@@ -153,6 +158,16 @@ describe('SweepstakesEntries', () => {
       await user.click(within(bodyRows()[rowIndex]).getAllByRole('button')[2]);
       return user;
     };
+
+    it('offers no entry actions when read-only', () => {
+      renderEntries(entries, true);
+
+      expect(
+        screen.queryByRole('button', { name: 'Entry actions' })
+      ).not.toBeInTheDocument();
+      expect(VerificationInstructionsDialog).not.toHaveBeenCalled();
+      expect(DeleteEntryDialog).not.toHaveBeenCalled();
+    });
 
     it('does not render the dialogs before an entry is chosen', () => {
       renderEntries();

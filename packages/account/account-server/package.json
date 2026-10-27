@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
+    "@giveaway/auth-core": "workspace:*",
     "@giveaway/auth-server": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/email": "workspace:*",

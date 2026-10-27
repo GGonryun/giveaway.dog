@@ -4,6 +4,7 @@ import { e2eIntegrationsRequestSchema } from '@giveaway/e2e-model/extras';
 import {
   E2E_INTEGRATION_SCOPES,
   seedE2eIntegrations,
+  toE2eAccountId,
   toE2eIntegrationSettings
 } from '../integrations';
 import { e2eUser, realUser, teamRow } from './fixtures';
@@ -41,6 +42,23 @@ describe('E2E_INTEGRATION_SCOPES', () => {
     expect(E2E_INTEGRATION_SCOPES.DISCORD).toEqual([]);
     expect(new Set(E2E_INTEGRATION_SCOPES.TWITTER).size).toBe(
       E2E_INTEGRATION_SCOPES.TWITTER.length
+    );
+  });
+});
+
+describe('toE2eAccountId', () => {
+  it('gives Bluesky a DID made from the team slug, as the post URLs of the app need', () => {
+    expect(toE2eAccountId('e2e-abc123-w0', 'BLUESKY')).toBe(
+      'did:plc:6532652d6162633132332d7730'
+    );
+  });
+
+  it('gives the other providers the team slug and the provider', () => {
+    expect(toE2eAccountId('e2e-abc123-w0', 'TWITTER')).toBe(
+      'e2e-abc123-w0-twitter'
+    );
+    expect(toE2eAccountId('e2e-abc123-w0', 'TWITCH')).toBe(
+      'e2e-abc123-w0-twitch'
     );
   });
 });

@@ -410,11 +410,11 @@ describe('bluesky user callback GET', () => {
       });
     });
 
-    it('follows an absolute stored redirect target to another origin', async () => {
+    it('ignores an absolute stored redirect target to another origin', async () => {
       await expect(
         GET(request('https://evil.example/phish'))
       ).rejects.toMatchObject({
-        digest: redirectDigest('https://evil.example/phish')
+        digest: redirectDigest('/account')
       });
     });
 

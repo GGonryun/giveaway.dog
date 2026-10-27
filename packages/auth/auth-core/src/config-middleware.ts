@@ -135,6 +135,7 @@ export const authConfigMiddleware = {
     async jwt({ token, user, account, trigger }) {
       if (trigger === 'signIn') {
         token.sid = newSessionId();
+        token.signedInAt = Date.now();
       } else if (await isSessionRevoked(token)) {
         return null;
       }

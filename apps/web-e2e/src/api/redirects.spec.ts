@@ -2,7 +2,6 @@ import type { APIRequestContext } from '@playwright/test';
 import { expect, test } from '../fixtures/test';
 import { E2E_SECRET, personaState } from '../env';
 import { expectSameOrigin, noRedirect } from '../helpers/http';
-import { knownBug } from '../helpers/known-bug';
 
 const OFF_SITE = 'https://example.org';
 
@@ -38,7 +37,7 @@ test.describe('redirect parameters', { tag: '@security' }, () => {
   for (const path of OPEN_REDIRECTS) {
     test(
       `GET ${path} stays on the origin`,
-      knownBug(347, { tag: '@prod-safe' }),
+      { tag: '@prod-safe' },
       async ({ request }) => {
         await expectRedirectOnOrigin(request, path);
       }
@@ -64,16 +63,14 @@ test.describe('redirect parameters', { tag: '@security' }, () => {
     test.use({ storageState: personaState('participant') });
 
     for (const redirectTo of [OFF_SITE, '//example.org']) {
-      test(
-        `GET /portal?redirectTo=${redirectTo} stays on the origin`,
-        knownBug(347),
-        async ({ request }) => {
-          await expectRedirectOnOrigin(
-            request,
-            `/portal?redirectTo=${redirectTo}`
-          );
-        }
-      );
+      test(`GET /portal?redirectTo=${redirectTo} stays on the origin`, async ({
+        request
+      }) => {
+        await expectRedirectOnOrigin(
+          request,
+          `/portal?redirectTo=${redirectTo}`
+        );
+      });
     }
   });
 });

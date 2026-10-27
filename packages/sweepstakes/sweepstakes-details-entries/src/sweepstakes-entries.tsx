@@ -34,12 +34,14 @@ interface SweepstakesEntriesProps {
   slug: string;
   sweepstakesId: string;
   entries: UserEntriesSchema[];
+  readOnly?: boolean;
 }
 
 export const SweepstakesEntries = ({
   slug,
   sweepstakesId,
-  entries
+  entries,
+  readOnly = false
 }: SweepstakesEntriesProps) => {
   const router = useRouter();
 
@@ -179,33 +181,35 @@ export const SweepstakesEntries = ({
                 </TableCell>
 
                 <TableCell onClick={(e) => e.stopPropagation()}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        aria-label="Entry actions"
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={(e) => handleVerifyClick(e, completion)}
-                      >
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        Verify Entry
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={(e) => handleDeleteClick(e, completion)}
-                        className="text-destructive focus:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete Entry
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  {!readOnly && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          aria-label="Entry actions"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={(e) => handleVerifyClick(e, completion)}
+                        >
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Verify Entry
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => handleDeleteClick(e, completion)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete Entry
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -223,7 +227,7 @@ export const SweepstakesEntries = ({
         />
       </Card>
 
-      {selectedCompletion && (
+      {selectedCompletion && !readOnly && (
         <>
           <VerificationInstructionsDialog
             open={verifyDialogOpen}

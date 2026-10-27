@@ -1,6 +1,8 @@
 import { SweepstakesEntries } from '@giveaway/sweepstakes-details-entries/sweepstakes-entries';
 import { SweepstakesEntriesSkeleton } from '@giveaway/sweepstakes-details-entries/sweepstakes-entries-skeleton';
 import getSweepstakeEntries from '@giveaway/sweepstakes-insights-server/get-sweepstake-entries';
+import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
+import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';
 import { Suspense } from 'react';
 
 type Params = { slug: string; id: string };
@@ -29,6 +31,7 @@ export default async function EntriesLayout({
 
 const Wrapper: React.FC<Params> = async ({ id, slug }) => {
   const entries = await getSweepstakeEntries({ sweepstakesId: id, slug });
+  const status = await getSweepstakesStatus({ id });
 
   if (!entries.ok) {
     return (
@@ -36,7 +39,16 @@ const Wrapper: React.FC<Params> = async ({ id, slug }) => {
     );
   }
 
+  if (!status.ok) {
+    return <div>Failed to load sweepstakes status: {status.data.message}</div>;
+  }
+
   return (
-    <SweepstakesEntries sweepstakesId={id} slug={slug} entries={entries.data} />
+    <SweepstakesEntries
+      sweepstakesId={id}
+      slug={slug}
+      entries={entries.data}
+      readOnly={!EDITABLE_DERIVED_STATUS[status.data.status]}
+    />
   );
 };
