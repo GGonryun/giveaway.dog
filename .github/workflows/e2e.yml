@@ -151,7 +151,7 @@ jobs:
             *) E2E_BASE_URL="https://$DEPLOYMENT_URL" ;;
           esac
           echo "Testing $E2E_BASE_URL at $SHA, shard $SHARD, with the run id $E2E_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
-          E2E_BASE_URL="$E2E_BASE_URL" pnpm --filter web-e2e exec playwright test --shard="$SHARD"
+          E2E_BASE_URL="$E2E_BASE_URL" pnpm --filter web-e2e exec playwright test --shard="$SHARD" --workers=8
 
       - name: Upload the JSON report
         if: ${{ !cancelled() && hashFiles('apps/web-e2e/.playwright-results/results.json') != '' }}
