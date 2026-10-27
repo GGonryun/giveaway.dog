@@ -183,6 +183,8 @@ const readAccounts = async (
     select: {
       id: true,
       email: true,
+      name: true,
+      username: true,
       source: true,
       emailVerified: true,
       accounts: {

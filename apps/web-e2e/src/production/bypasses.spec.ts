@@ -25,6 +25,7 @@ const SEED_PATHS = [
   'sweepstakes',
   'rows',
   'runs/abc123',
+  'users/anonymous/abc123abc123abc123abc123',
   'janitor',
   'does-not-exist'
 ];

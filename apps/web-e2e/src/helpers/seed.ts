@@ -249,6 +249,12 @@ export const seedApi = (request: APIRequestContext) => ({
         `outbox?${new URLSearchParams({ channel, target })}`
       )
     ).entries,
+  deleteAnonymousUser: (userId: string) =>
+    call<{ userId: string; deleted: number }>(
+      request,
+      'DELETE',
+      `users/anonymous/${userId}`
+    ),
   deleteRun: (runId: string) =>
     repeatWhileMore(() => call<DeletedRun>(request, 'DELETE', `runs/${runId}`)),
   janitor: () =>

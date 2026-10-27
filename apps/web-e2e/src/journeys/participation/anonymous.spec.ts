@@ -8,6 +8,13 @@ const BONUS = 'Claim a free entry';
 test.describe('an anonymous entry', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
 
+  let anonymousId: string | undefined;
+
+  test.afterEach(async ({ request }) => {
+    if (anonymousId) await seedApi(request).deleteAnonymousUser(anonymousId);
+    anonymousId = undefined;
+  });
+
   test(
     'a visitor enters a giveaway that accepts anonymous entries',
     knownBug(500),
@@ -28,6 +35,13 @@ test.describe('an anonymous entry', () => {
       await page.goto(path);
       await expect(page.getByText('Connect to participate...')).toBeVisible();
       await page.getByRole('button', { name: 'Anonymous' }).click();
+      await expect
+        .poll(async () => {
+          const session = await page.request.get('/api/auth/session');
+          anonymousId = (await session.json())?.user?.id;
+          return anonymousId;
+        })
+        .toEqual(expect.any(String));
 
       await expect(page).toHaveURL(path);
       await expect(page.getByText('Signed in as')).toBeVisible();

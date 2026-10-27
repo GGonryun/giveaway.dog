@@ -34,6 +34,7 @@ import {
   secretCodeV2TaskSchema,
   singleChoiceTaskSchema,
   submitMediaTaskSchema,
+  instagramVisitTaskSchema,
   TaskType,
   visitUrlTaskSchema
 } from '@giveaway/task-model/schemas';
@@ -210,7 +211,8 @@ export const E2E_TASK_TYPES = [
   'SECRET_CODE',
   'SECRET_CODE_V2',
   'REFERRAL_LINK',
-  'SUBMIT_MEDIA'
+  'SUBMIT_MEDIA',
+  'INSTAGRAM_VISIT'
 ] as const satisfies readonly TaskType[];
 
 const hermeticTaskSchema = z.discriminatedUnion('type', [
@@ -226,7 +228,8 @@ const hermeticTaskSchema = z.discriminatedUnion('type', [
   secretCodeTaskSchema.omit({ id: true }).strict(),
   secretCodeV2TaskSchema.omit({ id: true }).strict(),
   referralLinkTaskSchema.omit({ id: true }).strict(),
-  submitMediaTaskSchema.omit({ id: true }).strict()
+  submitMediaTaskSchema.omit({ id: true }).strict(),
+  instagramVisitTaskSchema.omit({ id: true }).strict()
 ]);
 
 export const e2eTaskRequestSchema = z

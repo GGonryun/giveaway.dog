@@ -413,6 +413,8 @@ describe('readE2eRows', () => {
     const user = {
       id: 'user-participant',
       email: 'e2e-participant-abc123p1@example.com',
+      name: 'E2E participant',
+      username: 'alice_e2e',
       source: 'TWITTER_IMPORT',
       emailVerified: null,
       accounts: [
@@ -436,6 +438,8 @@ describe('readE2eRows', () => {
       user: {
         id: 'user-participant',
         email: 'e2e-participant-abc123p1@example.com',
+        name: 'E2E participant',
+        username: 'alice_e2e',
         source: 'TWITTER_IMPORT',
         emailVerified: null
       },
@@ -446,6 +450,8 @@ describe('readE2eRows', () => {
       select: {
         id: true,
         email: true,
+        name: true,
+        username: true,
         source: true,
         emailVerified: true,
         accounts: {
