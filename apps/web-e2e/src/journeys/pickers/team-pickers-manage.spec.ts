@@ -306,7 +306,7 @@ test.describe('team X pickers, as their host', () => {
         await page.waitForLoadState('networkidle');
 
         const focusesCard = () =>
-          card.evaluate((element) => element.contains(document.activeElement));
+          card.evaluate((element) => element.matches(':focus-within'));
         let reached = false;
         for (let step = 0; step < 40 && !reached; step++) {
           await page.keyboard.press('Tab');
