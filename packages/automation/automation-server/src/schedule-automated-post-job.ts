@@ -8,6 +8,7 @@ import {
   toAutomatedPostJobCreateInput
 } from '@giveaway/automation-model/schemas';
 import { validateAutomatedPostRequest } from '@giveaway/automation-model/validation';
+import { requestJobRun } from '@giveaway/jobs/schedule';
 
 export const scheduleAutomatedPostJob = procedure()
   .authorization({ required: true })
@@ -82,6 +83,8 @@ export const scheduleAutomatedPostJob = procedure()
         runAt: sweepstakes.timing.startDate
       })
     });
+
+    await requestJobRun();
 
     return job;
   });

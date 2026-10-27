@@ -4,6 +4,14 @@ import { TaskJobStatus } from '@prisma/client';
 import { GET } from '../route';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 
+const redis = vi.hoisted(() => ({
+  incr: vi.fn(),
+  mget: vi.fn(),
+  set: vi.fn()
+}));
+
+vi.mock('@giveaway/cache/redis', () => ({ redis }));
+
 const CRON_SECRET = 'cron-secret';
 const NOW = new Date('2026-03-01T12:00:00.000Z');
 
@@ -174,6 +182,113 @@ describe('GET /api/jobs/process', () => {
         },
         posts: { ok: true, data: { processed: 0 } }
       });
+    });
+  });
+
+  describe('with the job schedule in Redis', () => {
+    const LATER = new Date('2026-03-01T13:00:00.000Z');
+    const MAX_IDLE_MS = 6 * 60 * 60 * 1000;
+
+    beforeEach(() => {
+      vi.stubEnv('REDIS_URL', 'https://default:token@redis.example.com');
+      redis.mget.mockReset();
+      redis.set.mockReset();
+      prismaMock.taskJob.findFirst.mockResolvedValue(null);
+      prismaMock.sweepstakesJob.findFirst.mockResolvedValue(null);
+      prismaMock.automatedPostJob.findFirst.mockResolvedValue(null);
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('does not touch the database before the next run time', async () => {
+      redis.mget.mockResolvedValue([
+        { nextRunAt: LATER.getTime(), requests: 2 },
+        2
+      ]);
+
+      const res = await GET(authorizedRequest());
+
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual({
+        skipped: true,
+        nextRunAt: LATER.toISOString()
+      });
+      expect(prismaMock.taskJob.findMany).not.toHaveBeenCalled();
+      expect(prismaMock.sweepstakesJob.findMany).not.toHaveBeenCalled();
+      expect(prismaMock.automatedPostJob.findMany).not.toHaveBeenCalled();
+      expect(prismaMock.taskJob.findFirst).not.toHaveBeenCalled();
+      expect(redis.set).not.toHaveBeenCalled();
+    });
+
+    it('does not read the schedule for a caller without the cron secret', async () => {
+      await GET(buildRequest());
+
+      expect(redis.mget).not.toHaveBeenCalled();
+    });
+
+    it('runs the jobs when a run was requested since the schedule was saved', async () => {
+      redis.mget.mockResolvedValue([
+        { nextRunAt: LATER.getTime(), requests: 2 },
+        3
+      ]);
+
+      const res = await GET(authorizedRequest());
+
+      expect(await res.json()).toEqual({
+        tasks: { ok: true, data: { processed: 0 } },
+        sweepstakes: { ok: true, data: { processed: 0 } },
+        posts: { ok: true, data: { processed: 0 } }
+      });
+      expect(prismaMock.taskJob.findMany).toHaveBeenCalledOnce();
+    });
+
+    it('saves the next run time with the request counter read before the run', async () => {
+      redis.mget.mockResolvedValue([null, 3]);
+      prismaMock.sweepstakesJob.findFirst.mockResolvedValue({ runAt: LATER });
+
+      await GET(authorizedRequest());
+
+      expect(redis.set).toHaveBeenCalledExactlyOnceWith('jobs:schedule', {
+        nextRunAt: LATER.getTime(),
+        requests: 3
+      });
+      expect(redis.set.mock.invocationCallOrder[0]).toBeGreaterThan(
+        prismaMock.automatedPostJob.findMany.mock.invocationCallOrder[0]
+      );
+    });
+
+    it('waits at most six hours when no job is pending', async () => {
+      redis.mget.mockResolvedValue([null, null]);
+
+      await GET(authorizedRequest());
+
+      expect(redis.set).toHaveBeenCalledExactlyOnceWith('jobs:schedule', {
+        nextRunAt: NOW.getTime() + MAX_IDLE_MS,
+        requests: 0
+      });
+    });
+
+    it('saves no schedule when the next run time cannot be read', async () => {
+      redis.mget.mockResolvedValue([null, 3]);
+      prismaMock.taskJob.findFirst.mockRejectedValue(new Error('db down'));
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const res = await GET(authorizedRequest());
+
+      expect(res.status).toBe(200);
+      expect(redis.set).not.toHaveBeenCalled();
+    });
+
+    it('runs the jobs and saves no schedule when Redis fails', async () => {
+      redis.mget.mockRejectedValue(new Error('redis down'));
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await GET(authorizedRequest());
+
+      expect(prismaMock.taskJob.findMany).toHaveBeenCalledOnce();
+      expect(redis.set).not.toHaveBeenCalled();
     });
   });
 });

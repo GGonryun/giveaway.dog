@@ -16,7 +16,8 @@
     }
   },
   "exports": {
-    "./util": "./src/util.ts"
+    "./util": "./src/util.ts",
+    "./schedule": "./src/schedule.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -25,6 +26,7 @@
     "test:property": "vitest run --project property --passWithNoTests"
   },
   "dependencies": {
+    "@giveaway/cache": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "server-only": "catalog:"
   },

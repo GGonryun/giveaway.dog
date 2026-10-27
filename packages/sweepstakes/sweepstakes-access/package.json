@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/team-model": "workspace:*",
     "@giveaway/team-permissions": "workspace:*",

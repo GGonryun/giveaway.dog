@@ -23,6 +23,7 @@ import {
 } from '@giveaway/team-permissions';
 import { assertMinimumTeamTier } from '@giveaway/team-model/team/util';
 import { assertNotCompleted } from './completed';
+import { requestJobRun } from '@giveaway/jobs/schedule';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -418,6 +419,10 @@ export const applySweepstakesChanges = async ({
       timeout: 30000
     }
   );
+
+  if ((input.status ?? sweepstakes.status) === SweepstakesStatus.ACTIVE) {
+    await requestJobRun();
+  }
 
   return { sweepstakes, team };
 };

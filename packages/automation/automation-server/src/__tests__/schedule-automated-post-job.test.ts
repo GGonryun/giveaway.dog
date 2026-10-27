@@ -7,6 +7,10 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 type ScheduleInput = Parameters<typeof scheduleAutomatedPostJob>[0];
 
+const { requestJobRun } = vi.hoisted(() => ({ requestJobRun: vi.fn() }));
+
+vi.mock('@giveaway/jobs/schedule', () => ({ requestJobRun }));
+
 const NOW = new Date('2026-06-01T12:00:00.000Z');
 const START = new Date('2026-06-02T12:00:00.000Z');
 const END = new Date('2026-06-10T12:00:00.000Z');
@@ -50,6 +54,7 @@ describe('scheduleAutomatedPostJob', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
+    requestJobRun.mockReset();
   });
 
   afterEach(() => {
@@ -313,6 +318,20 @@ describe('scheduleAutomatedPostJob', () => {
         'Bluesky integration not found or not active'
       );
       expect(prismaMock.automatedPostJob.create).not.toHaveBeenCalled();
+      expect(requestJobRun).not.toHaveBeenCalled();
+    });
+
+    it('requests a job run after the job is created', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(sweepstakesRow());
+      prismaMock.integration.findFirst.mockResolvedValue({ id: 'bsky-int' });
+      prismaMock.automatedPostJob.create.mockResolvedValue({ id: 'job-1' });
+
+      await scheduleAutomatedPostJob(blueskyInput);
+
+      expect(requestJobRun).toHaveBeenCalledOnce();
+      expect(requestJobRun.mock.invocationCallOrder[0]).toBeGreaterThan(
+        prismaMock.automatedPostJob.create.mock.invocationCallOrder[0]
+      );
     });
   });
 });
