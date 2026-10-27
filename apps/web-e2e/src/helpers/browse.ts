@@ -53,9 +53,9 @@ export const hostOptions = async (page: Page) => {
   if (await hosts.isVisible()) {
     await hosts.click();
     options = await page.getByRole('option').allTextContents();
-    await page.keyboard.press('Escape');
+    await page.getByRole('option', { name: 'Close', exact: true }).click();
   }
-  await page.keyboard.press('Escape');
+  await sheet.getByRole('button', { name: 'Close', exact: true }).click();
   await expect(sheet).toBeHidden();
   return options;
 };

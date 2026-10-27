@@ -24,7 +24,11 @@ type Giveaway = Omit<E2eSweepstakesRequestInput, 'ns' | 'team' | 'name'>;
 const ENTRANTS: E2ePersona[] = ['participant', 'participant2', 'newbie'];
 
 const entrants = (count: number, ns: string) =>
-  ENTRANTS.slice(0, count).map((persona) => ({ persona, ns }));
+  ENTRANTS.slice(0, count).map((persona) => ({
+    persona,
+    ns,
+    completions: [{ task: 0 }]
+  }));
 
 const seedGiveaways = async (
   request: APIRequestContext,
