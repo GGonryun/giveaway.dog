@@ -5,7 +5,7 @@ import { authConfigMiddleware } from '../config-middleware';
 import { prismaMock } from '@giveaway/testing-mocks/prisma';
 import { createSession } from '@giveaway/testing-mocks/session';
 
-const redis = vi.hoisted(() => ({ exists: vi.fn(), set: vi.fn() }));
+const redis = vi.hoisted(() => ({ mget: vi.fn(), set: vi.fn() }));
 
 vi.mock('@giveaway/cache/redis', () => ({ redis }));
 
@@ -36,7 +36,7 @@ const participant = { onboarded: true, accountType: 'PARTICIPANT' as const };
 const notOnboarded = { onboarded: false, accountType: 'HOST' as const };
 
 beforeEach(() => {
-  redis.exists.mockReset();
+  redis.mget.mockReset();
   redis.set.mockReset();
   vi.spyOn(console, 'error').mockImplementation(() => {});
   vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -389,7 +389,7 @@ describe('authConfigMiddleware', () => {
       } as JwtArgs);
 
     beforeEach(() => {
-      redis.exists.mockResolvedValue(0);
+      redis.mget.mockResolvedValue([null, null]);
     });
 
     it('gives a new session id to a token on sign in', async () => {
@@ -397,27 +397,39 @@ describe('authConfigMiddleware', () => {
 
       expect(token?.sid).toEqual(expect.any(String));
       expect(token?.sid).not.toBe('session-1');
-      expect(redis.exists).not.toHaveBeenCalled();
+      expect(redis.mget).not.toHaveBeenCalled();
     });
 
     it('keeps the session id of a token that is not revoked', async () => {
       const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
 
-      expect(redis.exists).toHaveBeenCalledWith(
-        'auth:revoked-session:session-1'
-      );
+      expect(redis.mget).toHaveBeenCalledExactlyOnceWith([
+        'auth:revoked-session:session-1',
+        'auth:revoked-user:u-1'
+      ]);
       expect(token).toEqual({ id: 'u-1', sid: 'session-1' });
+    });
+
+    it('checks only the session of a token without a user id', async () => {
+      redis.mget.mockResolvedValue([null]);
+
+      const token = await jwt({ token: { sid: 'session-1' } });
+
+      expect(redis.mget).toHaveBeenCalledExactlyOnceWith([
+        'auth:revoked-session:session-1'
+      ]);
+      expect(token).toEqual({ sid: 'session-1' });
     });
 
     it('gives a session id to a token that has none', async () => {
       const token = await jwt({ token: { id: 'u-1' } });
 
-      expect(redis.exists).not.toHaveBeenCalled();
+      expect(redis.mget).not.toHaveBeenCalled();
       expect(token).toEqual({ id: 'u-1', sid: expect.any(String) });
     });
 
     it('ends a session that was signed out', async () => {
-      redis.exists.mockResolvedValue(1);
+      redis.mget.mockResolvedValue([1, null]);
 
       const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
 
@@ -425,7 +437,7 @@ describe('authConfigMiddleware', () => {
     });
 
     it('ends a signed out session on update too', async () => {
-      redis.exists.mockResolvedValue(1);
+      redis.mget.mockResolvedValue([1, null]);
 
       const token = await jwt({
         token: { id: 'u-1', sid: 'session-1' },
@@ -436,8 +448,56 @@ describe('authConfigMiddleware', () => {
       expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     });
 
+    it('[AUTH-014] ends a session that signed in before its user was revoked', async () => {
+      redis.mget.mockResolvedValue([null, 2_000]);
+
+      const token = await jwt({
+        token: { id: 'u-1', sid: 'session-1', signedInAt: 1_999 }
+      });
+
+      expect(token).toBeNull();
+    });
+
+    it('[AUTH-014] ends a session that signed in when its user was revoked', async () => {
+      redis.mget.mockResolvedValue([null, 2_000]);
+
+      const token = await jwt({
+        token: { id: 'u-1', sid: 'session-1', signedInAt: 2_000 }
+      });
+
+      expect(token).toBeNull();
+    });
+
+    it('[AUTH-014] ends a session without a sign-in time when its user was revoked', async () => {
+      redis.mget.mockResolvedValue([null, 2_000]);
+
+      const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
+
+      expect(token).toBeNull();
+    });
+
+    it('keeps a session that signed in after its user was revoked', async () => {
+      redis.mget.mockResolvedValue([null, 2_000]);
+
+      const token = await jwt({
+        token: { id: 'u-1', sid: 'session-1', signedInAt: 2_001 }
+      });
+
+      expect(token).toEqual({ id: 'u-1', sid: 'session-1', signedInAt: 2_001 });
+    });
+
+    it('records the sign-in time of a new session', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
+
+      const token = await jwt({ user: { id: 'u-1' }, trigger: 'signIn' });
+
+      vi.useRealTimers();
+      expect(token?.signedInAt).toBe(Date.parse('2026-01-01T00:00:00.000Z'));
+    });
+
     it('keeps the session when the revocation check fails', async () => {
-      redis.exists.mockRejectedValue(new Error('down'));
+      redis.mget.mockRejectedValue(new Error('down'));
 
       const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
 
@@ -503,6 +563,7 @@ describe('authConfigMiddleware', () => {
         expect(token).toEqual({
           id: 'u-1',
           sid: expect.any(String),
+          signedInAt: trigger === 'signIn' ? expect.any(Number) : undefined,
           onboarded: true,
           accountType: 'HOST',
           username: 'host-user'
