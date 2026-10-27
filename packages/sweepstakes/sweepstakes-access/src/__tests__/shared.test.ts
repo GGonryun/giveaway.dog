@@ -745,17 +745,33 @@ describe('applySweepstakesChanges', () => {
       expect(prismaMock.automatedPostJob.createMany).not.toHaveBeenCalled();
     });
 
-    it('restores referrals even when their task no longer exists', async () => {
+    it('restores referrals only for tasks that still exist', async () => {
       stubSweepstakesRewrite(prismaMock, { tasks: [{ id: 'task-keep' }] });
       prismaMock.referral.findMany.mockResolvedValue([
-        { id: 'r-1', code: 'ABC', taskId: 'task-gone' }
+        { id: 'r-1', code: 'ABC', taskId: 'task-keep' },
+        { id: 'r-2', code: 'DEF', taskId: 'task-gone' }
       ]);
 
       await apply();
 
       expect(prismaMock.referral.createMany).toHaveBeenCalledWith({
-        data: [{ id: 'r-1', code: 'ABC', taskId: 'task-gone' }]
+        data: [{ id: 'r-1', code: 'ABC', taskId: 'task-keep' }]
       });
+    });
+
+    it('does not restore referrals when their tasks were all removed', async () => {
+      stubSweepstakesRewrite(prismaMock, { tasks: [{ id: 'task-keep' }] });
+      prismaMock.referral.findMany.mockResolvedValue([
+        { id: 'r-2', code: 'DEF', taskId: 'task-gone' }
+      ]);
+      prismaMock.referredUser.findMany.mockResolvedValue([
+        { id: 'ru-2', referralId: 'r-2', userId: 'user-4' }
+      ]);
+
+      await apply();
+
+      expect(prismaMock.referral.createMany).not.toHaveBeenCalled();
+      expect(prismaMock.referredUser.createMany).not.toHaveBeenCalled();
     });
 
     it('does not restore referrals when there are none', async () => {
@@ -764,9 +780,15 @@ describe('applySweepstakesChanges', () => {
       expect(prismaMock.referral.createMany).not.toHaveBeenCalled();
     });
 
-    it('restores referred users when there are some', async () => {
+    it('restores referred users only for referrals that are restored', async () => {
+      stubSweepstakesRewrite(prismaMock, { tasks: [{ id: 'task-keep' }] });
+      prismaMock.referral.findMany.mockResolvedValue([
+        { id: 'r-1', code: 'ABC', taskId: 'task-keep' },
+        { id: 'r-2', code: 'DEF', taskId: 'task-gone' }
+      ]);
       prismaMock.referredUser.findMany.mockResolvedValue([
-        { id: 'ru-1', referralId: 'r-1', userId: 'user-3' }
+        { id: 'ru-1', referralId: 'r-1', userId: 'user-3' },
+        { id: 'ru-2', referralId: 'r-2', userId: 'user-4' }
       ]);
 
       await apply();
