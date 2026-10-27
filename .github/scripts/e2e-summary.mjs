@@ -82,6 +82,9 @@ const tests = suites
             .map((annotation) => annotation.description)
         )
       ],
+      file: spec.file,
+      duration: last?.duration ?? 0,
+      total: results.reduce((sum, result) => sum + (result.duration ?? 0), 0),
       lastStatus: last?.status,
       lastError: errorOf(last),
       firstError: errorOf(results.find((result) => result.status !== 'passed'))
@@ -117,6 +120,36 @@ const knownViolations = tests.flatMap((test) =>
     return { test, issue, violation: rest.join(' ') };
   })
 );
+
+const formatDuration = (ms) => {
+  const total = Math.round(ms / 1000);
+  return total < 60 ? `${total}s` : `${Math.floor(total / 60)}m ${total % 60}s`;
+};
+
+const SLOWEST_TESTS = 25;
+const SLOWEST_FILES = 15;
+
+const ran = tests.filter((test) => test.status !== 'skipped');
+const slowestTests = [...ran]
+  .sort((a, b) => b.total - a.total)
+  .slice(0, SLOWEST_TESTS);
+const files = [
+  ...ran
+    .reduce((byFile, test) => {
+      const file = byFile.get(test.file) ?? {
+        file: test.file,
+        tests: 0,
+        total: 0
+      };
+      file.tests += 1;
+      file.total += test.total;
+      return byFile.set(test.file, file);
+    }, new Map())
+    .values()
+];
+const slowestFiles = files
+  .sort((a, b) => b.total - a.total)
+  .slice(0, SLOWEST_FILES);
 
 const seconds = Math.round(duration / 1000);
 const lines = [
@@ -183,6 +216,23 @@ table(
     cell(violation),
     issueLink(issue)
   ]
+);
+
+table(
+  `Slowest tests (the ${SLOWEST_TESTS} longest, with their retries)`,
+  slowestTests,
+  ['Test', 'Project', 'Location', 'Time', 'Last attempt'],
+  (test) => [
+    ...where(test),
+    formatDuration(test.total),
+    formatDuration(test.duration)
+  ]
+);
+table(
+  `Slowest files (the ${SLOWEST_FILES} longest, every project and retry)`,
+  slowestFiles,
+  ['File', 'Tests', 'Time'],
+  (file) => [`\`${file.file}\``, file.tests, formatDuration(file.total)]
 );
 
 if (missing.length > 0) {
