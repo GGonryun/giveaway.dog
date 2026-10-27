@@ -1,4 +1,4 @@
-import type { APIRequestContext, Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { E2E_X_FIXTURES } from '@giveaway/e2e-model/fakes';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
@@ -7,18 +7,11 @@ import { knownBug } from '../../helpers/known-bug';
 import { signInAs } from '../../helpers/personas';
 import {
   FIXTURE_RETWEETER,
+  seedPickerTeam,
   skipWithoutScrapeBadgerFixtures,
   statValue
 } from '../../helpers/pickers';
 import { seedApi } from '../../helpers/seed';
-
-const seedProTeam = (request: APIRequestContext, ns: string) =>
-  seedApi(request).team({
-    ns,
-    suffix: 'xp',
-    name: `Pickers ${ns}`,
-    tier: 'PRO'
-  });
 
 const eligibleUser = (username: string) => ({
   username,
@@ -50,7 +43,7 @@ test.describe('team X pickers', () => {
     request
   }, testInfo) => {
     const ns = freshNamespace(testInfo.workerIndex);
-    const { team } = await seedProTeam(request, ns);
+    const { team } = await seedPickerTeam(request, ns);
     const eligible = [`ok1_${ns}`, `ok2_${ns}`, `ok3_${ns}`];
     const picker = await seedApi(request).picker({
       team: team.slug,
@@ -143,7 +136,7 @@ test.describe('team X pickers', () => {
     knownBug(480),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedProTeam(request, ns);
+      const { team } = await seedPickerTeam(request, ns);
       const picker = await seedApi(request).picker({
         team: team.slug,
         users: [{ username: `only_${ns}` }],
@@ -172,7 +165,7 @@ test.describe('team X pickers', () => {
     }, testInfo) => {
       test.slow();
       const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedProTeam(request, ns);
+      const { team } = await seedPickerTeam(request, ns);
       await signInAs(page.request, 'host', ns);
 
       await page.goto(`/app/${team.slug}/pickers/x`);
