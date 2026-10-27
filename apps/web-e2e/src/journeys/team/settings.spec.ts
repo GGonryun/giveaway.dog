@@ -2,8 +2,10 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET } from '../../env';
+import { stubBlobImage, stubBlobUploads } from '../../helpers/blob';
 import { knownBug } from '../../helpers/known-bug';
 import { signInAs } from '../../helpers/personas';
+import { PIXEL_PNG } from '../../helpers/third-party';
 import { seedApi } from '../../helpers/seed';
 
 const seedOwnTeam = async (page: Page, ns: string, suffix: string) => {
@@ -15,6 +17,16 @@ const seedOwnTeam = async (page: Page, ns: string, suffix: string) => {
   await signInAs(page.request, 'host', ns);
   return team;
 };
+
+const expectTeamLogo = (page: Page, name: string, url: string) =>
+  expect
+    .poll(() =>
+      page
+        .getByRole('img', { name: `${name} logo` })
+        .first()
+        .getAttribute('src')
+    )
+    .toContain(`url=${encodeURIComponent(url)}`);
 
 const urlField = (page: Page) =>
   page.getByRole('textbox', { name: 'https://x.com/username' });
@@ -73,6 +85,47 @@ test.describe('team settings', () => {
     await expect(
       page.getByRole('button').filter({ hasText: renamed })
     ).toContainText(`@${team.slug}`);
+  });
+
+  test('an owner changes the team logo, and the new logo shows everywhere', async ({
+    page
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const team = await seedOwnTeam(page, ns, 'logo');
+    const logoUrl = `https://e2e.public.blob.vercel-storage.com/team-logo-${ns}.png`;
+    const uploads = await stubBlobUploads(page, { url: logoUrl });
+    await stubBlobImage(page, logoUrl);
+
+    await page.goto(`/app/${team.slug}/settings/profile`);
+    const card = page
+      .locator('[data-slot="card"]')
+      .filter({ hasText: 'Team Logo' });
+    const save = card.getByRole('button', { name: 'Save' });
+    await expect(save).toBeDisabled();
+
+    await card.getByRole('button', { name: 'Remove file' }).click();
+    await card.locator('input[type="file"]').setInputFiles({
+      name: 'logo.png',
+      mimeType: 'image/png',
+      buffer: PIXEL_PNG
+    });
+    await expect(card.getByText('Uploading...')).toBeHidden();
+    await expect(save).toBeEnabled();
+    expect(uploads).toEqual([{ pathname: 'logo.png', url: logoUrl }]);
+    await save.click();
+
+    await expect(
+      page.getByText('Team logo updated successfully')
+    ).toBeVisible();
+    await page.reload();
+    await expect(card.getByRole('img', { name: 'Preview' })).toHaveAttribute(
+      'src',
+      logoUrl
+    );
+    await expectTeamLogo(page, team.name, logoUrl);
+
+    await page.goto('/app?step=1');
+    await expectTeamLogo(page, team.name, logoUrl);
   });
 
   test('an owner saves and removes a social link', async ({

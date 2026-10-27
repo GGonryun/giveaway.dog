@@ -129,6 +129,7 @@ beforeEach(() => {
   vi.stubEnv('E2E_ALLOW_WRITES', '1');
   vi.stubEnv('E2E_ALLOW_PUBLIC', undefined);
   vi.stubEnv('E2E_FAKE_EXTERNALS', undefined);
+  vi.stubEnv('TWITCH_CLIENT_ID', undefined);
   clearMemoryOutbox();
   vi.spyOn(console, 'info').mockImplementation(() => undefined);
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -500,7 +501,16 @@ describe('handleE2eRequest', () => {
         environment: 'preview',
         writes: true,
         allowPublic: false,
-        fakes: []
+        fakes: [],
+        twitchOAuth: false
+      });
+    });
+
+    it('reports that Twitch OAuth is configured', async () => {
+      vi.stubEnv('TWITCH_CLIENT_ID', 'e2e-twitch-client');
+
+      expect(await (await call('GET', 'health')).json()).toMatchObject({
+        twitchOAuth: true
       });
     });
 

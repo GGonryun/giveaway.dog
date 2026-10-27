@@ -72,7 +72,8 @@ const ROUTES: E2eRoute[] = [
       environment: getE2eEnvironment(),
       writes: areE2eWritesAllowed(),
       allowPublic: arePublicE2eGiveawaysAllowed(),
-      fakes: getE2eFakeServices()
+      fakes: getE2eFakeServices(),
+      twitchOAuth: Boolean(process.env.TWITCH_CLIENT_ID)
     })
   },
   {
