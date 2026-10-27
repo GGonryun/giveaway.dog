@@ -16,6 +16,7 @@
     }
   },
   "exports": {
+    "./completed": "./src/completed.ts",
     "./shared": "./src/shared.ts",
     "./team-sweepstakes": "./src/team-sweepstakes.ts",
     "./testing/team-sweepstakes": "./src/testing/team-sweepstakes.ts"

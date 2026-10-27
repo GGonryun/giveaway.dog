@@ -13,9 +13,11 @@ type Role = 'OWNER' | 'ADMIN' | 'MEMBER' | 'GUEST' | 'BLOCKED';
 
 export const teamSweepstakes = (
   role: Role = 'OWNER',
-  id: string = SWEEPSTAKES_ID
+  id: string = SWEEPSTAKES_ID,
+  status: 'DRAFT' | 'ACTIVE' | 'COMPLETED' = 'ACTIVE'
 ) => ({
   id,
+  status,
   team: { members: [{ userId: TEST_USER.id, role }] }
 });
 
@@ -29,6 +31,7 @@ export const teamSweepstakesQuery = (
   },
   select: {
     id: true,
+    status: true,
     team: {
       select: {
         members: {

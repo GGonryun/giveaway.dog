@@ -4,6 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { CompletionStatus, TeamTier } from '@giveaway/db-model';
+import { assertNotCompleted } from '@giveaway/sweepstakes-access/completed';
 import {
   findUserSweepstakes,
   findUserSweepstakesQuery
@@ -29,13 +30,15 @@ export const reverifyTaskCompletion = procedure()
     })
   )
   .handler(async ({ db, input, user }) => {
-    const { team } = await findUserSweepstakes({
+    const { sweepstakes, team } = await findUserSweepstakes({
       db,
       user,
       id: input.sweepstakesId,
       permission: TeamPermission.VIEW_SWEEPSTAKES,
       tier: TeamTier.FREE
     });
+
+    assertNotCompleted(sweepstakes);
 
     const taskCompletion = await db.taskCompletion.findFirst({
       where: {

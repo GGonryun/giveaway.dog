@@ -4,6 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { TeamTier } from '@giveaway/db-model';
+import { assertNotCompleted } from '@giveaway/sweepstakes-access/completed';
 import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { TeamPermission } from '@giveaway/team-permissions';
 
@@ -18,13 +19,15 @@ export const deleteTaskCompletion = procedure()
   .output(z.object({ success: z.boolean() }))
   .invalidate(async ({ input }) => [`sweepstakes-${input.sweepstakesId}`])
   .handler(async ({ db, input, user }) => {
-    await findUserSweepstakes({
+    const { sweepstakes } = await findUserSweepstakes({
       db,
       user,
       id: input.sweepstakesId,
       permission: TeamPermission.UPDATE_SWEEPSTAKES,
       tier: TeamTier.FREE
     });
+
+    assertNotCompleted(sweepstakes);
 
     const taskCompletion = await db.taskCompletion.findFirst({
       where: {
