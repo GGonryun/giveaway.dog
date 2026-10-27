@@ -130,14 +130,13 @@ describe('publishSweepstakes', () => {
       ]);
     });
 
-    it('invalidates the sweepstakes cache tag', async () => {
+    it('invalidates the sweepstakes and participant page cache tags', async () => {
       await publishSweepstakes({ id: SWEEPSTAKES_ID });
 
-      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(1);
-      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
-        `sweepstakes-${SWEEPSTAKES_ID}`,
-        'max'
-      );
+      expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+        [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
+        ['participant-sweepstake', 'max']
+      ]);
     });
   });
 
