@@ -11,7 +11,6 @@ import {
   removeEntryMethod,
   saveChanges
 } from '../../helpers/manage';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import {
   eligibleEntries,
@@ -20,8 +19,6 @@ import {
   readDraws,
   winnersPage
 } from '../../helpers/winners';
-
-const CREATED_AT_BUG = 530;
 
 const completionKeys = async (request: APIRequestContext, id: string) =>
   (await readCompletions(request, id)).completions
@@ -200,32 +197,31 @@ test.describe('editing a published giveaway', () => {
     expect(participants.flatMap((p) => p.referrals)).toEqual([]);
   });
 
-  test(
-    '[EDIT-005] the host edits a giveaway and it keeps its creation date',
-    knownBug(CREATED_AT_BUG),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedApi(request).sweepstakes({
-        ns: freshNamespace(testInfo.workerIndex),
-        team: team.slug
-      });
-      const { createdAt } = await readSweepstakes(request, giveaway.id);
+  test('[EDIT-005] the host edits a giveaway and it keeps its creation date', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns: freshNamespace(testInfo.workerIndex),
+      team: team.slug
+    });
+    const { createdAt } = await readSweepstakes(request, giveaway.id);
 
-      await openEditor(page, team.slug, giveaway.id);
-      await page
-        .getByRole('textbox', { name: 'Name' })
-        .fill(`${giveaway.name} renamed`);
-      await saveChanges(page);
-      await expectSaved(page);
+    await openEditor(page, team.slug, giveaway.id);
+    await page
+      .getByRole('textbox', { name: 'Name' })
+      .fill(`${giveaway.name} renamed`);
+    await saveChanges(page);
+    await expectSaved(page);
 
-      await expect
-        .poll(
-          async () => (await readSweepstakes(request, giveaway.id)).details.name
-        )
-        .toBe(`${giveaway.name} renamed`);
-      expect((await readSweepstakes(request, giveaway.id)).createdAt).toBe(
-        createdAt
-      );
-    }
-  );
+    await expect
+      .poll(
+        async () => (await readSweepstakes(request, giveaway.id)).details.name
+      )
+      .toBe(`${giveaway.name} renamed`);
+    expect((await readSweepstakes(request, giveaway.id)).createdAt).toBe(
+      createdAt
+    );
+  });
 });
