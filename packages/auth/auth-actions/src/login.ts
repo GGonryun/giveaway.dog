@@ -6,7 +6,7 @@ import { parseProvider, blueskyHandleSchema } from '@giveaway/user-model/user';
 import { AuthError } from 'next-auth';
 import z from 'zod';
 import { signIn } from '@giveaway/auth-server/config';
-import { IdentityProvider } from '@giveaway/db-model';
+import { IdentityProvider, Prisma, PrismaClient } from '@giveaway/db-model';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { redirect } from 'next/navigation';
 import {
@@ -36,7 +36,7 @@ const login = procedure()
       returnTo: z.string()
     })
   )
-  .handler(async ({ input }) => {
+  .handler(async ({ db, user, input }) => {
     const {
       returnTo,
       redirectTo,
@@ -69,6 +69,8 @@ const login = procedure()
         email
       );
       await signInHandler({
+        db,
+        userId: user?.id ?? undefined,
         provider,
         email,
         options,
@@ -99,7 +101,81 @@ const login = procedure()
 
 export default login;
 
+type MetaProfile = {
+  provider: 'instagram' | 'facebook';
+  name: string;
+  providerAccountId: string;
+  label: string;
+  link: string;
+};
+
+const alreadyLinked = (name: string) =>
+  new ApplicationError({
+    code: 'CONFLICT',
+    message: `This ${name} profile is already linked to another account.`
+  });
+
+const linkMetaProfile = async (
+  db: PrismaClient,
+  userId: string | undefined,
+  profile: MetaProfile
+) => {
+  const { provider, name, providerAccountId, label, link } = profile;
+
+  if (!userId) {
+    throw new ApplicationError({
+      code: 'UNAUTHORIZED',
+      message: `Sign in to connect your ${name} profile.`
+    });
+  }
+
+  const existing = await db.account.findUnique({
+    where: { provider_providerAccountId: { provider, providerAccountId } }
+  });
+
+  if (existing && existing.userId !== userId) {
+    throw alreadyLinked(name);
+  }
+
+  if (existing) {
+    await db.account.update({
+      where: { provider_providerAccountId: { provider, providerAccountId } },
+      data: { label, link, updatedAt: new Date() }
+    });
+    return;
+  }
+
+  try {
+    await db.account.create({
+      data: {
+        userId,
+        provider,
+        providerAccountId,
+        type: 'oauth',
+        label,
+        link,
+        scope: ''
+      }
+    });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      throw alreadyLinked(name);
+    }
+    throw error;
+  }
+
+  console.info(`${name} profile linked to user`, {
+    userId,
+    providerAccountId
+  });
+};
+
 const signInHandler = async (args: {
+  db: PrismaClient;
+  userId: string | undefined;
   provider: string | undefined;
   email: string | undefined;
   options: Record<string, string>;
@@ -109,6 +185,8 @@ const signInHandler = async (args: {
   returnTo: string | undefined;
 }) => {
   const {
+    db,
+    userId,
     provider: rawProvider,
     email,
     options,
@@ -162,13 +240,14 @@ const signInHandler = async (args: {
       const normalizedUrl = normalizeInstagramUrl(validationResult.data);
       const username = extractInstagramUsername(validationResult.data);
 
-      const params = new URLSearchParams();
-      params.append('profileUrl', normalizedUrl);
-      params.append('username', username);
-      if (options.redirectTo) params.append('redirectTo', options.redirectTo);
-
-      const instagramUrl = `/api/instagram/user/link?${params.toString()}`;
-      redirect(instagramUrl);
+      await linkMetaProfile(db, userId, {
+        provider: 'instagram',
+        name: 'Instagram',
+        providerAccountId: username,
+        label: `@${username}`,
+        link: normalizedUrl
+      });
+      redirect(options.redirectTo);
     }
     case 'FACEBOOK': {
       if (!facebookProfileUrl) {
@@ -192,13 +271,16 @@ const signInHandler = async (args: {
       const normalizedUrl = normalizeFacebookUrl(validationResult.data);
       const identifier = extractFacebookIdentifier(validationResult.data);
 
-      const params = new URLSearchParams();
-      params.append('profileUrl', normalizedUrl);
-      params.append('identifier', identifier);
-      if (options.redirectTo) params.append('redirectTo', options.redirectTo);
-
-      const facebookUrl = `/api/facebook/user/link?${params.toString()}`;
-      redirect(facebookUrl);
+      await linkMetaProfile(db, userId, {
+        provider: 'facebook',
+        name: 'Facebook',
+        providerAccountId: identifier,
+        label: /^\d+$/.test(identifier)
+          ? `ID: ${identifier}`
+          : `@${identifier}`,
+        link: normalizedUrl
+      });
+      redirect(options.redirectTo);
     }
     case 'BLUESKY': {
       if (!blueskyHandle) {

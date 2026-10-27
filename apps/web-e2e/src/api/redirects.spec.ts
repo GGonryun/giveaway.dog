@@ -8,8 +8,6 @@ const OFF_SITE = 'https://example.org';
 const OPEN_REDIRECTS = [
   `/portal?redirectTo=${OFF_SITE}`,
   '/portal?redirectTo=//example.org',
-  `/api/instagram/user/link?redirectTo=${OFF_SITE}`,
-  `/api/facebook/user/link?redirectTo=${OFF_SITE}`,
   `/api/bluesky/team/authorize?returnTo=${OFF_SITE}`,
   `/api/bluesky/user/authorize?handle=e2e.invalid&returnTo=${OFF_SITE}`
 ];
