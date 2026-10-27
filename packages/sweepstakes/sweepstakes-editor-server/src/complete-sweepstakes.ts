@@ -12,6 +12,7 @@ import {
   SweepstakesJobStatus,
   SweepstakesJobType
 } from '@giveaway/db-model';
+import { requestJobRun } from '@giveaway/jobs/schedule';
 
 const completeSweepstakes = procedure()
   .authorization({ required: true })
@@ -117,6 +118,8 @@ const completeSweepstakes = procedure()
         }
       });
     });
+
+    await requestJobRun();
 
     return { success: true };
   });

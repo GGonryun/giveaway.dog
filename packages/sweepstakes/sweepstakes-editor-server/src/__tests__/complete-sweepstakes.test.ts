@@ -15,6 +15,10 @@ import {
   TEAM_SLUG
 } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-a';
 
+const { requestJobRun } = vi.hoisted(() => ({ requestJobRun: vi.fn() }));
+
+vi.mock('@giveaway/jobs/schedule', () => ({ requestJobRun }));
+
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 
 const input = { sweepstakesId: SWEEPSTAKES_ID, slug: TEAM_SLUG };
@@ -342,6 +346,33 @@ describe('completeSweepstakes', () => {
           }
         })
       );
+    });
+  });
+
+  describe('requesting a job run', () => {
+    beforeEach(() => {
+      signIn();
+      requestJobRun.mockReset();
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        sweepstakesWithPrizes([])
+      );
+    });
+
+    it('requests a job run after the completion job is saved', async () => {
+      await completeSweepstakes(input);
+
+      expect(requestJobRun).toHaveBeenCalledOnce();
+      expect(requestJobRun.mock.invocationCallOrder[0]).toBeGreaterThan(
+        prismaMock.sweepstakesJob.upsert.mock.invocationCallOrder[0]
+      );
+    });
+
+    it('does not request a job run when the transaction fails', async () => {
+      prismaMock.sweepstakesJob.upsert.mockRejectedValue(new Error('down'));
+
+      await completeSweepstakes(input);
+
+      expect(requestJobRun).not.toHaveBeenCalled();
     });
   });
 

@@ -26,6 +26,10 @@ import {
   stubSweepstakesRewrite
 } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-b';
 
+const { requestJobRun } = vi.hoisted(() => ({ requestJobRun: vi.fn() }));
+
+vi.mock('@giveaway/jobs/schedule', () => ({ requestJobRun }));
+
 const NOW = new Date('2025-06-15T12:00:00.000Z');
 const START = new Date('2025-06-20T00:00:00.000Z');
 const END = new Date('2025-06-30T00:00:00.000Z');
@@ -515,6 +519,56 @@ describe('applySweepstakesChanges', () => {
       expect(
         prismaMock.sweepstakesParticipant.createMany
       ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('requesting a job run', () => {
+    beforeEach(() => {
+      requestJobRun.mockReset();
+    });
+
+    it('requests a job run after saving an active sweepstakes', async () => {
+      await apply({ id: SWEEPSTAKES_ID, status: SweepstakesStatus.ACTIVE });
+
+      expect(requestJobRun).toHaveBeenCalledOnce();
+      expect(requestJobRun.mock.invocationCallOrder[0]).toBeGreaterThan(
+        prismaMock.sweepstakes.create.mock.invocationCallOrder[0]
+      );
+    });
+
+    it('requests a job run when the stored sweepstakes is active and the input has no status', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        buildTeamSweepstakes({ status: SweepstakesStatus.ACTIVE })
+      );
+
+      await apply();
+
+      expect(requestJobRun).toHaveBeenCalledOnce();
+    });
+
+    it('does not request a job run for a draft', async () => {
+      await apply();
+
+      expect(requestJobRun).not.toHaveBeenCalled();
+    });
+
+    it('does not request a job run when the input status is not active', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        buildTeamSweepstakes({ status: SweepstakesStatus.ACTIVE })
+      );
+
+      await apply({ id: SWEEPSTAKES_ID, status: SweepstakesStatus.DRAFT });
+
+      expect(requestJobRun).not.toHaveBeenCalled();
+    });
+
+    it('does not request a job run when the transaction fails', async () => {
+      prismaMock.sweepstakes.create.mockRejectedValue(new Error('boom'));
+
+      await expect(
+        apply({ id: SWEEPSTAKES_ID, status: SweepstakesStatus.ACTIVE })
+      ).rejects.toThrow('boom');
+      expect(requestJobRun).not.toHaveBeenCalled();
     });
   });
 

@@ -3006,6 +3006,9 @@ importers:
       '@giveaway/discord-connect':
         specifier: workspace:*
         version: link:../../integrations/discord/discord-connect
+      '@giveaway/jobs':
+        specifier: workspace:*
+        version: link:../../infra/jobs
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server
@@ -3846,6 +3849,9 @@ importers:
 
   packages/infra/jobs:
     dependencies:
+      '@giveaway/cache':
+        specifier: workspace:*
+        version: link:../cache
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../db-model
@@ -9716,6 +9722,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/jobs':
+        specifier: workspace:*
+        version: link:../../infra/jobs
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../sweepstakes-model
@@ -11159,6 +11168,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/jobs':
+        specifier: workspace:*
+        version: link:../../infra/jobs
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server

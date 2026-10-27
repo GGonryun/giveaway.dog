@@ -7,6 +7,7 @@ import {
   SweepstakesJobType
 } from '@giveaway/db-model';
 import { NextRequest } from 'next/server';
+import { requestJobRun } from './schedule';
 
 export const isValidCronSecret = (request: NextRequest) => {
   const secret = process.env.CRON_SECRET;
@@ -44,4 +45,5 @@ export const scheduleRandomlyAssignPrizesJob = async ({
       runAt: new Date()
     }
   });
+  await requestJobRun();
 };

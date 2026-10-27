@@ -32,6 +32,7 @@
     "@giveaway/bluesky-api": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-connect": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",

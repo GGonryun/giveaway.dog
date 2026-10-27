@@ -3,6 +3,10 @@ import { NextRequest } from 'next/server';
 import { isValidCronSecret, scheduleRandomlyAssignPrizesJob } from '../util';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 
+const { requestJobRun } = vi.hoisted(() => ({ requestJobRun: vi.fn() }));
+
+vi.mock('../schedule', () => ({ requestJobRun }));
+
 const request = (headers: Record<string, string> = {}) =>
   new NextRequest('http://localhost:3000/api/cron/jobs', { headers });
 
@@ -112,6 +116,7 @@ describe('jobs util', () => {
     });
 
     it('propagates database errors', async () => {
+      requestJobRun.mockReset();
       prismaMock.sweepstakesJob.upsert.mockRejectedValue(new Error('db down'));
 
       await expect(
@@ -120,6 +125,22 @@ describe('jobs util', () => {
           sweepstakesId: 'sw-1'
         })
       ).rejects.toThrow('db down');
+      expect(requestJobRun).not.toHaveBeenCalled();
+    });
+
+    it('requests a job run after the job is saved', async () => {
+      requestJobRun.mockReset();
+      prismaMock.sweepstakesJob.upsert.mockResolvedValue({});
+
+      await scheduleRandomlyAssignPrizesJob({
+        db: asPrismaClient(),
+        sweepstakesId: 'sw-1'
+      });
+
+      expect(requestJobRun).toHaveBeenCalledOnce();
+      expect(requestJobRun.mock.invocationCallOrder[0]).toBeGreaterThan(
+        prismaMock.sweepstakesJob.upsert.mock.invocationCallOrder[0]
+      );
     });
   });
 });
