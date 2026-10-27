@@ -39,7 +39,7 @@ describe('EnableAutomaticProfileEntry', () => {
     expect(screen.getByRole('switch')).toBeChecked();
   });
 
-  it.fails('labels the switch with the setting name', () => {
+  it('labels the switch with the setting name', () => {
     renderToggle([bonusTask]);
     expect(
       screen.getByRole('switch', { name: 'Reward Profile Completion' })

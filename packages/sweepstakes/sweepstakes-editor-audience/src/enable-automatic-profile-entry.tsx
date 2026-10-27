@@ -60,7 +60,11 @@ export const EnableAutomaticProfileEntry = () => {
             )
           }}
         />
-        <Switch checked={hasProfileTask} onCheckedChange={handleToggle} />
+        <Switch
+          aria-label="Reward Profile Completion"
+          checked={hasProfileTask}
+          onCheckedChange={handleToggle}
+        />
       </div>
     </SwitchBox>
   );
