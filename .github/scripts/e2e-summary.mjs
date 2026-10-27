@@ -69,6 +69,13 @@ const tests = suites
             .map((annotation) => annotation.description)
         )
       ],
+      a11y: [
+        ...new Set(
+          [...(test.annotations ?? []), ...(last?.annotations ?? [])]
+            .filter((annotation) => annotation.type === 'known-a11y-violation')
+            .map((annotation) => annotation.description)
+        )
+      ],
       lastStatus: last?.status,
       lastError: errorOf(last),
       firstError: errorOf(results.find((result) => result.status !== 'passed'))
@@ -97,6 +104,13 @@ const passed = tests.filter(
 );
 
 const warned = tests.filter((test) => test.warnings.length > 0);
+
+const knownViolations = tests.flatMap((test) =>
+  test.a11y.map((description) => {
+    const [issue, ...rest] = description.split(' ');
+    return { test, issue, violation: rest.join(' ') };
+  })
+);
 
 const seconds = Math.round((stats?.duration ?? 0) / 1000);
 const lines = [
@@ -152,6 +166,17 @@ table(
   openBugs,
   ['Test', 'Project', 'Location', 'Issue'],
   (test) => [...where(test), issueLink(test.issue)]
+);
+table(
+  'Known accessibility violations',
+  knownViolations,
+  ['Test', 'Project', 'Violation', 'Issue'],
+  ({ test, issue, violation }) => [
+    cell(test.title),
+    test.project,
+    cell(violation),
+    issueLink(issue)
+  ]
 );
 
 if (errors.length > 0) {

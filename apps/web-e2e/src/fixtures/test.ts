@@ -6,6 +6,7 @@ import {
   watchPageErrors,
   type PageErrorPattern
 } from '../helpers/third-party';
+import { test as a11y } from './a11y';
 import { test as personas } from './personas';
 
 const suite = base.extend<
@@ -38,6 +39,6 @@ const suite = base.extend<
   }
 });
 
-export const test = mergeTests(suite, personas);
+export const test = mergeTests(suite, personas, a11y);
 
 export { expect } from '@playwright/test';

@@ -304,15 +304,22 @@ export const applySweepstakesChanges = async ({
         });
       }
 
-      if (referrals.length > 0) {
+      const filteredReferrals = referrals.filter((r) => taskIds.has(r.taskId));
+
+      if (filteredReferrals.length > 0) {
         await tx.referral.createMany({
-          data: referrals.map((d) => ({ ...d }))
+          data: filteredReferrals.map((d) => ({ ...d }))
         });
       }
 
-      if (referredUsers.length > 0) {
+      const referralIds = new Set(filteredReferrals.map((r) => r.id));
+      const filteredReferredUsers = referredUsers.filter((u) =>
+        referralIds.has(u.referralId)
+      );
+
+      if (filteredReferredUsers.length > 0) {
         await tx.referredUser.createMany({
-          data: referredUsers.map((d) => ({ ...d }))
+          data: filteredReferredUsers.map((d) => ({ ...d }))
         });
       }
 
