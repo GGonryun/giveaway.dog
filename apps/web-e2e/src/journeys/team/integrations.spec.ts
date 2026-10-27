@@ -28,6 +28,23 @@ const disconnect = async (page: Page, title: 'Bluesky' | 'Discord') => {
   ).toBeVisible();
 };
 
+const openDiscordInstall = async (page: Page) => {
+  const discord = card(page, 'Discord');
+  const dialog = page.getByRole('dialog', {
+    name: 'Complete Discord Installation'
+  });
+  await expect(async () => {
+    const resume = discord.getByRole('button', { name: 'Continue' });
+    await (
+      (await resume.isVisible())
+        ? resume
+        : discord.getByRole('button', { name: 'Install Bot' })
+    ).click({ timeout: 2_000 });
+    await expect(dialog).toBeVisible({ timeout: 5_000 });
+  }).toPass({ timeout: 30_000 });
+  return dialog;
+};
+
 const seedOwnTeam = async (page: Page, ns: string, suffix: string) => {
   const { team } = await seedApi(page.request).team({
     ns,
@@ -52,13 +69,8 @@ test.describe('team integrations', () => {
     await signInAs(page.request, 'member', ns);
     await page.goto(integrationsPath(team.slug));
 
-    await card(page, 'Discord')
-      .getByRole('button', { name: 'Install Bot' })
-      .click();
-    const dialog = page.getByRole('dialog', {
-      name: 'Complete Discord Installation'
-    });
-    await expect(dialog).toBeVisible();
+    const discord = card(page, 'Discord');
+    const dialog = await openDiscordInstall(page);
     await dialog.getByRole('button', { name: 'Verify Installation' }).click();
     await expect(
       page.getByText(
@@ -67,13 +79,12 @@ test.describe('team integrations', () => {
     ).toBeVisible();
 
     await page.reload();
-    const discord = card(page, 'Discord');
     await expect(
       discord.getByText(
         'Please complete the setup to activate the integration.'
       )
     ).toBeVisible();
-    await discord.getByRole('button', { name: 'Continue' }).click();
+    await openDiscordInstall(page);
     await dialog.getByRole('button', { name: 'Disconnect' }).click();
     await expect(
       page.getByText('Discord disconnected successfully')
