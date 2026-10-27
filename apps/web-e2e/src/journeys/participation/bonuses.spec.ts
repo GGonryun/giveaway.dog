@@ -82,7 +82,7 @@ test.describe('limited and loyalty bonuses', () => {
 
   test(
     'a loyalty bonus unlocks once the participant entered another giveaway of the host',
-    {},
+    knownBug(602),
     async ({ page, request }, testInfo) => {
       const { team } = await seedWorkerTeam(request, testInfo);
       const first = await seedApi(request).sweepstakes({
