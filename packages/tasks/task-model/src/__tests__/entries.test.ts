@@ -139,13 +139,22 @@ describe('toParticipantEntries', () => {
     expect(toParticipantEntries(completions)).toBe(1 + 5 + 7 + 4);
   });
 
-  it('counts completions regardless of their status', () => {
-    const rejected = {
-      ...completion({ ...VALID_TASKS.BONUS_TASK, value: 3 }),
-      status: 'REJECTED' as const
-    };
+  it('leaves out rejected completions and counts pending ones', () => {
+    const withStatus = (
+      value: number,
+      status: TaskCompletionSchema['status']
+    ): TaskCompletionSchema => ({
+      ...completion({ ...VALID_TASKS.BONUS_TASK, value }),
+      status
+    });
 
-    expect(toParticipantEntries([rejected])).toBe(3);
+    expect(
+      toParticipantEntries([
+        withStatus(1, 'COMPLETED'),
+        withStatus(2, 'REJECTED'),
+        withStatus(5, 'PENDING')
+      ])
+    ).toBe(6);
   });
 
   it('throws when any completion has an unknown task type', () => {

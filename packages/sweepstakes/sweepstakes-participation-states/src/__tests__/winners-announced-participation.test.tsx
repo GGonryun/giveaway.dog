@@ -106,6 +106,24 @@ describe('WinnersAnnouncedParticipation', () => {
     expect(screen.getByText('1/2 completed')).toBeInTheDocument();
   });
 
+  it('leaves rejected completions out of the progress', () => {
+    const tasks = [
+      buildTask({ id: 'task-1', value: 3 }),
+      buildTask({ id: 'task-2', value: 4 })
+    ];
+    renderParticipation({
+      sweepstakes: buildSweepstakes({ status: 'COMPLETED', tasks }),
+      participant: buildParticipant({
+        completions: [
+          buildCompletion({ id: 'c-1', task: tasks[0], status: 'REJECTED' }),
+          buildCompletion({ id: 'c-2', task: tasks[1], status: 'COMPLETED' })
+        ]
+      })
+    });
+    expect(screen.getByText('Your entries: 4')).toBeInTheDocument();
+    expect(screen.getByText('1/2 completed')).toBeInTheDocument();
+  });
+
   it('hides progress for a visitor when there are no tasks', () => {
     renderParticipation({ sweepstakes: buildSweepstakes({ tasks: [] }) });
     expect(screen.queryByText(/Your entries/)).not.toBeInTheDocument();

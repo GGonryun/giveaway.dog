@@ -45,7 +45,9 @@ export const getPublicSweepstakesParticipation = procedure()
 
     for (const participation of participations) {
       const uniqueTasksCompleted = new Set(
-        participation.taskCompletions.map((tc) => tc.taskId)
+        participation.taskCompletions
+          .filter((tc) => tc.status !== 'REJECTED')
+          .map((tc) => tc.taskId)
       ).size;
 
       map[participation.sweepstakesId] = {

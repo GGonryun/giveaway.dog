@@ -129,7 +129,7 @@ describe('ActiveParticipation', () => {
   });
 
   describe('progress', () => {
-    it('counts completed tasks without rejected ones and sums entries of every completion', () => {
+    it('counts completed tasks and entries without rejected ones', () => {
       const tasks = [
         buildTask({ id: 'task-1', value: 1 }),
         buildTask({ id: 'task-2', value: 2 }),
@@ -145,7 +145,7 @@ describe('ActiveParticipation', () => {
           ]
         })
       });
-      expect(screen.getByText('Your entries: 8')).toBeInTheDocument();
+      expect(screen.getByText('Your entries: 6')).toBeInTheDocument();
       expect(screen.getByText('2/3 completed')).toBeInTheDocument();
     });
 
