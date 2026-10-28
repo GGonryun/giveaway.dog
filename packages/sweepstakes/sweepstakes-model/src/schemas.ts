@@ -77,11 +77,32 @@ export const giveawayFormTermsSchema = z.discriminatedUnion('type', [
 ]);
 export type GiveawayTerms = z.infer<typeof giveawayFormTermsSchema>;
 
-const giveawayFormSetupSchema = z.object({
-  name: z.string().min(3),
-  description: z.string().min(3),
-  banner: z.string()
-});
+const MIN_DESCRIPTION_LENGTH = 3;
+
+const toDescriptionText = (description: string): string =>
+  description
+    .replace(/<[^>]*>/g, '')
+    .replace(/&(nbsp|#160|#xa0);/gi, ' ')
+    .replace(/&(#\d+|#x[\da-f]+|[a-z]+);/gi, '_')
+    .trim();
+
+const giveawayFormSetupSchema = ({ validate }: { validate: boolean }) =>
+  z.object({
+    name: z.string().min(3),
+    description: validate
+      ? z.string().superRefine((description, ctx) => {
+          if (toDescriptionText(description).length < MIN_DESCRIPTION_LENGTH) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.too_small,
+              minimum: MIN_DESCRIPTION_LENGTH,
+              type: 'string',
+              inclusive: true
+            });
+          }
+        })
+      : z.string().min(MIN_DESCRIPTION_LENGTH),
+    banner: z.string()
+  });
 
 export const regionalRestrictionSchema = z
   .object({
@@ -265,7 +286,7 @@ export const baseGiveawayFormSchema = ({
   validate
 }: Pick<GiveawayFormSchemaOptions, 'validate'>) =>
   z.object({
-    setup: giveawayFormSetupSchema,
+    setup: giveawayFormSetupSchema({ validate }),
     terms: giveawayFormTermsSchema,
     timing: timingSchema({
       validate: validate,

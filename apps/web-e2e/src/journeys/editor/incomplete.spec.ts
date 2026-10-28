@@ -103,7 +103,7 @@ test.describe('an incomplete giveaway in the editor', () => {
 
   test(
     'a host cannot publish a giveaway with an empty description',
-    knownBug(496, { tag: TAGS.slow }),
+    { tag: TAGS.slow },
     async ({ page, request }, testInfo) => {
       const { team } = await seedWorkerTeam(request, testInfo);
       await createDraft(page, team.slug);
@@ -120,6 +120,11 @@ test.describe('an incomplete giveaway in the editor', () => {
       await headerButton(page, 'Publish').click();
 
       await expect(issuesDialog(page)).toBeVisible();
+      await expect(
+        issuesDialog(page).getByRole('button', {
+          name: 'setup.description String must contain at least 3 character(s)'
+        })
+      ).toBeVisible();
       await expect(publishDialog(page)).toBeHidden();
     }
   );
