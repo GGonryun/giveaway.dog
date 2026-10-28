@@ -94,12 +94,7 @@ export const authConfigMiddleware = {
       }
 
       // Check if user needs onboarding (only for specific routes)
-      const onboardingRequiredRoutes = [
-        '/account',
-        '/app',
-        '/browse',
-        '/pickers'
-      ];
+      const onboardingRequiredRoutes = ['/account', '/app', '/browse'];
       const roleHomeRoutes = ['/app', '/browse'];
       const requiresOnboarding = onboardingRequiredRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
