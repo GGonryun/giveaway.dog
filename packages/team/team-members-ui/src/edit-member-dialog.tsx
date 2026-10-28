@@ -21,7 +21,7 @@ import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateMemberRole from '@giveaway/team-members-server/update-member-role';
 import { toast } from 'sonner';
 import { TeamRole } from '@giveaway/db-model';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface EditMemberDialogProps {
   open: boolean;
@@ -45,6 +45,10 @@ export const EditMemberDialog: React.FC<EditMemberDialogProps> = ({
   onSuccess
 }) => {
   const [selectedRole, setSelectedRole] = useState<TeamRole>(currentRole);
+
+  useEffect(() => {
+    if (open) setSelectedRole(currentRole);
+  }, [open, currentRole]);
 
   const { isLoading, run: updateRole } = useProcedure({
     action: updateMemberRole,

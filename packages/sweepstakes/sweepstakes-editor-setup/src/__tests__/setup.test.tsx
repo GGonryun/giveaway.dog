@@ -163,27 +163,24 @@ describe('Setup', () => {
       );
     });
 
-    it('stores null when the banner is removed', async () => {
+    it('stores an empty banner when the banner is removed', async () => {
       const { form } = renderSetup({ banner: 'https://cdn.test/old.png' });
       await userEvent.click(
         within(getUpload()).getByRole('button', { name: 'Remove banner' })
       );
-      expect(form.getValues('setup.banner')).toBeNull();
+      expect(form.getValues('setup.banner')).toBe('');
     });
 
-    it.fails(
-      'accepts a form without a banner after the banner is removed',
-      async () => {
-        const { form } = renderSetup({
-          banner: 'https://cdn.test/old.png',
-          validate: true
-        });
-        await userEvent.click(
-          within(getUpload()).getByRole('button', { name: 'Remove banner' })
-        );
-        expect(await form.trigger('setup.banner')).toBe(true);
-      }
-    );
+    it('accepts a form without a banner after the banner is removed', async () => {
+      const { form } = renderSetup({
+        banner: 'https://cdn.test/old.png',
+        validate: true
+      });
+      await userEvent.click(
+        within(getUpload()).getByRole('button', { name: 'Remove banner' })
+      );
+      expect(await form.trigger('setup.banner')).toBe(true);
+    });
   });
 
   describe('description', () => {

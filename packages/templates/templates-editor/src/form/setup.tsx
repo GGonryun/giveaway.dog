@@ -49,7 +49,7 @@ export const TemplateSetup = () => {
                 className="items-start"
                 isDemo={action === 'demo'}
                 initialUrl={field.value ?? undefined}
-                onUpload={(url) => field.onChange(url || null)}
+                onUpload={(url) => field.onChange(url)}
                 size="wide"
                 fillPreview
               />

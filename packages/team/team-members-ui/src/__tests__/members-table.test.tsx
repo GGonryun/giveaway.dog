@@ -180,6 +180,48 @@ describe('MembersTable', () => {
         role: TeamRole.ADMIN
       });
     });
+
+    it('shows the role of the next member after a cancelled edit', async () => {
+      const user = userEvent.setup();
+      renderTable();
+
+      await openRowMenu(user, /Ada Lovelace/);
+      await user.click(screen.getByRole('menuitem', { name: 'Edit Member' }));
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      );
+
+      await openRowMenu(user, /l\*\*\*s@example\.com/);
+      await user.click(screen.getByRole('menuitem', { name: 'Edit Member' }));
+
+      expect(screen.getByRole('combobox', { name: 'Role' })).toHaveTextContent(
+        'Guest'
+      );
+      await user.click(screen.getByRole('button', { name: 'Save Changes' }));
+      expect(updateMemberRole).not.toHaveBeenCalled();
+    });
+
+    it('drops an unsaved role choice when the edit is cancelled', async () => {
+      const user = userEvent.setup();
+      renderTable();
+
+      await openRowMenu(user, /Ada Lovelace/);
+      await user.click(screen.getByRole('menuitem', { name: 'Edit Member' }));
+      await user.click(screen.getByRole('combobox', { name: 'Role' }));
+      await user.click(screen.getByRole('option', { name: 'Admin' }));
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      );
+
+      await openRowMenu(user, /Ada Lovelace/);
+      await user.click(screen.getByRole('menuitem', { name: 'Edit Member' }));
+
+      expect(screen.getByRole('combobox', { name: 'Role' })).toHaveTextContent(
+        'Owner'
+      );
+    });
   });
 
   describe('when removing a member', () => {

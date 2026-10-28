@@ -150,17 +150,16 @@ test.describe('the entry form', () => {
     }
   );
 
-  test(
-    'a participant can leave the optional X profile blank',
-    knownBug(7),
-    async ({ page, request }, testInfo) => {
-      const giveaway = await seedFormGiveaway(request, testInfo);
+  test('a participant can leave the optional X profile blank', async ({
+    page,
+    request
+  }, testInfo) => {
+    const giveaway = await seedFormGiveaway(request, testInfo);
 
-      await page.goto(`/browse/${giveaway.id}`);
-      await page.getByRole('checkbox', { name: AGE }).check();
-      await submitForm(page);
+    await page.goto(`/browse/${giveaway.id}`);
+    await page.getByRole('checkbox', { name: AGE }).check();
+    await submitForm(page);
 
-      await expectTasks(page);
-    }
-  );
+    await expectTasks(page);
+  });
 });

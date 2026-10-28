@@ -9,7 +9,7 @@ import {
 } from '@giveaway/user-model/user';
 import { doesUserHaveAllowedIdentity } from '@giveaway/integration-model/providers';
 import {
-  isFormFilled,
+  isProfileComplete,
   toParticipantForm,
   toParticipantFormFields
 } from '@giveaway/participant-model/participant';
@@ -77,7 +77,7 @@ export const validateAudience = async (
 
   const formFields = toParticipantFormFields(audience.formFields);
   const isFilled = participant
-    ? isFormFilled(
+    ? isProfileComplete(
         formFields,
         profile,
         toParticipantFormValues(participant.formValues)
