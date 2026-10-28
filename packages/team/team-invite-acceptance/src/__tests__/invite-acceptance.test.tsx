@@ -138,6 +138,21 @@ describe('InviteAcceptance', () => {
     expect(acceptButton()).toBeEnabled();
   });
 
+  it('shows a visitor the team logo as an image, not its URL', () => {
+    vi.mocked(useSession).mockReturnValue({
+      data: null,
+      status: 'unauthenticated',
+      update
+    } as unknown as ReturnType<typeof useSession>);
+    renderInvite();
+
+    expect(screen.getByRole('img', { name: 'Acme Logo' })).toHaveAttribute(
+      'src',
+      '/logo.png'
+    );
+    expect(screen.queryByText('/logo.png')).not.toBeInTheDocument();
+  });
+
   it('asks a visitor to sign in and come back to the invite', async () => {
     vi.mocked(useSession).mockReturnValue({
       data: null,
