@@ -30,6 +30,7 @@ export const UpdateDisplayName = () => {
   const updateProfileProcedure = useProcedure({
     action: updateProfile,
     onSuccess() {
+      form.reset(form.getValues());
       toast.success('Display name updated successfully');
       router.refresh();
     },

@@ -171,21 +171,20 @@ test.describe('display name', () => {
     await expect(displayNameInput(page)).toHaveValue('E2E participant');
   });
 
-  test(
-    '[ACCOUNT-003] the account page refuses a display name over 30 characters',
-    knownBug(504),
-    async ({ page, freshPersona }) => {
-      await freshPersona('participant');
-      await page.goto('/account');
+  test('[ACCOUNT-003] the account page refuses a display name over 30 characters', async ({
+    page,
+    freshPersona
+  }) => {
+    await freshPersona('participant');
+    await page.goto('/account');
 
-      await displayNameInput(page).fill('E2E name that is much too long xx');
-      await saveDisplayName(page);
+    await displayNameInput(page).fill('E2E name that is much too long xx');
+    await saveDisplayName(page);
 
-      await expect(page.getByText(/at most 30 characters/)).toBeVisible();
-      await page.reload();
-      await expect(displayNameInput(page)).toHaveValue('E2E participant');
-    }
-  );
+    await expect(page.getByText(/at most 30 characters/)).toBeVisible();
+    await page.reload();
+    await expect(displayNameInput(page)).toHaveValue('E2E participant');
+  });
 });
 
 test.describe('host access', () => {

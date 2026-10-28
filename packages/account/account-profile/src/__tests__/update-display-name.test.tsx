@@ -139,7 +139,20 @@ describe('UpdateDisplayName', () => {
       await user.click(saveButton());
 
       expect(
-        await screen.findByText('Username must be at least 5 characters')
+        await screen.findByText('Display name must be at least 5 characters')
+      ).toBeInTheDocument();
+      expect(updateProfile).not.toHaveBeenCalled();
+    });
+
+    it('[ACCOUNT-003] rejects a name longer than 30 characters', async () => {
+      const user = userEvent.setup();
+      renderCard();
+
+      await replaceName(user, 'Ada Lovelace Countess of Lovelace');
+      await user.click(saveButton());
+
+      expect(
+        await screen.findByText('Display name must be at most 30 characters')
       ).toBeInTheDocument();
       expect(updateProfile).not.toHaveBeenCalled();
     });
@@ -153,7 +166,7 @@ describe('UpdateDisplayName', () => {
 
       expect(
         await screen.findByText(
-          'Username can only contain letters, numbers, spaces, hyphens, and underscores'
+          'Display name can only contain letters, numbers, spaces, hyphens, and underscores'
         )
       ).toBeInTheDocument();
       expect(updateProfile).not.toHaveBeenCalled();
@@ -184,6 +197,17 @@ describe('UpdateDisplayName', () => {
       expect(toast.success).toHaveBeenCalledWith(
         'Display name updated successfully'
       );
+    });
+
+    it('disables saving again once the name is saved', async () => {
+      const user = userEvent.setup();
+      renderCard();
+
+      await replaceName(user, 'Countess Ada');
+      await user.click(saveButton());
+
+      await waitFor(() => expect(saveButton()).toBeDisabled());
+      expect(nameInput()).toHaveValue('Countess Ada');
     });
 
     it('disables the input and shows a saving state while pending', async () => {

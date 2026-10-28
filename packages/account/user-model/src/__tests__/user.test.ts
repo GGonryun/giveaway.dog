@@ -485,7 +485,21 @@ describe('updateUserProfileSchema', () => {
     const result = updateUserProfileSchema.safeParse({ name: 'abcd' });
 
     expect(issueMessages(result)).toEqual([
-      'Username must be at least 5 characters'
+      'Display name must be at least 5 characters'
+    ]);
+  });
+
+  it('[ACCOUNT-003] accepts a thirty character name', () => {
+    const name = 'a'.repeat(30);
+
+    expect(updateUserProfileSchema.parse({ name })).toEqual({ name });
+  });
+
+  it('[ACCOUNT-003] rejects a name longer than thirty characters', () => {
+    const result = updateUserProfileSchema.safeParse({ name: 'a'.repeat(31) });
+
+    expect(issueMessages(result)).toEqual([
+      'Display name must be at most 30 characters'
     ]);
   });
 
@@ -493,7 +507,7 @@ describe('updateUserProfileSchema', () => {
     const result = updateUserProfileSchema.safeParse({ name: 'jane.doe' });
 
     expect(issueMessages(result)).toEqual([
-      'Username can only contain letters, numbers, spaces, hyphens, and underscores'
+      'Display name can only contain letters, numbers, spaces, hyphens, and underscores'
     ]);
   });
 

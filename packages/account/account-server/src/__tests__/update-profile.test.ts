@@ -41,7 +41,16 @@ describe('updateProfile', () => {
       const result = await updateProfile({ name: 'Jane' });
 
       expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
-        'Username must be at least 5 characters'
+        'Display name must be at least 5 characters'
+      );
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
+    });
+
+    it('[ACCOUNT-003] rejects a name longer than 30 characters', async () => {
+      const result = await updateProfile({ name: 'J'.repeat(31) });
+
+      expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
+        'Display name must be at most 30 characters'
       );
       expect(prismaMock.user.update).not.toHaveBeenCalled();
     });
@@ -58,7 +67,7 @@ describe('updateProfile', () => {
       const result = await updateProfile({ name: 'Jane!Doe' });
 
       expect(expectFailure(result, 'UNPROCESSABLE_CONTENT').message).toContain(
-        'Username can only contain letters, numbers, spaces, hyphens, and underscores'
+        'Display name can only contain letters, numbers, spaces, hyphens, and underscores'
       );
     });
 
