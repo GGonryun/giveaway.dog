@@ -244,30 +244,29 @@ test.describe('the team Users area', () => {
     }
   });
 
-  test(
-    'the owner of a new team sees an empty Users list',
-    knownBug(57),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedApi(request).team({
-        ns,
-        suffix: 'e',
-        name: `Empty ${ns}`
-      });
-      await signInAs(page.request, 'host', ns);
-      await page.goto(`/app/${team.slug}/users`);
+  test('the owner of a new team sees an empty Users list', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedApi(request).team({
+      ns,
+      suffix: 'e',
+      name: `Empty ${ns}`
+    });
+    await signInAs(page.request, 'host', ns);
+    await page.goto(`/app/${team.slug}/users`);
 
-      await expect(
-        page.getByRole('textbox', { name: 'Search by name, email, or ID...' })
-      ).toBeVisible();
-      await expect(userRows(page)).toHaveCount(0);
-      await expect(page.getByText('1-0 of 0')).toHaveCount(0);
-      await expect(
-        page.getByRole('button', { name: 'Next page' })
-      ).toBeDisabled();
-      await expect(
-        page.getByRole('button', { name: 'Last page' })
-      ).toBeDisabled();
-    }
-  );
+    await expect(
+      page.getByRole('textbox', { name: 'Search by name, email, or ID...' })
+    ).toBeVisible();
+    await expect(userRows(page)).toHaveCount(0);
+    await expect(page.getByText('1-0 of 0')).toHaveCount(0);
+    await expect(
+      page.getByRole('button', { name: 'Next page' })
+    ).toBeDisabled();
+    await expect(
+      page.getByRole('button', { name: 'Last page' })
+    ).toBeDisabled();
+  });
 });
