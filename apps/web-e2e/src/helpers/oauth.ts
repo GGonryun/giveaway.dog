@@ -1,5 +1,5 @@
 import { randomInt } from 'crypto';
-import type { BrowserContext } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 import {
   E2E_OAUTH_SECRET_COOKIE,
   type E2eOAuthProfiles,
@@ -29,4 +29,10 @@ export const useMockOAuth = async <P extends E2eOAuthProvider>(
       value: toE2eOAuthProfileCookieValue(profile)
     }
   ]);
+};
+
+export const clickTikTokLogin = async (page: Page) => {
+  await page.goto('/login');
+  await page.getByRole('button', { name: 'More ways to sign in' }).click();
+  await page.getByRole('button', { name: 'Login with TikTok' }).click();
 };

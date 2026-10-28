@@ -4,7 +4,7 @@ import { freshNamespace } from '../fixtures/personas';
 import { BYPASS_STATE, E2E_SECRET } from '../env';
 import { knownBug } from '../helpers/known-bug';
 import { requestMagicLink, skipWithoutEmailFake } from '../helpers/magic-link';
-import { newDiscordId, useMockOAuth } from '../helpers/oauth';
+import { clickTikTokLogin, newDiscordId, useMockOAuth } from '../helpers/oauth';
 import { toPersonaEmail } from '../helpers/personas';
 import { seedApi } from '../helpers/seed';
 import { TAGS } from '../helpers/tags';
@@ -102,8 +102,7 @@ test.describe('account linking', { tag: TAGS.security }, () => {
       username: victim.email
     });
 
-    await page.goto('/login');
-    await page.getByRole('button', { name: 'Login with TikTok' }).click();
+    await clickTikTokLogin(page);
     await page.waitForURL(signInEnded, { timeout: 30_000 });
 
     const session = await page.request.get('/api/auth/session');
@@ -117,10 +116,7 @@ test.describe('account linking', { tag: TAGS.security }, () => {
         username: `e2e_${ns}`
       });
       const ownerPage = await owner.newPage();
-      await ownerPage.goto('/login');
-      await ownerPage
-        .getByRole('button', { name: 'Login with TikTok' })
-        .click();
+      await clickTikTokLogin(ownerPage);
       await ownerPage.waitForURL(signInEnded, { timeout: 30_000 });
 
       const linked = await ownerPage.request.get('/api/auth/session');

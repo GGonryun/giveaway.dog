@@ -3,7 +3,11 @@ import { freshNamespace } from '../../fixtures/personas';
 import { toE2ePersonaAccountId } from '@giveaway/e2e-model/personas';
 import { E2E_SECRET } from '../../env';
 import { knownBug } from '../../helpers/known-bug';
-import { newDiscordId, useMockOAuth } from '../../helpers/oauth';
+import {
+  clickTikTokLogin,
+  newDiscordId,
+  useMockOAuth
+} from '../../helpers/oauth';
 import { seedApi } from '../../helpers/seed';
 
 type AccountRows = {
@@ -92,8 +96,7 @@ test.describe('mock OAuth sign-in', () => {
       display_name: 'E2E TikTok'
     });
 
-    await page.goto('/login');
-    await page.getByRole('button', { name: 'Login with TikTok' }).click();
+    await clickTikTokLogin(page);
     await expect(page).not.toHaveURL(/\/(login|api\/)/, { timeout: 15_000 });
 
     const session = await page.request.get('/api/auth/session');
