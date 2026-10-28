@@ -250,3 +250,79 @@ describe('html.sanitize', () => {
     });
   });
 });
+
+describe('html.toPlainText', () => {
+  it('removes the inline tags of the rich text editor', () => {
+    expect(
+      html.toPlainText('<p>Win a <strong>mug</strong> for your desk</p>')
+    ).toBe('Win a mug for your desk');
+  });
+
+  it('joins the letters of a word that an inline tag splits', () => {
+    expect(html.toPlainText('<p>w<em>o</em>r<u>d</u></p>')).toBe('word');
+  });
+
+  it.each([
+    'p',
+    'pre',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'ul',
+    'ol',
+    'li',
+    'blockquote'
+  ])('puts a space around a %s block', (tag) => {
+    expect(html.toPlainText(`one<${tag}>two</${tag}>three`)).toBe(
+      'one two three'
+    );
+  });
+
+  it('puts a space for a line break', () => {
+    expect(html.toPlainText('one<br>two<br/>three')).toBe('one two three');
+  });
+
+  it('separates the items of a list', () => {
+    expect(html.toPlainText('<ul><li>One</li><li>Two</li></ul>')).toBe(
+      'One Two'
+    );
+  });
+
+  it('decodes the entities of the text', () => {
+    expect(
+      html.toPlainText('<p>Tom &amp; Jerry &lt;3 &gt; &quot;cats&quot;</p>')
+    ).toBe('Tom & Jerry <3 > "cats"');
+  });
+
+  it('decodes an escaped entity one time only', () => {
+    expect(html.toPlainText('<p>&amp;lt;b&amp;gt;</p>')).toBe('&lt;b&gt;');
+  });
+
+  it('keeps no tag from the text, even a broken one', () => {
+    expect(html.toPlainText('<p>a <b>b</b> <i>c')).toBe('a b c');
+  });
+
+  it('drops scripts and styles with their content', () => {
+    expect(
+      html.toPlainText('a<script>alert(1)</script>b<style>p{}</style>c')
+    ).toBe('abc');
+  });
+
+  it('collapses runs of whitespace to one space', () => {
+    expect(html.toPlainText('<p>a \n\t  b&nbsp;&nbsp;c</p>')).toBe('a b c');
+  });
+
+  it('removes the whitespace at the start and at the end', () => {
+    expect(html.toPlainText('<p> start</p>middle<p>end </p>')).toBe(
+      'start middle end'
+    );
+  });
+
+  it('returns an empty string for empty input', () => {
+    expect(html.toPlainText('')).toBe('');
+    expect(html.toPlainText('<p></p><br>')).toBe('');
+  });
+});
