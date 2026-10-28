@@ -12,26 +12,18 @@ import { AuthFooter } from '@giveaway/auth-login-ui/auth-footer';
 import { AccountTypeStep } from './account-type-step';
 import { ProfileStep } from './profile-step';
 import { useOnboardingPage } from './use-onboarding-page';
-import { UserAccountType } from '@giveaway/db-model';
-import { useState } from 'react';
 
 export function OnboardingForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const { step, redirectTo, navigateToAccountTypeStep, navigateToProfileStep } =
-    useOnboardingPage();
-  const [selectedAccountType, setSelectedAccountType] =
-    useState<UserAccountType>(UserAccountType.PARTICIPANT);
-
-  const handleAccountTypeSelected = (accountType: UserAccountType) => {
-    setSelectedAccountType(accountType);
-    navigateToProfileStep();
-  };
-
-  const handleBack = () => {
-    navigateToAccountTypeStep();
-  };
+  const {
+    step,
+    accountType,
+    redirectTo,
+    navigateToAccountTypeStep,
+    navigateToProfileStep
+  } = useOnboardingPage();
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -50,13 +42,16 @@ export function OnboardingForm({
         <CardContent>
           <div className="grid gap-6">
             {step === 1 && (
-              <AccountTypeStep onNext={handleAccountTypeSelected} />
+              <AccountTypeStep
+                initialAccountType={accountType}
+                onNext={navigateToProfileStep}
+              />
             )}
             {step === 2 && (
               <ProfileStep
-                accountType={selectedAccountType}
+                accountType={accountType}
                 redirectTo={redirectTo}
-                onBack={handleBack}
+                onBack={navigateToAccountTypeStep}
               />
             )}
           </div>
