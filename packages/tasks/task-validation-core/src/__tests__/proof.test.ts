@@ -11,7 +11,6 @@ const taskOf = (task: Record<string, unknown> & { type: string }) =>
 const NULL_PROOF_TYPES: TaskType[] = [
   'INSTAGRAM_LIKE',
   'INSTAGRAM_COMMENT',
-  'INSTAGRAM_VISIT',
   'FACEBOOK_VIEW_POST',
   'FACEBOOK_VISIT_PAGE',
   'BONUS_TASK',
@@ -252,6 +251,34 @@ describe('saveTaskProof', () => {
         saveTaskProof(taskOf({ type: 'STEAM_FOLLOW', requireProof: true }), {
           mediaUrl: 'not-a-url'
         })
+      ).toThrow(ZodError);
+    });
+  });
+
+  describe('INSTAGRAM_VISIT', () => {
+    it('stores the submitted profile link', () => {
+      expect(
+        saveTaskProof(taskOf({ type: 'INSTAGRAM_VISIT' }), {
+          answer: 'https://www.instagram.com/corgi'
+        })
+      ).toEqual({ answer: 'https://www.instagram.com/corgi' });
+    });
+
+    it('returns JsonNull when no profile link was sent', () => {
+      expect(saveTaskProof(taskOf({ type: 'INSTAGRAM_VISIT' }), {})).toBe(
+        Prisma.JsonNull
+      );
+    });
+
+    it('returns JsonNull when the profile link is empty', () => {
+      expect(
+        saveTaskProof(taskOf({ type: 'INSTAGRAM_VISIT' }), { answer: '' })
+      ).toBe(Prisma.JsonNull);
+    });
+
+    it('throws a ZodError when the profile link is not a string', () => {
+      expect(() =>
+        saveTaskProof(taskOf({ type: 'INSTAGRAM_VISIT' }), { answer: 1 })
       ).toThrow(ZodError);
     });
   });
