@@ -72,29 +72,26 @@ test.describe('the paths of a draft in the editor', () => {
     );
   });
 
-  test(
-    'the /edit path of a draft does not say that the changes go live',
-    knownBug(595),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const draft = await seedApi(request).sweepstakes({
-        ns: RUN_ID,
-        team: team.slug,
-        preset: 'draft'
-      });
-      await page.goto(editPage(team.slug, draft.id));
-      await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(
-        draft.name
-      );
+  test('the /edit path of a draft opens /create', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const draft = await seedApi(request).sweepstakes({
+      ns: RUN_ID,
+      team: team.slug,
+      preset: 'draft'
+    });
+    await page.goto(editPage(team.slug, draft.id));
 
-      await page
-        .getByRole('main')
-        .getByRole('button', { name: 'Save Changes', exact: true })
-        .first()
-        .click();
-      const dialog = page.getByRole('dialog', { name: 'Save Changes?' });
-      await expect(dialog).toBeVisible();
-      await expect(dialog).not.toContainText('go live');
-    }
-  );
+    await expect(page).toHaveURL(
+      new RegExp(`/app/${team.slug}/sweepstakes/${draft.id}/create$`)
+    );
+    await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(
+      draft.name
+    );
+    expect(await readSweepstakes(request, draft.id)).toMatchObject({
+      status: 'DRAFT'
+    });
+  });
 });

@@ -78,7 +78,7 @@ describe('SweepstakeFormPage', () => {
     vi.mocked(notFound).mockClear();
     vi.mocked(redirect).mockClear();
     vi.mocked(SweepstakesForm).mockClear();
-    succeed();
+    succeed('RUNNING');
   });
 
   it('loads the form, status, integrations and published count', async () => {
@@ -90,14 +90,23 @@ describe('SweepstakeFormPage', () => {
   });
 
   describe('when everything loads', () => {
-    it.each(['DRAFT', 'RUNNING', 'SCHEDULED', 'EXPIRED', 'ERROR'] as const)(
+    it.each(['RUNNING', 'SCHEDULED', 'EXPIRED', 'ERROR'] as const)(
       'renders the editor for a %s sweepstakes',
       async (status) => {
         succeed(status);
         await renderPage();
         expect(screen.getByText('Sweepstakes form')).toBeInTheDocument();
+        expect(redirect).not.toHaveBeenCalled();
       }
     );
+
+    it('sends a draft to the create page', async () => {
+      succeed('DRAFT');
+      await expect(renderPage()).rejects.toThrow(
+        'NEXT_REDIRECT /app/acme/sweepstakes/sweepstakes-1/create'
+      );
+      expect(SweepstakesForm).not.toHaveBeenCalled();
+    });
 
     it('passes the form, integrations and loyalty limit to the editor', async () => {
       await renderPage();
