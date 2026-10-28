@@ -32,6 +32,36 @@ const baseWhere = {
   }
 };
 
+const sortSelect = {
+  id: true,
+  quality: {
+    select: { score: true },
+    take: 1,
+    orderBy: { updatedAt: 'desc' }
+  },
+  participation: {
+    select: {
+      taskCompletions: {
+        select: { completedAt: true },
+        where: { task: { sweepstakes: { team: { slug: 'acme' } } } },
+        orderBy: { completedAt: 'desc' },
+        take: 1
+      }
+    }
+  }
+};
+
+const sortRow = (
+  id: string,
+  { score, completedAt }: { score?: number; completedAt: number[] }
+) => ({
+  id,
+  quality: score === undefined ? [] : [{ score }],
+  participation: completedAt.map((day) => ({
+    taskCompletions: [{ completedAt: new Date(Date.UTC(2026, 0, day)) }]
+  }))
+});
+
 const lastWhere = () => prismaMock.user.findMany.mock.calls[0][0].where;
 
 describe('getTeamParticipants', () => {
@@ -96,11 +126,10 @@ describe('getTeamParticipants', () => {
         pageSize: 50,
         totalPages: 0
       });
+      expect(prismaMock.user.findMany).toHaveBeenCalledTimes(1);
       expect(prismaMock.user.findMany).toHaveBeenCalledWith({
         where: baseWhere,
-        select: TEAM_PARTICIPANT_USER_SELECT_QUERY({ slug: 'acme' }),
-        skip: 0,
-        take: 50
+        select: sortSelect
       });
     });
 
@@ -110,28 +139,121 @@ describe('getTeamParticipants', () => {
       expect(prismaMock.user.count).toHaveBeenCalledWith({ where: baseWhere });
     });
 
-    it('skips the rows of previous pages', async () => {
-      await getTeamParticipants({
-        slug: 'acme',
-        page: 3,
-        pageSize: 10
-      } as Input);
+    describe('sorting by name', () => {
+      it.each(['asc', 'desc'] as const)(
+        'orders by name %s with unnamed users last and the id as tie-breaker',
+        async (sortDirection) => {
+          await getTeamParticipants({
+            slug: 'acme',
+            sortBy: 'name',
+            sortDirection,
+            page: 3,
+            pageSize: 10
+          } as Input);
 
-      expect(prismaMock.user.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ skip: 20, take: 10 })
+          expect(prismaMock.user.findMany).toHaveBeenCalledTimes(1);
+          expect(prismaMock.user.findMany).toHaveBeenCalledWith({
+            where: baseWhere,
+            select: TEAM_PARTICIPANT_USER_SELECT_QUERY({ slug: 'acme' }),
+            orderBy: [
+              { name: { sort: sortDirection, nulls: 'last' } },
+              { id: 'asc' }
+            ],
+            skip: 20,
+            take: 10
+          });
+        }
       );
     });
 
-    it('ignores the sort options when querying', async () => {
-      await getTeamParticipants({
-        slug: 'acme',
-        sortBy: 'name',
-        sortDirection: 'asc'
-      } as Input);
+    describe('sorting by quality score and last entry', () => {
+      const rows = [
+        sortRow('b', { score: 50, completedAt: [3] }),
+        sortRow('a', { score: 50, completedAt: [1] }),
+        sortRow('c', { score: 90, completedAt: [2, 5] }),
+        sortRow('d', { score: 120, completedAt: [4] }),
+        sortRow('e', { score: -5, completedAt: [] }),
+        sortRow('f', { completedAt: [] })
+      ];
 
-      expect(prismaMock.user.findMany.mock.calls[0][0]).not.toHaveProperty(
-        'orderBy'
+      const pageOf = async (input: Partial<Input>) => {
+        prismaMock.user.findMany
+          .mockResolvedValueOnce(rows as never)
+          .mockImplementationOnce((async (args: {
+            where: { id: { in: string[] } };
+          }) =>
+            [...args.where.id.in].reverse().map((id) => ({
+              ...buildUserRow(),
+              id,
+              participation: []
+            }))) as never);
+
+        const result = await getTeamParticipants({
+          slug: 'acme',
+          ...input
+        } as Input);
+
+        return expectOk(result).participants.map((p) => p.id);
+      };
+
+      it.each([
+        ['qualityScore', 'desc', ['d', 'c', 'a', 'b', 'e', 'f']],
+        ['qualityScore', 'asc', ['e', 'f', 'a', 'b', 'c', 'd']],
+        ['lastEntry', 'desc', ['c', 'd', 'b', 'a', 'e', 'f']],
+        ['lastEntry', 'asc', ['e', 'f', 'a', 'b', 'd', 'c']]
+      ] as const)(
+        'orders by %s %s with the id as tie-breaker',
+        async (sortBy, sortDirection, expected) => {
+          expect(await pageOf({ sortBy, sortDirection })).toEqual(expected);
+          expect(prismaMock.user.findMany).toHaveBeenNthCalledWith(1, {
+            where: baseWhere,
+            select: sortSelect
+          });
+          expect(prismaMock.user.findMany).toHaveBeenNthCalledWith(2, {
+            where: { id: { in: expected } },
+            select: TEAM_PARTICIPANT_USER_SELECT_QUERY({ slug: 'acme' })
+          });
+        }
       );
+
+      it('loads only the users of the requested page', async () => {
+        expect(
+          await pageOf({
+            sortBy: 'qualityScore',
+            sortDirection: 'desc',
+            page: 2,
+            pageSize: 4
+          })
+        ).toEqual(['e', 'f']);
+      });
+
+      it('loads no users for a page past the last one', async () => {
+        prismaMock.user.findMany.mockResolvedValueOnce(rows as never);
+
+        const result = await getTeamParticipants({
+          slug: 'acme',
+          page: 3,
+          pageSize: 4
+        } as Input);
+
+        expect(expectOk(result).participants).toEqual([]);
+        expect(prismaMock.user.findMany).toHaveBeenCalledTimes(1);
+      });
+
+      it('leaves out a user that is gone when the page loads', async () => {
+        prismaMock.user.findMany
+          .mockResolvedValueOnce(rows as never)
+          .mockResolvedValueOnce([
+            { ...buildUserRow(), id: 'c', participation: [] }
+          ] as never);
+
+        const result = await getTeamParticipants({
+          slug: 'acme',
+          pageSize: 2
+        } as Input);
+
+        expect(expectOk(result).participants.map((p) => p.id)).toEqual(['c']);
+      });
     });
 
     it('searches name, email and id case-insensitively', async () => {
