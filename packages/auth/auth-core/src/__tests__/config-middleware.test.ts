@@ -318,7 +318,6 @@ describe('authConfigMiddleware', () => {
 
       it.each([
         ['/account', '%2Faccount'],
-        ['/pickers/123', '%2Fpickers%2F123'],
         ['/app/team/sweepstakes', '%2Fapp%2Fteam%2Fsweepstakes']
       ])(
         'redirects users who are not onboarded from %s to onboarding and back',
@@ -327,6 +326,13 @@ describe('authConfigMiddleware', () => {
             authorize(local(path), notOnboarded),
             local(`/onboarding?redirectTo=${redirectTo}`)
           );
+        }
+      );
+
+      it.each(['/pickers/x', '/pickers/x/abc'])(
+        '[ROUTE-006] lets a user who is not onboarded open %s',
+        (path) => {
+          expect(authorize(local(path), notOnboarded)).toBe(true);
         }
       );
 

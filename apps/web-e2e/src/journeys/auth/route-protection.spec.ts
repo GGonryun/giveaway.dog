@@ -157,7 +157,6 @@ test.describe('a user who has not finished onboarding', () => {
       '/app',
       '/browse',
       '/browse/any-id',
-      '/pickers/x',
       '/'
     ]) {
       await page.goto(path);

@@ -20,6 +20,7 @@ How people sign in and out, which pages they can open, and how a sign-in finds t
 - `AUTH-014` Deleting an account ends every session of that account, on every device.
 - `AUTH-015` A user who signed in through a provider that gives no email address is shown as signed in and opens their account page.
 - `AUTH-016` A user whose sign-in ends on a giveaway page lands on that giveaway.
+- `AUTH-017` Starting a sign-in through an OAuth provider sends the visitor to that provider with the client id that the app has for it and a callback URL on the app's own origin.
 
 ## Route protection
 
@@ -28,7 +29,7 @@ How people sign in and out, which pages they can open, and how a sign-in finds t
 - `ROUTE-003` A visitor who opens the logout page is sent home.
 - `ROUTE-004` A participant who opens a host page is sent to browse.
 - `ROUTE-005` A signed-in user who opens the login page is sent away from it.
-- `ROUTE-006` A user who has not finished onboarding is sent to onboarding from every page except the home and pricing pages.
+- `ROUTE-006` A user who has not finished onboarding is sent to onboarding from every page except the home and pricing pages, the free X picker and its shared draws.
 - `ROUTE-007` A signed-in user lands where their account belongs: a host on the team picker, a participant on browse, and a user who has not finished onboarding on onboarding.
 - `ROUTE-008` A visitor who opens the onboarding page is sent to the login page.
 
