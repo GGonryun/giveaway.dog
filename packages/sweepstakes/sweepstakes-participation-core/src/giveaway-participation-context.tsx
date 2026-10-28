@@ -28,6 +28,7 @@ export interface GiveawayParticipationProps {
   participation: GiveawayParticipationSchema;
   prizes: GiveawayPrizeSchema[];
   participant?: SweepstakesParticipantSchema;
+  viewer?: SweepstakesParticipantSchema['user'];
   relationship?: UserHostRelationshipSchema;
   state: GiveawayState;
   hideBackground?: boolean;
@@ -65,6 +66,7 @@ export const GiveawayParticipationProvider: React.FC<
   host,
   prizes: winners,
   participant,
+  viewer,
   relationship,
   state = 'active',
   verifyEmail,
@@ -86,6 +88,7 @@ export const GiveawayParticipationProvider: React.FC<
     host,
     prizes: winners,
     participant,
+    viewer,
     relationship,
     referral,
     isPreview,

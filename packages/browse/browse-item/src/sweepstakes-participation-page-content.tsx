@@ -27,6 +27,7 @@ import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 export type SweepstakesParticipationPageContentProps =
   ParticipantSweepstakeSchema & {
     participant?: SweepstakesParticipantSchema;
+    viewer?: SweepstakesParticipantSchema['user'];
     relationship?: UserHostRelationshipSchema;
     referral?: UserReferralSchema;
     allocations?: AllocationStatisticsSchema;

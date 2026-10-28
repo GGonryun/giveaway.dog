@@ -23,6 +23,7 @@
     "./get-sweepstakes-privacy": "./src/get-sweepstakes-privacy.ts",
     "./get-team-sweepstake": "./src/get-team-sweepstake.ts",
     "./get-user-host-relationship": "./src/get-user-host-relationship.ts",
+    "./get-viewer": "./src/get-viewer.ts",
     "./refresh-sweepstakes": "./src/refresh-sweepstakes.ts"
   },
   "scripts": {
@@ -39,6 +40,7 @@
     "@giveaway/sweepstakes-access": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
+    "@giveaway/user-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-types": "workspace:*",
     "server-only": "catalog:",

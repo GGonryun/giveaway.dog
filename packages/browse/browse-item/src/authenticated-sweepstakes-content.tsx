@@ -9,6 +9,7 @@ import { AllocationStatisticsSchema } from '@giveaway/allocation-model/schemas';
 
 interface AuthenticatedSweepstakesContentProps extends ParticipantSweepstakeSchema {
   participant?: SweepstakesParticipantSchema;
+  viewer?: SweepstakesParticipantSchema['user'];
   relationship?: UserHostRelationshipSchema;
   referral?: UserReferralSchema;
   allocations?: AllocationStatisticsSchema;

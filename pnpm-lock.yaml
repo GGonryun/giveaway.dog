@@ -8123,6 +8123,9 @@ importers:
       '@giveaway/task-model':
         specifier: workspace:*
         version: link:../../tasks/task-model
+      '@giveaway/user-model':
+        specifier: workspace:*
+        version: link:../../account/user-model
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors
