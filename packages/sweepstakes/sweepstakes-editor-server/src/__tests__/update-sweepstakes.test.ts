@@ -87,10 +87,27 @@ describe('updateSweepstakes', () => {
       );
     });
 
-    it('applies a status smuggled in the input payload', async () => {
+    it('ignores a status smuggled in the input payload', async () => {
       await updateSweepstakes({
         id: SWEEPSTAKES_ID,
         status: SweepstakesStatus.ACTIVE
+      } as unknown as Input);
+
+      expect(prismaMock.sweepstakes.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ status: SweepstakesStatus.DRAFT })
+        })
+      );
+    });
+
+    it('keeps a published sweepstakes active when a stale form sends DRAFT', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        buildTeamSweepstakes({ status: SweepstakesStatus.ACTIVE })
+      );
+
+      await updateSweepstakes({
+        id: SWEEPSTAKES_ID,
+        status: SweepstakesStatus.DRAFT
       } as unknown as Input);
 
       expect(prismaMock.sweepstakes.create).toHaveBeenCalledWith(
@@ -121,7 +138,7 @@ describe('updateSweepstakes', () => {
       );
     });
 
-    it('does not schedule jobs for an active sweepstakes when no status is sent', async () => {
+    it('schedules the jobs of an active sweepstakes from its stored status', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         buildTeamSweepstakes({ status: SweepstakesStatus.ACTIVE })
       );
@@ -130,6 +147,24 @@ describe('updateSweepstakes', () => {
         id: SWEEPSTAKES_ID,
         timing: { startDate: START, endDate: END }
       });
+
+      expect(
+        prismaMock.sweepstakesJob.upsert.mock.calls.map(
+          ([args]) => args.create.type
+        )
+      ).toEqual([
+        'PROCESS_ACTIVATION',
+        'PROCESS_MODIFICATION',
+        'PROCESS_EXPIRATION'
+      ]);
+    });
+
+    it('does not schedule jobs for a draft even when the input says ACTIVE', async () => {
+      await updateSweepstakes({
+        id: SWEEPSTAKES_ID,
+        timing: { startDate: START, endDate: END },
+        status: SweepstakesStatus.ACTIVE
+      } as unknown as Input);
 
       expect(prismaMock.sweepstakesJob.upsert).not.toHaveBeenCalled();
     });

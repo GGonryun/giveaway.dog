@@ -1062,7 +1062,7 @@ describe('applySweepstakesChanges', () => {
       expect(prismaMock.sweepstakesJob.upsert).not.toHaveBeenCalled();
     });
 
-    it('does not schedule jobs when the input has no status even if the stored sweepstakes is active', async () => {
+    it('schedules the jobs from the stored status when the input has none', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         buildTeamSweepstakes({ status: SweepstakesStatus.ACTIVE })
       );
@@ -1072,7 +1072,15 @@ describe('applySweepstakesChanges', () => {
         timing: { startDate: START, endDate: END }
       });
 
-      expect(prismaMock.sweepstakesJob.upsert).not.toHaveBeenCalled();
+      expect(
+        prismaMock.sweepstakesJob.upsert.mock.calls.map(
+          ([args]) => args.create.type
+        )
+      ).toEqual([
+        SweepstakesJobType.PROCESS_ACTIVATION,
+        SweepstakesJobType.PROCESS_MODIFICATION,
+        SweepstakesJobType.PROCESS_EXPIRATION
+      ]);
     });
   });
 });
