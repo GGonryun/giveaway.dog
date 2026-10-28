@@ -74,10 +74,15 @@ export async function POST(request: NextRequest) {
     const twitterPickerUsersData = toTwitterPickerUsers({
       pickerId,
       users
-    }).map((user) => ({
-      ...user,
-      id: createId()
-    }));
+    })
+      .filter(
+        (user, index, all) =>
+          all.findIndex(({ userId }) => userId === user.userId) === index
+      )
+      .map((user) => ({
+        ...user,
+        id: createId()
+      }));
 
     const eligibleUsers = twitterPickerUsersData.filter((user) => {
       return !getDisqualificationReason(user, pickerData);

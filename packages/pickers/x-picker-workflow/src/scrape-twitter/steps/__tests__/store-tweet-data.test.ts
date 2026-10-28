@@ -48,7 +48,8 @@ describe('storeTweetData', () => {
 
     beforeEach(() => {
       mocks.getTweet.mockResolvedValue(tweet);
-      prismaMock.twitterPost.create.mockResolvedValue(stored);
+      prismaMock.twitterPost.createMany.mockResolvedValue({ count: 1 });
+      prismaMock.twitterPost.findUniqueOrThrow.mockResolvedValue(stored);
     });
 
     it('fetches the tweet by id', async () => {
@@ -60,9 +61,9 @@ describe('storeTweetData', () => {
     it('stores the tweet as a post of the picker', async () => {
       await storeTweetData({ tweetId: '1111', pickerId: 'picker-1' });
 
-      expect(prismaMock.twitterPost.create).toHaveBeenCalledWith({
+      expect(prismaMock.twitterPost.createMany).toHaveBeenCalledWith({
         data: {
-          picker: { connect: { id: 'picker-1' } },
+          pickerId: 'picker-1',
           tweetId: '1111',
           text: 'Retweet to win!',
           createdAt: new Date('2025-01-01T00:00:00.000Z'),
@@ -73,7 +74,16 @@ describe('storeTweetData', () => {
           replyCount: 5,
           viewCount: 1000,
           quoteCount: 2
-        }
+        },
+        skipDuplicates: true
+      });
+    });
+
+    it('reads the post back by the picker and the tweet id', async () => {
+      await storeTweetData({ tweetId: '1111', pickerId: 'picker-1' });
+
+      expect(prismaMock.twitterPost.findUniqueOrThrow).toHaveBeenCalledWith({
+        where: { pickerId_tweetId: { pickerId: 'picker-1', tweetId: '1111' } }
       });
     });
 
@@ -117,7 +127,7 @@ describe('storeTweetData', () => {
         () => undefined
       );
 
-      expect(prismaMock.twitterPost.create).not.toHaveBeenCalled();
+      expect(prismaMock.twitterPost.createMany).not.toHaveBeenCalled();
     });
 
     it('stringifies a non-error rejection into the message', async () => {
@@ -132,7 +142,7 @@ describe('storeTweetData', () => {
   describe('when storing the post fails', () => {
     it('throws a fatal error describing the database failure', async () => {
       mocks.getTweet.mockResolvedValue(tweet);
-      prismaMock.twitterPost.create.mockRejectedValue(
+      prismaMock.twitterPost.createMany.mockRejectedValue(
         knownRequestError('P2025', 'Picker missing')
       );
 

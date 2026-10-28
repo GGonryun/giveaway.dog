@@ -55,8 +55,8 @@ export const toTwitterPost = ({
 }: {
   pickerId: string;
   tweet: Tweet;
-}): Prisma.TwitterPostCreateInput => ({
-  picker: { connect: { id: pickerId } },
+}): Prisma.TwitterPostUncheckedCreateInput => ({
+  pickerId,
   tweetId: tweet.id,
   text: tweet.text,
   createdAt: tweet.created_at ? new Date(tweet.created_at) : new Date(),

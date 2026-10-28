@@ -259,7 +259,7 @@ describe('toTwitterPost', () => {
     expect(
       toTwitterPost({ pickerId: 'picker-1', tweet: buildTweet() })
     ).toEqual({
-      picker: { connect: { id: 'picker-1' } },
+      pickerId: 'picker-1',
       tweetId: 'tweet-1',
       text: 'Giveaway time!',
       createdAt: new Date('2026-04-01T12:00:00.000Z'),

@@ -64,12 +64,16 @@ const setupTweets = (
         retweet_count: tweets[tweetId].retweetCount
       }) as unknown as Tweet
   );
-  prismaMock.twitterPost.create.mockImplementation(
-    async ({ data }: { data: { tweetId: string } }) => ({
-      id: `post-${data.tweetId}`,
-      tweetId: data.tweetId,
-      retweetCount: tweets[data.tweetId].retweetCount
-    })
+  prismaMock.twitterPost.createMany.mockResolvedValue({ count: 1 });
+  prismaMock.twitterPost.findUniqueOrThrow.mockImplementation(
+    async ({ where }: { where: { pickerId_tweetId: { tweetId: string } } }) => {
+      const { tweetId } = where.pickerId_tweetId;
+      return {
+        id: `post-${tweetId}`,
+        tweetId,
+        retweetCount: tweets[tweetId].retweetCount
+      };
+    }
   );
   const queues = Object.fromEntries(
     Object.entries(tweets).map(([id, { pages }]) => [id, [...pages]])
@@ -215,7 +219,7 @@ describe('scrapeTwitterWorkflow', () => {
         [{ tweetId: '1' }],
         [{ tweetId: '2' }]
       ]);
-      expect(prismaMock.twitterPost.create).toHaveBeenCalledTimes(2);
+      expect(prismaMock.twitterPost.createMany).toHaveBeenCalledTimes(2);
       const lastTweetOrder = Math.max(
         ...mocks.getTweet.mock.invocationCallOrder
       );
@@ -236,13 +240,13 @@ describe('scrapeTwitterWorkflow', () => {
       });
 
       expect(
-        prismaMock.twitterPost.create.mock.calls.map(([args]) => ({
-          picker: args.data.picker,
-          tweetId: args.data.tweetId
+        prismaMock.twitterPost.createMany.mock.calls.map(([args]) => ({
+          pickerId: (args.data as { pickerId: string }).pickerId,
+          tweetId: (args.data as { tweetId: string }).tweetId
         }))
       ).toEqual([
-        { picker: { connect: { id: 'picker-1' } }, tweetId: '1' },
-        { picker: { connect: { id: 'picker-1' } }, tweetId: '2' }
+        { pickerId: 'picker-1', tweetId: '1' },
+        { pickerId: 'picker-1', tweetId: '2' }
       ]);
     });
 

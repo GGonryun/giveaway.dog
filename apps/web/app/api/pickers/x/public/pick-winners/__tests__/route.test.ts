@@ -411,7 +411,7 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
 
       expect(prismaMock.twitterPost.create).toHaveBeenCalledWith({
         data: {
-          picker: { connect: { id: 'id-1' } },
+          pickerId: 'id-1',
           tweetId: '123',
           text: 'Retweet to win!',
           createdAt: new Date('2026-05-01T00:00:00.000Z'),
@@ -454,6 +454,21 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
         tweetCount: 1000,
         verified: false
       });
+    });
+
+    it('stores a retweeter that appears twice once', async () => {
+      m.getRetweeters.mockResolvedValue({
+        data: [retweeter('1'), retweeter('2'), retweeter('1')],
+        hasMore: false
+      });
+
+      await POST(buildRequest());
+
+      const call = prismaMock.twitterPickerUser.createMany.mock.calls[0][0];
+      expect(call.data.map((user: { userId: string }) => user.userId)).toEqual([
+        '1',
+        '2'
+      ]);
     });
 
     it('stores one draw per winner that references the stored retweeter row', async () => {
