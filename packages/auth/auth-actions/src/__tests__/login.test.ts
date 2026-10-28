@@ -182,14 +182,26 @@ describe('login', () => {
       });
     });
 
-    it('passes an undefined email when none is given', async () => {
-      await run({ provider: IdentityProvider.EMAIL });
+    it('trims the spaces around the email', async () => {
+      await run({ provider: IdentityProvider.EMAIL, email: ' e@example.com ' });
 
       expect(mocks.signIn).toHaveBeenCalledWith('email', {
-        email: undefined,
-        redirectTo: portal({ provider: 'email' })
+        email: 'e@example.com',
+        redirectTo: portal({ email: 'e@example.com', provider: 'email' })
       });
     });
+
+    it.each([undefined, '', 'not-an-email'])(
+      '[AUTH-011] refuses the email %j and sends no email',
+      async (email) => {
+        const result = await run({ provider: IdentityProvider.EMAIL, email });
+
+        expect(expectFailure(result, 'VALIDATION_ERROR').message).toBe(
+          'Please enter a valid email address.'
+        );
+        expect(mocks.signIn).not.toHaveBeenCalled();
+      }
+    );
   });
 
   describe('anonymous provider', () => {

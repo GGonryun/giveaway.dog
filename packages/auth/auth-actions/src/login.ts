@@ -10,6 +10,10 @@ import { IdentityProvider, Prisma, PrismaClient } from '@giveaway/db-model';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { redirect } from 'next/navigation';
 import {
+  INVALID_LOGIN_EMAIL_MESSAGE,
+  loginEmailSchema
+} from '@giveaway/auth-model/email';
+import {
   instagramProfileUrlSchema,
   extractInstagramUsername,
   normalizeInstagramUrl
@@ -41,12 +45,12 @@ const login = procedure()
       returnTo,
       redirectTo,
       provider,
-      email,
       blueskyHandle,
       instagramProfileUrl,
       facebookProfileUrl,
       revalidate
     } = input;
+    const email = toLoginEmail(provider, input.email);
     // Build query parameters for other providers
     const queryParams = new URLSearchParams();
     if (redirectTo) queryParams.append('redirectTo', redirectTo);
@@ -100,6 +104,22 @@ const login = procedure()
   });
 
 export default login;
+
+const toLoginEmail = (
+  provider: IdentityProvider | undefined,
+  email: string | undefined
+) => {
+  if (provider !== IdentityProvider.EMAIL) return email;
+
+  const parsed = loginEmailSchema.safeParse(email);
+  if (!parsed.success) {
+    throw new ApplicationError({
+      code: 'VALIDATION_ERROR',
+      message: INVALID_LOGIN_EMAIL_MESSAGE
+    });
+  }
+  return parsed.data;
+};
 
 type MetaProfile = {
   provider: 'instagram' | 'facebook';
