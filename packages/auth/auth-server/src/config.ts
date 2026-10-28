@@ -29,7 +29,7 @@ import {
   REQUIRED_VELORA_SCOPES,
   REQUIRED_LINKEDIN_SCOPES
 } from '@giveaway/integration-model/scopes';
-import { UserSource } from '@giveaway/db-model';
+import { UserAccountType, UserSource } from '@giveaway/db-model';
 import prisma from '@giveaway/db-client/prisma';
 import { redeemBlueskyLoginToken } from './bluesky-login-token';
 import { environment } from '@giveaway/app-config/environment';
@@ -63,7 +63,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth(async (req) => {
             data: {
               id: createId(),
               name: 'Anonymous',
-              source: UserSource.ANONYMOUS
+              source: UserSource.ANONYMOUS,
+              accountType: UserAccountType.PARTICIPANT,
+              onboarded: true
             }
           });
         } catch (error) {
