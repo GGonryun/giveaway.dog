@@ -37,7 +37,10 @@ const mocks = vi.hoisted(() => {
     signIn: vi.fn(),
     redirect: vi.fn((url: string) => {
       throw redirectError(url);
-    })
+    }),
+    getBlueskyClient: vi.fn(),
+    authorize: vi.fn(),
+    setCookie: vi.fn()
   };
 });
 
@@ -49,6 +52,17 @@ vi.mock('@giveaway/auth-server/config', () => ({
 }));
 
 vi.mock('next/navigation', () => ({ redirect: mocks.redirect }));
+
+vi.mock('next/headers', () => ({
+  cookies: async () => ({ set: mocks.setCookie })
+}));
+
+vi.mock('@giveaway/bluesky-api/bluesky/bluesky-client', () => ({
+  getBlueskyClient: mocks.getBlueskyClient
+}));
+
+const BLUESKY_AUTH_URL =
+  'https://bsky.social/oauth/authorize?request_uri=urn%3Areq';
 
 vi.mock('next-auth', () => authErrors);
 
@@ -62,11 +76,17 @@ beforeEach(() => {
   mocks.signIn.mockReset();
   mocks.signIn.mockResolvedValue(undefined);
   mocks.redirect.mockClear();
+  mocks.setCookie.mockReset();
+  mocks.authorize.mockReset();
+  mocks.authorize.mockResolvedValue(new URL(BLUESKY_AUTH_URL));
+  mocks.getBlueskyClient.mockReset();
+  mocks.getBlueskyClient.mockResolvedValue({ authorize: mocks.authorize });
   vi.spyOn(console, 'info').mockImplementation(() => {});
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   vi.restoreAllMocks();
 });
 
@@ -540,7 +560,7 @@ describe('login', () => {
       );
     });
 
-    it('redirects to the bluesky authorize route with handle, returnTo and redirectTo', async () => {
+    it('redirects to the Bluesky authorization URL', async () => {
       await expect(
         run({
           provider: IdentityProvider.BLUESKY,
@@ -549,17 +569,11 @@ describe('login', () => {
         })
       ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
-      const params = new URLSearchParams({
-        handle: 'alice.bsky.social',
-        returnTo: '/giveaways/1',
-        redirectTo: portal({ provider: 'bluesky' })
-      });
-      expect(mocks.redirect).toHaveBeenCalledWith(
-        `/api/bluesky/user/authorize?${params.toString()}`
-      );
+      expect(mocks.authorize).toHaveBeenCalledWith('alice.bsky.social');
+      expect(mocks.redirect).toHaveBeenCalledWith(BLUESKY_AUTH_URL);
     });
 
-    it('passes the handle to the authorize route without changing its case', async () => {
+    it('passes the handle to Bluesky without changing its case', async () => {
       await expect(
         run({
           provider: IdentityProvider.BLUESKY,
@@ -567,26 +581,87 @@ describe('login', () => {
         })
       ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
-      const [url] = mocks.redirect.mock.calls[0];
-      const params = new URLSearchParams(url.split('?').slice(1).join('?'));
-      expect(params.get('handle')).toBe('Alice.Bsky.Social');
+      expect(mocks.authorize).toHaveBeenCalledWith('Alice.Bsky.Social');
     });
 
-    it('omits an empty returnTo from the authorize route', async () => {
+    it('stores the portal redirect in a short-lived cookie for the callback', async () => {
+      vi.stubEnv('NODE_ENV', 'production');
+
+      await expect(
+        run({
+          provider: IdentityProvider.BLUESKY,
+          blueskyHandle: 'alice.bsky.social'
+        })
+      ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
+
+      expect(mocks.setCookie).toHaveBeenCalledWith(
+        'bluesky_redirect',
+        portal({ provider: 'bluesky' }),
+        { httpOnly: true, secure: true, sameSite: 'lax', maxAge: 600 }
+      );
+    });
+
+    it('sets a cookie that is not secure outside production', async () => {
+      await expect(
+        run({
+          provider: IdentityProvider.BLUESKY,
+          blueskyHandle: 'alice.bsky.social'
+        })
+      ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
+
+      expect(mocks.setCookie.mock.calls[0][2]).toMatchObject({ secure: false });
+    });
+
+    it('[AUTH-013] sends the visitor back to returnTo with an error when the authorization fails', async () => {
+      mocks.authorize.mockRejectedValue(new Error('handle not found'));
+
+      await expect(
+        run({
+          provider: IdentityProvider.BLUESKY,
+          blueskyHandle: 'nobody.invalid',
+          returnTo: '/login'
+        })
+      ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
+
+      expect(mocks.redirect).toHaveBeenCalledWith(
+        '/login?error=bluesky_auth_failed'
+      );
+      expect(mocks.setCookie).not.toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith(
+        'Bluesky authorization failed:',
+        expect.any(Error)
+      );
+    });
+
+    it('[AUTH-013] keeps the query of returnTo when the authorization fails', async () => {
+      mocks.getBlueskyClient.mockRejectedValue(new Error('no key'));
+
       await expect(
         run({
           provider: IdentityProvider.BLUESKY,
           blueskyHandle: 'alice.bsky.social',
-          returnTo: ''
+          returnTo: '/browse/1?tab=tasks#top'
         })
       ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
-      const params = new URLSearchParams({
-        handle: 'alice.bsky.social',
-        redirectTo: portal({ provider: 'bluesky' })
-      });
       expect(mocks.redirect).toHaveBeenCalledWith(
-        `/api/bluesky/user/authorize?${params.toString()}`
+        '/browse/1?tab=tasks&error=bluesky_auth_failed#top'
+      );
+    });
+
+    it('sends the visitor to the login page when returnTo leaves the site', async () => {
+      mocks.authorize.mockRejectedValue(new Error('handle not found'));
+
+      await expect(
+        run({
+          provider: IdentityProvider.BLUESKY,
+          blueskyHandle: 'alice.bsky.social',
+          returnTo: 'https://evil.example/'
+        })
+      ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
+
+      expect(mocks.redirect).toHaveBeenCalledWith(
+        '/login?error=bluesky_auth_failed'
       );
     });
   });

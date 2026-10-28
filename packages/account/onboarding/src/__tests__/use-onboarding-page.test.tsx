@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { UserAccountType } from '@giveaway/db-model';
 import { useOnboardingPage } from '../use-onboarding-page';
 
 const navigation = vi.hoisted(() => ({
@@ -43,14 +44,35 @@ describe('useOnboardingPage', () => {
         expect(result.current.step).toBe(1);
       }
     );
+
+    it('reads a host account type from the url', () => {
+      navigation.searchParams = new URLSearchParams('step=2&accountType=HOST');
+
+      const { result } = renderHook(() => useOnboardingPage());
+
+      expect(result.current.accountType).toBe(UserAccountType.HOST);
+    });
+
+    it.each([null, 'PARTICIPANT', 'ADMIN', 'host'])(
+      'falls back to a participant when the account type param is %s',
+      (accountType) => {
+        navigation.searchParams = new URLSearchParams(
+          accountType ? { step: '2', accountType } : { step: '2' }
+        );
+
+        const { result } = renderHook(() => useOnboardingPage());
+
+        expect(result.current.accountType).toBe(UserAccountType.PARTICIPANT);
+      }
+    );
   });
 
   describe('when navigating', () => {
-    it('moves to the profile step by updating the url', () => {
+    it('moves to the profile step as a participant by updating the url', () => {
       const { result, rerender } = renderHook(() => useOnboardingPage());
 
       act(() => {
-        result.current.navigateToProfileStep();
+        result.current.navigateToProfileStep(UserAccountType.PARTICIPANT);
       });
 
       expect(navigation.router.push).toHaveBeenCalledWith('/onboarding?step=2');
@@ -60,6 +82,38 @@ describe('useOnboardingPage', () => {
       rerender();
 
       expect(result.current.step).toBe(2);
+      expect(result.current.accountType).toBe(UserAccountType.PARTICIPANT);
+    });
+
+    it('keeps a host account type in the url of the profile step', () => {
+      const { result, rerender } = renderHook(() => useOnboardingPage());
+
+      act(() => {
+        result.current.navigateToProfileStep(UserAccountType.HOST);
+      });
+
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/onboarding?step=2&accountType=HOST'
+      );
+
+      navigation.searchParams = new URLSearchParams('step=2&accountType=HOST');
+      rerender();
+
+      expect(result.current.step).toBe(2);
+      expect(result.current.accountType).toBe(UserAccountType.HOST);
+    });
+
+    it('keeps a host account type when going back', () => {
+      navigation.searchParams = new URLSearchParams('step=2&accountType=HOST');
+      const { result } = renderHook(() => useOnboardingPage());
+
+      act(() => {
+        result.current.navigateToAccountTypeStep();
+      });
+
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/onboarding?step=1&accountType=HOST'
+      );
     });
 
     it('moves back to the account type step by updating the url', () => {

@@ -476,7 +476,7 @@ describe('auth config', () => {
       });
     });
 
-    it('creates an anonymous user with a generated id', async () => {
+    it('creates an onboarded anonymous participant with a generated id', async () => {
       mocks.createId.mockReturnValue('cuid-1');
       const created = { id: 'cuid-1', name: 'Anonymous', source: 'ANONYMOUS' };
       prismaMock.user.create.mockResolvedValue(created);
@@ -485,7 +485,13 @@ describe('auth config', () => {
 
       expect(user).toBe(created);
       expect(prismaMock.user.create).toHaveBeenCalledWith({
-        data: { id: 'cuid-1', name: 'Anonymous', source: 'ANONYMOUS' }
+        data: {
+          id: 'cuid-1',
+          name: 'Anonymous',
+          source: 'ANONYMOUS',
+          accountType: 'PARTICIPANT',
+          onboarded: true
+        }
       });
     });
 

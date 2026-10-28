@@ -9,6 +9,9 @@ import { signIn } from '@giveaway/auth-server/config';
 import { IdentityProvider, Prisma, PrismaClient } from '@giveaway/db-model';
 import { IDENTITY_PROVIDER_TO_AUTH_PROVIDER } from '@giveaway/integration-model/providers';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { getBlueskyClient } from '@giveaway/bluesky-api/bluesky/bluesky-client';
+import { toSafeRedirect } from '@giveaway/user-model/redirect';
 import {
   INVALID_LOGIN_EMAIL_MESSAGE,
   loginEmailSchema
@@ -325,13 +328,13 @@ const signInHandler = async (args: {
         });
       }
 
-      const params = new URLSearchParams();
-      params.append('handle', validationResult.data);
-      if (returnTo) params.append('returnTo', returnTo);
-      if (options.redirectTo) params.append('redirectTo', options.redirectTo);
-
-      const blueskyUrl = `/api/bluesky/user/authorize?${params.toString()}`;
-      redirect(blueskyUrl);
+      redirect(
+        await authorizeBluesky({
+          handle: validationResult.data,
+          redirectTo: options.redirectTo,
+          returnTo
+        })
+      );
     }
     case 'YOUTUBE':
       throw new ApplicationError({
@@ -340,5 +343,41 @@ const signInHandler = async (args: {
       });
     default:
       throw assertNever(provider);
+  }
+};
+
+const BLUESKY_REDIRECT_COOKIE = 'bluesky_redirect';
+
+const authorizeBluesky = async (args: {
+  handle: string;
+  redirectTo: string;
+  returnTo: string | undefined;
+}) => {
+  const { handle, redirectTo } = args;
+  const returnTo = toSafeRedirect(args.returnTo, '/login');
+
+  try {
+    const client = await getBlueskyClient();
+    const authUrl = await client.authorize(handle);
+
+    console.info('Bluesky authorization URL generated', {
+      handle,
+      authUrlHost: authUrl.host
+    });
+
+    const cookieStore = await cookies();
+    cookieStore.set(BLUESKY_REDIRECT_COOKIE, redirectTo, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 600
+    });
+
+    return authUrl.toString();
+  } catch (error) {
+    console.error('Bluesky authorization failed:', error);
+    const url = new URL(returnTo, 'http://localhost');
+    url.searchParams.set('error', 'bluesky_auth_failed');
+    return `${url.pathname}${url.search}${url.hash}`;
   }
 };

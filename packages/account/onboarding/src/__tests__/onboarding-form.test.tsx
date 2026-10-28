@@ -79,7 +79,9 @@ describe('OnboardingForm', () => {
       expect(
         screen.getByText(`Profile step for ${UserAccountType.HOST}`)
       ).toBeInTheDocument();
-      expect(navigation.router.push).toHaveBeenCalledWith('/onboarding?step=2');
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/onboarding?step=2&accountType=HOST'
+      );
     });
   });
 
@@ -93,6 +95,16 @@ describe('OnboardingForm', () => {
         screen.getByText(`Profile step for ${UserAccountType.PARTICIPANT}`)
       ).toBeInTheDocument();
       expect(screen.queryByText('Host Giveaways')).not.toBeInTheDocument();
+    });
+
+    it('[ONBOARD-005] keeps the host account type chosen before a reload', () => {
+      navigation.searchParams = new URLSearchParams('step=2&accountType=HOST');
+
+      render(<OnboardingForm />);
+
+      expect(
+        screen.getByText(`Profile step for ${UserAccountType.HOST}`)
+      ).toBeInTheDocument();
     });
 
     it('passes the page to return to on to the profile step', async () => {
@@ -141,7 +153,7 @@ describe('OnboardingForm', () => {
       await user.click(screen.getByRole('button', { name: 'Continue' }));
       act(() => navigation.visit('/onboarding'));
 
-      act(() => navigation.visit('/onboarding?step=2'));
+      act(() => navigation.visit('/onboarding?step=2&accountType=HOST'));
 
       expect(
         screen.getByText(`Profile step for ${UserAccountType.HOST}`)

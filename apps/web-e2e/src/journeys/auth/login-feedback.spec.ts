@@ -1,6 +1,5 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
-import { knownBug } from '../../helpers/known-bug';
 
 const GENERIC_ERROR = 'An unexpected error occurred. Please try again.';
 
@@ -73,20 +72,18 @@ test.describe('the login page', () => {
     ).toBeHidden();
   });
 
-  test(
-    '[AUTH-013] returns to the login page when a Bluesky handle cannot be found',
-    knownBug(479),
-    async ({ page }) => {
-      const handle = await openBlueskyForm(page);
-      await handle.fill('nobody.invalid');
-      await page.getByRole('button', { name: 'Continue' }).click();
+  test('[AUTH-013] returns to the login page when a Bluesky handle cannot be found', async ({
+    page
+  }) => {
+    const handle = await openBlueskyForm(page);
+    await handle.fill('nobody.invalid');
+    await page.getByRole('button', { name: 'Continue' }).click();
 
-      await expect(page).toHaveURL(/\/login\?error=bluesky_auth_failed$/, {
-        timeout: 15_000
-      });
-      await expect(page.getByText(GENERIC_ERROR)).toBeVisible();
-    }
-  );
+    await expect(page).toHaveURL(/\/login\?error=bluesky_auth_failed$/, {
+      timeout: 15_000
+    });
+    await expect(page.getByText(GENERIC_ERROR)).toBeVisible();
+  });
 
   test('[AUTH-011] refuses an email address that is not valid', async ({
     page
