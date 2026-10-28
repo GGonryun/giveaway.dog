@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useTeams } from '@giveaway/team-context/team-provider';
 import { SocialLinksCard } from './social-links-card';
 import { useRouter } from 'next/navigation';
@@ -17,7 +18,7 @@ export const SocialsSettings: React.FC<SocialsSettingsProps> = ({ slug }) => {
     router.refresh();
   };
 
-  const parsedLinks = (() => {
+  const parsedLinks = useMemo(() => {
     if (!team.links) return [];
 
     try {
@@ -26,7 +27,7 @@ export const SocialsSettings: React.FC<SocialsSettingsProps> = ({ slug }) => {
     } catch {
       return [];
     }
-  })();
+  }, [team.links]);
 
   return (
     <div className="space-y-6">

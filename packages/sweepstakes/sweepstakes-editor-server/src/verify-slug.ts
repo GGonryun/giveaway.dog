@@ -17,27 +17,35 @@ export const verifySlug = procedure()
     })
   )
   .handler(async ({ db, input }) => {
-    const existing = await db.sweepstakesVisibility.findFirst({
-      where: {
-        slug: input.slug
-      },
-      select: {
-        sweepstakesId: true
-      }
-    });
+    const [existing, sweepstakes] = await Promise.all([
+      db.sweepstakesVisibility.findFirst({
+        where: {
+          slug: input.slug
+        },
+        select: {
+          sweepstakesId: true
+        }
+      }),
+      db.sweepstakes.findUnique({
+        where: {
+          id: input.slug
+        },
+        select: {
+          id: true
+        }
+      })
+    ]);
 
-    if (!existing) {
-      return { available: true };
-    }
+    const owners = [existing?.sweepstakesId, sweepstakes?.id].filter(
+      (owner) => owner !== undefined
+    );
+    const { currentSweepstakesId } = input;
 
-    if (
-      input.currentSweepstakesId &&
-      existing.sweepstakesId === input.currentSweepstakesId
-    ) {
-      return { available: true };
-    }
-
-    return { available: false };
+    return {
+      available: owners.every(
+        (owner) => !!currentSweepstakesId && owner === currentSweepstakesId
+      )
+    };
   });
 
 export default verifySlug;
