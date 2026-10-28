@@ -5,8 +5,8 @@ import getBrowseHosts from '@giveaway/browse-server/get-browse-hosts';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import {
-  BrowseStatus,
-  GiveawayFilters
+  GiveawayFiltersQuery,
+  parseGiveawayFilters
 } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 import { BrowsePageFilters } from '@giveaway/browse-list/filters';
 import { AllGiveawaysGrid } from '@giveaway/browse-list/components/all-giveaways-grid';
@@ -49,16 +49,7 @@ export const metadata: Metadata = {
   }
 };
 
-type SearchParams = {
-  minEntrants?: string;
-  maxEntrants?: string;
-  sortBy?: string;
-  search?: string;
-  page?: string;
-  showStatuses?: string;
-  hideEntered?: string;
-  hosts?: string;
-};
+type SearchParams = GiveawayFiltersQuery;
 
 export default async function Page({
   searchParams
@@ -74,29 +65,8 @@ export default async function Page({
   );
 }
 
-const parseShowStatuses = (value?: string): BrowseStatus[] | undefined => {
-  if (!value) return undefined;
-  const statuses = value.split(',').filter(Boolean) as BrowseStatus[];
-  return statuses.length > 0 ? statuses : undefined;
-};
-
-const parseHosts = (value?: string): string[] | undefined => {
-  if (!value) return undefined;
-  const hosts = value.split(',').filter(Boolean);
-  return hosts.length > 0 ? hosts : undefined;
-};
-
 const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
-  const filters: GiveawayFilters = {
-    minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
-    maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
-    sortBy: params.sortBy as GiveawayFilters['sortBy'],
-    search: params.search,
-    page: params.page ? parseInt(params.page) : 1,
-    showStatuses: parseShowStatuses(params.showStatuses),
-    hideEntered: params.hideEntered === 'true',
-    hosts: parseHosts(params.hosts)
-  };
+  const filters = parseGiveawayFilters(params);
 
   const [sweepstakes, participation, hosts] = await Promise.all([
     getPublicSweepstakesList(filters),

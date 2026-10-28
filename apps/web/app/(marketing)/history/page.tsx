@@ -3,7 +3,7 @@ import { getPublicSweepstakesParticipation } from '@giveaway/participant-server/
 import getHistoricalSweepstakesList from '@giveaway/browse-server/get-historical-sweepstakes-list';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { GiveawayFilters } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
+import { parseGiveawayFilters } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 import { HistoryFilters } from '@giveaway/account-history/filters';
 import { AllGiveawaysGrid } from '@giveaway/browse-list/components/all-giveaways-grid';
 
@@ -68,14 +68,9 @@ export default async function Page({
 }
 
 const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
-  const page = params.page ? parseInt(params.page) : 1;
-  const filters: GiveawayFilters & { page?: number } = {
-    minEntrants: params.minEntrants ? parseInt(params.minEntrants) : undefined,
-    maxEntrants: params.maxEntrants ? parseInt(params.maxEntrants) : undefined,
-    sortBy: params.sortBy as GiveawayFilters['sortBy'],
-    search: params.search,
-    page
-  };
+  const { minEntrants, maxEntrants, sortBy, search, page } =
+    parseGiveawayFilters(params);
+  const filters = { minEntrants, maxEntrants, sortBy, search, page };
 
   const sweepstakes = await getHistoricalSweepstakesList(filters);
 

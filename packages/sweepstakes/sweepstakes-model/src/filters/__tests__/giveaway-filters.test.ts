@@ -5,7 +5,8 @@ import {
   ALL_BROWSE_STATUSES,
   giveawayFiltersSchema,
   defaultFilters,
-  PAGE_SIZE
+  PAGE_SIZE,
+  parseGiveawayFilters
 } from '../giveaway-filters';
 
 describe('browseStatusSchema', () => {
@@ -145,5 +146,105 @@ describe('defaultFilters', () => {
 describe('PAGE_SIZE', () => {
   it('is 20', () => {
     expect(PAGE_SIZE).toBe(20);
+  });
+});
+
+describe('parseGiveawayFilters', () => {
+  it('reads every filter of a valid query', () => {
+    expect(
+      parseGiveawayFilters({
+        minEntrants: '5',
+        maxEntrants: '100',
+        sortBy: 'newest',
+        search: 'dog',
+        page: '3',
+        showStatuses: 'RUNNING,EXPIRED',
+        hideEntered: 'true',
+        hosts: 'host-1,host-2'
+      })
+    ).toEqual({
+      minEntrants: 5,
+      maxEntrants: 100,
+      sortBy: 'newest',
+      search: 'dog',
+      page: 3,
+      showStatuses: ['RUNNING', 'EXPIRED'],
+      hideEntered: true,
+      hosts: ['host-1', 'host-2']
+    });
+  });
+
+  it('falls back to the defaults for an empty query', () => {
+    expect(parseGiveawayFilters({})).toEqual({
+      minEntrants: undefined,
+      maxEntrants: undefined,
+      sortBy: undefined,
+      search: undefined,
+      page: 1,
+      showStatuses: undefined,
+      hideEntered: false,
+      hosts: undefined
+    });
+  });
+
+  it.each(['abc', '0', '-2', '1.5', '2abc', '', '99999999999999999999'])(
+    'reads page %j as the first page',
+    (page) => {
+      expect(parseGiveawayFilters({ page }).page).toBe(1);
+    }
+  );
+
+  it.each(['abc', '-1', '1.5', '5abc', '', '99999999999999999999'])(
+    'ignores the entrant count %j',
+    (value) => {
+      const filters = parseGiveawayFilters({
+        minEntrants: value,
+        maxEntrants: value
+      });
+      expect(filters.minEntrants).toBeUndefined();
+      expect(filters.maxEntrants).toBeUndefined();
+    }
+  );
+
+  it('accepts zero entrants', () => {
+    expect(parseGiveawayFilters({ minEntrants: '0' }).minEntrants).toBe(0);
+  });
+
+  it.each(['x', 'oldest', ''])('ignores the sort %j', (sortBy) => {
+    expect(parseGiveawayFilters({ sortBy }).sortBy).toBeUndefined();
+  });
+
+  it('keeps only the known statuses', () => {
+    expect(
+      parseGiveawayFilters({ showStatuses: 'DRAFT,RUNNING,,running' })
+        .showStatuses
+    ).toEqual(['RUNNING']);
+  });
+
+  it('ignores a status list with no known status', () => {
+    expect(
+      parseGiveawayFilters({ showStatuses: 'DRAFT' }).showStatuses
+    ).toBeUndefined();
+  });
+
+  it('reads hideEntered as true only for "true"', () => {
+    expect(parseGiveawayFilters({ hideEntered: 'yes' }).hideEntered).toBe(
+      false
+    );
+  });
+
+  it('drops empty hosts', () => {
+    expect(parseGiveawayFilters({ hosts: ',' }).hosts).toBeUndefined();
+  });
+
+  it('always returns filters that the schema accepts', () => {
+    const filters = parseGiveawayFilters({
+      minEntrants: 'abc',
+      maxEntrants: '-1',
+      sortBy: 'x',
+      page: 'abc',
+      showStatuses: 'DRAFT'
+    });
+    expect(giveawayFiltersSchema.safeParse(filters).success).toBe(true);
   });
 });
