@@ -150,6 +150,18 @@ const editPath = '/app/demo-team/sweepstakes/sweepstakes-1/edit';
 const getHeaderButton = (name: string) =>
   within(screen.getByRole('banner')).getByRole('button', { name });
 
+const unload = () => {
+  const event = document.createEvent('BeforeUnloadEvent');
+  event.initEvent('beforeunload', false, true);
+  window.dispatchEvent(event);
+  return event;
+};
+
+const changeName = () =>
+  fireEvent.change(screen.getByLabelText('Name'), {
+    target: { value: 'Summer Giveaway!' }
+  });
+
 describe('SweepstakesForm', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
@@ -385,6 +397,19 @@ describe('SweepstakesForm', () => {
       expect(navigation.router.push).toHaveBeenCalledWith(detailsPage);
       expect(deleteDraft).not.toHaveBeenCalled();
     });
+
+    it('lets the page unload when nothing changed', () => {
+      renderForm({ pathname: editPath });
+
+      expect(unload().defaultPrevented).toBe(false);
+    });
+
+    it('asks the browser before unloading unsaved changes', async () => {
+      renderForm({ pathname: editPath });
+      changeName();
+
+      await waitFor(() => expect(unload().defaultPrevented).toBe(true));
+    });
   });
 
   describe('in the demo', () => {
@@ -433,6 +458,17 @@ describe('SweepstakesForm', () => {
       expect(
         within(dialog).queryByRole('button', { name: 'Delete Draft' })
       ).not.toBeInTheDocument();
+    });
+
+    it('lets the page unload with changes it cannot save', async () => {
+      renderForm({ isDemo: true });
+      changeName();
+
+      await screen.findByRole('heading', {
+        level: 1,
+        name: 'Summer Giveaway!'
+      });
+      expect(unload().defaultPrevented).toBe(false);
     });
   });
 });

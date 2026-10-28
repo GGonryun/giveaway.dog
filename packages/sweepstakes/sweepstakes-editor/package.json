@@ -43,6 +43,7 @@
     "@giveaway/sweepstakes-routes": "workspace:*",
     "@giveaway/sweepstakes-ui": "workspace:*",
     "@giveaway/task-editor": "workspace:*",
+    "@giveaway/ui-hooks": "workspace:*",
     "@giveaway/ui-layouts": "workspace:*",
     "@hookform/resolvers": "catalog:",
     "react-hook-form": "catalog:",

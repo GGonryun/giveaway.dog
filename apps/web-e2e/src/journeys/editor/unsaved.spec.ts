@@ -159,29 +159,28 @@ test.describe('leave the editor of a published giveaway', () => {
     await expect(exitDialog(page)).toBeVisible();
   });
 
-  test(
-    'a host is asked before a reload throws away unsaved changes',
-    knownBug(593),
-    async ({ page, request }, testInfo) => {
-      const { team, giveaway } = await seedPublished(request, testInfo);
-      await openEditor(page, team, giveaway.id);
-      await changeName(page);
+  test('a host is asked before a reload throws away unsaved changes', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team, giveaway } = await seedPublished(request, testInfo);
+    await openEditor(page, team, giveaway.id);
+    await changeName(page);
 
-      const beforeUnload = page
-        .waitForEvent('dialog', {
-          predicate: (dialog) => dialog.type() === 'beforeunload',
-          timeout: BEFORE_UNLOAD_WAIT
-        })
-        .then(
-          async (dialog) => {
-            await dialog.dismiss();
-            return true;
-          },
-          () => false
-        );
-      await page.reload({ waitUntil: 'commit' }).catch(() => undefined);
+    const beforeUnload = page
+      .waitForEvent('dialog', {
+        predicate: (dialog) => dialog.type() === 'beforeunload',
+        timeout: BEFORE_UNLOAD_WAIT
+      })
+      .then(
+        async (dialog) => {
+          await dialog.dismiss();
+          return true;
+        },
+        () => false
+      );
+    await page.reload({ waitUntil: 'commit' }).catch(() => undefined);
 
-      expect(await beforeUnload).toBe(true);
-    }
-  );
+    expect(await beforeUnload).toBe(true);
+  });
 });
