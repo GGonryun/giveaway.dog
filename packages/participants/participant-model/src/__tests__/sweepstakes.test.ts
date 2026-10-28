@@ -397,6 +397,21 @@ describe('isInAllowedRegion', () => {
     ).toBe(false);
   });
 
+  it('[ENTRY-005] refuses a user whose country is unknown when the giveaway includes regions', () => {
+    expect(
+      isInAllowedRegion({ regions: ['country:US'], filter: 'INCLUDE' }, 'XX')
+    ).toBe(false);
+  });
+
+  it.fails(
+    '[ENTRY-005] refuses a user whose country is unknown when the giveaway excludes regions (fails until #608 is fixed)',
+    () => {
+      expect(
+        isInAllowedRegion({ regions: ['country:US'], filter: 'EXCLUDE' }, 'XX')
+      ).toBe(false);
+    }
+  );
+
   it.each([
     ['INCLUDE', 'US', true],
     ['INCLUDE', 'CA', false],
