@@ -1,3 +1,4 @@
+import { UNKNOWN_USER_COUNTRY_CODE } from '@giveaway/app-config/settings';
 import {
   GiveawayState,
   ParticipantSweepstakeSchema,
@@ -76,7 +77,7 @@ export const isInAllowedRegion = (
   countryCode: string | null | undefined
 ) => {
   if (!restriction) return true;
-  if (!countryCode) return false;
+  if (!countryCode || countryCode === UNKNOWN_USER_COUNTRY_CODE) return false;
 
   const hasRegion = includesCountryCode(
     expandCountries(restriction.regions),

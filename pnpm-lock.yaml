@@ -7900,6 +7900,9 @@ importers:
 
   packages/participants/participant-model:
     dependencies:
+      '@giveaway/app-config':
+        specifier: workspace:*
+        version: link:../../infra/app-config
       '@giveaway/custom-fields-model':
         specifier: workspace:*
         version: link:../custom-fields-model
