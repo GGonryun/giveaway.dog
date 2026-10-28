@@ -32,8 +32,6 @@ const COLUMNS = [
   'frontend_coverage',
   'property_coverage',
   ...TEST_KINDS.flatMap((kind) => [`${kind}_passed`, `${kind}_failed`]),
-  'mutation_killed',
-  'mutation_checked',
   'e2e',
   'run'
 ];
@@ -129,30 +127,6 @@ for (const kind of TEST_KINDS) {
   }
 }
 
-const mutation = needs.mutation;
-const checked = Number(mutation?.outputs?.checked);
-const killed = Number(mutation?.outputs?.killed);
-const survived = Number(mutation?.outputs?.failed);
-if (checked > 0) {
-  row.mutation_killed = killed;
-  row.mutation_checked = checked;
-}
-if (mutation?.result === 'success' && checked > 0) {
-  badges.push({
-    id: 'mutation-tests',
-    label: 'mutation tests',
-    message: `${count(killed)}/${count(checked)} killed`,
-    color: 'brightgreen'
-  });
-} else if (mutation?.result === 'failure') {
-  badges.push({
-    id: 'mutation-tests',
-    label: 'mutation tests',
-    message: survived > 0 ? `${count(survived)} survived` : 'failing',
-    color: 'red'
-  });
-}
-
 const e2e = value('E2E');
 if (e2e === 'success' || e2e === 'failure' || e2e === 'error') {
   const passed = e2e === 'success';
@@ -171,7 +145,6 @@ const README_BADGES = [
   ['frontend-coverage', 'frontend coverage'],
   ['property-coverage', 'property coverage'],
   ...TEST_KINDS.map((kind) => [`${kind}-tests`, `${kind} tests`]),
-  ['mutation-tests', 'mutation tests'],
   ['e2e-tests', 'e2e tests'],
   ['production-checks', 'production checks']
 ];
