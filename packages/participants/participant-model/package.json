@@ -30,6 +30,7 @@
     "test:property": "vitest run --project property --passWithNoTests"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/custom-fields-model": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
