@@ -109,6 +109,20 @@ describe('WithdrawParticipationDialog', () => {
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
+    it('stays open until the withdrawal succeeds', async () => {
+      const user = userEvent.setup();
+      const request = createDeferred<Result<{ success: boolean }>>();
+      vi.mocked(withdrawParticipation).mockReturnValue(request.promise);
+      const { onOpenChange } = renderDialog();
+
+      await user.click(screen.getByRole('button', { name: 'Withdraw' }));
+
+      expect(onOpenChange).not.toHaveBeenCalled();
+      request.resolve({ ok: true, data: { success: true } });
+      await waitFor(() => expect(onOpenChange).toHaveBeenCalledTimes(1));
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+
     it('disables both buttons while withdrawing', async () => {
       const user = userEvent.setup();
       const request = createDeferred<Result<{ success: boolean }>>();
@@ -143,6 +157,22 @@ describe('WithdrawParticipationDialog', () => {
         expect(toast.error).toHaveBeenCalledWith('This giveaway has ended')
       );
       expect(onSuccess).not.toHaveBeenCalled();
+    });
+
+    it('stays open so the user can retry', async () => {
+      const user = userEvent.setup();
+      vi.mocked(withdrawParticipation).mockResolvedValue({
+        ok: false,
+        data: { code: 'BAD_REQUEST', message: 'This giveaway has ended' }
+      });
+      const { onOpenChange } = renderDialog();
+
+      await user.click(screen.getByRole('button', { name: 'Withdraw' }));
+
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'Withdraw' })).toBeEnabled()
+      );
+      expect(onOpenChange).not.toHaveBeenCalled();
     });
   });
 

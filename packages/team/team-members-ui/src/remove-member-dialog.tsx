@@ -90,7 +90,10 @@ export const RemoveMemberDialog: React.FC<RemoveMemberDialogProps> = ({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleRemove}
+            onClick={(event) => {
+              event.preventDefault();
+              handleRemove();
+            }}
             disabled={isLoading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
