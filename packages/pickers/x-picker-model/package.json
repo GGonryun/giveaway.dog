@@ -21,6 +21,7 @@
     "./defaults": "./src/defaults.ts",
     "./extract-tweet-id": "./src/extract-tweet-id.ts",
     "./picker-utils": "./src/picker-utils.ts",
+    "./post-url": "./src/post-url.ts",
     "./schemas/details": "./src/schemas/details.ts",
     "./schemas/form": "./src/schemas/form.ts",
     "./schemas/list": "./src/schemas/list.ts",

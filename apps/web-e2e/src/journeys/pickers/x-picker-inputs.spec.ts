@@ -81,13 +81,11 @@ test.describe('free X picker post URLs on the ScrapeBadger fixtures', () => {
     }
   );
 
-  test(
-    'an anonymous caller cannot put a link to another site on a verified draw',
-    knownBug(583),
-    async ({ page }) => {
-      const postUrl = `https://evil.example/?u=x.com/a/status/${tweet}`;
-      expect((await postLoadTweet(page.request, postUrl)).status()).toBe(400);
-      expect((await postPickWinners(page.request, postUrl)).status()).toBe(400);
-    }
-  );
+  test('an anonymous caller cannot put a link to another site on a verified draw', async ({
+    page
+  }) => {
+    const postUrl = `https://evil.example/?u=x.com/a/status/${tweet}`;
+    expect((await postLoadTweet(page.request, postUrl)).status()).toBe(400);
+    expect((await postPickWinners(page.request, postUrl)).status()).toBe(400);
+  });
 });

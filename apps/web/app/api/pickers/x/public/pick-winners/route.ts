@@ -9,6 +9,10 @@ import {
   getDisqualificationReason,
   selectRandomUnique
 } from '@giveaway/x-picker-model/picker-utils';
+import {
+  isXPostUrl,
+  toCanonicalXPostUrl
+} from '@giveaway/x-picker-model/post-url';
 import { createId } from '@paralleldrive/cuid2';
 import { fetchRetweetersWithCoverage } from '@giveaway/x-picker-server/fetch-retweeters-with-coverage';
 import { ApplicationError } from '@giveaway/util-errors';
@@ -20,7 +24,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { postUrl, winnersCount, filters } = body;
 
-    const tweetId = extractTweetId(postUrl);
+    const tweetId = isXPostUrl(postUrl) ? extractTweetId(postUrl) : null;
     if (!tweetId) {
       return NextResponse.json(
         { success: false, error: 'Invalid X post URL' },
@@ -47,7 +51,12 @@ export async function POST(request: NextRequest) {
 
     const pickerData = {
       id: pickerId,
-      tweetUrls: [postUrl],
+      tweetUrls: [
+        toCanonicalXPostUrl({
+          id: tweet.id,
+          username: tweet.username ?? tweet.user_name
+        })
+      ],
       winners: winnersCount,
       minPostCount: filters.minimumPostCount,
       minAccountAgeDays: filters.minimumAccountAgeDays,

@@ -71,8 +71,8 @@ const request = (
   return new NextRequest(url, { headers: cookie ? { cookie } : {} });
 };
 
-const errorLocation = (message: string, slug = 'acme') =>
-  `${APP_URL}/app/${slug}/settings/integrations?error=${encodeURIComponent(message)}`;
+const errorLocation = (code: string, slug = 'acme') =>
+  `${APP_URL}/app/${slug}/settings/integrations?error=${code}`;
 
 describe('bluesky team callback GET', () => {
   let consoleError: ReturnType<typeof vi.spyOn>;
@@ -145,15 +145,15 @@ describe('bluesky team callback GET', () => {
 
       expect(res.status).toBe(307);
       expect(res.headers.get('location')).toBe(
-        errorLocation('Team context not found', 'undefined')
+        errorLocation('connection_failed', 'undefined')
       );
     });
 
-    it('redirects with a scope error when the scope cookie is missing', async () => {
+    it('redirects with connection_failed when the scope cookie is missing', async () => {
       const res = await GET(request(undefined, { bluesky_team_slug: 'acme' }));
 
       expect(res.headers.get('location')).toBe(
-        errorLocation('Bluesky scope not found')
+        errorLocation('connection_failed')
       );
     });
 
@@ -165,13 +165,24 @@ describe('bluesky team callback GET', () => {
   });
 
   describe('when Bluesky returns an error parameter', () => {
-    it('redirects with the OAuth error message', async () => {
+    it('redirects with access_denied when the person cancels', async () => {
       const res = await GET(
         request({ error: 'access_denied', error_description: 'User denied' })
       );
 
+      expect(res.headers.get('location')).toBe(errorLocation('access_denied'));
+    });
+
+    it('redirects with connection_failed for another OAuth error, never its text', async () => {
+      const res = await GET(
+        request({
+          error: 'Your account is suspended',
+          error_description: 'Your account is suspended'
+        })
+      );
+
       expect(res.headers.get('location')).toBe(
-        errorLocation('Bluesky OAuth error')
+        errorLocation('connection_failed')
       );
     });
 
@@ -217,20 +228,19 @@ describe('bluesky team callback GET', () => {
       });
     });
 
-    it('redirects with a not found error when the team does not exist', async () => {
+    it('redirects with connection_failed when the team does not exist', async () => {
       prismaMock.team.findUnique.mockResolvedValue(null);
 
       const res = await GET(request());
 
-      expect(res.headers.get('location')).toBe(errorLocation('Team not found'));
+      expect(res.headers.get('location')).toBe(
+        errorLocation('connection_failed')
+      );
       expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
     });
   });
 
   describe('when the user may not connect the team integrations', () => {
-    const FORBIDDEN_ROLE =
-      'You do not have permission to perform this action. Required permission: UPDATE_INTEGRATIONS';
-
     it('[TEAM-006] redirects with a forbidden error for a person who is not a member', async () => {
       prismaMock.team.findUnique.mockResolvedValue(
         teamWithRole(TeamRole.OWNER, 'someone-else')
@@ -238,9 +248,7 @@ describe('bluesky team callback GET', () => {
 
       const res = await GET(request());
 
-      expect(res.headers.get('location')).toBe(
-        errorLocation('You are not a member of this team')
-      );
+      expect(res.headers.get('location')).toBe(errorLocation('forbidden'));
       expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
       expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
@@ -250,7 +258,7 @@ describe('bluesky team callback GET', () => {
 
       const res = await GET(request());
 
-      expect(res.headers.get('location')).toBe(errorLocation(FORBIDDEN_ROLE));
+      expect(res.headers.get('location')).toBe(errorLocation('forbidden'));
       expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();
       expect(m.callback).not.toHaveBeenCalled();
       expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
@@ -321,23 +329,23 @@ describe('bluesky team callback GET', () => {
       );
     });
 
-    it('redirects with a generic message when the OAuth exchange throws', async () => {
+    it('redirects with connection_failed when the OAuth exchange throws', async () => {
       m.callback.mockRejectedValue(new Error('invalid_grant'));
 
       const res = await GET(request());
 
       expect(res.headers.get('location')).toBe(
-        errorLocation('Failed to connect Bluesky')
+        errorLocation('connection_failed')
       );
     });
 
-    it('redirects with a generic message when the profile fetch throws', async () => {
+    it('redirects with connection_failed when the profile fetch throws', async () => {
       m.getProfile.mockRejectedValue(new Error('network'));
 
       const res = await GET(request());
 
       expect(res.headers.get('location')).toBe(
-        errorLocation('Failed to connect Bluesky')
+        errorLocation('connection_failed')
       );
       expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
@@ -362,7 +370,7 @@ describe('bluesky team callback GET', () => {
       const res = await GET(request());
 
       expect(res.headers.get('location')).toBe(
-        errorLocation('Bluesky integration not found')
+        errorLocation('connection_failed')
       );
       expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
@@ -380,9 +388,7 @@ describe('bluesky team callback GET', () => {
       const res = await GET(request());
 
       expect(res.headers.get('location')).toBe(
-        errorLocation(
-          'Bluesky integration is already connected on a different team'
-        )
+        errorLocation('bluesky_other_team')
       );
     });
 
@@ -621,7 +627,7 @@ describe('bluesky team callback GET', () => {
     const res = await GET(request());
 
     expect(res.headers.get('location')).toBe(
-      `https://giveaway-abc123-team.vercel.app/app/acme/settings/integrations?error=${encodeURIComponent('Team not found')}`
+      `https://giveaway-abc123-team.vercel.app/app/acme/settings/integrations?error=connection_failed`
     );
   });
 });

@@ -10,52 +10,22 @@ import { TwitchCard } from '@giveaway/twitch-connect-ui/twitch-card';
 import { PlaceholderCard } from '@giveaway/integration-ui/placeholder-card';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import { IntegrationProvider } from '@giveaway/db-model';
+import { StatusMessage, toStatusMessage } from './status-message';
 
 export const TeamIntegrationSettings: React.FC<{
   integrations: IntegrationsSchema;
 }> = ({ integrations }) => {
-  const [statusMessage, setStatusMessage] = useState<{
-    type: 'success' | 'error';
-    message: string;
-  } | null>(null);
+  const [statusMessage, setStatusMessage] = useState<StatusMessage | null>(
+    null
+  );
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const success = searchParams.get('success');
-    const error = searchParams.get('error');
-    const username = searchParams.get('username');
-    const handle = searchParams.get('handle');
-
-    if (success === 'twitch_connected' && username) {
-      setStatusMessage({
-        type: 'success',
-        message: `Successfully connected Twitch channel ${username}`
-      });
-      setTimeout(() => setStatusMessage(null), 5000);
-    } else if (success === 'bluesky_connected' && handle) {
-      setStatusMessage({
-        type: 'success',
-        message: `Successfully connected Bluesky account @${handle}`
-      });
-      setTimeout(() => setStatusMessage(null), 5000);
-    } else if (success === 'discord_pending') {
-      const guild = searchParams.get('guild');
-      setStatusMessage({
-        type: 'success',
-        message: `Discord OAuth completed for ${guild || 'your server'}. Complete installation by running /connect in your server.`
-      });
-      setTimeout(() => setStatusMessage(null), 10000);
-    } else if (error) {
-      const errorMessages: Record<string, string> = {
-        missing_parameters: 'Missing required OAuth parameters',
-        connection_failed: 'Failed to connect account',
-        unexpected_error: 'An unexpected error occurred'
-      };
-      setStatusMessage({
-        type: 'error',
-        message: errorMessages[error] || error
-      });
-    }
+    const next = toStatusMessage(searchParams);
+    setStatusMessage(next);
+    if (!next?.duration) return;
+    const timeout = setTimeout(() => setStatusMessage(null), next.duration);
+    return () => clearTimeout(timeout);
   }, [searchParams]);
 
   return (

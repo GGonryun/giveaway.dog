@@ -155,6 +155,25 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       });
     });
 
+    it.each([
+      'https://example.com/?ref=x.com',
+      'https://evil.example/?u=x.com/a/status/123',
+      'https://notx.com/a/status/123',
+      'https://x.com.evil.example/a/status/123',
+      'https://x.com@evil.example/a/status/123',
+      'https://ghost.co/xyz'
+    ])('returns 400 for %s', async (postUrl) => {
+      const res = await POST(buildRequest({ postUrl }));
+
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({
+        success: false,
+        error: 'Please enter a valid X (Twitter) post URL'
+      });
+      expect(m.creditsLimit).not.toHaveBeenCalled();
+      expect(m.getById).not.toHaveBeenCalled();
+    });
+
     it('returns 400 when the body is not an object', async () => {
       const res = await POST(buildRequest('null'));
 
@@ -183,17 +202,6 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       });
       expect(m.creditsLimit).not.toHaveBeenCalled();
     });
-
-    it('returns 400 for a non-X url that merely contains x.com', async () => {
-      const res = await POST(
-        buildRequest({ postUrl: 'https://example.com/?ref=x.com' })
-      );
-
-      expect(res.status).toBe(400);
-      expect((await res.json()).error).toBe(
-        'Could not extract tweet ID from URL'
-      );
-    });
   });
 
   describe('when the body is not valid JSON', () => {
@@ -215,12 +223,6 @@ describe('POST /api/pickers/x/public/load-tweet', () => {
       await POST(buildRequest({ postUrl }));
 
       expect(m.getById).toHaveBeenCalledWith(tweetId);
-    });
-
-    it('treats any domain ending in t.co as a short link', async () => {
-      await POST(buildRequest({ postUrl: 'https://ghost.co/xyz' }));
-
-      expect(m.getById).toHaveBeenCalledWith('xyz');
     });
   });
 

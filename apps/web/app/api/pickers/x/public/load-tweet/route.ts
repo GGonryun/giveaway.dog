@@ -17,20 +17,12 @@ import {
   X_PICKER_REPLIES_KEY,
   X_PICKER_QUOTES_KEY
 } from '@giveaway/x-picker-model/constants';
+import { isXPostUrl } from '@giveaway/x-picker-model/post-url';
 
 const loadTweetSchema = z.object({
-  postUrl: z
-    .string()
-    .url('Please enter a valid URL')
-    .refine(
-      (url) =>
-        url.includes('twitter.com') ||
-        url.includes('x.com') ||
-        url.includes('t.co'),
-      {
-        message: 'Please enter a valid X (Twitter) post URL'
-      }
-    )
+  postUrl: z.string().url('Please enter a valid URL').refine(isXPostUrl, {
+    message: 'Please enter a valid X (Twitter) post URL'
+  })
 });
 
 function extractTweetId(url: string): string | null {

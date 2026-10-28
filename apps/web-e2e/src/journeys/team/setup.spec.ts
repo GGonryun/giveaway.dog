@@ -144,32 +144,32 @@ test.describe('team setup', () => {
       await expect(page.getByText(`@e2e-${host.ns} •`)).toHaveCount(0);
     });
 
-    test(
-      'a host at the team limit cannot join another team with its invite link',
-      knownBug(487),
-      async ({ page, request, freshPersona }) => {
-        const host = await freshPersona('host');
-        await seedTeams(page, host.ns, ['t1', 't2', 't3', 't4', 't5']);
-        const seed = seedApi(request);
-        const { team } = await seed.team({
-          ns: host.ns,
-          suffix: 'x',
-          owner: 'host2'
-        });
-        const { link } = await seed.invites({
-          ns: host.ns,
-          team: team.slug,
-          link: {}
-        });
+    test('a host at the team limit cannot join another team with its invite link', async ({
+      page,
+      request,
+      freshPersona
+    }) => {
+      const host = await freshPersona('host');
+      await seedTeams(page, host.ns, ['t1', 't2', 't3', 't4', 't5']);
+      const seed = seedApi(request);
+      const { team } = await seed.team({
+        ns: host.ns,
+        suffix: 'x',
+        owner: 'host2'
+      });
+      const { link } = await seed.invites({
+        ns: host.ns,
+        team: team.slug,
+        link: {}
+      });
 
-        await page.goto(`/invites/${link!.id}`);
-        await page.getByRole('button', { name: 'Accept Invitation' }).click();
-        await expect(page.locator('[data-sonner-toast]').first()).toBeVisible();
+      await page.goto(`/invites/${link!.id}`);
+      await page.getByRole('button', { name: 'Accept Invitation' }).click();
+      await expect(page.locator('[data-sonner-toast]').first()).toBeVisible();
 
-        const { members } = await seed.teamRows(team.slug);
-        expect(members.map(({ email }) => email)).not.toContain(host.email);
-      }
-    );
+      const { members } = await seed.teamRows(team.slug);
+      expect(members.map(({ email }) => email)).not.toContain(host.email);
+    });
 
     test(
       'a blocked membership does not take a place under the team limit',
