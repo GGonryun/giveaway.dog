@@ -297,25 +297,23 @@ describe('TermsAndConditions', () => {
         });
       });
 
-      it.fails(
-        'keeps unrelated unsaved changes dirty when discarded',
-        async () => {
-          const { form } = renderTerms();
-          form.setValue('setup.name', 'Changed Name', { shouldDirty: true });
-          const sheet = await openSheet();
-          await userEvent.type(
-            within(sheet).getByLabelText('Sponsor Name'),
-            '!'
-          );
-          await userEvent.keyboard('{Escape}');
-          await userEvent.click(
-            screen.getByRole('button', { name: 'Discard changes' })
-          );
+      it('keeps unrelated unsaved changes dirty when discarded', async () => {
+        const { form } = renderTerms();
+        form.setValue('setup.name', 'Changed Name', { shouldDirty: true });
+        const sheet = await openSheet();
+        await userEvent.type(within(sheet).getByLabelText('Sponsor Name'), '!');
+        await userEvent.keyboard('{Escape}');
+        await userEvent.click(
+          screen.getByRole('button', { name: 'Discard changes' })
+        );
 
-          expect(form.getValues('setup.name')).toBe('Changed Name');
-          expect(form.getFieldState('setup.name').isDirty).toBe(true);
-        }
-      );
+        expect(form.getValues('setup.name')).toBe('Changed Name');
+        expect(form.getFieldState('setup.name').isDirty).toBe(true);
+        expect(form.getValues('terms')).toMatchObject({
+          sponsorName: 'Acme Inc'
+        });
+        expect(form.getFieldState('terms').isDirty).toBe(false);
+      });
     });
 
     it.fails(
