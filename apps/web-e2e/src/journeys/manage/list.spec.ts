@@ -4,11 +4,8 @@ import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, personaState } from '../../env';
 import { clickUntilUrl, dashboardRow } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import { searchList } from '../../helpers/manage';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
-
-const DATE_RANGE_BUG = 536;
 
 const DAY = 24 * 60 * 60;
 
@@ -182,39 +179,35 @@ test.describe('the dashboard list of giveaways', () => {
     );
   });
 
-  test(
-    '[LIST-003] the date range filter lists only the giveaways in that range',
-    knownBug(DATE_RANGE_BUG),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const ns = freshNamespace(testInfo.workerIndex);
-      const seed = seedApi(request);
-      const recent = await seed.sweepstakes({
-        ns,
-        team: team.slug,
-        name: 'Range recent'
-      });
-      const old = await seed.sweepstakes({
-        ns,
-        team: team.slug,
-        preset: 'ended',
-        startsIn: -60 * DAY,
-        endsIn: -40 * DAY,
-        name: 'Range old'
-      });
+  test('[LIST-003] the date range filter lists only the giveaways in that range', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const ns = freshNamespace(testInfo.workerIndex);
+    const seed = seedApi(request);
+    const recent = await seed.sweepstakes({
+      ns,
+      team: team.slug,
+      name: 'Range recent'
+    });
+    const old = await seed.sweepstakes({
+      ns,
+      team: team.slug,
+      preset: 'ended',
+      startsIn: -60 * DAY,
+      endsIn: -40 * DAY,
+      name: 'Range old'
+    });
 
-      await page.goto(`/app/${team.slug}`);
-      await searchList(page, `[e2e ${ns}]`);
-      await expect(dashboardRow(page, old.name)).toHaveCount(1);
-      await page
-        .getByRole('combobox')
-        .filter({ hasText: 'Date range' })
-        .click();
-      await page.getByRole('option', { name: 'Last 7 days' }).click();
-      await expect(page).toHaveURL(/[?&]dateRange=7d(&|$)/);
+    await page.goto(`/app/${team.slug}`);
+    await searchList(page, `[e2e ${ns}]`);
+    await expect(dashboardRow(page, old.name)).toHaveCount(1);
+    await page.getByRole('combobox').filter({ hasText: 'Date range' }).click();
+    await page.getByRole('option', { name: 'Last 7 days' }).click();
+    await expect(page).toHaveURL(/[?&]dateRange=7d(&|$)/);
 
-      await expect(dashboardRow(page, recent.name)).toHaveCount(1);
-      await expect(dashboardRow(page, old.name)).toHaveCount(0);
-    }
-  );
+    await expect(dashboardRow(page, recent.name)).toHaveCount(1);
+    await expect(dashboardRow(page, old.name)).toHaveCount(0);
+  });
 });

@@ -216,15 +216,62 @@ describe('getSweepstakesList', () => {
       });
     });
 
-    it('ignores the date range filter', async () => {
-      await list({ dateRange: 'last-7-days' });
+    it.each([
+      ['today', new Date('2025-06-15T00:00:00.000Z')],
+      ['7d', new Date('2025-06-08T12:00:00.000Z')],
+      ['30d', new Date('2025-05-16T12:00:00.000Z')],
+      ['90d', new Date('2025-03-17T12:00:00.000Z')],
+      ['1y', new Date('2024-06-15T12:00:00.000Z')]
+    ])(
+      '[LIST-003] keeps only the sweepstakes that ran during the %s range',
+      async (dateRange, from) => {
+        await list({ dateRange });
+
+        const where = {
+          status: undefined,
+          timing: undefined,
+          team: teamWhere,
+          AND: [
+            {
+              timing: { startDate: { lte: NOW }, endDate: { gte: from } }
+            }
+          ]
+        };
+        expect(findManyArgs().where).toEqual(where);
+        expect(prismaMock.sweepstakes.count).toHaveBeenCalledWith({ where });
+      }
+    );
+
+    it('combines the date range with the status timing', async () => {
+      await list({ status: 'EXPIRED', dateRange: '7d' });
 
       expect(findManyArgs().where).toEqual({
-        status: undefined,
-        timing: undefined,
-        team: teamWhere
+        status: 'ACTIVE',
+        timing: { endDate: { lt: NOW } },
+        team: teamWhere,
+        AND: [
+          {
+            timing: {
+              startDate: { lte: NOW },
+              endDate: { gte: new Date('2025-06-08T12:00:00.000Z') }
+            }
+          }
+        ]
       });
     });
+
+    it.each(['', 'all', 'last-7-days', 'toString', '__proto__'])(
+      'does not filter by date for the range %j',
+      async (dateRange) => {
+        await list({ dateRange });
+
+        expect(findManyArgs().where).toEqual({
+          status: undefined,
+          timing: undefined,
+          team: teamWhere
+        });
+      }
+    );
 
     it('orders by the details name when sorting by name', async () => {
       await list({ sortField: 'name', sortDirection: 'asc' });
