@@ -20,6 +20,7 @@ How people sign in and out, which pages they can open, and how a sign-in finds t
 - `AUTH-014` Deleting an account ends every session of that account, on every device.
 - `AUTH-015` A user who signed in through a provider that gives no email address is shown as signed in and opens their account page.
 - `AUTH-016` A user whose sign-in ends on a giveaway page lands on that giveaway.
+- `AUTH-017` Starting a sign-in through an OAuth provider sends the visitor to that provider with the client id that the app has for it and a callback URL on the app's own origin.
 
 ## Route protection
 
