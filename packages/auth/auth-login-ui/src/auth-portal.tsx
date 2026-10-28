@@ -39,6 +39,20 @@ interface AuthPortalProps {
   provider?: string;
 }
 
+const toLoginUrl = ({
+  token,
+  email,
+  redirectTo
+}: Pick<AuthPortalProps, 'token' | 'email' | 'redirectTo'>) => {
+  if (!token || !email) return '/login';
+
+  const portal = new URLSearchParams({ token, email });
+  if (redirectTo) portal.set('redirectTo', redirectTo);
+
+  const login = new URLSearchParams({ redirectTo: `/portal?${portal}` });
+  return `/login?${login}`;
+};
+
 export const AuthPortal: React.FC<AuthPortalProps> = ({
   token,
   email,
@@ -113,7 +127,7 @@ export const AuthPortal: React.FC<AuthPortalProps> = ({
     }
     // If not authenticated, redirect to login
     if (status === 'unauthenticated') {
-      router.push('/login');
+      router.push(toLoginUrl({ token, email, redirectTo }));
       return;
     }
 
