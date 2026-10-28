@@ -1998,6 +1998,12 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@giveaway/testing-integration':
+        specifier: workspace:*
+        version: link:../../tooling/testing-integration
+      '@giveaway/testing-postgres':
+        specifier: workspace:*
+        version: link:../../tooling/testing-postgres
       '@giveaway/testing-server':
         specifier: workspace:*
         version: link:../../tooling/testing-server

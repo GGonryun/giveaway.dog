@@ -68,11 +68,7 @@ export const getTemplateForm = procedure()
           slug: team.slug,
           logo: team.logo
         },
-        createdBy: {
-          id: dbTemplate.createdBy.id,
-          name: dbTemplate.createdBy.name,
-          image: dbTemplate.createdBy.image
-        },
+        createdBy: dbTemplate.createdBy,
         isCustom: true
       };
     }

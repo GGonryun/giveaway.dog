@@ -123,6 +123,20 @@ describe('getTemplateForm', () => {
       });
     });
 
+    it('returns a template whose creator deleted their account', async () => {
+      signIn();
+      prismaMock.team.findUnique.mockResolvedValue(team);
+      prismaMock.template.findUnique.mockResolvedValue({
+        ...dbTemplate,
+        createdById: null,
+        createdBy: null
+      });
+
+      const data = expectOk(await getTemplateForm(input));
+
+      expect(data).toMatchObject({ id: 'tpl-1', createdBy: null });
+    });
+
     it('does not fall back to static templates', async () => {
       signIn();
       prismaMock.team.findUnique.mockResolvedValue(team);
