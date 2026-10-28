@@ -17,6 +17,7 @@
   },
   "exports": {
     "./use-array-context": "./src/use-array-context.tsx",
+    "./use-before-unload": "./src/use-before-unload.ts",
     "./use-file-provider": "./src/use-file-provider.ts",
     "./use-interval": "./src/use-interval.tsx",
     "./use-mobile": "./src/use-mobile.tsx",

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from '@giveaway/testing-integration/database';
 import { createHost } from '@giveaway/testing-integration/fixtures';
-import { expectOk } from '@giveaway/testing-server/result';
+import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { signIn, signOut } from '@giveaway/testing-server/session';
 import { E2E_MAX_TASKS, E2E_TASK_TYPES } from '@giveaway/e2e-model/requests';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
@@ -707,9 +707,10 @@ describe('the e2e seed API against a real database', () => {
         isEmailInvite: true
       }
     );
-    expect(
-      expectOk(await getInviteDetails({ code: seeded.link.id }))
-    ).toMatchObject({ teamSlug: 'e2e-abc123-w0', isEmailInvite: false });
+    expectFailure(
+      await getInviteDetails({ code: seeded.link.id }),
+      'NOT_FOUND'
+    );
 
     const { users } = await call('POST', 'users/extras', {
       ns: 'abc123t1',

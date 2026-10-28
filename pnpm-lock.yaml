@@ -4037,9 +4037,6 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@giveaway/testing-dom':
-        specifier: workspace:*
-        version: link:../../tooling/testing-dom
       '@giveaway/testing-server':
         specifier: workspace:*
         version: link:../../tooling/testing-server
@@ -4049,9 +4046,6 @@ importers:
       '@giveaway/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@testing-library/react':
-        specifier: 'catalog:'
-        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
@@ -10636,6 +10630,9 @@ importers:
       '@giveaway/task-editor':
         specifier: workspace:*
         version: link:../../tasks/task-editor
+      '@giveaway/ui-hooks':
+        specifier: workspace:*
+        version: link:../../ui/ui-hooks
       '@giveaway/ui-layouts':
         specifier: workspace:*
         version: link:../../ui/ui-layouts
@@ -13262,6 +13259,9 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@giveaway/testing-dom':
+        specifier: workspace:*
+        version: link:../../tooling/testing-dom
       '@giveaway/testing-server':
         specifier: workspace:*
         version: link:../../tooling/testing-server
@@ -13271,6 +13271,12 @@ importers:
       '@giveaway/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@testing-library/user-event':
+        specifier: 'catalog:'
+        version: 14.6.7(@testing-library/dom@10.4.2)
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6

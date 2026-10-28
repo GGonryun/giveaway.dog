@@ -24,6 +24,7 @@ import updateSweepstakes from '@giveaway/sweepstakes-editor-server/update-sweeps
 import publishSweepstakes from '@giveaway/sweepstakes-editor-server/publish-sweepstakes';
 import { PreviewStateContext } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 
+import { useBeforeUnload } from '@giveaway/ui-hooks/use-before-unload';
 import { UnifiedFormLayoutContextProvider } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
 import {
@@ -115,6 +116,8 @@ const FormContent: React.FC<{
   const [showPublishModal, setShowPublishModal] = useState(false);
 
   const form = useFormContext<GiveawayFormSchema>();
+
+  useBeforeUnload(form.formState.isDirty && action !== 'demo');
 
   const deleteDraft = useDeleteDraft(() => {
     toast.success('Sweepstakes deleted successfully!');
