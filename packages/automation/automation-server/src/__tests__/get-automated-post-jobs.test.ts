@@ -27,6 +27,7 @@ const jobRow = (
   type: 'POST_TO_BLUESKY',
   status: 'PENDING',
   runAt: RUN_AT,
+  attempts: 0,
   createdAt: CREATED_AT,
   updatedAt: CREATED_AT,
   request: { integrationId: 'int-1', text: 'Hello' },

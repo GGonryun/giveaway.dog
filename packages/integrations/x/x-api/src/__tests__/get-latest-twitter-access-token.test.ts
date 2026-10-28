@@ -588,6 +588,7 @@ describe('getLatestTwitterAccessToken', () => {
           cause: '{"error":"invalid_request"}',
           data: {
             twitterError: { error: 'invalid_request' },
+            status,
             statusCode: status
           }
         });

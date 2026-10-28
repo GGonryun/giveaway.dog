@@ -30,6 +30,7 @@
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-api": "workspace:*",
     "@giveaway/e2e-fakes": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/team-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",

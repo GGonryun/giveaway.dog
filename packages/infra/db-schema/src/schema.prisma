@@ -514,6 +514,7 @@ model SweepstakesJob {
   type          SweepstakesJobType
   status        SweepstakesJobStatus
   runAt         DateTime
+  attempts      Int                  @default(0)
   createdAt     DateTime             @default(now())
   updatedAt     DateTime             @updatedAt
 
@@ -541,6 +542,7 @@ model AutomatedPostJob {
   type          AutomatedPostJobType
   status        AutomatedPostJobStatus
   runAt         DateTime
+  attempts      Int                    @default(0)
   createdAt     DateTime               @default(now())
   updatedAt     DateTime               @updatedAt
 

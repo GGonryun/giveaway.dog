@@ -39,6 +39,7 @@ export const postToDiscordResponseSchema = z.object({
   messageId: z.string().optional(),
   channelId: z.string().optional(),
   messageUrl: z.string().url().optional(),
+  taskId: z.string().optional(),
   error: z.string().optional()
 });
 
