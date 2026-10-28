@@ -173,22 +173,46 @@ describe('login', () => {
   });
 
   describe('email provider', () => {
-    it('signs in with the email and portal redirect', async () => {
-      await run({ provider: IdentityProvider.EMAIL, email: 'e@example.com' });
+    it('sends the link without the Auth.js redirect, then opens the verify page', async () => {
+      await expect(
+        run({ provider: IdentityProvider.EMAIL, email: 'e@example.com' })
+      ).rejects.toMatchObject({
+        message: 'NEXT_REDIRECT',
+        digest: 'NEXT_REDIRECT;replace;/login?verify=true;307;'
+      });
 
       expect(mocks.signIn).toHaveBeenCalledWith('email', {
         email: 'e@example.com',
-        redirectTo: portal({ email: 'e@example.com', provider: 'email' })
+        redirectTo: portal({ email: 'e@example.com', provider: 'email' }),
+        redirect: false
       });
+      expect(mocks.redirect).toHaveBeenCalledWith('/login?verify=true');
     });
 
     it('passes an undefined email when none is given', async () => {
-      await run({ provider: IdentityProvider.EMAIL });
+      await expect(
+        run({ provider: IdentityProvider.EMAIL })
+      ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
       expect(mocks.signIn).toHaveBeenCalledWith('email', {
         email: undefined,
-        redirectTo: portal({ provider: 'email' })
+        redirectTo: portal({ provider: 'email' }),
+        redirect: false
       });
+    });
+
+    it('does not open the verify page when the email cannot be sent', async () => {
+      mocks.signIn.mockRejectedValue(new AuthError('Send failed'));
+
+      const result = await run({
+        provider: IdentityProvider.EMAIL,
+        email: 'e@example.com'
+      });
+
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+        'Send failed'
+      );
+      expect(mocks.redirect).not.toHaveBeenCalled();
     });
   });
 
