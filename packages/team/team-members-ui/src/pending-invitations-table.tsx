@@ -178,7 +178,10 @@ export const PendingInvitationsTable: React.FC<
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isRevoking}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleRevoke}
+              onClick={(event) => {
+                event.preventDefault();
+                handleRevoke();
+              }}
               disabled={isRevoking}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

@@ -63,7 +63,10 @@ export const WithdrawParticipationDialog: React.FC<
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleWithdraw}
+            onClick={(event) => {
+              event.preventDefault();
+              handleWithdraw();
+            }}
             disabled={isLoading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >

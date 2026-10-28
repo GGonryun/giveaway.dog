@@ -11,6 +11,21 @@ import {
   TeamPermission
 } from '@giveaway/team-permissions';
 
+const toErrorCode = (error: unknown) => {
+  if (!(error instanceof ApplicationError)) return 'connection_failed';
+  if (error.data === 'bluesky_other_team') return error.data;
+  if (error.code === 'FORBIDDEN') return 'forbidden';
+  if (
+    typeof error.data === 'object' &&
+    error.data !== null &&
+    'error' in error.data &&
+    error.data.error === 'access_denied'
+  ) {
+    return 'access_denied';
+  }
+  return 'connection_failed';
+};
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const error = searchParams.get('error');
@@ -98,6 +113,7 @@ export async function GET(request: NextRequest) {
           code: 'FORBIDDEN',
           message:
             'Bluesky integration is already connected on a different team',
+          data: 'bluesky_other_team',
           cause: `Integration ID ${existingIntegration.id} is connected to team ID ${existingIntegration.teamId}`
         });
       }
@@ -137,15 +153,10 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Bluesky OAuth callback error:', error);
 
-    const errorMessage =
-      error instanceof ApplicationError
-        ? error.message
-        : 'Failed to connect Bluesky';
-
     const baseUrl = environment.appUrl();
     return NextResponse.redirect(
       new URL(
-        `/app/${slug}/settings/integrations?error=${encodeURIComponent(errorMessage)}`,
+        `/app/${slug}/settings/integrations?error=${toErrorCode(error)}`,
         baseUrl
       )
     );
