@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TeamRole, UserAccountType } from '@giveaway/db-model';
+import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
 import acceptInvite from '../accept-invite';
 import {
   prismaMock,
@@ -311,6 +312,77 @@ describe('acceptInvite', () => {
         'You are already a member of this team'
       );
       expect(prismaMock.teamInviteEmail.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('team limit', () => {
+    beforeEach(() => {
+      signIn();
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue(inviteLink());
+      prismaMock.teamInviteEmail.findFirst.mockResolvedValue(null);
+      prismaMock.membership.findFirst.mockResolvedValue(null);
+    });
+
+    it('counts the memberships of the caller', async () => {
+      prismaMock.membership.count.mockResolvedValue(0);
+
+      await acceptInvite({ code: 'link-1' });
+
+      expect(prismaMock.membership.count).toHaveBeenCalledWith({
+        where: { userId: TEST_USER.id }
+      });
+    });
+
+    it('accepts the invite when the caller is one team below the limit', async () => {
+      prismaMock.membership.count.mockResolvedValue(MAX_USER_TEAMS - 1);
+
+      const result = await acceptInvite({ code: 'link-1' });
+
+      expect(expectOk(result)).toEqual({ teamSlug: 'acme', teamName: 'Acme' });
+      expect(prismaMock.membership.create).toHaveBeenCalled();
+    });
+
+    it('returns FORBIDDEN when the caller is at the limit', async () => {
+      prismaMock.membership.count.mockResolvedValue(MAX_USER_TEAMS);
+
+      const result = await acceptInvite({ code: 'link-1' });
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        `You cannot be a member of more than ${MAX_USER_TEAMS} teams`
+      );
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
+      expect(prismaMock.membership.create).not.toHaveBeenCalled();
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
+    });
+
+    it('returns FORBIDDEN when the caller is above the limit', async () => {
+      prismaMock.membership.count.mockResolvedValue(MAX_USER_TEAMS + 2);
+
+      const result = await acceptInvite({ code: 'link-1' });
+
+      expectFailure(result, 'FORBIDDEN');
+      expect(prismaMock.membership.create).not.toHaveBeenCalled();
+    });
+
+    it('keeps an email invitation when the caller is at the limit', async () => {
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue(null);
+      prismaMock.teamInviteEmail.findFirst.mockResolvedValue(emailInvite());
+      prismaMock.membership.count.mockResolvedValue(MAX_USER_TEAMS);
+
+      const result = await acceptInvite({ code: 'email-1' });
+
+      expectFailure(result, 'FORBIDDEN');
+      expect(prismaMock.membership.create).not.toHaveBeenCalled();
+      expect(prismaMock.teamInviteEmail.delete).not.toHaveBeenCalled();
+    });
+
+    it('returns CONFLICT rather than FORBIDDEN when the caller is already a member', async () => {
+      prismaMock.membership.findFirst.mockResolvedValue({ id: 'm-1' });
+      prismaMock.membership.count.mockResolvedValue(MAX_USER_TEAMS);
+
+      const result = await acceptInvite({ code: 'link-1' });
+
+      expectFailure(result, 'CONFLICT');
     });
   });
 
