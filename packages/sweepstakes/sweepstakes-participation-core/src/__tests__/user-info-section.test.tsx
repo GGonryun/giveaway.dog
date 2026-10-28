@@ -87,6 +87,45 @@ describe('UserInfoSection', () => {
     });
   });
 
+  describe('when a signed-in user is not a participant', () => {
+    it('shows the user as signed in', () => {
+      renderWithParticipation(<UserInfoSection />, {
+        viewer: buildUser({ name: 'John Roe' })
+      });
+      expect(screen.getByText('Signed in as')).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'John Roe' })).toHaveAttribute(
+        'href',
+        '/account'
+      );
+      expect(screen.queryByText('Not signed in')).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: 'Sign In' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('shows the providers of the user', () => {
+      const { container } = renderWithParticipation(<UserInfoSection />, {
+        viewer: buildUser({ providers: providers(2), emailVerified: false })
+      });
+      expect(container.querySelectorAll('svg')).toHaveLength(2);
+    });
+
+    it('prefers the participant to the user', () => {
+      renderWithParticipation(<UserInfoSection />, {
+        participant: buildParticipant({
+          user: buildUser({ name: 'Jane Doe' })
+        }),
+        viewer: buildUser({ name: 'John Roe' })
+      });
+      expect(
+        screen.getByRole('link', { name: 'Jane Doe' })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: 'John Roe' })
+      ).not.toBeInTheDocument();
+    });
+  });
+
   describe('provider icons', () => {
     it.each([
       { count: 0, emailVerified: true, icons: 0, remaining: null },

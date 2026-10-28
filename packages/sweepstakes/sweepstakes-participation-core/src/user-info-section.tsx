@@ -12,7 +12,8 @@ import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 export const UserInfoSection: React.FC<{ className?: string }> = ({
   className
 }) => {
-  const { participant } = useGiveawayParticipation();
+  const { participant, viewer } = useGiveawayParticipation();
+  const user = participant?.user ?? viewer;
   const logout = useLogout();
   const pathname = usePathname();
 
@@ -24,11 +25,10 @@ export const UserInfoSection: React.FC<{ className?: string }> = ({
   }, [pathname]);
 
   const { visibleProviders, remainingCount } = useMemo(() => {
-    if (!participant?.user.providers)
-      return { visibleProviders: [], remainingCount: 0 };
+    if (!user?.providers) return { visibleProviders: [], remainingCount: 0 };
 
-    const providers = [...participant.user.providers];
-    const hasEmail = participant.user.email && participant.user.emailVerified;
+    const providers = [...user.providers];
+    const hasEmail = user.email && user.emailVerified;
     const totalCount = providers.length + (hasEmail ? 1 : 0);
 
     const MAX_VISIBLE = 5;
@@ -40,16 +40,16 @@ export const UserInfoSection: React.FC<{ className?: string }> = ({
       remainingCount: remaining,
       showEmail: hasEmail && providers.length < MAX_VISIBLE
     };
-  }, [participant]);
+  }, [user]);
 
   return (
     <div className={cn('text-xs text-muted-foreground', className)}>
-      {participant ? (
+      {user ? (
         <div className="flex justify-between">
           <div className="flex items-center gap-1 flex-wrap">
             <span className="hidden sm:inline">Signed in as</span>
             <Link href="/account" className="font-semibold">
-              {participant.user.name || UNKNOWN_USER_NAME}
+              {user.name || UNKNOWN_USER_NAME}
             </Link>
             <div className="flex items-center gap-1 ">
               {/* Social provider icons (max 5) */}

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import { getOrCreateSweepstakesParticipant } from '@giveaway/participation-server/get-sweepstake-participant';
+import { getViewer } from '@giveaway/participation-server/get-viewer';
 import { getUserHostRelationship } from '@giveaway/participation-server/get-user-host-relationship';
 import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
 import { getUserReferral } from '@giveaway/referrals-server/get-user-referral';
@@ -70,6 +71,13 @@ export default async function AuthenticatedPage({ params }: PageProps) {
     notFound();
   }
 
+  const viewer = participant.data ? undefined : await getViewer();
+
+  if (viewer && !viewer.ok) {
+    console.warn('Viewer fetch error:', viewer.data?.message);
+    notFound();
+  }
+
   return (
     <>
       <Suspense fallback={null}>
@@ -78,6 +86,7 @@ export default async function AuthenticatedPage({ params }: PageProps) {
       <AuthenticatedSweepstakesContent
         {...sweepstakes.data}
         participant={participant.data}
+        viewer={viewer?.data}
         relationship={relationship.data}
         referral={referral.data}
         allocations={allocations.data}

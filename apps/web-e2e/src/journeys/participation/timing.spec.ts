@@ -1,6 +1,5 @@
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
 type Participants = { participants: { userId: string }[] };
@@ -48,26 +47,25 @@ test.describe('the dates of a giveaway', () => {
     expect(participants).toEqual([]);
   });
 
-  test(
-    'a signed-in participant is shown as signed in on a giveaway that has ended',
-    knownBug(521),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedApi(request).sweepstakes({
-        ns: RUN_ID,
-        team: team.slug,
-        preset: 'ended',
-        audience: AUDIENCE,
-        tasks: [{ type: 'BONUS_TASK', title: BONUS }]
-      });
+  test('a signed-in participant is shown as signed in on a giveaway that has ended', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns: RUN_ID,
+      team: team.slug,
+      preset: 'ended',
+      audience: AUDIENCE,
+      tasks: [{ type: 'BONUS_TASK', title: BONUS }]
+    });
 
-      await page.goto(`/browse/${giveaway.id}`);
-      await expect(page.getByText('Winners Being Selected')).toBeVisible();
+    await page.goto(`/browse/${giveaway.id}`);
+    await expect(page.getByText('Winners Being Selected')).toBeVisible();
 
-      await expect(page.getByText('Signed in as')).toBeVisible();
-      await expect(page.getByText('Not signed in')).toBeHidden();
-    }
-  );
+    await expect(page.getByText('Signed in as')).toBeVisible();
+    await expect(page.getByText('Not signed in')).toBeHidden();
+  });
 
   test('[ENTRY-004] a participant cannot enter a giveaway that has not started', async ({
     page,
