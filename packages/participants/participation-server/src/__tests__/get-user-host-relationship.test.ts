@@ -30,23 +30,13 @@ describe('getUserHostRelationship', () => {
   });
 
   describe('when the caller is signed in', () => {
-    it('caches per user and sweepstakes with user and host tags', async () => {
+    it('does not cache the loyalty, so a new entry counts at once', async () => {
       signedInWithHost();
       prismaMock.sweepstakesParticipant.count.mockResolvedValue(0);
 
       await getUserHostRelationship({ sweepstakesId: 'sw-1' });
 
-      expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
-        expect.any(Function),
-        [`user-host-relationship-${TEST_USER.id}-sw-1`],
-        {
-          tags: [
-            `user-${TEST_USER.id}-host-relationship`,
-            'sweepstakes-sw-1-host'
-          ],
-          revalidate: 3600
-        }
-      );
+      expect(nextCacheMock.unstable_cache).not.toHaveBeenCalled();
     });
 
     it('looks up the caller profile by id', async () => {
