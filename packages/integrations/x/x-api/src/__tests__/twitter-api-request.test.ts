@@ -134,7 +134,8 @@ describe('twitterApiRequest', () => {
           Authorization: 'Bearer stored-access-token',
           'Content-Type': 'application/json'
         },
-        body: undefined
+        body: undefined,
+        signal: expect.any(AbortSignal)
       });
     });
 

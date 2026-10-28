@@ -1,6 +1,7 @@
 'use server';
 
 import { Tx } from '@giveaway/db-client/prisma';
+import { requestTimeout } from '@giveaway/util-time/request-timeout';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestTeamBlueskyCredentials } from './bluesky/get-latest-team-bluesky-agent';
 import { RichText } from '@atproto/api';
@@ -55,7 +56,9 @@ export const createSkeet = async (
   };
 
   if (input.imageUrl) {
-    const imageResponse = await fetch(input.imageUrl);
+    const imageResponse = await fetch(input.imageUrl, {
+      signal: requestTimeout()
+    });
     const imageBuffer = await imageResponse.arrayBuffer();
     const imageUint8 = new Uint8Array(imageBuffer);
 

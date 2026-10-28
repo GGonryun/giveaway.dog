@@ -3,6 +3,7 @@
 import { getTeamBlueskyClient } from './team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { Agent } from '@atproto/api';
+import { withRequestTimeout } from './timed-session';
 import {
   TokenInvalidError,
   TokenRefreshError,
@@ -70,7 +71,7 @@ export async function getLatestTeamBlueskyCredentials(
 
   try {
     const session = await client.restore(integration.account_id);
-    const agent = new Agent(session);
+    const agent = new Agent(withRequestTimeout(session));
 
     return {
       agent,

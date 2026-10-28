@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { requestTimeout } from '@giveaway/util-time/request-timeout';
 import { ApplicationError, statusToCode } from '@giveaway/util-errors';
 import { IntegrationProvider, IntegrationStatus } from '@giveaway/db-model';
 import {
@@ -108,7 +109,8 @@ export const getLatestTwitterAccessToken = async (
     body: new URLSearchParams({
       grant_type: 'refresh_token',
       refresh_token: integration.refresh_token
-    })
+    }),
+    signal: requestTimeout()
   });
 
   if (!tokenResponse.ok) {

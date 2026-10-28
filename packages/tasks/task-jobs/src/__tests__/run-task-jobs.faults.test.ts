@@ -33,8 +33,7 @@ const REPOSTS = `GET ${PDS}/xrpc/app.bsky.feed.getRepostedBy`;
 const POST_URI = 'at://did:plc:giveawaydog/app.bsky.feed.post/3kabc123';
 
 const ISSUES = {
-  retry: '#302',
-  timeout: '#303'
+  retry: '#302'
 };
 
 type Expectation = 'finishes' | 'retries' | 'staysConnected';
@@ -56,11 +55,6 @@ const RETRIES_LATER: Partial<Record<Fault, string>> = {
   'rate-limit-retry-after': ISSUES.retry,
   'server-error': ISSUES.retry,
   'network-error': ISSUES.retry
-};
-
-const HANGS: Bugs = {
-  finishes: { timeout: ISSUES.timeout },
-  retries: { ...RETRIES_LATER, timeout: ISSUES.timeout }
 };
 
 const requested = (matcher: string) => (network: FakeNetwork) =>
@@ -98,19 +92,19 @@ const CALLS: Call[] = [
     'the Bluesky profile lookup of a like import',
     'BLUESKY_LIKE_IMPORT',
     PROFILE,
-    HANGS
+    { retries: RETRIES_LATER }
   ),
   networkCall(
     'the Bluesky likes request of a like import',
     'BLUESKY_LIKE_IMPORT',
     LIKES,
-    HANGS
+    { retries: RETRIES_LATER }
   ),
   networkCall(
     'the Bluesky reposts request of a repost import',
     'BLUESKY_REPOST_IMPORT',
     REPOSTS,
-    HANGS
+    { retries: RETRIES_LATER }
   )
 ];
 

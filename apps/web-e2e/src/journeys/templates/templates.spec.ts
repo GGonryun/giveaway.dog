@@ -107,84 +107,85 @@ test.describe('team templates', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
   test.use({ storageState: personaState('host') });
 
-  test('a host creates, edits, uses and deletes a custom template', async ({
-    page,
-    request
-  }, testInfo) => {
-    const seed = seedApi(request);
-    const { team } = await seedWorkerTeam(request, testInfo);
-    const tag = freshSlug(testInfo);
-    const name = `Template ${tag}`;
-    const giveaway = `[e2e ${RUN_ID}] From ${tag}`;
+  test(
+    'a host creates, edits, uses and deletes a custom template',
+    { tag: TAGS.slow },
+    async ({ page, request }, testInfo) => {
+      const seed = seedApi(request);
+      const { team } = await seedWorkerTeam(request, testInfo);
+      const tag = freshSlug(testInfo);
+      const name = `Template ${tag}`;
+      const giveaway = `[e2e ${RUN_ID}] From ${tag}`;
 
-    const templateId = await createTemplate(page, team.slug, {
-      name,
-      giveaway
-    });
+      const templateId = await createTemplate(page, team.slug, {
+        name,
+        giveaway
+      });
 
-    const draftId = await useTemplate(page, team.slug, name);
-    await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(
-      giveaway
-    );
-    const draft = await seed.rows<DraftRows>({
-      view: 'sweepstakes',
-      id: draftId
-    });
-    expect(draft.sweepstakes).toMatchObject({
-      status: 'DRAFT',
-      details: { name: giveaway },
-      _count: { tasks: 1, prizes: 1 }
-    });
+      const draftId = await useTemplate(page, team.slug, name);
+      await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(
+        giveaway
+      );
+      const draft = await seed.rows<DraftRows>({
+        view: 'sweepstakes',
+        id: draftId
+      });
+      expect(draft.sweepstakes).toMatchObject({
+        status: 'DRAFT',
+        details: { name: giveaway },
+        _count: { tasks: 1, prizes: 1 }
+      });
 
-    const renamed = `${giveaway} (draft)`;
-    await page.getByRole('textbox', { name: 'Name' }).fill(renamed);
-    await page.getByRole('button', { name: 'Cancel' }).click();
-    await page.getByRole('button', { name: 'Save & Exit' }).click();
-    await expect(page).toHaveURL(new RegExp(`/app/${team.slug}$`), {
-      timeout: 30_000
-    });
-    const saved = await seed.rows<DraftRows>({
-      view: 'sweepstakes',
-      id: draftId
-    });
-    expect(saved.sweepstakes.details?.name).toBe(renamed);
+      const renamed = `${giveaway} (draft)`;
+      await page.getByRole('textbox', { name: 'Name' }).fill(renamed);
+      await page.getByRole('button', { name: 'Cancel' }).click();
+      await page.getByRole('button', { name: 'Save & Exit' }).click();
+      await expect(page).toHaveURL(new RegExp(`/app/${team.slug}$`), {
+        timeout: 30_000
+      });
+      const saved = await seed.rows<DraftRows>({
+        view: 'sweepstakes',
+        id: draftId
+      });
+      expect(saved.sweepstakes.details?.name).toBe(renamed);
 
-    await page.goto(`/app/${team.slug}/templates`);
-    const card = await findCard(page, name);
-    await card.getByRole('button', { name: 'Template actions' }).click();
-    await page.getByRole('menuitem', { name: 'Edit' }).click();
-    await expect(page).toHaveURL(new RegExp(`/templates/${templateId}/edit`));
-    await step(page, 'Setup');
-    const defaultName = page.getByRole('textbox', { name: 'Default Name' });
-    await expect(defaultName).toHaveValue(giveaway);
+      await page.goto(`/app/${team.slug}/templates`);
+      const card = await findCard(page, name);
+      await card.getByRole('button', { name: 'Template actions' }).click();
+      await page.getByRole('menuitem', { name: 'Edit' }).click();
+      await expect(page).toHaveURL(new RegExp(`/templates/${templateId}/edit`));
+      await step(page, 'Setup');
+      const defaultName = page.getByRole('textbox', { name: 'Default Name' });
+      await expect(defaultName).toHaveValue(giveaway);
 
-    const edited = `${giveaway} (edited)`;
-    await defaultName.fill(edited);
-    await saveTemplate(page, team.slug, 'Update Template');
+      const edited = `${giveaway} (edited)`;
+      await defaultName.fill(edited);
+      await saveTemplate(page, team.slug, 'Update Template');
 
-    await page.goto(`/app/${team.slug}/templates/${templateId}/edit`);
-    await step(page, 'Setup');
-    await expect(
-      page.getByRole('textbox', { name: 'Default Name' })
-    ).toHaveValue(edited);
-    const untouched = await seed.rows<DraftRows>({
-      view: 'sweepstakes',
-      id: draftId
-    });
-    expect(untouched.sweepstakes.details?.name).toBe(renamed);
+      await page.goto(`/app/${team.slug}/templates/${templateId}/edit`);
+      await step(page, 'Setup');
+      await expect(
+        page.getByRole('textbox', { name: 'Default Name' })
+      ).toHaveValue(edited);
+      const untouched = await seed.rows<DraftRows>({
+        view: 'sweepstakes',
+        id: draftId
+      });
+      expect(untouched.sweepstakes.details?.name).toBe(renamed);
 
-    await page.goto(`/app/${team.slug}/templates`);
-    const deleting = await findCard(page, name);
-    await deleting.getByRole('button', { name: 'Template actions' }).click();
-    await page.getByRole('menuitem', { name: 'Delete' }).click();
-    const dialog = page.getByRole('dialog', { name: 'Delete Template' });
-    await dialog.getByRole('textbox').fill(name);
-    await dialog.getByRole('button', { name: 'Delete Template' }).click();
-    await expect(
-      page.getByText('Template deleted successfully', { exact: true })
-    ).toBeVisible();
-    await expect(deleting).toHaveCount(0);
-  });
+      await page.goto(`/app/${team.slug}/templates`);
+      const deleting = await findCard(page, name);
+      await deleting.getByRole('button', { name: 'Template actions' }).click();
+      await page.getByRole('menuitem', { name: 'Delete' }).click();
+      const dialog = page.getByRole('dialog', { name: 'Delete Template' });
+      await dialog.getByRole('textbox').fill(name);
+      await dialog.getByRole('button', { name: 'Delete Template' }).click();
+      await expect(
+        page.getByText('Template deleted successfully', { exact: true })
+      ).toBeVisible();
+      await expect(deleting).toHaveCount(0);
+    }
+  );
 
   test('a host discards a new template, which deletes it', async ({
     page,

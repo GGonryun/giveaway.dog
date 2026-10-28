@@ -46,6 +46,7 @@
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
     "server-only": "catalog:",
     "zod": "catalog:"
   },

@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { requestTimeout } from '@giveaway/util-time/request-timeout';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
   discordMessageResponseSchema,
@@ -47,7 +48,8 @@ export async function updateDiscordMessage(
       body: JSON.stringify({
         embeds: [options.embed],
         components: options.components
-      })
+      }),
+      signal: requestTimeout()
     }
   );
 

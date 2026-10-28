@@ -39,6 +39,7 @@
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
     "server-only": "catalog:",
     "zod": "catalog:"
   },

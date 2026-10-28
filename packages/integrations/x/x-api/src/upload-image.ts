@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { requestTimeout } from '@giveaway/util-time/request-timeout';
 import { ApplicationError } from '@giveaway/util-errors';
 import { Tx } from '@giveaway/db-client/prisma';
 import { twitterApiRequest } from './twitter-api-request';
@@ -11,7 +12,7 @@ export async function uploadImage(
   imageUrl: string,
   integrationId: string
 ): Promise<string> {
-  const imageResponse = await fetch(imageUrl);
+  const imageResponse = await fetch(imageUrl, { signal: requestTimeout() });
   if (!imageResponse.ok) {
     throw new ApplicationError({
       code: 'BAD_REQUEST',

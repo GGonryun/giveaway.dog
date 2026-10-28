@@ -3,6 +3,7 @@
 import { getBlueskyClient } from './bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { Agent } from '@atproto/api';
+import { withRequestTimeout } from './timed-session';
 import { PrismaClient } from '@giveaway/db-model';
 
 export interface BlueskyCredentials {
@@ -54,7 +55,7 @@ export async function getLatestBlueskyCredentials(
     const session = await client.restore(account.providerAccountId);
 
     // Create an authenticated Agent from the session
-    const agent = new Agent(session);
+    const agent = new Agent(withRequestTimeout(session));
 
     return {
       agent,

@@ -98,10 +98,14 @@ describe('getLatestBlueskyCredentials', () => {
         'user-1'
       );
 
-      expect(m.Agent).toHaveBeenCalledWith(session);
+      const timedSession = {
+        did: 'did:plc:alice',
+        fetchHandler: expect.any(Function)
+      };
+      expect(m.Agent).toHaveBeenCalledWith(timedSession);
       expect(credentials.agent).toBe(m.Agent.mock.instances[0]);
       expect(credentials).toEqual({
-        agent: { session },
+        agent: { session: timedSession },
         did: 'did:plc:alice',
         handle: 'alice.bsky.social'
       });

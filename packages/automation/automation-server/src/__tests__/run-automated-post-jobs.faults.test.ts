@@ -40,7 +40,6 @@ const DISCORD_OK_MESSAGES =
 
 const ISSUES = {
   retry: '#183',
-  timeout: '#303',
   image: '#305'
 };
 
@@ -104,10 +103,7 @@ const RETRIES_LATER: Partial<Record<Fault, string>> = {
   'network-error': ISSUES.retry
 };
 
-const HANGS: Bugs = {
-  finishes: { timeout: ISSUES.timeout },
-  retries: { ...RETRIES_LATER, timeout: ISSUES.timeout }
-};
+const RETRIES: Bugs = { retries: RETRIES_LATER };
 
 const requested = (matcher: string) => (network: FakeNetwork) =>
   network.requests(matcher).length > 0;
@@ -122,7 +118,7 @@ const networkCall = (
   type,
   inject: (network, fault) => network.fault(matcher, fault),
   reached: requested(matcher),
-  bugs: HANGS,
+  bugs: RETRIES,
   ...options
 });
 
@@ -131,11 +127,7 @@ const IMAGE_FAULTS = FAULTS.filter((fault) => fault !== 'malformed-body');
 const CALLS: Call[] = [
   networkCall('the X token refresh of an X post', 'POST_TO_TWITTER', X_TOKEN, {
     expiredToken: true,
-    refreshesToken: true,
-    bugs: {
-      ...HANGS,
-      staysConnected: { timeout: ISSUES.timeout }
-    }
+    refreshesToken: true
   }),
   networkCall('the image download of an X post', 'POST_TO_TWITTER', IMAGE, {
     faults: IMAGE_FAULTS
@@ -157,9 +149,8 @@ const CALLS: Call[] = [
     {
       faults: IMAGE_FAULTS,
       bugs: {
-        ...HANGS,
+        ...RETRIES,
         finishes: {
-          timeout: ISSUES.timeout,
           'rate-limit': ISSUES.image,
           'rate-limit-retry-after': ISSUES.image,
           'server-error': ISSUES.image
