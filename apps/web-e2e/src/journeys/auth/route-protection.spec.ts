@@ -40,7 +40,7 @@ const expectTeamPicker = async (page: Page) => {
 };
 
 const expectOnboarding = async (page: Page) => {
-  await expect(page).toHaveURL(/\/onboarding$/);
+  await expect(page).toHaveURL(/\/onboarding(\?redirectTo=[^&]+)?$/);
   await expect(page.getByText('Welcome to Giveaway.dog')).toBeVisible();
 };
 

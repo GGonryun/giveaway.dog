@@ -17,13 +17,16 @@ vi.mock('next/navigation', () => ({
 vi.mock('../profile-step', () => ({
   ProfileStep: ({
     accountType,
+    redirectTo,
     onBack
   }: {
     accountType: UserAccountType;
+    redirectTo?: string;
     onBack: () => void;
   }) => (
     <div>
       <p>Profile step for {accountType}</p>
+      <p>Returns to {redirectTo ?? 'home'}</p>
       <button type="button" onClick={onBack}>
         Back
       </button>
@@ -74,6 +77,19 @@ describe('OnboardingForm', () => {
         screen.getByText(`Profile step for ${UserAccountType.PARTICIPANT}`)
       ).toBeInTheDocument();
       expect(screen.queryByText('Host Giveaways')).not.toBeInTheDocument();
+    });
+
+    it('passes the page to return to on to the profile step', async () => {
+      const user = userEvent.setup();
+      navigation.searchParams = new URLSearchParams('redirectTo=/browse/abc');
+      render(<OnboardingForm />);
+
+      await user.click(screen.getByRole('button', { name: 'Continue' }));
+
+      expect(screen.getByText('Returns to /browse/abc')).toBeInTheDocument();
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/onboarding?step=2&redirectTo=%2Fbrowse%2Fabc'
+      );
     });
 
     it('returns to the account type step when going back', async () => {

@@ -70,6 +70,37 @@ describe('useOnboardingPage', () => {
     });
   });
 
+  describe('when started with a page to return to', () => {
+    it('returns the page to return to', () => {
+      navigation.searchParams = new URLSearchParams('redirectTo=/browse/abc');
+
+      const { result } = renderHook(() => useOnboardingPage());
+
+      expect(result.current.redirectTo).toBe('/browse/abc');
+    });
+
+    it('keeps the page to return to in the url of each step', () => {
+      navigation.searchParams = new URLSearchParams(
+        'step=2&redirectTo=/browse/abc'
+      );
+      const { result } = renderHook(() => useOnboardingPage());
+
+      act(() => {
+        result.current.navigateToAccountTypeStep();
+      });
+
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/onboarding?step=1&redirectTo=%2Fbrowse%2Fabc'
+      );
+    });
+
+    it('has no page to return to without the param', () => {
+      const { result } = renderHook(() => useOnboardingPage());
+
+      expect(result.current.redirectTo).toBeUndefined();
+    });
+  });
+
   describe('when the url changes after mounting', () => {
     it('keeps the step it started with', () => {
       const { result, rerender } = renderHook(() => useOnboardingPage());

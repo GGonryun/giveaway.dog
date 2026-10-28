@@ -95,6 +95,7 @@ export const authConfigMiddleware = {
         '/browse',
         '/pickers'
       ];
+      const roleHomeRoutes = ['/app', '/browse'];
       const requiresOnboarding = onboardingRequiredRoutes.some((r) =>
         nextUrl.pathname.startsWith(r)
       );
@@ -109,7 +110,14 @@ export const authConfigMiddleware = {
 
         // If user is not onboarded, redirect to onboarding
         if (userOnboarded === false) {
-          return Response.redirect(new URL('/onboarding', nextUrl));
+          const onboardingUrl = new URL('/onboarding', nextUrl);
+          if (!roleHomeRoutes.includes(nextUrl.pathname)) {
+            onboardingUrl.searchParams.set(
+              'redirectTo',
+              `${nextUrl.pathname}${nextUrl.search}`
+            );
+          }
+          return Response.redirect(onboardingUrl);
         }
       }
 
@@ -133,7 +141,9 @@ export const authConfigMiddleware = {
       return true;
     },
     async jwt({ token, user, account, trigger }) {
-      if (trigger === 'signIn') {
+      const isNewSession = trigger === 'signIn' || trigger === 'signUp';
+
+      if (isNewSession) {
         token.sid = newSessionId();
         token.signedInAt = Date.now();
       } else if (await isSessionRevoked(token)) {
@@ -150,8 +160,8 @@ export const authConfigMiddleware = {
         token.provider = account.provider;
       }
 
-      // Fetch user data on login or update
-      if (trigger === 'signIn' || trigger === 'update') {
+      // Fetch user data on login, sign-up or update
+      if (isNewSession || trigger === 'update') {
         if (token.id) {
           const userData = await prisma.user.findUnique({
             where: { id: token.id as string },

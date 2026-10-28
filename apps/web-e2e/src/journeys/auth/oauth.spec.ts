@@ -2,7 +2,6 @@ import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { toE2ePersonaAccountId } from '@giveaway/e2e-model/personas';
 import { E2E_SECRET } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import {
   clickTikTokLogin,
   newDiscordId,
@@ -62,26 +61,25 @@ test.describe('mock OAuth sign-in', () => {
     ]);
   });
 
-  test(
-    "[AUTH-006] a new user's first OAuth sign-in lands on onboarding",
-    knownBug(428),
-    async ({ page, context }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      await useMockOAuth(context, 'discord', {
-        id: newDiscordId(),
-        username: `e2e_${ns}`,
-        email: `e2e-newbie-${ns}@example.com`
-      });
+  test("[AUTH-006] a new user's first OAuth sign-in lands on onboarding", async ({
+    page,
+    context
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    await useMockOAuth(context, 'discord', {
+      id: newDiscordId(),
+      username: `e2e_${ns}`,
+      email: `e2e-newbie-${ns}@example.com`
+    });
 
-      await page.goto('/login');
-      await page.getByRole('button', { name: 'Login with Discord' }).click();
+    await page.goto('/login');
+    await page.getByRole('button', { name: 'Login with Discord' }).click();
 
-      await expect(page).toHaveURL(/\/onboarding$/, { timeout: 15_000 });
-      await expect(page.getByText('Welcome to Giveaway.dog')).toBeVisible();
-      const session = await page.request.get('/api/auth/session');
-      expect((await session.json()).user.onboarded).toBe(false);
-    }
-  );
+    await expect(page).toHaveURL(/\/onboarding$/, { timeout: 15_000 });
+    await expect(page.getByText('Welcome to Giveaway.dog')).toBeVisible();
+    const session = await page.request.get('/api/auth/session');
+    expect((await session.json()).user.onboarded).toBe(false);
+  });
 
   test('[AUTH-015] a TikTok user is signed in and opens their account page', async ({
     page,

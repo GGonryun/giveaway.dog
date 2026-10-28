@@ -237,26 +237,26 @@ test.describe('onboarding journeys', () => {
     await expect(page).toHaveURL(/\/browse$/);
   });
 
-  test(
-    '[ONBOARD-004] a newbie returns to the giveaway after onboarding',
-    knownBug(503),
-    async ({ page, request, freshPersona }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedApi(request).sweepstakes({
-        ns: RUN_ID,
-        team: team.slug
-      });
-      const { ns } = await freshPersona('newbie');
+  test('[ONBOARD-004] a newbie returns to the giveaway after onboarding', async ({
+    page,
+    request,
+    freshPersona
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns: RUN_ID,
+      team: team.slug
+    });
+    const { ns } = await freshPersona('newbie');
 
-      await page.goto(`/browse/${giveaway.id}`);
-      await expect(page).toHaveURL(/\/onboarding/);
-      await page.getByRole('button', { name: 'Continue' }).click();
-      await page.getByLabel('Username').fill(toUsername(ns));
-      await completeSetup(page);
+    await page.goto(`/browse/${giveaway.id}`);
+    await expect(page).toHaveURL(/\/onboarding/);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByLabel('Username').fill(toUsername(ns));
+    await completeSetup(page);
 
-      await expect(page).toHaveURL(new RegExp(`/browse/${giveaway.id}$`));
-    }
-  );
+    await expect(page).toHaveURL(new RegExp(`/browse/${giveaway.id}$`));
+  });
 
   test(
     '[ONBOARD-005] a newbie who picks hosting and reloads the profile step finishes as a host',
