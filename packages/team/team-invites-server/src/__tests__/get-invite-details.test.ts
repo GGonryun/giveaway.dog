@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TeamRole } from '@giveaway/db-model';
 import getInviteDetails from '../get-invite-details';
 import { prismaMock } from '@giveaway/testing-server/prisma';
@@ -85,11 +85,63 @@ describe('getInviteDetails', () => {
 
       expect(prismaMock.teamInviteEmail.findFirst).not.toHaveBeenCalled();
     });
+  });
 
-    it('ignores an expiration date in the past', async () => {
+  describe('[INVITE-002] when the invite link has an expiration date', () => {
+    const now = new Date('2026-06-01T12:00:00.000Z');
+
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(now);
+      prismaMock.teamInviteEmail.findFirst.mockResolvedValue(null);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('[INVITE-002] returns NOT_FOUND for a link that expired in the past', async () => {
       prismaMock.teamInviteLink.findUnique.mockResolvedValue({
         id: 'link-1',
         expiresAt: new Date('2000-01-01T00:00:00.000Z'),
+        team
+      });
+
+      const result = await getInviteDetails({ code: 'link-1' });
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Invalid or expired invitation'
+      );
+    });
+
+    it('[INVITE-002] returns NOT_FOUND for a link that expires at this moment', async () => {
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue({
+        id: 'link-1',
+        expiresAt: new Date(now),
+        team
+      });
+
+      const result = await getInviteDetails({ code: 'link-1' });
+
+      expectFailure(result, 'NOT_FOUND');
+    });
+
+    it('[INVITE-002] returns the team details for a link that expires in the future', async () => {
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue({
+        id: 'link-1',
+        expiresAt: new Date(now.getTime() + 1),
+        team
+      });
+
+      const result = await getInviteDetails({ code: 'link-1' });
+
+      expect(expectOk(result).teamSlug).toBe('acme');
+    });
+
+    it('[INVITE-002] returns the team details for a link with no expiration date', async () => {
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue({
+        id: 'link-1',
+        expiresAt: null,
         team
       });
 

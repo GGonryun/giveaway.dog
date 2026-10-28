@@ -5,6 +5,9 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { TeamRole, UserAccountType } from '@giveaway/db-model';
 import z from 'zod';
 
+const isExpired = (expiresAt: Date | null) =>
+  !!expiresAt && expiresAt <= new Date();
+
 const acceptInvite = procedure()
   .authorization({ required: true })
   .input(
@@ -31,7 +34,10 @@ const acceptInvite = procedure()
       include: { team: true }
     });
 
-    const invite = inviteLink || emailInvite;
+    const activeLink =
+      inviteLink && !isExpired(inviteLink.expiresAt) ? inviteLink : null;
+
+    const invite = activeLink || emailInvite;
 
     if (!invite) {
       throw new ApplicationError({
