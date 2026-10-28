@@ -206,7 +206,9 @@ test.describe('team X pickers, as their host', () => {
         .getByRole('dialog', { name: 'Delete Picker' })
         .getByRole('button', { name: 'Delete Picker' })
         .click();
-      await page.waitForURL(`**/app/${team.slug}/pickers`);
+      await expect(page).toHaveURL(new RegExp(`/app/${team.slug}/pickers$`), {
+        timeout: 10_000
+      });
 
       await page.goto(`/app/${team.slug}/pickers/x`);
       const row = pickerRow(page, fromList.id);
