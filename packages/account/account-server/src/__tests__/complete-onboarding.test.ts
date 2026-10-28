@@ -121,6 +121,44 @@ describe('completeOnboarding', () => {
     });
   });
 
+  describe('when the user is already onboarded', () => {
+    it('[ONBOARD-006] returns FORBIDDEN and keeps the account type', async () => {
+      signIn();
+      prismaMock.user.findUnique.mockResolvedValue(
+        dbUser({ onboarded: true, accountType: UserAccountType.HOST })
+      );
+
+      const result = await completeOnboarding(
+        validInput({ accountType: UserAccountType.PARTICIPANT })
+      );
+
+      expect(expectFailure(result, 'FORBIDDEN').message).toBe(
+        'Onboarding is already complete'
+      );
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+        where: { id: TEST_USER.id },
+        select: { onboarded: true }
+      });
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
+    });
+
+    it('completes onboarding for a user who is not onboarded yet', async () => {
+      signIn();
+      prismaMock.user.findUnique.mockResolvedValue(
+        dbUser({ onboarded: false })
+      );
+      prismaMock.user.findFirst.mockResolvedValue(null);
+      prismaMock.user.update.mockResolvedValue(
+        dbUser({ username: 'jane_doe', accountType: UserAccountType.HOST })
+      );
+
+      const result = await completeOnboarding(validInput());
+
+      expectOk(result);
+      expect(prismaMock.user.update).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('when the username is taken by another user', () => {
     it('returns CONFLICT without updating the user', async () => {
       signIn();

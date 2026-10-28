@@ -343,6 +343,33 @@ describe('authConfigMiddleware', () => {
         expect(authorize(local('/onboarding'), notOnboarded)).toBe(true);
       });
 
+      it('[ONBOARD-006] sends an onboarded host from the onboarding page to the host dashboard', () => {
+        expectRedirect(
+          authorize(local('/onboarding?step=2'), host),
+          local('/app')
+        );
+      });
+
+      it('[ONBOARD-006] sends an onboarded participant from the onboarding page to browse', () => {
+        expectRedirect(
+          authorize(local('/onboarding'), participant),
+          local('/browse')
+        );
+      });
+
+      it('allows a signed-out visitor on the onboarding page', () => {
+        expect(authorize(local('/onboarding'))).toBe(true);
+      });
+
+      it('allows a session without a user on the onboarding page', () => {
+        const result = callbacks.authorized({
+          auth: { expires: '2999-01-01T00:00:00.000Z' },
+          request: new NextRequest(local('/onboarding'))
+        } as unknown as AuthorizedArgs);
+
+        expect(result).toBe(true);
+      });
+
       it('allows users who are not onboarded on the portal', () => {
         expect(authorize(local('/portal'), notOnboarded)).toBe(true);
       });

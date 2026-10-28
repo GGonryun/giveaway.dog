@@ -88,6 +88,11 @@ export const authConfigMiddleware = {
       if (isConnectionRoute && isLoggedIn)
         return Response.redirect(new URL('/', nextUrl));
 
+      if (isOnboardingRoute && auth?.user?.onboarded === true) {
+        const home = auth.user.accountType === 'HOST' ? '/app' : '/browse';
+        return Response.redirect(new URL(home, nextUrl));
+      }
+
       // Check if user needs onboarding (only for specific routes)
       const onboardingRequiredRoutes = [
         '/account',

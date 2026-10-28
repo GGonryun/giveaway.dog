@@ -18,6 +18,18 @@ const completeOnboarding = procedure()
   .handler(async ({ input, user, db }) => {
     const { username, accountType, image } = input;
 
+    const current = await db.user.findUnique({
+      where: { id: user.id },
+      select: { onboarded: true }
+    });
+
+    if (current?.onboarded) {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message: 'Onboarding is already complete'
+      });
+    }
+
     const existingUsername = await db.user.findFirst({
       where: { username }
     });
