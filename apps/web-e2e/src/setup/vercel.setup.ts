@@ -6,8 +6,32 @@ import {
   BYPASS_STATE
 } from '../env';
 import { userMetricsCookie } from '../helpers/user-metrics';
+import { isLocalDeployment, warmUp } from '../helpers/warm-up';
+
+setup.describe.configure({ mode: 'default' });
 
 setup.use({ storageState: { cookies: [userMetricsCookie()], origins: [] } });
+
+setup('compile the routes of the setup projects', async ({ request }) => {
+  setup.skip(
+    !isLocalDeployment(BASE_URL),
+    'Only next dev compiles a route on its first request'
+  );
+  setup.setTimeout(600_000);
+
+  const results = await warmUp(request);
+  const notFound = results.filter(({ status }) => status === 404);
+
+  for (const { path, status, attempts } of results) {
+    console.log(`[warm-up] GET ${path} ${status} after ${attempts} attempt(s)`);
+  }
+  if (notFound.length > 0) {
+    setup.info().annotations.push({
+      type: 'warning',
+      description: `Still 404 after the warm-up: ${notFound.map(({ path }) => path).join(', ')}`
+    });
+  }
+});
 
 setup('open the deployment', async ({ request }) => {
   const headers = secret

@@ -36,10 +36,13 @@ export const signInAs = async (
     ns
   });
 
-  expect(signIn.status()).toBe(302);
+  expect(
+    signIn.status(),
+    `Signing in ${persona} failed: POST /api/auth/callback/e2e returned ${signIn.status()}`
+  ).toBe(302);
   expect(
     signIn.headers().location,
-    `Signing in ${persona} failed. The deployment needs the same E2E_LOGIN_SECRET.`
+    `Signing in ${persona} failed: POST /api/auth/callback/e2e redirected to ${signIn.headers().location}. The deployment needs the same E2E_LOGIN_SECRET.`
   ).not.toContain('error');
 
   const session = await request.get('/api/auth/session');
