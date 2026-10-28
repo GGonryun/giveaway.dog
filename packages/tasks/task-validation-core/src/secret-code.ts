@@ -11,10 +11,14 @@ import { ValidateTaskInput } from '@giveaway/task-model/types';
 
 const MAX_ATTEMPTS = 25;
 
-export const checkSecretCode = async (
+const recordAttempt = async (
   db: PrismaClient,
-  input: ValidateTaskInput<SecretCodeTaskSchema>
+  input: ValidateTaskInput<SecretCodeTaskSchema | SecretCodeV2TaskSchema>
 ): Promise<void> => {
+  if (input.reverify) {
+    return;
+  }
+
   const existingProgress = await db.taskProgress.upsert({
     where: {
       participantId_taskId: {
@@ -40,6 +44,36 @@ export const checkSecretCode = async (
       message: 'Maximum number of attempts reached for this task'
     });
   }
+};
+
+const assertNotCompleted = async (
+  db: PrismaClient,
+  input: ValidateTaskInput<SecretCodeTaskSchema | SecretCodeV2TaskSchema>
+): Promise<void> => {
+  if (input.reverify) {
+    return;
+  }
+
+  const existingCompletion = await db.taskCompletion.findFirst({
+    where: {
+      taskId: input.task.id,
+      participantId: input.participantId
+    }
+  });
+
+  if (existingCompletion) {
+    throw new ApplicationError({
+      code: 'BAD_REQUEST',
+      message: 'Task already completed'
+    });
+  }
+};
+
+export const checkSecretCode = async (
+  db: PrismaClient,
+  input: ValidateTaskInput<SecretCodeTaskSchema>
+): Promise<void> => {
+  await recordAttempt(db, input);
 
   const parsed = TASK_INPUT_SCHEMA.SECRET_CODE.safeParse(input.data);
 
@@ -77,51 +111,14 @@ export const checkSecretCode = async (
     }
   }
 
-  // Check if the user has already completed this task
-  const existingCompletion = await db.taskCompletion.findFirst({
-    where: {
-      taskId: input.task.id,
-      participantId: input.participantId
-    }
-  });
-
-  if (existingCompletion) {
-    throw new ApplicationError({
-      code: 'BAD_REQUEST',
-      message: 'Task already completed'
-    });
-  }
+  await assertNotCompleted(db, input);
 };
 
 export const checkSecretCodeV2 = async (
   db: PrismaClient,
   input: ValidateTaskInput<SecretCodeV2TaskSchema>
 ): Promise<void> => {
-  const existingProgress = await db.taskProgress.upsert({
-    where: {
-      participantId_taskId: {
-        taskId: input.task.id,
-        participantId: input.participantId
-      }
-    },
-    update: {
-      count: {
-        increment: 1
-      }
-    },
-    create: {
-      taskId: input.task.id,
-      participantId: input.participantId,
-      count: 1
-    }
-  });
-
-  if (existingProgress.count >= MAX_ATTEMPTS) {
-    throw new ApplicationError({
-      code: 'FORBIDDEN',
-      message: 'Maximum number of attempts reached for this task'
-    });
-  }
+  await recordAttempt(db, input);
 
   const parsed = TASK_INPUT_SCHEMA.SECRET_CODE_V2.safeParse(input.data);
 
@@ -156,17 +153,5 @@ export const checkSecretCodeV2 = async (
     });
   }
 
-  const existingCompletion = await db.taskCompletion.findFirst({
-    where: {
-      taskId: input.task.id,
-      participantId: input.participantId
-    }
-  });
-
-  if (existingCompletion) {
-    throw new ApplicationError({
-      code: 'BAD_REQUEST',
-      message: 'Task already completed'
-    });
-  }
+  await assertNotCompleted(db, input);
 };
