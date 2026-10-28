@@ -88,22 +88,26 @@ export const TermsAndConditions = () => {
   const canSave = useMemo(() => !termsErrors, [termsErrors]);
   const hasUnsavedChanges = useMemo(() => termsDirtyFields, [termsDirtyFields]);
 
+  const [sweepstakesName, prizes, startDate, endDate] = useWatch({
+    name: ['setup.name', 'prizes', 'timing.startDate', 'timing.endDate'],
+    control: form.control
+  });
+
   const livePreview = useMemo(() => {
-    const data = form.getValues();
     if (terms.type === SweepstakesTermsType.TEMPLATE) {
       return stringifyTerms({
-        prizes: data.prizes,
-        sweepstakesName: data.setup.name,
+        prizes,
+        sweepstakesName,
         eligibilityRegions: 'Global',
-        startDate: date.format(data.timing.startDate, 'long'),
-        endDate: date.format(data.timing.endDate, 'long'),
+        startDate: date.format(startDate, 'long'),
+        endDate: date.format(endDate, 'long'),
         entryUrl: toBrowsePageUrl(id),
         ...terms
       });
     } else {
       return stringifyTerms();
     }
-  }, [terms, form.getValues]);
+  }, [terms, prizes, sweepstakesName, startDate, endDate, id]);
 
   const handleSave = useCallback(async () => {
     // Trigger validation for terms fields to get current errors
@@ -220,7 +224,7 @@ export const TermsAndConditions = () => {
               {field.value.type === SweepstakesTermsType.TEMPLATE ? (
                 <ButtonTextarea
                   onOpenSheet={handleOpenSheet}
-                  defaultValue={livePreview}
+                  value={livePreview}
                 />
               ) : (
                 <MinimalTiptap
@@ -433,16 +437,16 @@ const RadioIcon: React.FC<{ checked: boolean }> = ({ checked }) => {
 
 type ButtonTextareaProps = {
   onOpenSheet: () => void;
-  defaultValue: string;
+  value: string;
 };
 
 const ButtonTextarea: React.FC<ButtonTextareaProps> = ({
   onOpenSheet,
-  defaultValue
+  value
 }) => {
   return (
     <div className="relative w-full">
-      <Textarea rows={12} defaultValue={defaultValue} />
+      <Textarea rows={12} readOnly value={value} />
 
       <div
         className="absolute border inset-0 bg-white/70 dark:bg-input/30 backdrop-blur-[1px] opacity-100 lg:opacity-0 hover:opacity-100 transition-opacity rounded-md flex items-center justify-center cursor-pointer"
