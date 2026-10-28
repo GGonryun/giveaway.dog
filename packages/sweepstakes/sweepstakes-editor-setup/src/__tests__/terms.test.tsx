@@ -1,4 +1,10 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  screen,
+  waitFor,
+  within
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { GiveawayTerms } from '@giveaway/sweepstakes-model/schemas';
@@ -318,23 +324,52 @@ describe('TermsAndConditions', () => {
       );
     });
 
-    it.fails(
-      'refreshes the terms preview after the terms are saved',
-      async () => {
-        renderTerms();
-        const sheet = await openSheet();
-        const sponsor = within(sheet).getByLabelText('Sponsor Name');
-        await userEvent.clear(sponsor);
-        await userEvent.type(sponsor, 'Globex');
-        await userEvent.click(
-          within(sheet).getByRole('button', { name: 'Save Terms & Conditions' })
-        );
-        await waitFor(() =>
-          expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-        );
+    it('refreshes the terms preview after the terms are saved', async () => {
+      renderTerms();
+      const sheet = await openSheet();
+      const sponsor = within(sheet).getByLabelText('Sponsor Name');
+      await userEvent.clear(sponsor);
+      await userEvent.type(sponsor, 'Globex');
+      await userEvent.click(
+        within(sheet).getByRole('button', { name: 'Save Terms & Conditions' })
+      );
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      );
 
-        expect(getPreviewText()).toContain('sponsored by Globex');
-      }
-    );
+      expect(getPreviewText()).toContain('sponsored by Globex');
+    });
+
+    it('refreshes the terms preview after the dates change', async () => {
+      const { form } = renderTerms();
+      act(() => {
+        form.setValue('timing.startDate', new Date('2026-08-03T12:00:00.000Z'));
+        form.setValue('timing.endDate', new Date('2026-08-20T12:00:00.000Z'));
+      });
+
+      await waitFor(() =>
+        expect(getPreviewText()).toContain(
+          'The Promotion begins on August 3, 2026 and ends on August 20, 2026.'
+        )
+      );
+    });
+
+    it('refreshes the terms preview after the prizes change', async () => {
+      const { form } = renderTerms();
+      act(() => {
+        form.setValue('prizes', [
+          { id: 'prize-1', name: 'Snowboard', quota: 1 }
+        ]);
+      });
+
+      await waitFor(() =>
+        expect(getPreviewText()).toContain("1 winner will receive 'Snowboard'")
+      );
+    });
+
+    it('keeps the terms preview read-only', () => {
+      renderTerms();
+      expect(screen.getAllByRole('textbox')[0]).toHaveAttribute('readonly');
+    });
   });
 });
