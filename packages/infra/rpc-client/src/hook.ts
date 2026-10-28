@@ -119,43 +119,40 @@ export function useProcedureAsync<TInput, TSuccess>({
   isLoading: boolean;
   run: ((input: TInput) => Promise<TSuccess>) | (() => Promise<TSuccess>);
 } {
-  const [pending, setPending] = useState(0);
-  const [, startTransition] = useTransition();
+  const [isLoading, startTransition] = useTransition();
 
   const handleAction = useCallback(
     async (input: any): Promise<TSuccess> => {
-      setPending((count) => count + 1);
-      let result: Result<TSuccess> | undefined;
-      try {
-        result = await action(input);
-      } catch (error: any) {
-        if (isNextRedirect(error)) {
-          startTransition(() => {
-            throw error;
-          });
-          return new Promise<never>(() => {});
-        }
-        throw {
-          code: 'UNKNOWN_HTTP_ERROR',
-          message: parseError(error)
-        };
-      } finally {
-        setPending((count) => count - 1);
-      }
+      return new Promise((resolve, reject) => {
+        startTransition(async () => {
+          try {
+            const result = await action(input);
 
-      if (!result) {
-        // this should only ever happen on redirects
-        return new Promise<never>(() => {});
-      }
+            if (!result) {
+              // this should only ever happen on redirects
 
-      if (result.ok) {
-        return result.data;
-      }
+              return;
+            }
 
-      throw result.data;
+            if (result.ok) {
+              resolve(result.data);
+            } else {
+              reject(result.data);
+            }
+          } catch (error: any) {
+            if (isNextRedirect(error)) {
+              throw error;
+            }
+            reject({
+              code: 'UNKNOWN_HTTP_ERROR',
+              message: parseError(error)
+            });
+          }
+        });
+      });
     },
     [action, startTransition]
   );
 
-  return { isLoading: pending > 0, run: handleAction };
+  return { isLoading, run: handleAction };
 }
