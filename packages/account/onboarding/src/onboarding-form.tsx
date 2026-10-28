@@ -19,7 +19,7 @@ export function OnboardingForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const { step, navigateToAccountTypeStep, navigateToProfileStep } =
+  const { step, redirectTo, navigateToAccountTypeStep, navigateToProfileStep } =
     useOnboardingPage();
   const [selectedAccountType, setSelectedAccountType] =
     useState<UserAccountType>(UserAccountType.PARTICIPANT);
@@ -55,6 +55,7 @@ export function OnboardingForm({
             {step === 2 && (
               <ProfileStep
                 accountType={selectedAccountType}
+                redirectTo={redirectTo}
                 onBack={handleBack}
               />
             )}

@@ -42,11 +42,13 @@ type ProfileFormData = z.infer<typeof profileFormSchema>;
 
 interface ProfileStepProps {
   accountType: UserAccountType;
+  redirectTo?: string;
   onBack: () => void;
 }
 
 export const ProfileStep: React.FC<ProfileStepProps> = ({
   accountType,
+  redirectTo,
   onBack
 }) => {
   const router = useRouter();
@@ -64,7 +66,7 @@ export const ProfileStep: React.FC<ProfileStepProps> = ({
       });
 
       toast.success('Welcome to Giveaway.dog!');
-      const redirect = getUserAuthRedirect({ accountType });
+      const redirect = getUserAuthRedirect({ redirectTo, accountType });
       router.push(redirect);
     },
     onFailure(data) {

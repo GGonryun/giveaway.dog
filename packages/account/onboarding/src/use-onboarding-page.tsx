@@ -9,11 +9,14 @@ export const useOnboardingPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const stepParam = searchParams.get('step');
+  const redirectTo = searchParams.get('redirectTo') ?? undefined;
   const [step, setStep] = useState<OnboardingStep>(stepParam === '2' ? 2 : 1);
 
   const navigateToStep = (newStep: OnboardingStep) => {
     setStep(newStep);
-    router.push(`/onboarding?step=${newStep}`);
+    const params = new URLSearchParams({ step: `${newStep}` });
+    if (redirectTo) params.set('redirectTo', redirectTo);
+    router.push(`/onboarding?${params.toString()}`);
   };
 
   const navigateToAccountTypeStep = () => navigateToStep(1);
@@ -21,6 +24,7 @@ export const useOnboardingPage = () => {
 
   return {
     step,
+    redirectTo,
     navigateToAccountTypeStep,
     navigateToProfileStep
   };

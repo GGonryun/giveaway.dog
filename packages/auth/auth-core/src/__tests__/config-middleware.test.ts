@@ -302,7 +302,7 @@ describe('authConfigMiddleware', () => {
     });
 
     describe('onboarding', () => {
-      it.each(['/account', '/app', '/browse', '/pickers/123'])(
+      it.each(['/app', '/browse'])(
         'redirects users who are not onboarded from %s to onboarding',
         (path) => {
           expectRedirect(
@@ -311,6 +311,27 @@ describe('authConfigMiddleware', () => {
           );
         }
       );
+
+      it.each([
+        ['/account', '%2Faccount'],
+        ['/pickers/123', '%2Fpickers%2F123'],
+        ['/app/team/sweepstakes', '%2Fapp%2Fteam%2Fsweepstakes']
+      ])(
+        'redirects users who are not onboarded from %s to onboarding and back',
+        (path, redirectTo) => {
+          expectRedirect(
+            authorize(local(path), notOnboarded),
+            local(`/onboarding?redirectTo=${redirectTo}`)
+          );
+        }
+      );
+
+      it('[ONBOARD-004] sends a user who is not onboarded back to the giveaway after onboarding', () => {
+        expectRedirect(
+          authorize(local('/browse/abc?ref=friend'), notOnboarded),
+          local('/onboarding?redirectTo=%2Fbrowse%2Fabc%3Fref%3Dfriend')
+        );
+      });
 
       it('does not redirect when the onboarded flag is undefined', () => {
         expect(authorize(local('/browse'), { onboarded: undefined })).toBe(
@@ -392,13 +413,16 @@ describe('authConfigMiddleware', () => {
       redis.mget.mockResolvedValue([null, null]);
     });
 
-    it('gives a new session id to a token on sign in', async () => {
-      const token = await jwt({ user: { id: 'u-1' }, trigger: 'signIn' });
+    it.each(['signIn', 'signUp'])(
+      'gives a new session id to a token on %s',
+      async (trigger) => {
+        const token = await jwt({ user: { id: 'u-1' }, trigger });
 
-      expect(token?.sid).toEqual(expect.any(String));
-      expect(token?.sid).not.toBe('session-1');
-      expect(redis.mget).not.toHaveBeenCalled();
-    });
+        expect(token?.sid).toEqual(expect.any(String));
+        expect(token?.sid).not.toBe('session-1');
+        expect(redis.mget).not.toHaveBeenCalled();
+      }
+    );
 
     it('keeps the session id of a token that is not revoked', async () => {
       const token = await jwt({ token: { id: 'u-1', sid: 'session-1' } });
@@ -486,15 +510,18 @@ describe('authConfigMiddleware', () => {
       expect(token).toEqual({ id: 'u-1', sid: 'session-1', signedInAt: 2_001 });
     });
 
-    it('records the sign-in time of a new session', async () => {
-      vi.useFakeTimers({ toFake: ['Date'] });
-      vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
+    it.each(['signIn', 'signUp'])(
+      'records the sign-in time of a new session on %s',
+      async (trigger) => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        vi.setSystemTime(new Date('2026-01-01T00:00:00.000Z'));
 
-      const token = await jwt({ user: { id: 'u-1' }, trigger: 'signIn' });
+        const token = await jwt({ user: { id: 'u-1' }, trigger });
 
-      vi.useRealTimers();
-      expect(token?.signedInAt).toBe(Date.parse('2026-01-01T00:00:00.000Z'));
-    });
+        vi.useRealTimers();
+        expect(token?.signedInAt).toBe(Date.parse('2026-01-01T00:00:00.000Z'));
+      }
+    );
 
     it('keeps the session when the revocation check fails', async () => {
       redis.mget.mockRejectedValue(new Error('down'));
@@ -542,7 +569,7 @@ describe('authConfigMiddleware', () => {
       expect(await jwt({ token: original })).toBe(original);
     });
 
-    it.each(['signIn', 'update'])(
+    it.each(['signIn', 'signUp', 'update'])(
       'loads profile fields from the database on %s',
       async (trigger) => {
         prismaMock.user.findUnique.mockResolvedValue({
@@ -563,7 +590,7 @@ describe('authConfigMiddleware', () => {
         expect(token).toEqual({
           id: 'u-1',
           sid: expect.any(String),
-          signedInAt: trigger === 'signIn' ? expect.any(Number) : undefined,
+          signedInAt: trigger === 'update' ? undefined : expect.any(Number),
           onboarded: true,
           accountType: 'HOST',
           username: 'host-user'
@@ -598,10 +625,30 @@ describe('authConfigMiddleware', () => {
       expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
     });
 
-    it('skips the lookup for other triggers', async () => {
-      await jwt({ token: { id: 'u-1' }, trigger: 'signUp' });
+    it("[AUTH-006] marks a new user's first session as not onboarded", async () => {
+      prismaMock.user.findUnique.mockResolvedValue({
+        onboarded: false,
+        accountType: 'PARTICIPANT',
+        username: null
+      });
 
-      expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+      const token = await jwt({
+        token: {},
+        user: { id: 'new-user' },
+        account: { provider: 'discord' },
+        trigger: 'signUp'
+      });
+
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: 'new-user' } })
+      );
+      expect(token).toMatchObject({
+        id: 'new-user',
+        provider: 'discord',
+        onboarded: false,
+        accountType: 'PARTICIPANT',
+        username: null
+      });
     });
 
     it('skips the lookup when there is no trigger', async () => {

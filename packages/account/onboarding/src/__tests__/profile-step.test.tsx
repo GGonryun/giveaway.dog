@@ -62,10 +62,17 @@ const createDeferred = <T,>() => {
 
 const update = vi.fn();
 
-const renderStep = (accountType: UserAccountType = UserAccountType.HOST) => {
+const renderStep = (
+  accountType: UserAccountType = UserAccountType.HOST,
+  redirectTo?: string
+) => {
   const onBack = vi.fn();
   const view = render(
-    <ProfileStep accountType={accountType} onBack={onBack} />
+    <ProfileStep
+      accountType={accountType}
+      redirectTo={redirectTo}
+      onBack={onBack}
+    />
   );
   return { ...view, onBack };
 };
@@ -231,6 +238,28 @@ describe('ProfileStep', () => {
     it('sends a participant to the browse page', async () => {
       const user = userEvent.setup();
       renderStep(UserAccountType.PARTICIPANT);
+
+      await submitUsername(user);
+
+      await waitFor(() =>
+        expect(navigation.router.push).toHaveBeenCalledWith('/browse')
+      );
+    });
+
+    it('[ONBOARD-004] sends the user back to the giveaway they started from', async () => {
+      const user = userEvent.setup();
+      renderStep(UserAccountType.PARTICIPANT, '/browse/abc');
+
+      await submitUsername(user);
+
+      await waitFor(() =>
+        expect(navigation.router.push).toHaveBeenCalledWith('/browse/abc')
+      );
+    });
+
+    it('ignores a redirect to another site', async () => {
+      const user = userEvent.setup();
+      renderStep(UserAccountType.PARTICIPANT, '//evil.example.com');
 
       await submitUsername(user);
 
