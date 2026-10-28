@@ -10,8 +10,10 @@ export type CompletionValueArgs = {
 export const toParticipantEntries = (completions: TaskCompletionSchema[]) =>
   completions.reduce(
     (sum, completion) =>
-      sum +
-      toCompletionValue({ task: completion.task, proof: completion.proof }),
+      completion.status === 'REJECTED'
+        ? sum
+        : sum +
+          toCompletionValue({ task: completion.task, proof: completion.proof }),
     0
   );
 

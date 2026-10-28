@@ -1,7 +1,6 @@
 import type { APIRequestContext, TestInfo } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
 const QUESTION = 'Tell us about your setup';
@@ -83,19 +82,18 @@ test.describe('a rejected submission', () => {
     ).toBeHidden();
   });
 
-  test(
-    'a participant keeps no entries from a rejected submission',
-    knownBug(522),
-    async ({ page, request }, testInfo) => {
-      const giveaway = await seedRejectedAnswer(
-        request,
-        testInfo,
-        nsOf(testInfo)
-      );
+  test('a participant keeps no entries from a rejected submission', async ({
+    page,
+    request
+  }, testInfo) => {
+    const giveaway = await seedRejectedAnswer(
+      request,
+      testInfo,
+      nsOf(testInfo)
+    );
 
-      await page.goto(`/browse/${giveaway.id}`);
+    await page.goto(`/browse/${giveaway.id}`);
 
-      await expect(page.getByText('Your entries: 1')).toBeVisible();
-    }
-  );
+    await expect(page.getByText('Your entries: 1')).toBeVisible();
+  });
 });

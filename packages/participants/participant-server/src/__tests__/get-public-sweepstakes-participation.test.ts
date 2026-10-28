@@ -14,13 +14,14 @@ const NOW = new Date('2026-06-01T12:00:00.000Z');
 const participation = (
   sweepstakesId: string,
   completedTaskIds: string[],
-  taskCount: number
+  taskCount: number,
+  rejectedTaskIds: string[] = []
 ) => ({
   sweepstakesId,
-  taskCompletions: completedTaskIds.map((taskId, i) => ({
-    id: `${sweepstakesId}-tc-${i}`,
-    taskId
-  })),
+  taskCompletions: [
+    ...completedTaskIds.map((taskId) => ({ taskId, status: 'COMPLETED' })),
+    ...rejectedTaskIds.map((taskId) => ({ taskId, status: 'REJECTED' }))
+  ].map((completion, i) => ({ id: `${sweepstakesId}-tc-${i}`, ...completion })),
   sweepstakes: {
     id: sweepstakesId,
     tasks: Array.from({ length: taskCount }, (_, i) => ({ id: `t-${i}` }))
@@ -103,6 +104,18 @@ describe('getPublicSweepstakesParticipation', () => {
       expect(expectOk(result)).toEqual({
         'sweep-1': { sweepstakesId: 'sweep-1', completed: 2, maximum: 4 },
         'sweep-2': { sweepstakesId: 'sweep-2', completed: 0, maximum: 0 }
+      });
+    });
+
+    it('leaves rejected completions out of the completed tasks', async () => {
+      prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([
+        participation('sweep-1', ['t-1'], 2, ['t-0'])
+      ]);
+
+      const result = await getPublicSweepstakesParticipation();
+
+      expect(expectOk(result)).toEqual({
+        'sweep-1': { sweepstakesId: 'sweep-1', completed: 1, maximum: 2 }
       });
     });
 
