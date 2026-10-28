@@ -1,17 +1,16 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
-import { BYPASS_STATE, E2E_SECRET, RUN_ID } from '../../env';
+import { BASE_URL, BYPASS_STATE, E2E_SECRET, RUN_ID } from '../../env';
 import { STUB_BLOB_URL, stubBlobUploads } from '../../helpers/blob';
+import { expectSameOrigin, noRedirect } from '../../helpers/http';
 import { knownBug } from '../../helpers/known-bug';
 import { expectAfterReloads } from '../../helpers/poll';
 import {
   captureServerAction,
   readActionResult,
-  replayServerAction,
   rewriteServerActions
 } from '../../helpers/rsc';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
-import { blockThirdParties } from '../../helpers/third-party';
 
 const PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
@@ -111,16 +110,26 @@ test.describe('onboarding replay', () => {
     });
 
     const visitor = await browser.newContext({ storageState: BYPASS_STATE });
-    await blockThirdParties(visitor);
-    const visitorPage = await visitor.newPage();
-    await visitorPage.goto('/');
+    const target = new URL(action.url);
 
-    const response = await replayServerAction(visitorPage, action);
+    const response = await visitor.request.post(
+      `${target.pathname}${target.search}`,
+      {
+        ...noRedirect,
+        headers: {
+          'Next-Action': action.id,
+          'Content-Type': 'text/plain;charset=UTF-8',
+          Accept: 'text/x-component'
+        },
+        data: JSON.stringify(action.args)
+      }
+    );
 
-    expect(readActionResult(response)).toMatchObject({
-      ok: false,
-      data: { code: 'UNAUTHORIZED' }
-    });
+    expect(response.status()).toBeGreaterThanOrEqual(300);
+    expect(response.status()).toBeLessThan(400);
+    const location = response.headers().location;
+    expectSameOrigin(location);
+    expect(new URL(location, BASE_URL).pathname).toBe('/login');
     await visitor.close();
   });
 });
