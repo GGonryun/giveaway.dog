@@ -1,18 +1,34 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserAccountType } from '@giveaway/db-model';
 import { OnboardingForm } from '../onboarding-form';
 
-const navigation = vi.hoisted(() => ({
-  router: { push: vi.fn() },
-  searchParams: new URLSearchParams()
-}));
+const navigation = vi.hoisted(() => {
+  const listeners = new Set<() => void>();
+  const state = {
+    router: { push: vi.fn<(url: string) => void>() },
+    searchParams: new URLSearchParams(),
+    subscribe: (listener: () => void) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    visit: (url: string) => {
+      state.searchParams = new URL(url, 'http://localhost').searchParams;
+      listeners.forEach((listener) => listener());
+    }
+  };
+  return state;
+});
 
-vi.mock('next/navigation', () => ({
-  useRouter: () => navigation.router,
-  useSearchParams: () => navigation.searchParams
-}));
+vi.mock('next/navigation', async () => {
+  const { useSyncExternalStore } = await import('react');
+  return {
+    useRouter: () => navigation.router,
+    useSearchParams: () =>
+      useSyncExternalStore(navigation.subscribe, () => navigation.searchParams)
+  };
+});
 
 vi.mock('../profile-step', () => ({
   ProfileStep: ({
@@ -36,7 +52,7 @@ vi.mock('../profile-step', () => ({
 
 describe('OnboardingForm', () => {
   beforeEach(() => {
-    navigation.router.push.mockReset();
+    navigation.router.push.mockReset().mockImplementation(navigation.visit);
     navigation.searchParams = new URLSearchParams();
   });
 
@@ -113,6 +129,35 @@ describe('OnboardingForm', () => {
 
       expect(screen.getByText('Welcome to Giveaway.dog')).toBeInTheDocument();
       expect(navigation.router.push).toHaveBeenCalledWith('/onboarding?step=1');
+    });
+  });
+
+  describe('when the url changes without the form', () => {
+    it('shows the account type step after going back in the browser', async () => {
+      const user = userEvent.setup();
+      render(<OnboardingForm />);
+      await user.click(screen.getByRole('button', { name: 'Continue' }));
+
+      act(() => navigation.visit('/onboarding'));
+
+      expect(screen.getByText('Welcome to Giveaway.dog')).toBeInTheDocument();
+      expect(
+        screen.queryByText('Complete Your Profile')
+      ).not.toBeInTheDocument();
+    });
+
+    it('shows the profile step again after going forward in the browser', async () => {
+      const user = userEvent.setup();
+      render(<OnboardingForm />);
+      await user.click(screen.getByText('Host Giveaways'));
+      await user.click(screen.getByRole('button', { name: 'Continue' }));
+      act(() => navigation.visit('/onboarding'));
+
+      act(() => navigation.visit('/onboarding?step=2&accountType=HOST'));
+
+      expect(
+        screen.getByText(`Profile step for ${UserAccountType.HOST}`)
+      ).toBeInTheDocument();
     });
   });
 
