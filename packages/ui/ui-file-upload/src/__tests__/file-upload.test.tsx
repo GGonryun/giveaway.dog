@@ -83,6 +83,43 @@ describe('FileUpload', () => {
     expect(click).toHaveBeenCalledTimes(1);
   });
 
+  it.each(['{Enter}', ' '])(
+    'opens the file picker when %s is pressed on the focused drop zone',
+    async (key) => {
+      const click = vi
+        .spyOn(HTMLInputElement.prototype, 'click')
+        .mockImplementation(() => {});
+      render(<FileUpload />);
+
+      await userEvent.tab();
+      expect(getDropZone()).toHaveFocus();
+      await userEvent.keyboard(key);
+
+      expect(click).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  it('is a button named by the label that points at its id', () => {
+    render(
+      <>
+        <label htmlFor="banner">Banner Image</label>
+        <p id="banner-description">Shown at the top of the page</p>
+        <FileUpload
+          id="banner"
+          aria-describedby="banner-description"
+          aria-invalid
+        />
+      </>
+    );
+
+    const dropZone = screen.getByRole('button', { name: 'Banner Image' });
+    expect(dropZone).toBe(getDropZone());
+    expect(dropZone).toHaveAccessibleDescription(
+      'Shown at the top of the page'
+    );
+    expect(dropZone).toHaveAttribute('aria-invalid', 'true');
+  });
+
   it('uploads a selected image, previews it and reports its url', async () => {
     upload.mockResolvedValue({ url: 'https://cdn.example.com/prize.png' });
     const onUpload = vi.fn();
