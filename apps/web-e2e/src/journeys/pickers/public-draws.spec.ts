@@ -193,25 +193,23 @@ test.describe('free X picker filters on the ScrapeBadger fixtures', () => {
     allowedPageErrors: [/Failed to load resource: .* status of 400/]
   });
 
-  test(
-    'a visitor cannot read more than the first page of the participants of a free draw',
-    knownBug(585),
-    async ({ page }) => {
-      const response = await postPickWinners(
-        page.request,
-        fixturePostUrl(E2E_X_FIXTURES.tweet)
-      );
-      expect(response.status()).toBe(200);
-      const { data } = await response.json();
-      const html = await (
-        await page.request.get(`/pickers/x/${data.drawId}`)
-      ).text();
+  test('a visitor cannot read more than the first page of the participants of a free draw', async ({
+    page
+  }) => {
+    const response = await postPickWinners(
+      page.request,
+      fixturePostUrl(E2E_X_FIXTURES.tweet)
+    );
+    expect(response.status()).toBe(200);
+    const { data } = await response.json();
+    const html = await (
+      await page.request.get(`/pickers/x/${data.drawId}`)
+    ).text();
 
-      const retweeters = new Set(html.match(/e2e_fixture_rt\d+/g));
-      expect(retweeters.size).toBeLessThanOrEqual(FIRST_PAGE + 1);
-      expect(html).not.toContain('runId');
-    }
-  );
+    const retweeters = new Set(html.match(/e2e_fixture_rt\d+/g));
+    expect(retweeters.size).toBeLessThanOrEqual(FIRST_PAGE + 1);
+    expect(html).not.toContain('runId');
+  });
 
   test('a visitor learns that too few retweeters pass the filters, and the draw page lists the filters', async ({
     page

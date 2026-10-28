@@ -4,7 +4,8 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
-  twitterV2PickerSchema,
+  TWITTER_V2_FREE_PARTICIPANTS_PAGE_SIZE,
+  twitterV2PublicPickerSchema,
   calculateTwitterV2PickerStats
 } from '@giveaway/x-picker-model/schemas/details';
 
@@ -13,7 +14,7 @@ export const getTwitterV2PublicPicker = procedure()
     required: false
   })
   .input(z.object({ pickerId: z.string() }))
-  .output(twitterV2PickerSchema)
+  .output(twitterV2PublicPickerSchema)
   .handler(async ({ db, input }) => {
     const picker = await db.twitterPicker.findUnique({
       where: { id: input.pickerId },
@@ -53,14 +54,35 @@ export const getTwitterV2PublicPicker = procedure()
       tweets: picker.tweets
     });
 
+    const { runId, teamId, ...rest } = picker;
+    const isFree = !teamId;
+
     return {
-      ...picker,
-      users: usersWithEligibility,
+      ...rest,
+      isFree,
+      hasRun: runId !== null,
+      users: isFree
+        ? toFreeParticipants(usersWithEligibility, picker.draws)
+        : usersWithEligibility,
       draws: picker.draws,
       tweets: picker.tweets,
       stats
     };
   });
+
+function toFreeParticipants<
+  T extends { id: string; ineligible: string | undefined }
+>(users: T[], draws: { userId: string }[]): T[] {
+  const firstPage = users
+    .filter((user) => !user.ineligible)
+    .slice(0, TWITTER_V2_FREE_PARTICIPANTS_PAGE_SIZE);
+  const shown = new Set(firstPage.map((user) => user.id));
+  const drawn = new Set(draws.map((draw) => draw.userId));
+  const drawnUsers = users.filter(
+    (user) => drawn.has(user.id) && !shown.has(user.id)
+  );
+  return [...firstPage, ...drawnUsers];
+}
 
 function getDisqualificationReason(
   user: {

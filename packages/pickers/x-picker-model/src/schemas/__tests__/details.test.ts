@@ -6,6 +6,7 @@ import {
   twitterV2PickerSchema,
   twitterV2PickerStatsSchema,
   twitterV2PickerUserSchema,
+  twitterV2PublicPickerSchema,
   type TwitterPostSchema,
   type TwitterV2PickerUserSchema
 } from '../details';
@@ -318,6 +319,28 @@ describe('twitterV2PickerSchema', () => {
     expect(
       twitterV2PickerSchema.safeParse({ ...picker, users: [{ id: 'x' }] })
         .success
+    ).toBe(false);
+  });
+});
+
+describe('twitterV2PublicPickerSchema', () => {
+  const publicPicker = { ...picker, isFree: true, hasRun: false };
+
+  it('drops the run id and the team id', () => {
+    const parsed = twitterV2PublicPickerSchema.parse({
+      ...publicPicker,
+      runId: 'run-1',
+      teamId: 'team-1'
+    });
+
+    expect(parsed).not.toHaveProperty('runId');
+    expect(parsed).not.toHaveProperty('teamId');
+    expect(parsed).toMatchObject({ isFree: true, hasRun: false });
+  });
+
+  it.each(['isFree', 'hasRun'] as const)('requires %s', (key) => {
+    expect(
+      twitterV2PublicPickerSchema.safeParse(without(publicPicker, key)).success
     ).toBe(false);
   });
 });

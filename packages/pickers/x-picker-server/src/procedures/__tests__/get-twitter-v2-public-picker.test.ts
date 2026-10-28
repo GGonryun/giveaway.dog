@@ -160,7 +160,9 @@ describe('getTwitterV2PublicPicker', () => {
       const result = await getTwitterV2PublicPicker({ pickerId: 'picker-1' });
 
       expect(expectOk(result)).toEqual({
-        ...withoutKeys(row, 'lastPostWithin'),
+        ...withoutKeys(row, 'lastPostWithin', 'runId', 'teamId'),
+        isFree: false,
+        hasRun: false,
         users: [
           {
             ...withoutKeys(buildPickerUser(), 'pickerId'),
@@ -178,12 +180,62 @@ describe('getTwitterV2PublicPicker', () => {
       });
     });
 
-    it('keeps the team id from the picker row', async () => {
-      mockPicker({ picker: { teamId: 'team-9' } });
+    it('sends neither the run id nor the team id', async () => {
+      mockPicker({ picker: { teamId: 'team-9', runId: 'run-9' } });
 
       const result = await getTwitterV2PublicPicker({ pickerId: 'picker-1' });
 
-      expect(expectOk(result).teamId).toBe('team-9');
+      const picker = expectOk(result);
+      expect(picker).not.toHaveProperty('runId');
+      expect(picker).not.toHaveProperty('teamId');
+      expect(picker).toMatchObject({ isFree: false, hasRun: true });
+    });
+
+    it('marks a picker without a team as free', async () => {
+      mockPicker({ picker: { teamId: null } });
+
+      const result = await getTwitterV2PublicPicker({ pickerId: 'picker-1' });
+
+      expect(expectOk(result)).toMatchObject({ isFree: true, hasRun: false });
+    });
+
+    it('sends every user of a team picker', async () => {
+      const users = Array.from({ length: 25 }, (_, index) =>
+        buildPickerUser({ id: `pu-${index}` })
+      );
+      mockPicker({ users, draws: [] });
+
+      const result = await getTwitterV2PublicPicker({ pickerId: 'picker-1' });
+
+      expect(expectOk(result).users.map((user) => user.id)).toEqual(
+        users.map((user) => user.id)
+      );
+    });
+
+    it('sends only the first page of eligible users and the drawn users of a free picker', async () => {
+      const users = [
+        buildPickerUser({ id: 'pu-ineligible', tweetCount: 0 }),
+        ...Array.from({ length: 25 }, (_, index) =>
+          buildPickerUser({ id: `pu-${index}`, tweetCount: 100 })
+        )
+      ];
+      mockPicker({
+        picker: { teamId: null, minPostCount: 10 },
+        users,
+        draws: [
+          buildDraw({ id: 'draw-1', userId: 'pu-20' }),
+          buildDraw({ id: 'draw-2', userId: 'pu-3' }),
+          buildDraw({ id: 'draw-3', userId: 'pu-ineligible' })
+        ]
+      });
+
+      const result = await getTwitterV2PublicPicker({ pickerId: 'picker-1' });
+
+      expect(expectOk(result).users.map((user) => user.id)).toEqual([
+        ...Array.from({ length: 10 }, (_, index) => `pu-${index}`),
+        'pu-ineligible',
+        'pu-20'
+      ]);
     });
 
     it('estimates stats from the sample for a picker without a team', async () => {
