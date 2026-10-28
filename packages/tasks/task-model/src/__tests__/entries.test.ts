@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { toCompletionValue, toParticipantEntries } from '../entries';
+import {
+  toCompletionValue,
+  toParticipantEntries,
+  toParticipantProgress
+} from '../entries';
 import type { TaskCompletionSchema } from '../completions';
 import type { TaskOf, TaskSchema, TaskType } from '../schemas';
 import { TASK_TYPES, VALID_TASKS } from '../testing/fixtures-task-schemas';
@@ -166,5 +170,64 @@ describe('toParticipantEntries', () => {
     expect(() =>
       toParticipantEntries([completion(VALID_TASKS.BONUS_TASK), broken])
     ).toThrow('Unexpected value: [object Object]');
+  });
+});
+
+describe('toParticipantProgress', () => {
+  const tasks = [
+    { ...VALID_TASKS.BONUS_TASK, id: 'task-1', value: 1 },
+    { ...VALID_TASKS.VISIT_URL, id: 'task-2', value: 2 },
+    { ...VALID_TASKS.ASK_QUESTION, id: 'task-3', value: 4 },
+    { ...VALID_TASKS.SINGLE_CHOICE, id: 'task-4', value: 8 }
+  ];
+  const withStatus = (
+    task: TaskSchema,
+    status: TaskCompletionSchema['status']
+  ): TaskCompletionSchema => ({ ...completion(task), status });
+
+  it('returns no progress without completions', () => {
+    expect(toParticipantProgress(tasks, undefined)).toEqual({
+      completed: 0,
+      total: 4,
+      percentage: 0,
+      entries: 0
+    });
+  });
+
+  it('returns zero percentage when there are no tasks', () => {
+    expect(toParticipantProgress([], [])).toEqual({
+      completed: 0,
+      total: 0,
+      percentage: 0,
+      entries: 0
+    });
+  });
+
+  it('leaves rejected completions out of the completed tasks and the entries', () => {
+    expect(
+      toParticipantProgress(tasks, [
+        withStatus(tasks[0], 'COMPLETED'),
+        withStatus(tasks[1], 'REJECTED'),
+        withStatus(tasks[2], 'PENDING')
+      ])
+    ).toEqual({ completed: 2, total: 4, percentage: 50, entries: 5 });
+  });
+
+  it('counts a task once when it has several completions', () => {
+    expect(
+      toParticipantProgress(tasks, [
+        withStatus(tasks[0], 'REJECTED'),
+        withStatus(tasks[0], 'COMPLETED'),
+        withStatus(tasks[0], 'COMPLETED')
+      ])
+    ).toEqual({ completed: 1, total: 4, percentage: 25, entries: 2 });
+  });
+
+  it('ignores completions of tasks that are not in the list', () => {
+    expect(
+      toParticipantProgress(tasks.slice(0, 2), [
+        withStatus(tasks[3], 'COMPLETED')
+      ])
+    ).toEqual({ completed: 0, total: 2, percentage: 0, entries: 8 });
   });
 });

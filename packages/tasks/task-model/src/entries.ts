@@ -1,6 +1,10 @@
 import { assertNever } from '@giveaway/util-errors';
 import { TaskCompletionSchema } from './completions';
-import { parseTwitterProofSchema, ParticipantTaskSchema } from './schemas';
+import {
+  parseTwitterProofSchema,
+  ParticipantTaskSchema,
+  TaskSchema
+} from './schemas';
 
 export type CompletionValueArgs = {
   task: ParticipantTaskSchema;
@@ -16,6 +20,35 @@ export const toParticipantEntries = (completions: TaskCompletionSchema[]) =>
           toCompletionValue({ task: completion.task, proof: completion.proof }),
     0
   );
+
+export type ParticipantProgress = {
+  completed: number;
+  total: number;
+  percentage: number;
+  entries: number;
+};
+
+export const toParticipantProgress = (
+  tasks: Pick<TaskSchema, 'id'>[],
+  completions: TaskCompletionSchema[] | undefined
+): ParticipantProgress => {
+  const total = tasks.length;
+  if (!completions) return { completed: 0, total, percentage: 0, entries: 0 };
+
+  const completed = tasks.filter((task) =>
+    completions.some(
+      (completion) =>
+        completion.task.id === task.id && completion.status !== 'REJECTED'
+    )
+  ).length;
+
+  return {
+    completed,
+    total,
+    percentage: total > 0 ? (completed / total) * 100 : 0,
+    entries: toParticipantEntries(completions)
+  };
+};
 
 export const toCompletionValue = (args: CompletionValueArgs) => {
   switch (args.task.type) {

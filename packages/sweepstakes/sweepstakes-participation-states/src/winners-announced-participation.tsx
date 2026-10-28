@@ -15,7 +15,7 @@ import {
   TabsTrigger
 } from '@giveaway/ui-primitives/tabs';
 import { TaskList } from '@giveaway/task-entry/task-list';
-import { toParticipantEntries } from '@giveaway/task-model/entries';
+import { toParticipantProgress } from '@giveaway/task-model/entries';
 import {
   Alert,
   AlertDescription,
@@ -124,32 +124,10 @@ const UserProgressSection: React.FC<{ className?: string }> = ({
 }) => {
   const { sweepstakes, participant } = useGiveawayParticipation();
 
-  const userProgress = useMemo(() => {
-    if (!participant)
-      return {
-        completed: 0,
-        total: sweepstakes.tasks.length,
-        percentage: 0,
-        entries: 0
-      };
-
-    const completed = sweepstakes.tasks.filter((task) =>
-      participant.completions.some(
-        (completion) =>
-          completion.task.id === task.id && completion.status !== 'REJECTED'
-      )
-    ).length;
-    const total = sweepstakes.tasks.length;
-    const percentage = total > 0 ? (completed / total) * 100 : 0;
-    const entries = toParticipantEntries(participant.completions);
-
-    return {
-      completed,
-      total,
-      percentage,
-      entries
-    };
-  }, [participant, sweepstakes.tasks]);
+  const userProgress = useMemo(
+    () => toParticipantProgress(sweepstakes.tasks, participant?.completions),
+    [participant, sweepstakes.tasks]
+  );
 
   const hasTasks = sweepstakes.tasks && sweepstakes.tasks.length > 0;
 
