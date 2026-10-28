@@ -29,7 +29,7 @@ How people sign in and out, which pages they can open, and how a sign-in finds t
 - `ROUTE-003` A visitor who opens the logout page is sent home.
 - `ROUTE-004` A participant who opens a host page is sent to browse.
 - `ROUTE-005` A signed-in user who opens the login page is sent away from it.
-- `ROUTE-006` A user who has not finished onboarding is sent to onboarding from every page except the home and pricing pages.
+- `ROUTE-006` A user who has not finished onboarding is sent to onboarding from every page except the home and pricing pages, the free X picker and its shared draws.
 - `ROUTE-007` A signed-in user lands where their account belongs: a host on the team picker, a participant on browse, and a user who has not finished onboarding on onboarding.
 - `ROUTE-008` A visitor who opens the onboarding page is sent to the login page.
 

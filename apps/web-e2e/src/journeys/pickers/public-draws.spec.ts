@@ -160,7 +160,7 @@ test.describe('the free X picker for a user who has not finished onboarding', ()
   test.use({ storageState: personaState('newbie') });
 
   test(
-    'opens the free picker and a shared draw',
+    '[ROUTE-006] opens the free picker and a shared draw',
     knownBug(584),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
