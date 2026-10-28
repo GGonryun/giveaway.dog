@@ -1,7 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { BYPASS_STATE, E2E_SECRET } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import {
   requestMagicLink,
   skipWithoutEmailFake
@@ -88,34 +87,34 @@ test.describe('email change', () => {
     expect((await readSession(page)).email).toBe(email);
   });
 
-  test(
-    '[ACCOUNT-015] a verification link opened while signed out verifies the address after the user signs in',
-    knownBug(567),
-    async ({ browser, page, freshPersona }) => {
-      const { email, ns } = await freshPersona('participant');
-      const next = toPersonaEmail('participant2', ns);
-      await page.goto('/account');
-      await changeEmail(page, next);
-      await expect(page.getByText('Check Your Email')).toBeVisible();
-      const link = await verificationLink(page, next);
+  test('[ACCOUNT-015] a verification link opened while signed out verifies the address after the user signs in', async ({
+    browser,
+    page,
+    freshPersona
+  }) => {
+    const { email, ns } = await freshPersona('participant');
+    const next = toPersonaEmail('participant2', ns);
+    await page.goto('/account');
+    await changeEmail(page, next);
+    await expect(page.getByText('Check Your Email')).toBeVisible();
+    const link = await verificationLink(page, next);
 
-      const visitor = await browser.newContext({ storageState: BYPASS_STATE });
-      await blockThirdParties(visitor);
-      const signedOut = await visitor.newPage();
-      await signedOut.goto(link);
-      await expect(signedOut).toHaveURL(/\/login/, { timeout: VERIFY_TIMEOUT });
-      await signedOut.goto(
-        await requestMagicLink(signedOut, signedOut.request, email)
-      );
+    const visitor = await browser.newContext({ storageState: BYPASS_STATE });
+    await blockThirdParties(visitor);
+    const signedOut = await visitor.newPage();
+    await signedOut.goto(link);
+    await expect(signedOut).toHaveURL(/\/login/, { timeout: VERIFY_TIMEOUT });
+    await signedOut.goto(
+      await requestMagicLink(signedOut, signedOut.request, email)
+    );
 
-      await expect(signedOut.getByText('Email Verified!')).toBeVisible({
-        timeout: VERIFY_TIMEOUT
-      });
-      await page.goto('/account');
-      await expect(emailCard(page)).toContainText(`Connected • ${next}`);
-      await visitor.close();
-    }
-  );
+    await expect(signedOut.getByText('Email Verified!')).toBeVisible({
+      timeout: VERIFY_TIMEOUT
+    });
+    await page.goto('/account');
+    await expect(emailCard(page)).toContainText(`Connected • ${next}`);
+    await visitor.close();
+  });
 });
 
 test.describe('email verification errors', () => {
