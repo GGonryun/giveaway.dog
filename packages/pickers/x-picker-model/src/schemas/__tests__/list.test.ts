@@ -104,8 +104,18 @@ describe('toPickersV2Filter', () => {
     expect(toPickersV2Filter({ status: '' })).toEqual({ status: 'ALL' });
   });
 
-  it('passes an unknown status through without validation', () => {
-    expect(toPickersV2Filter({ status: 'bogus' })).toEqual({ status: 'bogus' });
+  it('defaults to ALL when the status is unknown', () => {
+    expect(toPickersV2Filter({ status: 'BOGUS' })).toEqual({ status: 'ALL' });
+  });
+
+  it('defaults to ALL when the status is not a string', () => {
+    expect(toPickersV2Filter({ status: ['DRAFT', 'FAILED'] })).toEqual({
+      status: 'ALL'
+    });
+  });
+
+  it('keeps the ALL status', () => {
+    expect(toPickersV2Filter({ status: 'ALL' })).toEqual({ status: 'ALL' });
   });
 
   it('ignores unrelated search params', () => {
