@@ -81,6 +81,16 @@ const buildReferral = ({
   }))
 });
 
+const profileTask = storedTask('task-profile', {
+  ...BASE_TASK,
+  type: 'BONUS_COMPLETE_PROFILE'
+});
+
+const bonusTask = storedTask('task-bonus', {
+  ...BASE_TASK,
+  type: 'BONUS_TASK'
+});
+
 const validate = (completions = [] as ReturnType<typeof taskCompletion>[]) =>
   validateReferral(db, {
     taskId: 'task-submitted',
@@ -96,6 +106,7 @@ describe('validateReferral', () => {
     runtime.cookies.mockResolvedValue(cookieStore('REF123'));
     prismaMock.referral.findUnique.mockResolvedValue(buildReferral());
     prismaMock.referredUser.findUnique.mockResolvedValue(null);
+    prismaMock.task.findMany.mockResolvedValue([profileTask, bonusTask]);
     vi.spyOn(console, 'info').mockImplementation(() => undefined);
   });
 
@@ -122,6 +133,23 @@ describe('validateReferral', () => {
   describe('when the referral cannot be applied', () => {
     it('clears the cookie without a lookup when the user already completed a task', async () => {
       await validate([taskCompletion('task-other')]);
+
+      expect(prismaMock.referral.findUnique).not.toHaveBeenCalled();
+      expect(runtime.deleteCookie).toHaveBeenCalledWith('referral_code');
+    });
+
+    it('clears the cookie without a lookup when the user completed a task of the giveaway', async () => {
+      await validate([taskCompletion('task-bonus')]);
+
+      expect(prismaMock.referral.findUnique).not.toHaveBeenCalled();
+      expect(runtime.deleteCookie).toHaveBeenCalledWith('referral_code');
+    });
+
+    it('clears the cookie without a lookup when the user completed a task besides the profile bonus', async () => {
+      await validate([
+        taskCompletion('task-profile'),
+        taskCompletion('task-bonus')
+      ]);
 
       expect(prismaMock.referral.findUnique).not.toHaveBeenCalled();
       expect(runtime.deleteCookie).toHaveBeenCalledWith('referral_code');
@@ -204,6 +232,30 @@ describe('validateReferral', () => {
       expect(prismaMock.referredUser.create).toHaveBeenCalledWith({
         data: { referralId: 'referral-1', userId: IDS.userId }
       });
+    });
+
+    it('does not read the tasks when the user has no completions', async () => {
+      await validate();
+
+      expect(prismaMock.task.findMany).not.toHaveBeenCalled();
+      expect(prismaMock.referredUser.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('reads the tasks of the giveaway to find the automatic profile bonus', async () => {
+      await validate([taskCompletion('task-profile')]);
+
+      expect(prismaMock.task.findMany).toHaveBeenCalledWith({
+        where: { sweepstakesId: IDS.sweepstakesId }
+      });
+    });
+
+    it('credits the referrer when the only completion is the automatic profile bonus', async () => {
+      await validate([taskCompletion('task-profile')]);
+
+      expect(prismaMock.referredUser.create).toHaveBeenCalledWith({
+        data: { referralId: 'referral-1', userId: IDS.userId }
+      });
+      expect(prismaMock.taskCompletion.create).toHaveBeenCalledTimes(1);
     });
 
     it('credits the referrer with a completed referral task', async () => {
@@ -332,6 +384,23 @@ describe('validateReferral', () => {
           sweepstakesId: IDS.sweepstakesId,
           referralCode: 'REF123',
           completionsCount: 2
+        }
+      );
+    });
+
+    it('leaves the automatic profile bonus out of the completion count', async () => {
+      await validate([
+        taskCompletion('task-profile'),
+        taskCompletion('task-bonus')
+      ]);
+
+      expect(console.info).toHaveBeenCalledWith(
+        '[Referral] User already has completions, skipping referral',
+        {
+          userId: IDS.userId,
+          sweepstakesId: IDS.sweepstakesId,
+          referralCode: 'REF123',
+          completionsCount: 1
         }
       );
     });

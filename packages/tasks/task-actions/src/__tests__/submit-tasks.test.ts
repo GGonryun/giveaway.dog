@@ -613,6 +613,39 @@ describe('submitTask', () => {
       expect(prismaMock.taskCompletion.create).toHaveBeenCalledTimes(1);
     });
 
+    it('credits the referrer when the only earlier completion is the automatic profile bonus', async () => {
+      m.referralCode = 'REF123';
+      givenTasks(
+        storedTask('task-profile', taskConfig('BONUS_COMPLETE_PROFILE')),
+        storedTask('task-1', taskConfig('BONUS_TASK'))
+      );
+      givenCompletions(completion('task-profile'));
+      prismaMock.referral.findUnique.mockResolvedValue({
+        id: 'referral-1',
+        participantId: 'referrer-participant',
+        taskId: 'ref-task',
+        task: {
+          id: 'ref-task',
+          sweepstakesId: 'sweep-1',
+          index: 1,
+          config: toJsonConfig({
+            ...taskConfig('REFERRAL_LINK'),
+            id: 'ref-task'
+          })
+        },
+        participant: { userId: 'referrer' },
+        referredUsers: []
+      });
+      prismaMock.referredUser.findUnique.mockResolvedValue(null);
+
+      const result = await submitTask(input());
+
+      expect(expectOk(result)).toBe(true);
+      expect(prismaMock.referredUser.create).toHaveBeenCalledWith({
+        data: { referralId: 'referral-1', userId: TEST_USER.id }
+      });
+    });
+
     it('skips the referral when the participant had completions before this task', async () => {
       m.referralCode = 'REF123';
       givenCompletions(completion('task-0'));
