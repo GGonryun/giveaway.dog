@@ -14,6 +14,33 @@ import {
   DEFAULT_SWEEPSTAKES_NAME
 } from '@giveaway/app-config/settings';
 import { Prisma } from '@giveaway/db-model';
+import { startOfDay } from 'date-fns/startOfDay';
+import { subDays } from 'date-fns/subDays';
+import { subYears } from 'date-fns/subYears';
+
+const DATE_RANGE_STARTS: Record<string, (now: Date) => Date> = {
+  today: startOfDay,
+  '7d': (now) => subDays(now, 7),
+  '30d': (now) => subDays(now, 30),
+  '90d': (now) => subDays(now, 90),
+  '1y': (now) => subYears(now, 1)
+};
+
+const toDateRangeQuery = (dateRange: string | undefined) => {
+  if (!dateRange || !Object.hasOwn(DATE_RANGE_STARTS, dateRange)) return {};
+  const toStart = DATE_RANGE_STARTS[dateRange];
+  const now = new Date();
+  return {
+    AND: [
+      {
+        timing: {
+          startDate: { lte: now },
+          endDate: { gte: toStart(now) }
+        }
+      }
+    ]
+  };
+};
 
 const getSweepstakesList = procedure()
   .authorization({ required: true })
@@ -78,7 +105,8 @@ const getSweepstakesList = procedure()
       ...searchQuery,
       status: statusQuery,
       timing: timingQuery,
-      team: teamQuery
+      team: teamQuery,
+      ...toDateRangeQuery(input.dateRange)
     } satisfies Prisma.SweepstakesWhereInput;
 
     const orderBy =
