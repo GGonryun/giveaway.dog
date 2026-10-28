@@ -1,7 +1,6 @@
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { BYPASS_STATE, E2E_SECRET } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import {
   requestMagicLink,
   skipWithoutEmailFake
@@ -27,20 +26,19 @@ test.describe('magic-link sign-in', () => {
     expect((await session.json()).user.email).toBe(email);
   });
 
-  test(
-    '[AUTH-004] shows that the email was sent',
-    knownBug(446),
-    async ({ page, request }, testInfo) => {
-      await skipWithoutEmailFake(request);
-      const email = `e2e-magic-${freshNamespace(testInfo.workerIndex)}@example.com`;
+  test('[AUTH-004] shows that the email was sent', async ({
+    page,
+    request
+  }, testInfo) => {
+    await skipWithoutEmailFake(request);
+    const email = `e2e-magic-${freshNamespace(testInfo.workerIndex)}@example.com`;
 
-      await page.goto('/login');
-      await requestMagicLink(page, request, email);
+    await page.goto('/login');
+    await requestMagicLink(page, request, email);
 
-      await expect(page).toHaveURL(/\/login\?verify/);
-      await expect(page.getByText('Check your email!')).toBeVisible();
-    }
-  );
+    await expect(page).toHaveURL(/\/login\?verify/);
+    await expect(page.getByText('Check your email!')).toBeVisible();
+  });
 
   test('[AUTH-003] refuses an empty email address', async ({ page }) => {
     await page.goto('/login');
