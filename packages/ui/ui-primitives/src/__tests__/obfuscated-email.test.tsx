@@ -60,19 +60,16 @@ describe('ObfuscatedEmail', () => {
   it.each([
     ['xs', 'text-xs'],
     ['sm', 'text-sm'],
-    ['md', 'text-md'],
+    ['md', 'text-base'],
     ['lg', 'text-lg']
   ] as const)('applies the %s text size', (size, className) => {
     render(<ObfuscatedEmail email="jane@example.com" size={size} />);
     expect(screen.getByText('j***e@example.com')).toHaveClass(className);
   });
 
-  it('shows an empty label when the email has no domain', () => {
+  it('renders nothing when the email has no domain', () => {
     const { container } = render(<ObfuscatedEmail email="not-an-email" />);
-    expect(container.querySelector('span')).toBeEmptyDOMElement();
-    expect(
-      screen.getByRole('button', { name: 'Reveal email' })
-    ).toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('merges a custom class name', () => {

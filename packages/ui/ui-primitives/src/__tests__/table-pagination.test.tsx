@@ -97,21 +97,20 @@ describe('TablePagination', () => {
     expect(onPageChange.mock.calls).toEqual([[1], [2], [4], [5]]);
   });
 
-  it('reports an inverted range when there are no items', () => {
+  it('reports an empty range when there are no items', () => {
     renderPagination({ totalItems: 0, currentPage: 1, totalPages: 0 });
-    expect(screen.getByText('1-0 of 0')).toBeInTheDocument();
+    expect(screen.getByText('0-0 of 0')).toBeInTheDocument();
   });
 
-  it('lets the user request page zero when there are no pages', async () => {
-    const { onPageChange } = renderPagination({
+  it('treats an empty list as one page and never requests page zero', () => {
+    renderPagination({
       totalItems: 0,
       currentPage: 1,
       totalPages: 0
     });
     const { next, last } = getButtons();
-    expect(next).toBeEnabled();
-    await userEvent.click(next);
-    await userEvent.click(last);
-    expect(onPageChange.mock.calls).toEqual([[0], [0]]);
+    expect(next).toBeDisabled();
+    expect(last).toBeDisabled();
+    expect(screen.getByText('of').nextElementSibling).toHaveTextContent('1');
   });
 });

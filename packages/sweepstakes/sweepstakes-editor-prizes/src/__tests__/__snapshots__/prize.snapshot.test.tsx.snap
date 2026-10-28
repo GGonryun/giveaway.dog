@@ -109,7 +109,6 @@ exports[`Prize > when collapsed > matches the snapshot 1`] = `
           </div>
           <p
             class="text-sm font-medium"
-            weight="medium"
           >
             Prize 
             2
@@ -332,7 +331,6 @@ exports[`Prize > when expanded > matches the snapshot 1`] = `
           </div>
           <p
             class="text-sm font-medium"
-            weight="medium"
           >
             Prize 
             2

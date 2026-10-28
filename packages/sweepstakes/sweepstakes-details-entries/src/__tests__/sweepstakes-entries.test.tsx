@@ -145,10 +145,11 @@ describe('SweepstakesEntries', () => {
       expect(screen.getByText(/26-30 of 30/)).toBeInTheDocument();
     });
 
-    it('describes an empty list as page 1 of 0', () => {
+    it('describes an empty list as 0 of 0 on page 1 of 1', () => {
       renderEntries([]);
       expect(bodyRows()).toHaveLength(0);
-      expect(screen.getByText(/1-0 of 0/)).toBeInTheDocument();
+      expect(screen.getByText(/0-0 of 0/)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Next page' })).toBeDisabled();
     });
   });
 

@@ -232,11 +232,9 @@ describe('ChartTooltipContent', () => {
     expect(screen.queryByText('Entries')).not.toBeInTheDocument();
   });
 
-  it('renders a zero value as bare text without the value styling', () => {
+  it('renders a zero value with the value styling', () => {
     renderTooltip({ payload: [{ ...entriesItem, value: 0 }] });
-    const zero = screen.getByText('0');
-    expect(zero).not.toHaveClass('font-mono');
-    expect(zero).toHaveClass('justify-between');
+    expect(screen.getByText('0')).toHaveClass('font-mono');
   });
 
   it('throws when rendered outside a ChartContainer', () => {

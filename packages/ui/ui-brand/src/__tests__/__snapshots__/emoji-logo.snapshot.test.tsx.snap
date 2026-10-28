@@ -3,7 +3,7 @@
 exports[`EmojiLogo > matches the snapshot 1`] = `
 <span
   aria-label="dog face"
-  class="text-3xl"
+  class="text-3xl leading-none"
   role="img"
 >
   🐶

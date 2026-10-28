@@ -42,8 +42,24 @@ describe('Progress', () => {
     expect(getIndicator()).not.toHaveClass('bg-primary');
   });
 
-  it('does not expose the value to assistive technology', () => {
+  it('exposes the value to assistive technology', () => {
     render(<Progress value={40} />);
+    const progressbar = screen.getByRole('progressbar');
+    expect(progressbar).toHaveAttribute('aria-valuenow', '40');
+    expect(progressbar).toHaveAttribute('aria-valuetext', '40%');
+    expect(progressbar).toHaveAttribute('data-state', 'loading');
+  });
+
+  it('reports a full bar as complete', () => {
+    render(<Progress value={100} />);
+    expect(screen.getByRole('progressbar')).toHaveAttribute(
+      'data-state',
+      'complete'
+    );
+  });
+
+  it('reports an indeterminate bar without a value', () => {
+    render(<Progress value={40} indeterminate />);
     const progressbar = screen.getByRole('progressbar');
     expect(progressbar).not.toHaveAttribute('aria-valuenow');
     expect(progressbar).toHaveAttribute('data-state', 'indeterminate');

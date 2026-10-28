@@ -30,7 +30,6 @@ exports[`TermsAndConditions > with custom terms > matches the snapshot 1`] = `
           >
             <p
               class="text-sm font-semibold"
-              weight="semibold"
             >
               Default
             </p>
@@ -67,7 +66,6 @@ exports[`TermsAndConditions > with custom terms > matches the snapshot 1`] = `
           >
             <p
               class="text-sm font-semibold"
-              weight="semibold"
             >
               Custom
             </p>
@@ -134,7 +132,6 @@ exports[`TermsAndConditions > with template terms > matches the snapshot 1`] = `
           >
             <p
               class="text-sm font-semibold"
-              weight="semibold"
             >
               Default
             </p>
@@ -170,7 +167,6 @@ exports[`TermsAndConditions > with template terms > matches the snapshot 1`] = `
           >
             <p
               class="text-sm font-semibold"
-              weight="semibold"
             >
               Custom
             </p>

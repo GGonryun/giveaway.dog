@@ -15,9 +15,9 @@ describe('EmojiLogo', () => {
     expect(screen.getByRole('img')).toHaveClass('text-7xl');
   });
 
-  it('loses the leading-none class to the font size that follows it', () => {
-    render(<EmojiLogo />);
-    expect(screen.getByRole('img')).not.toHaveClass('leading-none');
+  it('keeps the leading-none class whatever font size it gets', () => {
+    render(<EmojiLogo className="text-3xl" />);
+    expect(screen.getByRole('img')).toHaveClass('leading-none');
   });
 
   it('lets a custom size replace the default one', () => {

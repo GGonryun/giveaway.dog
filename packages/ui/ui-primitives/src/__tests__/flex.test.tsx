@@ -41,15 +41,15 @@ describe('Flex', () => {
     expect(screen.getByTestId('flex')).toHaveClass('flex', 'flex-wrap');
   });
 
-  it('does not apply the items variant and forwards it as an attribute', () => {
+  it('applies the items variant without forwarding it as an attribute', () => {
     render(
       <Flex data-testid="flex" items="center">
         Content
       </Flex>
     );
     const flex = screen.getByTestId('flex');
-    expect(flex).not.toHaveClass('items-center');
-    expect(flex).toHaveAttribute('items', 'center');
+    expect(flex).toHaveClass('items-center');
+    expect(flex).not.toHaveAttribute('items');
   });
 });
 

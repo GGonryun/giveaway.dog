@@ -2,7 +2,7 @@
 
 exports[`DemoBanner > in demo mode > matches the snapshot 1`] = `
 <div
-  class="relative w-full border px-4 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current text-muted-foreground border-primary bg-primary/10 rounded-none border-x-0 py-2"
+  class="relative w-full border px-4 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current text-muted-foreground border-primary bg-primary/10 rounded-none border-x-0 py-2"
   data-slot="alert"
   role="alert"
 >
@@ -56,7 +56,7 @@ exports[`DemoBanner > in demo mode > matches the snapshot 1`] = `
 
 exports[`DemoBanner > with a custom banner > matches the snapshot 1`] = `
 <div
-  class="relative w-full border px-4 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current text-muted-foreground border-primary bg-primary/10 rounded-none border-x-0 py-2"
+  class="relative w-full border px-4 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current text-muted-foreground border-primary bg-primary/10 rounded-none border-x-0 py-2"
   data-slot="alert"
   role="alert"
 >

@@ -280,7 +280,6 @@ exports[`Setup > matches the snapshot 1`] = `
               >
                 <p
                   class="text-sm font-semibold"
-                  weight="semibold"
                 >
                   Default
                 </p>
@@ -316,7 +315,6 @@ exports[`Setup > matches the snapshot 1`] = `
               >
                 <p
                   class="text-sm font-semibold"
-                  weight="semibold"
                 >
                   Custom
                 </p>
