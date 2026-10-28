@@ -23,11 +23,13 @@
     "./regional-restriction-filter": "./src/regional-restriction-filter.tsx",
     "./regional-restriction-regions": "./src/regional-restriction-regions.tsx",
     "./require-pre-entry-login": "./src/require-pre-entry-login.tsx",
+    "./slug-availability": "./src/slug-availability.ts",
     "./sweepstakes-visibility": "./src/sweepstakes-visibility.tsx"
   },
   "scripts": {
     "test": "vitest run",
-    "test:unit": "vitest run --project frontend",
+    "test:unit": "vitest run --project server --project frontend",
+    "test:server": "vitest run --project server",
     "test:frontend": "vitest run --project frontend",
     "test:snapshot": "vitest run --project snapshot"
   },
