@@ -388,6 +388,7 @@ describe('findOrCreateSweepstakesParticipant', () => {
     it('prefills form values from the user profile and skips empty ones', async () => {
       prismaMock.user.findFirst.mockResolvedValue(
         buildUserRow({
+          username: 'jane_doe',
           birthday: new Date('1990-01-01T00:00:00.000Z'),
           accounts: [
             {
@@ -416,7 +417,7 @@ describe('findOrCreateSweepstakesParticipant', () => {
       ).toEqual({
         createMany: {
           data: [
-            { fieldId: 'f-name', value: 'Jane Doe' },
+            { fieldId: 'f-name', value: 'jane_doe' },
             { fieldId: 'f-email', value: 'jane@example.com' },
             { fieldId: 'f-age', value: 'true' },
             { fieldId: 'f-twitter', value: 'https://x.com/jane' }

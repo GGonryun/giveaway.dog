@@ -288,6 +288,7 @@ describe('checkBonusCompleteProfile', () => {
 
   const user = (overrides: {
     name?: string | null;
+    username?: string | null;
     email?: string | null;
   }) => ({
     id: IDS.userId,
@@ -442,7 +443,9 @@ describe('checkBonusCompleteProfile', () => {
       prismaMock.sweepstakes.findFirst.mockResolvedValue(
         sweepstakesWith([formField('field-name', 'USERNAME', false)])
       );
-      prismaMock.user.findUnique.mockResolvedValue(user({ name: 'Alice' }));
+      prismaMock.user.findUnique.mockResolvedValue(
+        user({ name: 'Alice', username: 'alice' })
+      );
       prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(null);
 
       const error = await applicationError(
@@ -456,7 +459,9 @@ describe('checkBonusCompleteProfile', () => {
       prismaMock.sweepstakes.findFirst.mockResolvedValue(
         sweepstakesWith([formField('field-name', 'USERNAME', false)])
       );
-      prismaMock.user.findUnique.mockResolvedValue(user({ name: 'Alice' }));
+      prismaMock.user.findUnique.mockResolvedValue(
+        user({ name: 'Alice', username: 'alice' })
+      );
       prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(
         participantWith({})
       );
@@ -477,7 +482,11 @@ describe('checkBonusCompleteProfile', () => {
         ])
       );
       prismaMock.user.findUnique.mockResolvedValue(
-        user({ name: 'Alice', email: 'alice@example.com' })
+        user({
+          name: 'Alice',
+          username: 'alice',
+          email: 'alice@example.com'
+        })
       );
       prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(
         participantWith({ 'field-age': 'true' })

@@ -101,6 +101,7 @@ const BONUS_CONFIG = {
 const user = (overrides: Partial<UserSchema> = {}): UserSchema => ({
   id: 'user-1',
   name: 'Jane',
+  username: 'jane',
   email: 'jane@example.com',
   emailVerified: true,
   image: null,
@@ -496,15 +497,15 @@ describe('toParticipantForm', () => {
   });
 
   describe('username fields', () => {
-    it('uses the user name', () => {
+    it('uses the username of the user, not the display name', () => {
       expect(
         toParticipantForm([usernameField()], user(), { username: 'other' })[0]
-      ).toMatchObject({ value: 'Jane', isCustom: false });
+      ).toMatchObject({ value: 'jane', isCustom: false });
     });
 
-    it('uses the submitted value when the user has no name', () => {
+    it('uses the submitted value when the user has no username', () => {
       expect(
-        toParticipantForm([usernameField()], user({ name: null }), {
+        toParticipantForm([usernameField()], user({ username: null }), {
           username: 'other'
         })[0]
       ).toMatchObject({ value: 'other', isCustom: true });
@@ -654,9 +655,13 @@ describe('isProfileComplete', () => {
 
   it('returns false when a required field after a filled one is missing', () => {
     expect(
-      isProfileComplete([emailField(), usernameField()], user({ name: null }), {
-        other: 1
-      })
+      isProfileComplete(
+        [emailField(), usernameField()],
+        user({ username: null }),
+        {
+          other: 1
+        }
+      )
     ).toBe(false);
   });
 
@@ -668,7 +673,9 @@ describe('isProfileComplete', () => {
 
   it('returns false when a required username is missing', () => {
     expect(
-      isProfileComplete([usernameField()], user({ name: null }), { other: 1 })
+      isProfileComplete([usernameField()], user({ username: null }), {
+        other: 1
+      })
     ).toBe(false);
   });
 
@@ -676,7 +683,7 @@ describe('isProfileComplete', () => {
     expect(
       isProfileComplete(
         [usernameField({ required: false })],
-        user({ name: null }),
+        user({ username: null }),
         { other: 1 }
       )
     ).toBe(true);
@@ -740,7 +747,7 @@ describe('isFormFilled', () => {
     expect(
       isFormFilled(
         [emailField(), usernameField({ required: false })],
-        user({ name: null }),
+        user({ username: null }),
         { other: 1 }
       )
     ).toBe(false);
@@ -763,7 +770,7 @@ describe('toInitialFormValues', () => {
         user({ birthday: new Date('2000-01-01T00:00:00.000Z') })
       )
     ).toEqual([
-      { fieldId: 'username', value: 'Jane' },
+      { fieldId: 'username', value: 'jane' },
       { fieldId: 'email', value: 'jane@example.com' },
       { fieldId: 'age', value: 'true' }
     ]);

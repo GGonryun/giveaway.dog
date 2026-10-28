@@ -125,13 +125,14 @@ describe('UserDetailsForm', () => {
         participant: buildParticipant({
           user: buildUser({
             name: 'Jane Doe',
+            username: 'janedoe',
             email: 'jane@example.com',
             birthday: new Date(1990, 0, 1),
             providers: [buildProvider({ link: 'https://x.com/janedoe' })]
           })
         })
       });
-      expect(usernameInput()).toHaveValue('Jane Doe');
+      expect(usernameInput()).toHaveValue('janedoe');
       expect(usernameInput().parentElement).toHaveClass('hidden');
       expect(emailInput()).toHaveValue('jane@example.com');
       expect(emailInput().parentElement).toHaveClass('hidden');
@@ -273,6 +274,7 @@ describe('UserDetailsForm', () => {
         onFormSubmit,
         participant: buildParticipant({
           user: buildUser({
+            username: 'janedoe',
             birthday: new Date(1990, 0, 1),
             providers: [buildProvider({ link: 'https://x.com/janedoe' })]
           })
@@ -283,7 +285,7 @@ describe('UserDetailsForm', () => {
 
       await waitFor(() =>
         expect(onFormSubmit).toHaveBeenCalledWith({
-          'field-username': 'Jane Doe',
+          'field-username': 'janedoe',
           'field-email': 'jane@example.com',
           'field-age': true,
           'field-twitter': 'https://x.com/janedoe'
