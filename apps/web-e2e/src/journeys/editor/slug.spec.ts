@@ -12,9 +12,12 @@ import {
   publishDialog,
   publishNow
 } from '../../helpers/editor';
+import { knownBug } from '../../helpers/known-bug';
 import { readSweepstakes } from '../../helpers/manage';
 import { freshSlug, seedApi, seedWorkerTeam } from '../../helpers/seed';
 import { TAGS } from '../../helpers/tags';
+
+const SLUG_PATTERN = /^[a-zA-Z0-9-]+$/;
 
 const typeSlug = async (page: Page, slug: string) => {
   await openStep(page, 'Audience');
@@ -78,6 +81,34 @@ test.describe('the custom slug of a giveaway in the editor', () => {
       expect(await readSweepstakes(request, id)).toMatchObject({
         status: 'DRAFT'
       });
+    }
+  );
+
+  test(
+    "a host cannot take another giveaway's id as a custom slug",
+    knownBug(639),
+    async ({ page, request }, testInfo) => {
+      const { team } = await seedWorkerTeam(request, testInfo);
+      let other = '';
+      for (
+        let attempt = 0;
+        attempt < 5 && !SLUG_PATTERN.test(other);
+        attempt++
+      ) {
+        ({ id: other } = await seedApi(request).sweepstakes({
+          ns: RUN_ID,
+          team: team.slug
+        }));
+      }
+      expect(other).toMatch(SLUG_PATTERN);
+
+      await createDraft(page, team.slug);
+      await typeSlug(page, other);
+      await expect(
+        page.getByText(
+          `The slug "${other}" is already taken. Please choose another one.`
+        )
+      ).toBeVisible();
     }
   );
 });
