@@ -18,7 +18,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { formatDistance } from 'date-fns/formatDistance';
-import { TwitterV2PickerSchema } from '@giveaway/x-picker-model/schemas/details';
+import { TwitterV2PublicPickerSchema } from '@giveaway/x-picker-model/schemas/details';
 import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 import { TwitterV2ParticipantsSection } from '@giveaway/x-picker-results/twitter-v2-participants-section';
@@ -36,7 +36,7 @@ import {
 } from '@giveaway/ui-primitives/dialog';
 
 interface TwitterV2PublicViewProps {
-  picker: TwitterV2PickerSchema;
+  picker: TwitterV2PublicPickerSchema;
 }
 
 export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
@@ -55,8 +55,6 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
     picker.status === 'CREATED';
 
   const winners = picker.draws.filter((d) => !d.disqualified);
-  const eligibleUsers = picker.users.filter((u) => !u.ineligible);
-  const isPublicGiveaway = !picker.teamId;
 
   const hasRequirements =
     picker.minPostCount !== null ||
@@ -86,10 +84,10 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
         />
       </div>
 
-      {isScheduledOrProcessing && picker.runId && (
+      {isScheduledOrProcessing && picker.hasRun && (
         <TwitterScrapeProgressMonitor
           pickerId={picker.id}
-          runId={picker.runId}
+          runId={null}
           status={picker.status}
         />
       )}
@@ -294,7 +292,7 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
 
       <TwitterV2ParticipantsSection
         participants={picker.users}
-        isUnverified={isPublicGiveaway}
+        isUnverified={picker.isFree}
         totalCount={picker.stats.totalParticipants}
       />
 

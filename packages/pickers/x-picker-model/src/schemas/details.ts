@@ -89,6 +89,19 @@ export const twitterV2PickerSchema = z.object({
 
 export type TwitterV2PickerSchema = z.infer<typeof twitterV2PickerSchema>;
 
+export const TWITTER_V2_FREE_PARTICIPANTS_PAGE_SIZE = 10;
+
+export const twitterV2PublicPickerSchema = twitterV2PickerSchema
+  .omit({ runId: true, teamId: true })
+  .extend({
+    isFree: z.boolean(),
+    hasRun: z.boolean()
+  });
+
+export type TwitterV2PublicPickerSchema = z.infer<
+  typeof twitterV2PublicPickerSchema
+>;
+
 export const calculateTwitterV2PickerStats = (picker: {
   teamId?: string | null;
   users: TwitterV2PickerUserSchema[];

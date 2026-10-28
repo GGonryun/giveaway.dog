@@ -34,10 +34,13 @@ import {
 import pluralize from 'pluralize';
 import { useState } from 'react';
 import { TwitterV2ParticipantsTable } from './twitter-v2-participants-table';
-import { TwitterV2PickerUserSchema } from '@giveaway/x-picker-model/schemas/details';
+import {
+  TWITTER_V2_FREE_PARTICIPANTS_PAGE_SIZE,
+  TwitterV2PickerUserSchema
+} from '@giveaway/x-picker-model/schemas/details';
 import Link from 'next/link';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = TWITTER_V2_FREE_PARTICIPANTS_PAGE_SIZE;
 
 export const TwitterV2ParticipantsSection = ({
   participants,
