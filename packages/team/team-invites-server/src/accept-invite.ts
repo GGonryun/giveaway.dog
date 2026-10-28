@@ -71,7 +71,8 @@ const acceptInvite = procedure()
 
     const userTeamCount = await db.membership.count({
       where: {
-        userId: user.id
+        userId: user.id,
+        role: { not: TeamRole.BLOCKED }
       }
     });
 

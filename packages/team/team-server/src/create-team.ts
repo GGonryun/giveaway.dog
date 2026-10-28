@@ -3,6 +3,7 @@
 import { createTeamInputSchema } from '@giveaway/team-model/teams';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
+import { TeamRole } from '@giveaway/db-model';
 import z from 'zod';
 
 import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
@@ -19,7 +20,8 @@ const createTeam = procedure()
   .handler(async ({ db, user, input }) => {
     const userTeamCount = await db.membership.count({
       where: {
-        userId: user.id
+        userId: user.id,
+        role: { not: TeamRole.BLOCKED }
       }
     });
 

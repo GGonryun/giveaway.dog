@@ -378,13 +378,13 @@ describe('acceptInvite', () => {
       prismaMock.membership.findFirst.mockResolvedValue(null);
     });
 
-    it('counts the memberships of the caller', async () => {
+    it('counts the memberships of the caller that are not blocked', async () => {
       prismaMock.membership.count.mockResolvedValue(0);
 
       await acceptInvite({ code: 'link-1' });
 
       expect(prismaMock.membership.count).toHaveBeenCalledWith({
-        where: { userId: TEST_USER.id }
+        where: { userId: TEST_USER.id, role: { not: TeamRole.BLOCKED } }
       });
     });
 
