@@ -20,7 +20,6 @@ import {
   publishNow
 } from '../../helpers/editor';
 import { seedSweepstakes } from '../../helpers/jobs';
-import { knownBug } from '../../helpers/known-bug';
 import { expectAfterReloads } from '../../helpers/poll';
 import { freshSlug, seedApi } from '../../helpers/seed';
 import { TAGS } from '../../helpers/tags';
@@ -40,37 +39,37 @@ test.describe('the browse lists after a change', { tag: TAGS.slow }, () => {
   test.use({ storageState: personaState('host') });
   test.beforeEach(({ request }) => requirePublicSeeds(request));
 
-  test(
-    'a public giveaway that a host publishes shows up in /browse with its host',
-    knownBug(559),
-    async ({ browser, page, request }, testInfo) => {
-      const { team } = await freshTeam(request, testInfo);
-      const token = freshSlug(testInfo);
-      const name = `${token} published`;
-      const visitor = await openAsVisitor(browser, `/browse?search=${token}`);
-      try {
-        await expect(noGiveaways(visitor.page)).toBeVisible();
-        expect(await hostOptions(visitor.page)).not.toContain(team.name);
+  test('a public giveaway that a host publishes shows up in /browse with its host', async ({
+    browser,
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await freshTeam(request, testInfo);
+    const token = freshSlug(testInfo);
+    const name = `${token} published`;
+    const visitor = await openAsVisitor(browser, `/browse?search=${token}`);
+    try {
+      await expect(noGiveaways(visitor.page)).toBeVisible();
+      expect(await hostOptions(visitor.page)).not.toContain(team.name);
 
-        await createDraft(page, team.slug);
-        await fillComplete(page, { name });
-        await openStep(page, 'Audience');
-        await page.getByRole('combobox', { name: 'Visibility Type' }).click();
-        await page.getByRole('option', { name: 'Public', exact: true }).click();
-        await publishNow(page, team.slug, /go live immediately/);
+      await createDraft(page, team.slug);
+      await fillComplete(page, { name });
+      await openStep(page, 'Audience');
+      await page.getByRole('combobox', { name: 'Visibility Type' }).click();
+      await page.getByRole('option', { name: 'Public', exact: true }).click();
+      await publishNow(page, team.slug, /go live immediately/);
 
-        await visitor.page.reload();
-        await expectAfterReloads(visitor.page, () =>
-          expect(giveawayCard(visitor.page, name)).toBeVisible({
-            timeout: 2_000
-          })
-        );
-        expect(await hostOptions(visitor.page)).toContain(team.name);
-      } finally {
-        await visitor.context.close();
-      }
+      await visitor.page.reload();
+      await expectAfterReloads(visitor.page, () =>
+        expect(giveawayCard(visitor.page, name)).toBeVisible({
+          timeout: 2_000
+        })
+      );
+      expect(await hostOptions(visitor.page)).toContain(team.name);
+    } finally {
+      await visitor.context.close();
     }
-  );
+  });
 
   test('a visitor filters /browse by host, then clears the filters', async ({
     page,

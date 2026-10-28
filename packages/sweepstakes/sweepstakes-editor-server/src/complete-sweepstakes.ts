@@ -1,6 +1,7 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
+import { BROWSE_LIST_TAGS } from './browse-tags';
 import { ApplicationError } from '@giveaway/util-errors';
 import {
   assertMembershipPermission,
@@ -25,7 +26,8 @@ const completeSweepstakes = procedure()
   .output(z.object({ success: z.boolean() }))
   .invalidate(async ({ input }) => [
     `sweepstakes-${input.sweepstakesId}`,
-    'winners-leaderboard'
+    'winners-leaderboard',
+    ...BROWSE_LIST_TAGS
   ])
   .handler(async ({ db, user, input }) => {
     const sweepstakes = await db.sweepstakes.findUnique({

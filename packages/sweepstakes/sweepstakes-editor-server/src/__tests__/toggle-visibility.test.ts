@@ -197,7 +197,10 @@ describe('toggleVisibility', () => {
 
       expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
         [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
-        [`sweepstakes-${SWEEPSTAKES_ID}-privacy`, 'max']
+        [`sweepstakes-${SWEEPSTAKES_ID}-privacy`, 'max'],
+        ['public-sweepstakes-list', 'max'],
+        ['historical-sweepstakes-list', 'max'],
+        ['browse-hosts', 'max']
       ]);
     });
 
