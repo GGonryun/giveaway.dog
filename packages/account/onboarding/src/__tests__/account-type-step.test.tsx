@@ -38,6 +38,23 @@ describe('AccountTypeStep', () => {
       );
       expect(cardFor('Host Giveaways')).not.toHaveClass('bg-primary/5');
     });
+
+    it('highlights the account type chosen before', () => {
+      render(
+        <AccountTypeStep
+          initialAccountType={UserAccountType.HOST}
+          onNext={vi.fn()}
+        />
+      );
+
+      expect(cardFor('Host Giveaways')).toHaveClass(
+        'border-primary',
+        'bg-primary/5'
+      );
+      expect(cardFor('Participate in Giveaways')).not.toHaveClass(
+        'bg-primary/5'
+      );
+    });
   });
 
   describe('when continuing', () => {
