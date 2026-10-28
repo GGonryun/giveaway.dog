@@ -48,7 +48,7 @@ test.describe('site icons and images', { tag: '@prod-safe' }, () => {
     }
   });
 
-  test('the manifest names the app', knownBug(361), async ({ request }) => {
+  test('the manifest names the app', async ({ request }) => {
     const manifest: Manifest = await (
       await request.get('/site.webmanifest', noRedirect)
     ).json();
@@ -57,7 +57,7 @@ test.describe('site icons and images', { tag: '@prod-safe' }, () => {
     expect(manifest.short_name).toMatch(/\S/);
   });
 
-  test('the pages link the manifest', knownBug(361), async ({ request }) => {
+  test('the pages link the manifest', async ({ request }) => {
     const html = await (await request.get('/', noRedirect)).text();
 
     const link = html.match(/<link[^>]*rel="manifest"[^>]*>/)?.[0];

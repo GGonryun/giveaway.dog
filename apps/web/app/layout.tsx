@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: 'GiveawayDog',
   description: 'Build better giveaways and contests',
+  manifest: '/site.webmanifest',
   openGraph: {
     title: 'GiveawayDog',
     description: 'Build better giveaways and contests',
