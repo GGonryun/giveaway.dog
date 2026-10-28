@@ -18,6 +18,7 @@ describe('verifySlug', () => {
       'Invalid session'
     );
     expect(prismaMock.sweepstakesVisibility.findFirst).not.toHaveBeenCalled();
+    expect(prismaMock.sweepstakes.findUnique).not.toHaveBeenCalled();
   });
 
   it('rejects an empty slug', async () => {
@@ -54,6 +55,69 @@ describe('verifySlug', () => {
       where: { slug: 'summer' },
       select: { sweepstakesId: true }
     });
+  });
+
+  it('looks up a sweepstakes whose id is the slug selecting only its id', async () => {
+    signIn();
+    prismaMock.sweepstakesVisibility.findFirst.mockResolvedValue(null);
+
+    await verifySlug({ slug: 'abc123' });
+
+    expect(prismaMock.sweepstakes.findUnique).toHaveBeenCalledWith({
+      where: { id: 'abc123' },
+      select: { id: true }
+    });
+  });
+
+  it('reports the slug taken when it is the id of another sweepstakes', async () => {
+    signIn();
+    prismaMock.sweepstakesVisibility.findFirst.mockResolvedValue(null);
+    prismaMock.sweepstakes.findUnique.mockResolvedValue({ id: 'abc123' });
+
+    const result = await verifySlug({
+      slug: 'abc123',
+      currentSweepstakesId: 'sweep-1'
+    });
+
+    expect(expectOk(result)).toEqual({ available: false });
+  });
+
+  it('reports the slug taken when it is the id of a sweepstakes and no current sweepstakes is given', async () => {
+    signIn();
+    prismaMock.sweepstakesVisibility.findFirst.mockResolvedValue(null);
+    prismaMock.sweepstakes.findUnique.mockResolvedValue({ id: 'abc123' });
+
+    const result = await verifySlug({ slug: 'abc123' });
+
+    expect(expectOk(result)).toEqual({ available: false });
+  });
+
+  it('reports the slug available when it is the id of the current sweepstakes', async () => {
+    signIn();
+    prismaMock.sweepstakesVisibility.findFirst.mockResolvedValue(null);
+    prismaMock.sweepstakes.findUnique.mockResolvedValue({ id: 'sweep-1' });
+
+    const result = await verifySlug({
+      slug: 'sweep-1',
+      currentSweepstakesId: 'sweep-1'
+    });
+
+    expect(expectOk(result)).toEqual({ available: true });
+  });
+
+  it('reports the slug taken when the current sweepstakes uses it but it is the id of another sweepstakes', async () => {
+    signIn();
+    prismaMock.sweepstakesVisibility.findFirst.mockResolvedValue({
+      sweepstakesId: 'sweep-1'
+    });
+    prismaMock.sweepstakes.findUnique.mockResolvedValue({ id: 'abc123' });
+
+    const result = await verifySlug({
+      slug: 'abc123',
+      currentSweepstakesId: 'sweep-1'
+    });
+
+    expect(expectOk(result)).toEqual({ available: false });
   });
 
   it('reports the slug available when nobody uses it', async () => {
