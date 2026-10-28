@@ -19,13 +19,19 @@ import {
 } from './defaults';
 
 import { createJobsForTask } from './jobs';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
+import {
+  DEFAULT_ALLOWED_IDENTITIES,
+  DEFAULT_SWEEPSTAKES_NAME
+} from '@giveaway/app-config/settings';
 import { TaskSchema } from '@giveaway/task-model/schemas';
+
+const toStorableName = (name: string | undefined) =>
+  name?.trim() === '' ? DEFAULT_SWEEPSTAKES_NAME : name;
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {
   return {
     create: {
-      name: setup?.name,
+      name: toStorableName(setup?.name),
       description: setup?.description,
       banner: setup?.banner
     }

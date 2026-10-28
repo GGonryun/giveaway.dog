@@ -81,25 +81,24 @@ test.describe('an incomplete giveaway in the editor', () => {
     }
   );
 
-  test(
-    'a draft saved with an empty name is named Untitled Sweepstakes',
-    knownBug(501),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const id = await createDraft(page, team.slug);
+  test('a draft saved with an empty name is named Untitled Sweepstakes', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const id = await createDraft(page, team.slug);
 
-      await page.getByRole('textbox', { name: 'Name' }).fill('');
-      await headerButton(page, 'Cancel').click();
-      await page.getByRole('button', { name: 'Save & Exit' }).click();
-      await expect(page).toHaveURL(new RegExp(`/app/${team.slug}$`), {
-        timeout: 30_000
-      });
+    await page.getByRole('textbox', { name: 'Name' }).fill('');
+    await headerButton(page, 'Cancel').click();
+    await page.getByRole('button', { name: 'Save & Exit' }).click();
+    await expect(page).toHaveURL(new RegExp(`/app/${team.slug}$`), {
+      timeout: 30_000
+    });
 
-      expect(await readDraft(request, id)).toMatchObject({
-        details: { name: 'Untitled Sweepstakes' }
-      });
-    }
-  );
+    expect(await readDraft(request, id)).toMatchObject({
+      details: { name: 'Untitled Sweepstakes' }
+    });
+  });
 
   test(
     'a host cannot publish a giveaway with an empty description',

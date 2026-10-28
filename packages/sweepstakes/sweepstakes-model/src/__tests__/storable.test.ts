@@ -17,7 +17,10 @@ import type {
   SweepstakesInputTaskSchema,
   TeamSweepstakesGetPayload
 } from '../db';
-import { DEFAULT_ALLOWED_IDENTITIES } from '@giveaway/app-config/settings';
+import {
+  DEFAULT_ALLOWED_IDENTITIES,
+  DEFAULT_SWEEPSTAKES_NAME
+} from '@giveaway/app-config/settings';
 
 type Input = Omit<SweepstakesInputSchema, 'id'>;
 
@@ -84,6 +87,28 @@ describe('toStorableSweepstakesUpdate', () => {
         visibility: undefined,
         criteria: undefined
       });
+    });
+  });
+
+  describe('when the name is blank', () => {
+    it.each(['', '   '])('stores the default name for %j', (name) => {
+      expect(
+        toStorableSweepstakesUpdate({ setup: { name } }).details.create.name
+      ).toBe(DEFAULT_SWEEPSTAKES_NAME);
+    });
+
+    it('keeps a missing name missing', () => {
+      expect(
+        toStorableSweepstakesUpdate({ setup: { description: 'Win' } }).details
+          .create.name
+      ).toBeUndefined();
+    });
+
+    it('keeps a name that is not blank as it is', () => {
+      expect(
+        toStorableSweepstakesUpdate({ setup: { name: ' Giveaway ' } }).details
+          .create.name
+      ).toBe(' Giveaway ');
     });
   });
 
