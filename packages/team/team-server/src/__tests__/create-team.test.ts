@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import createTeam from '../create-team';
 import { DEFAULT_TEAM_LOGO } from '@giveaway/team-model/team/data';
+import { TeamRole } from '@giveaway/db-model';
 import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
 import { prismaMock, knownRequestError } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
@@ -154,11 +155,11 @@ describe('createTeam', () => {
       expect(expectOk(result)).toStrictEqual({ slug: createdTeam().slug });
     });
 
-    it('counts the memberships of the caller', async () => {
+    it('counts the memberships of the caller that are not blocked', async () => {
       await createTeam(validInput());
 
       expect(prismaMock.membership.count).toHaveBeenCalledWith({
-        where: { userId: TEST_USER.id }
+        where: { userId: TEST_USER.id, role: { not: TeamRole.BLOCKED } }
       });
     });
 

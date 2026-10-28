@@ -171,28 +171,28 @@ test.describe('team setup', () => {
       expect(members.map(({ email }) => email)).not.toContain(host.email);
     });
 
-    test(
-      'a blocked membership does not take a place under the team limit',
-      knownBug(488),
-      async ({ page, request, freshPersona }) => {
-        const host = await freshPersona('host');
-        await seedTeams(page, host.ns, ['t1', 't2', 't3', 't4']);
-        await seedApi(request).team({
-          ns: host.ns,
-          suffix: 'b',
-          owner: 'host2',
-          members: [{ persona: 'host', role: 'BLOCKED' }]
-        });
+    test('a blocked membership does not take a place under the team limit', async ({
+      page,
+      request,
+      freshPersona
+    }) => {
+      const host = await freshPersona('host');
+      await seedTeams(page, host.ns, ['t1', 't2', 't3', 't4']);
+      await seedApi(request).team({
+        ns: host.ns,
+        suffix: 'b',
+        owner: 'host2',
+        members: [{ persona: 'host', role: 'BLOCKED' }]
+      });
 
-        await page.goto('/app?step=1');
-        await expect(
-          page.getByRole('button', { name: 'Create new team' })
-        ).toBeEnabled();
-        await fillNewTeam(page, `E2E ${host.ns}`);
-        await createButton(page).click();
-        await expect(page).toHaveURL(new RegExp(`/app/e2e-${host.ns}$`));
-      }
-    );
+      await page.goto('/app?step=1');
+      await expect(
+        page.getByRole('button', { name: 'Create new team' })
+      ).toBeEnabled();
+      await fillNewTeam(page, `E2E ${host.ns}`);
+      await createButton(page).click();
+      await expect(page).toHaveURL(new RegExp(`/app/e2e-${host.ns}$`));
+    });
   });
 
   test('a host switches teams and returns to the last one', async ({
