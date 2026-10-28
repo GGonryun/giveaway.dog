@@ -245,7 +245,7 @@ test.describe('hide participation on /browse', { tag: TAGS.slow }, () => {
 });
 
 test.describe('the query string of /browse', () => {
-  for (const query of ['page=abc', 'sortBy=x']) {
+  for (const query of ['page=abc', 'sortBy=x', 'minEntrants=abc']) {
     test(`/browse?${query} shows the list instead of an error`, async ({
       page
     }, testInfo) => {
