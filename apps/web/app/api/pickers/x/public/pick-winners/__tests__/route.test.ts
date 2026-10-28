@@ -176,11 +176,34 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
       expect(m.creditsLimit).not.toHaveBeenCalled();
     });
 
-    it('returns a generic 500 when the post url is missing', async () => {
+    it('returns 400 when the post url is missing', async () => {
       const res = await POST(buildRequest(buildBody({ postUrl: undefined })));
 
-      expect(res.status).toBe(500);
-      expect(await res.json()).toEqual(genericError);
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({
+        success: false,
+        error: 'Invalid X post URL'
+      });
+    });
+
+    it.each([
+      'https://evil.example/?u=x.com/a/status/123',
+      'https://evil.example/twitter.com/a/status/123',
+      'https://notx.com/someone/status/555',
+      'https://x.com.evil.example/a/status/123',
+      'https://x.com@evil.example/a/status/123',
+      'https://ghost.co/xyz'
+    ])('returns 400 for %s without charging a credit', async (postUrl) => {
+      const res = await POST(buildRequest(buildBody({ postUrl })));
+
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({
+        success: false,
+        error: 'Invalid X post URL'
+      });
+      expect(m.creditsLimit).not.toHaveBeenCalled();
+      expect(m.getById).not.toHaveBeenCalled();
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
     });
   });
 
@@ -274,17 +297,15 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
     });
 
     it.each([
-      ['https://notx.com/someone/status/555', '555'],
-      ['https://ghost.co/xyz', 'xyz']
-    ])(
-      'accepts %s without checking the domain and charges a credit',
-      async (postUrl, tweetId) => {
-        await POST(buildRequest(buildBody({ postUrl })));
+      ['https://www.x.com/someone/status/555', '555'],
+      ['https://mobile.x.com/someone/status/556', '556'],
+      ['https://www.twitter.com/someone/status/557', '557']
+    ])('accepts %s and charges a credit', async (postUrl, tweetId) => {
+      await POST(buildRequest(buildBody({ postUrl })));
 
-        expect(m.creditsLimit).toHaveBeenCalledTimes(1);
-        expect(m.getById).toHaveBeenCalledWith(tweetId);
-      }
-    );
+      expect(m.creditsLimit).toHaveBeenCalledTimes(1);
+      expect(m.getById).toHaveBeenCalledWith(tweetId);
+    });
 
     it('returns a generic 500 when the post has no retweeters', async () => {
       m.getRetweeters.mockResolvedValue({ data: [], hasMore: false });
@@ -467,6 +488,39 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
         'users-write',
         'draws-write'
       ]);
+    });
+
+    it.each([
+      'https://twitter.com/someone/status/123?s=20',
+      'https://mobile.twitter.com/someone/status/123/photo/1',
+      'https://t.co/AbC123'
+    ])(
+      'stores the canonical x.com url of the fetched post for %s',
+      async (postUrl) => {
+        await POST(buildRequest(buildBody({ postUrl })));
+
+        expect(prismaMock.twitterPicker.create).toHaveBeenCalledWith({
+          data: expect.objectContaining({
+            tweetUrls: ['https://x.com/author/status/123']
+          })
+        });
+      }
+    );
+
+    it('stores the url under i when the fetched post has no valid username', async () => {
+      m.getById.mockResolvedValue({
+        ...TWEET,
+        username: 'evil.example/a',
+        user_name: undefined
+      });
+
+      await POST(buildRequest());
+
+      expect(prismaMock.twitterPicker.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          tweetUrls: ['https://x.com/i/status/123']
+        })
+      });
     });
 
     it('issues each write exactly once', async () => {
