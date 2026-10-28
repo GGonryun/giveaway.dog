@@ -44,6 +44,10 @@ export const SweepstakeFormPage = async ({
     redirect(`/app/${slug}/sweepstakes/${id}/edit`);
   }
 
+  if (mode === 'edit' && info.data.status === 'DRAFT') {
+    redirect(`/app/${slug}/sweepstakes/${id}/create`);
+  }
+
   const isEditable = EDITABLE_DERIVED_STATUS[info.data.status];
   if (!isEditable) {
     return (
