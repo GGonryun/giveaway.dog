@@ -2,6 +2,7 @@
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
+import { BROWSE_LIST_TAGS } from './browse-tags';
 import z from 'zod';
 import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
@@ -23,7 +24,8 @@ const deleteSweepstakes = procedure()
   .invalidate(async ({ input }) => [
     `sweepstakes-${input.id}`,
     `sweepstakes-${input.id}-privacy`,
-    'participant-sweepstake'
+    'participant-sweepstake',
+    ...BROWSE_LIST_TAGS
   ])
 
   .handler(async ({ input, db, user }) => {

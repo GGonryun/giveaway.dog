@@ -174,7 +174,10 @@ describe('updateSweepstakes', () => {
 
       expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
         [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
-        ['participant-sweepstake', 'max']
+        ['participant-sweepstake', 'max'],
+        ['public-sweepstakes-list', 'max'],
+        ['historical-sweepstakes-list', 'max'],
+        ['browse-hosts', 'max']
       ]);
     });
   });

@@ -278,15 +278,13 @@ describe('completeSweepstakes', () => {
     it('expires the giveaway and winners leaderboard cache tags', async () => {
       await completeSweepstakes(input);
 
-      expect(nextCacheMock.revalidateTag).toHaveBeenCalledTimes(2);
-      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
-        `sweepstakes-${SWEEPSTAKES_ID}`,
-        'max'
-      );
-      expect(nextCacheMock.revalidateTag).toHaveBeenCalledWith(
-        'winners-leaderboard',
-        'max'
-      );
+      expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
+        [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
+        ['winners-leaderboard', 'max'],
+        ['public-sweepstakes-list', 'max'],
+        ['historical-sweepstakes-list', 'max'],
+        ['browse-hosts', 'max']
+      ]);
     });
   });
 

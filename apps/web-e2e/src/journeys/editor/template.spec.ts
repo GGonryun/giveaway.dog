@@ -9,7 +9,6 @@ import {
   publishNow,
   setTiming
 } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import { seedWorkerTeam } from '../../helpers/seed';
 import { TAGS } from '../../helpers/tags';
 
@@ -66,16 +65,15 @@ test.describe('create a giveaway from a template', () => {
     }
   );
 
-  test(
-    "a giveaway made from a template keeps the host's time zone",
-    knownBug(497),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      await useBasicTemplate(page, team.slug);
+  test("a giveaway made from a template keeps the host's time zone", async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    await useBasicTemplate(page, team.slug);
 
-      await expect(
-        page.getByRole('combobox', { name: 'Timezone' })
-      ).toContainText('New York');
-    }
-  );
+    await expect(
+      page.getByRole('combobox', { name: 'Timezone' })
+    ).toContainText('New York');
+  });
 });
