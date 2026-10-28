@@ -41,6 +41,7 @@ const nextConfig: NextConfig = {
     '@giveaway/browse-server',
     '@giveaway/cache',
     '@giveaway/content-moderation',
+    '@giveaway/csp-model',
     '@giveaway/custom-fields-model',
     '@giveaway/custom-fields-server',
     '@giveaway/custom-fields-ui',

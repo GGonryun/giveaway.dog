@@ -1,0 +1,40 @@
+{
+  "name": "@giveaway/csp-model",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "tags": [
+      "type:model",
+      "runtime:isomorphic",
+      "scope:infra"
+    ],
+    "targets": {
+      "lint": {
+        "executor": "@giveaway/eslint-config:lint"
+      },
+      "type-check": {}
+    }
+  },
+  "exports": {
+    "./policy": "./src/policy.ts",
+    "./report": "./src/report.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server",
+    "test:property": "vitest run --project property --passWithNoTests"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-server": "workspace:*",
+    "@giveaway/tsconfig": "workspace:*",
+    "@giveaway/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

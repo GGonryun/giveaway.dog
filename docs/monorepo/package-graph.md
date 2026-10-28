@@ -416,13 +416,14 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 ### Server infrastructure
 
-18 packages, 30 source files, 23 test files.
+19 packages, 32 source files, 25 test files.
 
 | Package                            | Type    | Files | Moves from                                                                                                                                 |
 | ---------------------------------- | ------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `@giveaway/app-config`             | model   | 2 / 2 | `lib/environment.ts`<br>`lib/settings.ts`                                                                                                  |
 | `@giveaway/cache`                  | server  | 1 / 1 | `lib/redis.ts`                                                                                                                             |
 | `@giveaway/content-moderation`     | server  | 1 / 1 | `lib/content-moderation.ts`                                                                                                                |
+| `@giveaway/csp-model`              | model   | 2 / 2 | New: the Content-Security-Policy of the pages (`policy.ts`) and the parser of its violation reports (`report.ts`).                         |
 | `@giveaway/db-client`              | server  | 1 / 0 | `lib/prisma.ts`                                                                                                                            |
 | `@giveaway/db-model`               | model   | 0 / 0 | Browser-safe re-export of the generated Prisma enums and types.                                                                            |
 | `@giveaway/db-schema`              | server  | 0 / 0 | `prisma/schema.prisma`<br>`prisma/migrations/`                                                                                             |

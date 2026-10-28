@@ -65,6 +65,8 @@ const describeRequest = (request: Request) => {
   return `${request.method()} ${request.resourceType()}${notable ? `, ${notable}` : ''}`;
 };
 
+const CSP_VIOLATION = /violates the following Content Security Policy/;
+
 type PageError = { kind: string; pageUrl: string; text: string; url?: string };
 
 export const watchPageErrors = (
@@ -88,9 +90,10 @@ export const watchPageErrors = (
       })
     );
     page.on('console', (message) => {
-      if (message.type() !== 'error') return;
+      const violation = CSP_VIOLATION.test(message.text());
+      if (message.type() !== 'error' && !violation) return;
       record({
-        kind: 'console.error',
+        kind: violation ? 'Content-Security-Policy violation' : 'console.error',
         pageUrl: page.url(),
         text: message.text(),
         url: message.location().url || undefined
