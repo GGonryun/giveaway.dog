@@ -18,14 +18,18 @@ import {
   CardTitle
 } from '@giveaway/ui-primitives/card';
 import { LOGIN_PROVIDERS } from '@giveaway/integration-model/providers';
+import { fromCallbackUrl } from '@giveaway/user-model/redirect';
 
 export function LoginForm({
   className,
+  host,
   ...props
-}: React.ComponentProps<'div'>) {
+}: React.ComponentProps<'div'> & { host?: string | null }) {
   const searchParams = useSearchParams();
   const verify = searchParams.get('verify');
-  const redirectTo = searchParams.get('redirectTo') ?? '';
+  const redirectTo =
+    searchParams.get('redirectTo') ??
+    fromCallbackUrl(searchParams.get('callbackUrl'), host);
 
   if (verify) {
     return (
