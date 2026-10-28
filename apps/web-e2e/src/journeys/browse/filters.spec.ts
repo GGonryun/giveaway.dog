@@ -245,15 +245,13 @@ test.describe('hide participation on /browse', { tag: TAGS.slow }, () => {
 });
 
 test.describe('the query string of /browse', () => {
-  for (const query of ['page=abc', 'sortBy=x']) {
-    test(
-      `/browse?${query} shows the list instead of an error`,
-      knownBug(562),
-      async ({ page }, testInfo) => {
-        await page.goto(`/browse?search=${freshSlug(testInfo)}&${query}`);
+  for (const query of ['page=abc', 'sortBy=x', 'minEntrants=abc']) {
+    test(`/browse?${query} shows the list instead of an error`, async ({
+      page
+    }, testInfo) => {
+      await page.goto(`/browse?search=${freshSlug(testInfo)}&${query}`);
 
-        await expect(noGiveaways(page)).toBeVisible();
-      }
-    );
+      await expect(noGiveaways(page)).toBeVisible();
+    });
   }
 });
