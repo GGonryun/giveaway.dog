@@ -96,7 +96,7 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
       onSubmit?.();
       onOpen(false);
       toast.success('Task completed!');
-      router.refresh();
+      setTimeout(() => router.refresh());
     } catch (error) {
       const failure = toFailureData(error);
       setError(failure);
