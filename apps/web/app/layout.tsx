@@ -4,6 +4,7 @@ import { Toaster } from '@giveaway/ui-primitives/toaster';
 import { Analytics } from '@vercel/analytics/react';
 import { SessionProvider } from '@giveaway/auth-session-ui/auth-session-provider';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { ThemeProvider } from '@giveaway/ui-theme/theme-provider';
 
 import { Figtree } from 'next/font/google';
@@ -11,6 +12,7 @@ import { UserMetricsCollector } from '@giveaway/shell-metrics/user-metrics-colle
 import { environment } from '@giveaway/app-config/environment';
 import { BLUESKY_EMBED_SCRIPT_URL } from '@giveaway/bluesky-model/embed';
 import { TurnstileProvider } from '@giveaway/turnstile-ui/provider';
+import { NONCE_HEADER } from '@giveaway/csp-model/policy';
 import {
   THEME_STORAGE_KEY,
   DEFAULT_THEME
@@ -58,20 +60,28 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const nonce = (await headers()).get(NONCE_HEADER) ?? undefined;
+
   return (
     <html lang="en" className={`${figtree.variable}`} suppressHydrationWarning>
       <head>
-        <script async src="https://platform.twitter.com/widgets.js"></script>
-        <script async src={BLUESKY_EMBED_SCRIPT_URL}></script>
+        <script
+          async
+          nonce={nonce}
+          src="https://platform.twitter.com/widgets.js"
+        ></script>
+        <script async nonce={nonce} src={BLUESKY_EMBED_SCRIPT_URL}></script>
         <script
           async
           defer
+          nonce={nonce}
           crossOrigin="anonymous"
           src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"
         ></script>
       </head>
       <body>
         <ThemeProvider
+          nonce={nonce}
           attribute="class"
           defaultTheme={DEFAULT_THEME}
           enableSystem
