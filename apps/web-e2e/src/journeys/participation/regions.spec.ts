@@ -60,7 +60,7 @@ const expectNotEligible = async (page: Page, requirement: string) => {
 test.describe('regional restrictions', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to call the seed API');
 
-  test('a participant whose country is unknown cannot enter a giveaway for the US only', async ({
+  test('[ENTRY-005] a participant whose country is unknown cannot enter a giveaway for the US only', async ({
     page,
     request,
     freshPersona
@@ -72,6 +72,19 @@ test.describe('regional restrictions', () => {
 
     await expectNotEligible(page, 'Only available in: United States');
   });
+
+  test(
+    '[ENTRY-005] a participant whose country is unknown cannot enter a giveaway that excludes the US',
+    knownBug(608),
+    async ({ page, request, freshPersona }, testInfo) => {
+      await signInFrom(request, freshPersona);
+      const giveaway = await seedRegionGiveaway(request, testInfo, 'EXCLUDE');
+
+      await page.goto(`/browse/${giveaway.id}`);
+
+      await expectNotEligible(page, 'Not available in: United States');
+    }
+  );
 
   test('a participant in the US cannot enter a giveaway that excludes the US', async ({
     page,
