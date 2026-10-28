@@ -64,7 +64,7 @@ const submitTask = procedure()
     const completions = await db.taskCompletion.findMany({
       where: {
         participantId: participant.id,
-        task: { sweepstakesId }
+        taskId
       }
     });
 
@@ -78,7 +78,7 @@ const submitTask = procedure()
       });
     }
 
-    const existingCompletion = completions.find((c) => c.taskId === taskId);
+    const [existingCompletion] = completions;
     if (!existingCompletion) {
       throw new ApplicationError({
         code: 'CONFLICT',

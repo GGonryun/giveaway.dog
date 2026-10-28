@@ -70,15 +70,13 @@ test.describe('updating a submitted answer', () => {
     }
   );
 
-  test(
-    'a participant updates the profile link after completing another task',
-    knownBug(589),
-    async ({ page }) => {
-      const updated = `https://www.instagram.com/e2e${ns}_new`;
-      await answerInstagram(page, updated);
-      await page.getByRole('button', { name: 'Update Task' }).click();
+  test('a participant updates the profile link after completing another task', async ({
+    page
+  }) => {
+    const updated = `https://www.instagram.com/e2e${ns}_new`;
+    await answerInstagram(page, updated);
+    await page.getByRole('button', { name: 'Update Task' }).click();
 
-      await expect(page.getByText('Task updated!')).toBeVisible();
-    }
-  );
+    await expect(page.getByText('Task updated!')).toBeVisible();
+  });
 });

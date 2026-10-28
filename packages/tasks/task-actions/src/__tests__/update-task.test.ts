@@ -166,13 +166,13 @@ describe('updateTask', () => {
       });
     });
 
-    it('loads every completion of the participant within the sweepstakes', async () => {
+    it('loads only the completions of the participant for the task', async () => {
       await updateTask(input({ data: { answer: 'Yes' } }));
 
       expect(prismaMock.taskCompletion.findMany).toHaveBeenCalledWith({
         where: {
           participantId: 'participant-1',
-          task: { sweepstakesId: 'sweep-1' }
+          taskId: 'task-1'
         }
       });
     });
@@ -188,8 +188,11 @@ describe('updateTask', () => {
       expect(prismaMock.taskCompletion.update).not.toHaveBeenCalled();
     });
 
-    it('returns INTERNAL_SERVER_ERROR when the participant has more than one completion', async () => {
-      givenCompletions(completion('task-1'), completion('task-2'));
+    it('returns INTERNAL_SERVER_ERROR when the participant has more than one completion of the task', async () => {
+      givenCompletions(
+        completion('task-1', 'completion-1'),
+        completion('task-1', 'completion-2')
+      );
 
       const result = await updateTask(input({ data: { answer: 'Yes' } }));
 
@@ -203,15 +206,19 @@ describe('updateTask', () => {
       expect(prismaMock.taskCompletion.update).not.toHaveBeenCalled();
     });
 
-    it('returns a silent CONFLICT when the only completion belongs to another task', async () => {
-      givenCompletions(completion('task-2'));
-
-      const result = await updateTask(input({ data: { answer: 'Yes' } }));
-
-      expect(expectFailure(result, 'CONFLICT').message).toBe(
-        'You have not completed this task yet.'
+    it('updates the completion of the task when the participant also completed other tasks', async () => {
+      givenTasks(
+        storedTask('task-1', taskConfig('ASK_QUESTION')),
+        storedTask('task-2', taskConfig('BONUS_TASK'))
       );
-      expect(prismaMock.taskCompletion.update).not.toHaveBeenCalled();
+
+      const result = await updateTask(input({ data: { answer: 'Updated' } }));
+
+      expect(expectOk(result)).toBe(true);
+      expect(prismaMock.taskCompletion.update).toHaveBeenCalledWith({
+        where: { id: 'completion-task-1' },
+        data: { proof: { question: 'Why dogs?', answer: 'Updated' } }
+      });
     });
   });
 
@@ -236,16 +243,11 @@ describe('updateTask', () => {
       expect(consoleError).not.toHaveBeenCalled();
     });
 
-    it('does not log the conflict when the only completion belongs to another task', async () => {
-      givenCompletions(completion('task-2'));
-
-      await updateTask(input({ data: { answer: 'Yes' } }));
-
-      expect(consoleError).not.toHaveBeenCalled();
-    });
-
     it('logs the multiple completions error', async () => {
-      givenCompletions(completion('task-1'), completion('task-2'));
+      givenCompletions(
+        completion('task-1', 'completion-1'),
+        completion('task-1', 'completion-2')
+      );
 
       await updateTask(input({ data: { answer: 'Yes' } }));
 
