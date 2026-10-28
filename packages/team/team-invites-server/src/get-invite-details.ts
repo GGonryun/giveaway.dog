@@ -5,6 +5,9 @@ import { ApplicationError } from '@giveaway/util-errors';
 import { TeamRole } from '@giveaway/db-model';
 import z from 'zod';
 
+const isExpired = (expiresAt: Date | null) =>
+  !!expiresAt && expiresAt <= new Date();
+
 const getInviteDetails = procedure()
   .authorization({ required: false })
   .input(
@@ -27,7 +30,7 @@ const getInviteDetails = procedure()
       include: { team: { select: { name: true, logo: true, slug: true } } }
     });
 
-    if (inviteLink) {
+    if (inviteLink && !isExpired(inviteLink.expiresAt)) {
       return {
         teamName: inviteLink.team.name,
         teamLogo: inviteLink.team.logo,
