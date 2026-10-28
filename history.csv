@@ -162,3 +162,4 @@ date,commit,coverage,server_coverage,frontend_coverage,property_coverage,server_
 2026-10-28T18:25:34Z,0700dea0c43e790523aaa1bd26bb27ce5cb16636,84.92,83.12,76.14,10.33,12769,0,73,0,2578,0,278,0,26,0,109,0,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/40744583510
 2026-10-28T19:16:40Z,6609f470ffd4c0d5f74a221b33400198288f111d,84.92,83.12,76.14,10.33,12769,0,73,0,2578,0,278,0,26,0,109,0,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/40751742316
 2026-10-28T19:20:22Z,26faf77535e9c3cdb15d41e2d5d75a7c333f1592,84.93,83.15,76.15,10.9,12779,0,73,0,2587,0,278,0,26,0,109,0,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/40752757754
+2026-10-28T19:24:14Z,2873e565c905c29a13e853ec96c917a4fb364edd,84.95,83.15,76.24,10.9,12779,0,73,0,2592,0,278,0,26,0,109,0,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/40753601598
