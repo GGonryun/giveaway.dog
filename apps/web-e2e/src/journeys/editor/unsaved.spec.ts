@@ -167,20 +167,15 @@ test.describe('leave the editor of a published giveaway', () => {
     await openEditor(page, team, giveaway.id);
     await changeName(page);
 
-    const beforeUnload = page
-      .waitForEvent('dialog', {
-        predicate: (dialog) => dialog.type() === 'beforeunload',
-        timeout: BEFORE_UNLOAD_WAIT
-      })
-      .then(
-        async (dialog) => {
-          await dialog.dismiss();
-          return true;
-        },
-        () => false
-      );
-    await page.reload({ waitUntil: 'commit' }).catch(() => undefined);
+    const beforeUnload = page.waitForEvent('dialog', {
+      predicate: (dialog) => dialog.type() === 'beforeunload',
+      timeout: BEFORE_UNLOAD_WAIT
+    });
+    void page.reload().catch(() => undefined);
 
-    expect(await beforeUnload).toBe(true);
+    await (await beforeUnload).dismiss();
+    await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(
+      'Unsaved e2e name'
+    );
   });
 });
