@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { ApplicationError } from '@giveaway/util-errors';
+import { ApplicationError, statusToCode } from '@giveaway/util-errors';
 import { IntegrationProvider, IntegrationStatus } from '@giveaway/db-model';
 import {
   TWITTER_TEAM_APP_CLIENT_ID,
@@ -10,6 +10,16 @@ import { Tx } from '@giveaway/db-client/prisma';
 import { twitterTokenResponseSchema } from './schemas';
 
 const EXPIRY_BUFFER_SECONDS = 300;
+
+const REJECTED_REFRESH_STATUSES = [400, 401];
+const REJECTED_REFRESH_ERRORS: unknown[] = ['invalid_grant', 'invalid_request'];
+
+const isRejectedRefresh = (status: number, body: unknown) =>
+  REJECTED_REFRESH_STATUSES.includes(status) &&
+  typeof body === 'object' &&
+  body !== null &&
+  'error' in body &&
+  REJECTED_REFRESH_ERRORS.includes(body.error);
 
 export const getLatestTwitterAccessToken = async (
   tx: Tx,
@@ -102,13 +112,25 @@ export const getLatestTwitterAccessToken = async (
   });
 
   if (!tokenResponse.ok) {
-    const error = await tokenResponse.json();
+    const error: unknown = await tokenResponse.json().catch(() => null);
     console.error('Twitter token refresh failed:', {
       status: tokenResponse.status,
       error,
       refreshTokenLength: integration.refresh_token.length,
       refreshTokenPreview: `${integration.refresh_token.substring(0, 10)}...`
     });
+
+    if (!isRejectedRefresh(tokenResponse.status, error)) {
+      throw new ApplicationError({
+        code: statusToCode[tokenResponse.status] ?? 'BAD_GATEWAY',
+        message: 'X could not refresh the access token',
+        cause: JSON.stringify(error),
+        data: {
+          twitterError: error,
+          statusCode: tokenResponse.status
+        }
+      });
+    }
 
     await tx.integration.update({
       where: { id: integration.id },

@@ -481,16 +481,21 @@ describe('getLatestTwitterAccessToken', () => {
     });
   });
 
-  describe('when twitter rejects the refresh', () => {
+  describe('when twitter rejects the refresh token', () => {
     beforeEach(() => {
       prismaMock.integration.findFirst.mockResolvedValue(expiredIntegration());
     });
 
-    it.each([400, 401, 500])(
-      'marks the integration as ERROR for status %i',
-      async (status) => {
+    it.each([
+      [400, 'invalid_request'],
+      [401, 'invalid_request'],
+      [400, 'invalid_grant'],
+      [401, 'invalid_grant']
+    ])(
+      'marks the integration as ERROR for status %i with %s',
+      async (status, twitterError) => {
         fetchMock.mockResolvedValue(
-          jsonResponse({ error: 'invalid_request' }, { status })
+          jsonResponse({ error: twitterError }, { status })
         );
 
         await captureError(getToken());
@@ -503,7 +508,7 @@ describe('getLatestTwitterAccessToken', () => {
       }
     );
 
-    it.each([400, 401, 500])(
+    it.each([400, 401])(
       'throws BAD_REQUEST with the twitter error details for status %i',
       async (status) => {
         fetchMock.mockResolvedValue(
@@ -554,14 +559,85 @@ describe('getLatestTwitterAccessToken', () => {
         }
       );
     });
+  });
 
-    it('rejects with the JSON parse error when the error body is not JSON', async () => {
+  describe('when twitter fails to refresh without rejecting the refresh token', () => {
+    beforeEach(() => {
+      prismaMock.integration.findFirst.mockResolvedValue(expiredIntegration());
+    });
+
+    it.each([
+      [429, 'TOO_MANY_REQUESTS'],
+      [500, 'INTERNAL_SERVER_ERROR'],
+      [502, 'BAD_GATEWAY'],
+      [503, 'SERVICE_UNAVAILABLE']
+    ])(
+      'keeps the integration connected and throws %i as %s',
+      async (status, code) => {
+        fetchMock.mockResolvedValue(
+          jsonResponse({ error: 'invalid_request' }, { status })
+        );
+
+        const error = await captureError(getToken());
+
+        expect(prismaMock.integration.update).not.toHaveBeenCalled();
+        expect(error).toBeInstanceOf(ApplicationError);
+        expect(error).toMatchObject({
+          code,
+          message: 'X could not refresh the access token',
+          cause: '{"error":"invalid_request"}',
+          data: {
+            twitterError: { error: 'invalid_request' },
+            statusCode: status
+          }
+        });
+      }
+    );
+
+    it.each([
+      [400, { error: 'invalid_client' }],
+      [401, { error: 'unauthorized_client' }],
+      [400, { error: 42 }],
+      [400, { message: 'invalid_grant' }],
+      [400, 'invalid_grant'],
+      [400, null],
+      [403, { error: 'invalid_grant' }]
+    ])(
+      'keeps the integration connected for status %i with body %j',
+      async (status, body) => {
+        fetchMock.mockResolvedValue(jsonResponse(body, { status }));
+
+        const error = await captureError(getToken());
+
+        expect(prismaMock.integration.update).not.toHaveBeenCalled();
+        expect(error).toMatchObject({
+          message: 'X could not refresh the access token',
+          data: { twitterError: body, statusCode: status }
+        });
+      }
+    );
+
+    it('throws BAD_GATEWAY for a status with no error code', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({ error: 'invalid_grant' }, { status: 520 })
+      );
+
+      const error = await captureError(getToken());
+
+      expect(error).toMatchObject({ code: 'BAD_GATEWAY' });
+    });
+
+    it('keeps the integration connected when the error body is not JSON', async () => {
       fetchMock.mockResolvedValue(textResponse('Service Unavailable', 503));
 
       const error = await captureError(getToken());
 
-      expect(error).toBeInstanceOf(SyntaxError);
       expect(prismaMock.integration.update).not.toHaveBeenCalled();
+      expect(error).toMatchObject({
+        code: 'SERVICE_UNAVAILABLE',
+        cause: 'null',
+        data: { twitterError: null, statusCode: 503 }
+      });
     });
   });
 

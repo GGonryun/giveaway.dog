@@ -34,8 +34,7 @@ const POST_URI = 'at://did:plc:giveawaydog/app.bsky.feed.post/3kabc123';
 
 const ISSUES = {
   retry: '#302',
-  timeout: '#303',
-  token: '#304'
+  timeout: '#303'
 };
 
 type Expectation = 'finishes' | 'retries' | 'staysConnected';
@@ -93,16 +92,7 @@ const CALLS: Call[] = [
     inject: (_, fault) => m.restore.mockRejectedValue(faultError(fault)),
     reached: () => m.restore.mock.calls.length > 0,
     refreshesSession: true,
-    bugs: {
-      retries: RETRIES_LATER,
-      staysConnected: {
-        timeout: ISSUES.token,
-        'rate-limit': ISSUES.token,
-        'rate-limit-retry-after': ISSUES.token,
-        'server-error': ISSUES.token,
-        'network-error': ISSUES.token
-      }
-    }
+    bugs: { retries: RETRIES_LATER }
   },
   networkCall(
     'the Bluesky profile lookup of a like import',
