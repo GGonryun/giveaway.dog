@@ -2,7 +2,6 @@ import { E2E_X_FIXTURES } from '@giveaway/e2e-model/fakes';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import {
   FIXTURE_RETWEETER,
   clearNumberFilters,
@@ -159,27 +158,26 @@ test.describe('the free X picker for a user who has not finished onboarding', ()
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
   test.use({ storageState: personaState('newbie') });
 
-  test(
-    '[ROUTE-006] opens the free picker and a shared draw',
-    knownBug(584),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedPickerTeam(request, ns);
-      const picker = await seedApi(request).picker({ team: team.slug });
+  test('[ROUTE-006] opens the free picker and a shared draw', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedPickerTeam(request, ns);
+    const picker = await seedApi(request).picker({ team: team.slug });
 
-      await page.goto('/pickers/x');
-      expect(new URL(page.url()).pathname).toBe('/pickers/x');
-      await expect(
-        page.getByRole('heading', { level: 1, name: 'X (Twitter) Picker' })
-      ).toBeVisible();
+    await page.goto('/pickers/x');
+    expect(new URL(page.url()).pathname).toBe('/pickers/x');
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'X (Twitter) Picker' })
+    ).toBeVisible();
 
-      await page.goto(`/pickers/x/${picker.id}`);
-      expect(new URL(page.url()).pathname).toBe(`/pickers/x/${picker.id}`);
-      await expect(
-        page.getByRole('heading', { level: 1, name: 'Draw Verification' })
-      ).toBeVisible();
-    }
-  );
+    await page.goto(`/pickers/x/${picker.id}`);
+    expect(new URL(page.url()).pathname).toBe(`/pickers/x/${picker.id}`);
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Draw Verification' })
+    ).toBeVisible();
+  });
 });
 
 test.describe('free X picker filters on the ScrapeBadger fixtures', () => {
