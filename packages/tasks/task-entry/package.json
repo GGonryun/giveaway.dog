@@ -27,7 +27,9 @@
     "./task-tooltip-content": "./src/task-tooltip-content.tsx"
   },
   "scripts": {
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run",
+    "test:unit": "vitest run --project frontend",
+    "test:frontend": "vitest run --project frontend"
   },
   "dependencies": {
     "@giveaway/bluesky-task-entry": "workspace:*",
@@ -73,9 +75,12 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/sweepstakes-ui-testing": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
     "@types/lodash": "catalog:",
     "@types/node": "catalog:",
     "@types/pluralize": "catalog:",
