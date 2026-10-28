@@ -85,23 +85,22 @@ test.describe('team members', () => {
     );
   });
 
-  test(
-    'a participant who joins through an invite link lands in the app',
-    knownBug(486),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const seed = seedApi(request);
-      const { team } = await seed.team({ ns, suffix: 'lnk' });
-      const { link } = await seed.invites({ ns, team: team.slug, link: {} });
-      await signInAs(page.request, 'participant', ns);
+  test('a participant who joins through an invite link lands in the app', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const seed = seedApi(request);
+    const { team } = await seed.team({ ns, suffix: 'lnk' });
+    const { link } = await seed.invites({ ns, team: team.slug, link: {} });
+    await signInAs(page.request, 'participant', ns);
 
-      await page.goto(`/invites/${link!.id}`);
-      await acceptInvite(page);
-      await expect(page.getByText('Welcome to the Team!')).toBeVisible();
+    await page.goto(`/invites/${link!.id}`);
+    await acceptInvite(page);
+    await expect(page.getByText('Welcome to the Team!')).toBeVisible();
 
-      await expect(page).toHaveURL(/\/app$/, { timeout: 15_000 });
-    }
-  );
+    await expect(page).toHaveURL(/\/app$/, { timeout: 15_000 });
+  });
 
   test('an owner removes a member, who loses access at once', async ({
     page,

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TeamRole, UserAccountType } from '@giveaway/db-model';
 import acceptInvite from '../accept-invite';
 import {
@@ -186,17 +186,6 @@ describe('acceptInvite', () => {
       expectOk(result);
     });
 
-    it('accepts an invite link whose expiresAt is in the past', async () => {
-      prismaMock.teamInviteLink.findUnique.mockResolvedValue(
-        inviteLink({ expiresAt: new Date('2000-01-01T00:00:00.000Z') })
-      );
-
-      const result = await acceptInvite({ code: 'link-1' });
-
-      expect(expectOk(result)).toEqual({ teamSlug: 'acme', teamName: 'Acme' });
-      expect(prismaMock.membership.create).toHaveBeenCalled();
-    });
-
     it('returns CONFLICT when the caller is already a member', async () => {
       prismaMock.membership.findFirst.mockResolvedValue({
         id: 'm-1',
@@ -227,6 +216,72 @@ describe('acceptInvite', () => {
       expect(expectFailure(result, 'CONFLICT').message).toBe(
         'You are already a member of this team'
       );
+    });
+  });
+
+  describe('[INVITE-002] when the invite link has an expiration date', () => {
+    const now = new Date('2026-06-01T12:00:00.000Z');
+
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(now);
+      signIn();
+      prismaMock.teamInviteEmail.findFirst.mockResolvedValue(null);
+      prismaMock.membership.findFirst.mockResolvedValue(null);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('[INVITE-002] refuses a link that expired in the past and adds no one to the team', async () => {
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue(
+        inviteLink({ expiresAt: new Date('2000-01-01T00:00:00.000Z') })
+      );
+
+      const result = await acceptInvite({ code: 'link-1' });
+
+      expect(expectFailure(result, 'NOT_FOUND').message).toBe(
+        'Invalid or expired invitation'
+      );
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
+      expect(prismaMock.membership.create).not.toHaveBeenCalled();
+      expect(prismaMock.user.update).not.toHaveBeenCalled();
+    });
+
+    it('[INVITE-002] refuses a link that expires at this moment', async () => {
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue(
+        inviteLink({ expiresAt: new Date(now) })
+      );
+
+      const result = await acceptInvite({ code: 'link-1' });
+
+      expectFailure(result, 'NOT_FOUND');
+      expect(prismaMock.membership.create).not.toHaveBeenCalled();
+    });
+
+    it('[INVITE-002] accepts a link that expires in the future', async () => {
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue(
+        inviteLink({ expiresAt: new Date(now.getTime() + 1) })
+      );
+
+      const result = await acceptInvite({ code: 'link-1' });
+
+      expect(expectOk(result)).toEqual({ teamSlug: 'acme', teamName: 'Acme' });
+      expect(prismaMock.membership.create).toHaveBeenCalledWith({
+        data: { userId: TEST_USER.id, teamId: 'team-1', role: TeamRole.MEMBER }
+      });
+    });
+
+    it('[INVITE-002] accepts a link with no expiration date', async () => {
+      prismaMock.teamInviteLink.findUnique.mockResolvedValue(
+        inviteLink({ expiresAt: null })
+      );
+
+      const result = await acceptInvite({ code: 'link-1' });
+
+      expect(expectOk(result)).toEqual({ teamSlug: 'acme', teamName: 'Acme' });
+      expect(prismaMock.membership.create).toHaveBeenCalled();
     });
   });
 

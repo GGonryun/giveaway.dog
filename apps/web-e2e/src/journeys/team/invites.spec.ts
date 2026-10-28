@@ -3,7 +3,6 @@ import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET } from '../../env';
 import { noRedirect } from '../../helpers/http';
-import { knownBug } from '../../helpers/known-bug';
 import { fakesOf, linkInEmail, waitForEmail } from '../../helpers/outbox';
 import { signInAs } from '../../helpers/personas';
 import { seedApi } from '../../helpers/seed';
@@ -43,25 +42,21 @@ test.describe('team invites', () => {
     );
   });
 
-  test(
-    '[INVITE-002] the page of an expired invite link is not found',
-    knownBug(455),
-    async ({ page, request }, testInfo) => {
-      const seed = seedApi(request);
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seed.team({ ns, suffix: 'exp' });
-      const { link } = await seed.invites({
-        ns,
-        team: team.slug,
-        link: { expiresIn: -3600 }
-      });
-      await signInAs(page.request, 'member', ns);
+  test('[INVITE-002] the page of an expired invite link is not found', async ({
+    page,
+    request
+  }, testInfo) => {
+    const seed = seedApi(request);
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seed.team({ ns, suffix: 'exp' });
+    const { link } = await seed.invites({
+      ns,
+      team: team.slug,
+      link: { expiresIn: -3600 }
+    });
+    await signInAs(page.request, 'member', ns);
 
-      const response = await page.request.get(
-        `/invites/${link!.id}`,
-        noRedirect
-      );
-      expect(response.status()).toBe(404);
-    }
-  );
+    const response = await page.request.get(`/invites/${link!.id}`, noRedirect);
+    expect(response.status()).toBe(404);
+  });
 });

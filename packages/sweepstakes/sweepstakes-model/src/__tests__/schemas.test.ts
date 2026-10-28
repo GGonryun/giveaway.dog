@@ -1002,6 +1002,75 @@ describe('baseGiveawayFormSchema', () => {
 
     expect(messagesOf(result)).toEqual(['Duration cannot exceed 90 days']);
   });
+
+  const withDescription = (description: string) =>
+    validForm({ setup: { name: 'My Giveaway', description, banner: '' } });
+
+  it.each([
+    '<p></p>',
+    '<p><br></p>',
+    '<p>  </p><p>&nbsp;&#160;&#xA0;</p>',
+    '<h1></h1><ul><li><p></p></li></ul>',
+    '<p>ab</p>',
+    '<p>&amp;&lt;</p>',
+    '<p>&#123;&#x2014;</p>'
+  ])(
+    'rejects the description %s with less than 3 characters of text when validation is on',
+    (description) => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(NOW);
+
+      const result = baseGiveawayFormSchema({ validate: true }).safeParse(
+        withDescription(description)
+      );
+
+      expect(pathsOf(result)).toEqual([['setup', 'description']]);
+      expect(messagesOf(result)).toEqual([
+        'String must contain at least 3 character(s)'
+      ]);
+    }
+  );
+
+  it.each([
+    '<p>Win</p>',
+    '<p>a</p><p>b c</p>',
+    '<p>a&nbsp;b</p>',
+    '<p>&amp;&#38;&#x26;</p>'
+  ])(
+    'accepts the description %s with 3 characters of text when validation is on',
+    (description) => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(NOW);
+
+      const result = baseGiveawayFormSchema({ validate: true }).safeParse(
+        withDescription(description)
+      );
+
+      expect(result.success).toBe(true);
+    }
+  );
+
+  it('reports a description shorter than 3 characters once when validation is on', () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+
+    const result = baseGiveawayFormSchema({ validate: true }).safeParse(
+      withDescription('ab')
+    );
+
+    expect(pathsOf(result)).toEqual([['setup', 'description']]);
+    expect(messagesOf(result)).toEqual([
+      'String must contain at least 3 character(s)'
+    ]);
+  });
+
+  it('accepts an empty editor description when validation is off', () => {
+    const result = baseGiveawayFormSchema({ validate: false }).safeParse(
+      withDescription('<p></p>')
+    );
+
+    expect(result.success).toBe(true);
+  });
 });
 
 describe('giveawayFormSchema', () => {
