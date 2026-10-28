@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
 import { headerButton, openStep } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import { openEditor, previewPage, readSweepstakes } from '../../helpers/manage';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
@@ -16,21 +15,18 @@ const changeName = (page: Page) =>
 
 const CUSTOM_TERMS = 'Custom e2e terms';
 
-const UNTRACKED_CHANGES: {
+const SINGLE_CONTROL_CHANGES: {
   title: string;
-  issue: number;
   terms?: { type: 'CUSTOM'; text: string };
   change: (page: Page) => Promise<void>;
 }[] = [
   {
     title: 'the terms type',
-    issue: 592,
     change: (page) =>
       page.getByRole('button', { name: 'Custom', exact: true }).click()
   },
   {
     title: 'the custom terms text',
-    issue: 592,
     terms: { type: 'CUSTOM', text: `<p>${CUSTOM_TERMS}</p>` },
     change: async (page) => {
       await page.getByRole('main').getByText(CUSTOM_TERMS).click();
@@ -40,7 +36,6 @@ const UNTRACKED_CHANGES: {
   },
   {
     title: 'the Reward Profile Completion switch',
-    issue: 592,
     change: async (page) => {
       await openStep(page, 'Audience');
       await page
@@ -113,24 +108,19 @@ test.describe('leave the editor of a published giveaway', () => {
     });
   });
 
-  for (const { title, issue, terms, change } of UNTRACKED_CHANGES) {
-    test(
-      `a host is asked before leaving after changing only ${title}`,
-      knownBug(issue),
-      async ({ page, request }, testInfo) => {
-        const { team, giveaway } = await seedPublished(
-          request,
-          testInfo,
-          terms
-        );
-        await openEditor(page, team, giveaway.id);
-        await change(page);
+  for (const { title, terms, change } of SINGLE_CONTROL_CHANGES) {
+    test(`a host is asked before leaving after changing only ${title}`, async ({
+      page,
+      request
+    }, testInfo) => {
+      const { team, giveaway } = await seedPublished(request, testInfo, terms);
+      await openEditor(page, team, giveaway.id);
+      await change(page);
 
-        await headerButton(page, 'Cancel').click();
+      await headerButton(page, 'Cancel').click();
 
-        await expect(exitDialog(page)).toBeVisible();
-      }
-    );
+      await expect(exitDialog(page)).toBeVisible();
+    });
   }
 
   test('discarding the terms sheet keeps the other unsaved changes', async ({
