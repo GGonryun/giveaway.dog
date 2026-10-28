@@ -1,6 +1,7 @@
 'use server';
 
 import { procedure } from '@giveaway/rpc-server/procedures';
+import { BROWSE_LIST_TAGS } from './browse-tags';
 import { applySweepstakesChanges } from '@giveaway/sweepstakes-access/shared';
 import z from 'zod';
 import { sweepstakesInputSchema } from '@giveaway/sweepstakes-model/db';
@@ -11,7 +12,8 @@ const updateSweepstakes = procedure()
   .output(z.object({ slug: z.string() }))
   .invalidate(async ({ input }) => [
     `sweepstakes-${input.id}`,
-    'participant-sweepstake'
+    'participant-sweepstake',
+    ...BROWSE_LIST_TAGS
   ])
   .handler(async ({ db, user, input }) => {
     const { team } = await applySweepstakesChanges({

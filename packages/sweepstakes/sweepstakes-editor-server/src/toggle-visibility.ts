@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { procedure } from '@giveaway/rpc-server/procedures';
+import { BROWSE_LIST_TAGS } from './browse-tags';
 import { TeamTier, VisibilityType } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
 import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
@@ -18,7 +19,8 @@ const toggleVisibility = procedure()
   .output(z.object({ visibility: z.nativeEnum(VisibilityType) }))
   .invalidate(async ({ input }) => [
     `sweepstakes-${input.sweepstakesId}`,
-    `sweepstakes-${input.sweepstakesId}-privacy` // Invalidate privacy cache when visibility changes
+    `sweepstakes-${input.sweepstakesId}-privacy`, // Invalidate privacy cache when visibility changes
+    ...BROWSE_LIST_TAGS
   ])
   .handler(async ({ db, user, input }) => {
     const { sweepstakes } = await findUserSweepstakes({
