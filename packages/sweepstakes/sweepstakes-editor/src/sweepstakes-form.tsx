@@ -41,6 +41,10 @@ import { SweepstakeFormContent } from './sweepstake-form-content';
 import { CancelConfirmationModal } from '@giveaway/sweepstakes-ui/cancel-confirmation-modal';
 import { PublishConfirmationModal } from '@giveaway/sweepstakes-editor-core/publish-confirmation-modal';
 import { useSweepstakesDetailsPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-details-page';
+import {
+  SlugAvailability,
+  slugAvailability
+} from '@giveaway/sweepstakes-editor-audience/slug-availability';
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
@@ -66,9 +70,11 @@ export const SweepstakesForm: React.FC<{
       ? 'edit'
       : 'create';
 
+  const [slugs] = useState(() => slugAvailability(id));
+
   const form = useForm<GiveawayFormSchema>({
-    resolver: zodResolver(
-      giveawayFormSchema({ validate: !isDemo, maxLoyalty })
+    resolver: slugs.resolver(
+      zodResolver(giveawayFormSchema({ validate: !isDemo, maxLoyalty }))
     ),
     defaultValues,
     mode: 'onChange'
@@ -96,6 +102,7 @@ export const SweepstakesForm: React.FC<{
           step={step}
           action={action}
           integrations={integrations}
+          slugs={slugs}
         />
       </FormProvider>
     </PreviewStateContext.Provider>
@@ -107,7 +114,8 @@ const FormContent: React.FC<{
   step: SweepstakeStep;
   integrations: IntegrationsSchema;
   action: UnifiedFormAction;
-}> = ({ id, integrations, action, step }) => {
+  slugs: SlugAvailability;
+}> = ({ id, integrations, action, step, slugs }) => {
   const detailsPage = useSweepstakesDetailsPage();
   const sweepstakesPage = useSweepstakesPage();
 
@@ -224,11 +232,17 @@ const FormContent: React.FC<{
 
   const handleClosePublishModal = () => setShowPublishModal(false);
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (action !== 'demo') {
+      await slugs.verify(form.getValues('visibility.slug'));
+    }
+    await form.handleSubmit(handleSubmitValid, handleSubmitInvalid)(event);
+  };
+
   return (
     <>
-      <form
-        onSubmit={form.handleSubmit(handleSubmitValid, handleSubmitInvalid)}
-      >
+      <form onSubmit={handleSubmit}>
         <UnifiedFormLayoutContextProvider
           id={id}
           title={name}

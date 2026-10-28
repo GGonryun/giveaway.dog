@@ -39,6 +39,7 @@ import {
   CollapsibleContent
 } from '@giveaway/ui-primitives/collapsible';
 import { VisibilityType } from '@giveaway/db-model';
+import { slugTakenMessage } from './slug-availability';
 
 export const VisibilityTypeField = <
   TFieldValues extends FieldValues,
@@ -176,7 +177,7 @@ export const UrlSlugField = <
         setSlugStatus('unavailable');
         form.setError(fieldPath, {
           type: 'manual',
-          message: `The slug "${slug}" is already taken. Please choose another one.`
+          message: slugTakenMessage(slug)
         });
       }
     } catch (error) {

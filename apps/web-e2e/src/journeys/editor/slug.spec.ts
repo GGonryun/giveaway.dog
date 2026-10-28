@@ -12,7 +12,6 @@ import {
   publishDialog,
   publishNow
 } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import { readSweepstakes } from '../../helpers/manage';
 import { freshSlug, seedApi, seedWorkerTeam } from '../../helpers/seed';
 import { TAGS } from '../../helpers/tags';
@@ -57,7 +56,7 @@ test.describe('the custom slug of a giveaway in the editor', () => {
 
   test(
     'a host cannot publish a giveaway with a slug that another giveaway has',
-    knownBug(591, { tag: TAGS.slow }),
+    { tag: TAGS.slow },
     async ({ page, request }, testInfo) => {
       const { team } = await seedWorkerTeam(request, testInfo);
       const slug = freshSlug(testInfo);

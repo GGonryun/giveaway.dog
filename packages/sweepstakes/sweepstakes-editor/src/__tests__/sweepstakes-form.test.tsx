@@ -13,6 +13,7 @@ import { MockTeamProvider } from '@giveaway/team-context/mock-team-provider';
 import deleteDraft from '@giveaway/sweepstakes-editor-server/delete-draft';
 import publishSweepstakes from '@giveaway/sweepstakes-editor-server/publish-sweepstakes';
 import updateSweepstakes from '@giveaway/sweepstakes-editor-server/update-sweepstakes';
+import verifySlug from '@giveaway/sweepstakes-editor-server/verify-slug';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { SweepstakesForm } from '../sweepstakes-form';
 import {
@@ -145,6 +146,17 @@ const renderForm = ({
   );
 };
 
+const slugAvailable = (available: boolean) => ({
+  ok: true as const,
+  data: { available }
+});
+
+const withSlug = (slug: string) =>
+  buildFormValues({ visibility: { visibility: 'PUBLIC', slug } });
+
+const takenSlug =
+  'The slug "summer" is already taken. Please choose another one.';
+
 const editPath = '/app/demo-team/sweepstakes/sweepstakes-1/edit';
 
 const getHeaderButton = (name: string) =>
@@ -169,6 +181,7 @@ describe('SweepstakesForm', () => {
     vi.mocked(updateSweepstakes).mockReset().mockResolvedValue(succeed);
     vi.mocked(publishSweepstakes).mockReset().mockResolvedValue(succeed);
     vi.mocked(deleteDraft).mockReset().mockResolvedValue(succeed);
+    vi.mocked(verifySlug).mockReset().mockResolvedValue(slugAvailable(true));
     vi.mocked(toast.success).mockClear();
     vi.mocked(toast.info).mockClear();
     navigation.router.push.mockReset();
@@ -294,6 +307,70 @@ describe('SweepstakesForm', () => {
         'issue need to be fixed before you can publish'
       );
       expect(publishSweepstakes).not.toHaveBeenCalled();
+    });
+
+    it('publishes a sweepstakes with a free custom slug', async () => {
+      renderForm({ values: withSlug('summer') });
+      await userEvent.click(getHeaderButton('Publish'));
+
+      await screen.findByRole('dialog', { name: 'Ready to Publish?' });
+      expect(verifySlug).toHaveBeenCalledWith({
+        slug: 'summer',
+        currentSweepstakesId: 'sweepstakes-1'
+      });
+    });
+
+    it('lists a custom slug that another giveaway has instead of publishing', async () => {
+      vi.mocked(verifySlug).mockResolvedValue(slugAvailable(false));
+      renderForm({ values: withSlug('summer') });
+      await userEvent.click(getHeaderButton('Publish'));
+
+      const dialog = await screen.findByRole('dialog', {
+        name: 'There are some problems'
+      });
+      expect(
+        within(dialog).getByRole('button', {
+          name: `visibility.slug ${takenSlug}`
+        })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('dialog', { name: 'Ready to Publish?' })
+      ).not.toBeInTheDocument();
+      expect(publishSweepstakes).not.toHaveBeenCalled();
+    });
+
+    it('lists a taken custom slug with the other problems', async () => {
+      vi.mocked(verifySlug).mockResolvedValue(slugAvailable(false));
+      renderForm({
+        values: buildFormValues({
+          setup: { name: 'ab', description: 'Win', banner: '' },
+          visibility: { visibility: 'PUBLIC', slug: 'summer' }
+        })
+      });
+      await userEvent.click(getHeaderButton('Publish'));
+
+      const dialog = await screen.findByRole('dialog', {
+        name: 'There are some problems'
+      });
+      expect(dialog).toHaveTextContent('setup.name');
+      expect(dialog).toHaveTextContent(`visibility.slug${takenSlug}`);
+    });
+
+    it('keeps the taken slug error after jumping to the field', async () => {
+      vi.mocked(verifySlug).mockResolvedValue(slugAvailable(false));
+      renderForm({ values: withSlug('summer') });
+      await userEvent.click(getHeaderButton('Publish'));
+
+      const dialog = await screen.findByRole('dialog', {
+        name: 'There are some problems'
+      });
+      await userEvent.click(
+        within(dialog).getByRole('button', {
+          name: `visibility.slug ${takenSlug}`
+        })
+      );
+
+      expect(await screen.findByText(takenSlug)).toBeInTheDocument();
     });
 
     it('asks before leaving the draft', async () => {
@@ -443,6 +520,14 @@ describe('SweepstakesForm', () => {
       ).not.toBeInTheDocument();
       expect(publishSweepstakes).not.toHaveBeenCalled();
       expect(updateSweepstakes).not.toHaveBeenCalled();
+    });
+
+    it('does not check the custom slug', async () => {
+      renderForm({ isDemo: true, values: withSlug('summer') });
+      await userEvent.click(getHeaderButton('Save Changes'));
+
+      await screen.findByRole('dialog', { name: 'Save Changes?' });
+      expect(verifySlug).not.toHaveBeenCalled();
     });
 
     it('asks before leaving the demo', async () => {
