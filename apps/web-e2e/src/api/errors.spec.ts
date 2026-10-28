@@ -89,16 +89,14 @@ test.describe('error responses', { tag: ['@security', '@prod-safe'] }, () => {
     }
   });
 
-  test(
-    'the X picker answers a body without a post URL with 400',
-    knownBug(350),
-    async ({ request }) => {
-      const response = await request.post(PICK_WINNERS, { data: {} });
+  test('the X picker answers a body without a post URL with 400', async ({
+    request
+  }) => {
+    const response = await request.post(PICK_WINNERS, { data: {} });
 
-      expect(response.status()).toBe(400);
-      expect(await response.json()).toMatchObject({ success: false });
-    }
-  );
+    expect(response.status()).toBe(400);
+    expect(await response.json()).toMatchObject({ success: false });
+  });
 
   test('the scrape stream needs a run id', async ({ request }) => {
     const response = await request.get(RESUME);
