@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { UserAccountType } from '@giveaway/db-model';
-import { getUserAuthRedirect, toSafeRedirect } from '../redirect';
+import {
+  fromCallbackUrl,
+  getUserAuthRedirect,
+  toSafeRedirect
+} from '../redirect';
 
 describe('toSafeRedirect', () => {
   it.each([
@@ -39,6 +43,65 @@ describe('toSafeRedirect', () => {
     ['a backslash after a tab', '/\t\\example.org']
   ])('returns the fallback for %s', (_label, value) => {
     expect(toSafeRedirect(value, '/fallback')).toBe('/fallback');
+  });
+});
+
+describe('fromCallbackUrl', () => {
+  it.each([
+    [
+      'an absolute url on the same host',
+      'https://www.giveaway.dog/account/history',
+      '/account/history'
+    ],
+    [
+      'an absolute url with a query and a hash',
+      'http://www.giveaway.dog/browse/abc?tab=tasks#top',
+      '/browse/abc?tab=tasks#top'
+    ],
+    [
+      'an absolute url on the same host in upper case',
+      'https://WWW.GIVEAWAY.DOG/app',
+      '/app'
+    ],
+    ['a path', '/account/history', '/account/history']
+  ])('keeps the path of %s', (_label, value, expected) => {
+    expect(fromCallbackUrl(value, 'www.giveaway.dog')).toBe(expected);
+  });
+
+  it('compares the port of the host', () => {
+    expect(
+      fromCallbackUrl('http://localhost:3000/account', 'localhost:3000')
+    ).toBe('/account');
+    expect(
+      fromCallbackUrl('http://localhost:4000/account', 'localhost:3000')
+    ).toBe('');
+  });
+
+  it.each([
+    ['undefined', undefined],
+    ['null', null],
+    ['an empty string', ''],
+    ['another host', 'https://evil.example.com/account'],
+    ['a subdomain of another host', 'https://www.giveaway.dog.evil.com/app'],
+    ['a protocol-relative url', '//evil.example.com/account'],
+    ['a backslash after the slash', '/\\evil.example.com'],
+    ['a double slash in the path', 'https://www.giveaway.dog//evil.com'],
+    ['a javascript url', 'javascript:alert(1)'],
+    ['a value that is not a url', 'http://']
+  ])('returns an empty string for %s', (_label, value) => {
+    expect(fromCallbackUrl(value, 'www.giveaway.dog')).toBe('');
+  });
+
+  it.each([
+    ['undefined', undefined],
+    ['null', null],
+    ['an empty string', '']
+  ])('returns an empty string when the host is %s', (_label, host) => {
+    expect(fromCallbackUrl('/account/history', host)).toBe('');
+  });
+
+  it('returns an empty string when the host is not a valid host', () => {
+    expect(fromCallbackUrl('/account', 'bad host')).toBe('');
   });
 });
 
