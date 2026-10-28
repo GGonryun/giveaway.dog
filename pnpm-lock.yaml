@@ -2517,6 +2517,9 @@ importers:
       '@giveaway/auth-server':
         specifier: workspace:*
         version: link:../auth-server
+      '@giveaway/bluesky-api':
+        specifier: workspace:*
+        version: link:../../integrations/bluesky/bluesky-api
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model

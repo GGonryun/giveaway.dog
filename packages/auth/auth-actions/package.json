@@ -27,6 +27,7 @@
   "dependencies": {
     "@giveaway/auth-model": "workspace:*",
     "@giveaway/auth-server": "workspace:*",
+    "@giveaway/bluesky-api": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/meta-model": "workspace:*",
