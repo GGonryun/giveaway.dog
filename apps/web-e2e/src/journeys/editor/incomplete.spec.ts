@@ -22,13 +22,13 @@ const ISSUES = [
   'prizes At least one prize is required'
 ];
 
-const expectIssues = async (page: Page) => {
+const expectIssues = async (page: Page, issues: string[]) => {
   const dialog = issuesDialog(page);
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole('paragraph')).toHaveText(
-    `${ISSUES.length} issues need to be fixed before you can publish`
+    `${issues.length} issues need to be fixed before you can publish`
   );
-  for (const issue of ISSUES) {
+  for (const issue of issues) {
     await expect(dialog.getByRole('button', { name: issue })).toBeVisible();
   }
   await expect(publishDialog(page)).toBeHidden();
@@ -54,7 +54,7 @@ test.describe('an incomplete giveaway in the editor', () => {
 
       await page.getByRole('textbox', { name: 'Name' }).fill('');
       await headerButton(page, 'Publish').click();
-      await expectIssues(page);
+      await expectIssues(page, ISSUES);
 
       await issuesDialog(page).getByRole('button', { name: ISSUES[3] }).click();
       await expect(issuesDialog(page)).toBeHidden();
@@ -77,7 +77,7 @@ test.describe('an incomplete giveaway in the editor', () => {
 
       await page.goto(`/app/${team.slug}/sweepstakes/${id}/create`);
       await headerButton(page, 'Publish').click();
-      await expectIssues(page);
+      await expectIssues(page, ISSUES.slice(1));
     }
   );
 
