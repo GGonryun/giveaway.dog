@@ -163,21 +163,23 @@ test.describe('team X pickers, as their host', () => {
     ).toBeVisible();
   });
 
-  test(
-    'a host who opens the picker list with an unknown status sees every picker',
-    knownBug(580),
+  test('a host who opens the picker list with an unknown status sees every picker', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedPickerTeam(request, ns);
+    const picker = await seedApi(request).picker({ team: team.slug });
+    await signInAs(page.request, 'host', ns);
 
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedPickerTeam(request, ns);
-      const picker = await seedApi(request).picker({ team: team.slug });
-      await signInAs(page.request, 'host', ns);
-
-      await page.goto(`/app/${team.slug}/pickers/x?status=BOGUS`);
-      await expect(pickerRow(page, picker.id)).toBeVisible();
-      await expect(page.getByText(/Error loading pickers/)).toHaveCount(0);
-    }
-  );
+    await page.goto(`/app/${team.slug}/pickers/x?status=BOGUS`);
+    await expect(page.getByRole('tab', { name: 'All' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    await expect(pickerRow(page, picker.id)).toBeVisible();
+    await expect(page.getByText(/Error loading pickers/)).toHaveCount(0);
+  });
 
   test(
     'a host deletes pickers that already have winners, from their page and from the list',

@@ -1,7 +1,6 @@
 import z from 'zod';
 import {
   pickerFilterStatusSchema,
-  PickerFilterStatus,
   pickerStatusSchema
 } from '@giveaway/picker-model/schemas/status';
 import {
@@ -36,8 +35,9 @@ export type ListPickersV2FilterSchema = z.infer<
 >;
 
 export const toPickersV2Filter = (s: unknown): ListPickersV2FilterSchema => {
-  const obj = s as Record<string, string>;
+  const obj = s as Record<string, unknown>;
+  const status = pickerFilterStatusSchema.safeParse(obj.status);
   return {
-    status: (obj.status as PickerFilterStatus) || 'ALL'
+    status: status.success ? status.data : 'ALL'
   };
 };
