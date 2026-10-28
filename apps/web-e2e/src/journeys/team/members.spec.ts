@@ -335,27 +335,26 @@ test.describe('team members', () => {
     ).toBeVisible();
   });
 
-  test(
-    'a visitor sees the team logo on the invite page, not its URL',
-    knownBug(489),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const seed = seedApi(request);
-      const { team } = await seed.team({
-        ns,
-        suffix: 'logo',
-        name: `Logo ${ns}`
-      });
-      const { link } = await seed.invites({ ns, team: team.slug, link: {} });
+  test('a visitor sees the team logo on the invite page, not its URL', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const seed = seedApi(request);
+    const { team } = await seed.team({
+      ns,
+      suffix: 'logo',
+      name: `Logo ${ns}`
+    });
+    const { link } = await seed.invites({ ns, team: team.slug, link: {} });
 
-      await page.goto(`/invites/${link!.id}`);
-      await expect(page.getByText(`Join ${team.name}`)).toBeVisible();
-      await expect(page.getByText(/^https?:\/\//)).toHaveCount(0);
-      await expect(
-        page.getByRole('img', { name: `${team.name} Logo` })
-      ).toBeVisible();
-    }
-  );
+    await page.goto(`/invites/${link!.id}`);
+    await expect(page.getByText(`Join ${team.name}`)).toBeVisible();
+    await expect(page.getByText(/^https?:\/\//)).toHaveCount(0);
+    await expect(
+      page.getByRole('img', { name: `${team.name} Logo` })
+    ).toBeVisible();
+  });
 
   test.describe('roles', () => {
     test('an owner changes a role and transfers the ownership', async ({

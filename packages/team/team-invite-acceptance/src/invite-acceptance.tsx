@@ -35,6 +35,20 @@ interface InviteAcceptanceProps {
   inviteDetails: InviteDetails;
 }
 
+const TeamLogo: React.FC<{ inviteDetails: InviteDetails }> = ({
+  inviteDetails
+}) => (
+  <div className="mb-2 flex items-center justify-center gap-2">
+    <Image
+      className="border rounded-full"
+      src={inviteDetails.teamLogo}
+      alt={`${inviteDetails.teamName} Logo`}
+      width={64}
+      height={64}
+    />
+  </div>
+);
+
 export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
   code,
   inviteDetails
@@ -105,9 +119,7 @@ export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
         <Card>
           <EasterEggLogo size={120} />
           <CardHeader className="text-center">
-            <div className="mb-2 flex items-center justify-center gap-2">
-              <div className="text-4xl">{inviteDetails.teamLogo}</div>
-            </div>
+            <TeamLogo inviteDetails={inviteDetails} />
             <CardTitle className="text-2xl">You've Been Invited!</CardTitle>
             <CardDescription className="text-base">
               Join{' '}
@@ -140,15 +152,7 @@ export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
       </div>
       <Card>
         <CardHeader className="text-center">
-          <div className="mb-2 flex items-center justify-center gap-2">
-            <Image
-              className="border rounded-full"
-              src={inviteDetails.teamLogo}
-              alt={`${inviteDetails.teamName} Logo`}
-              width={64}
-              height={64}
-            />
-          </div>
+          <TeamLogo inviteDetails={inviteDetails} />
           <CardTitle className="text-2xl">You've Been Invited!</CardTitle>
           <CardDescription className="text-base">
             Join <span className="font-semibold">{inviteDetails.teamName}</span>
