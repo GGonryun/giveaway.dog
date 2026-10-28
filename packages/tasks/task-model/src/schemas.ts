@@ -842,7 +842,9 @@ export const TASK_INPUT_SCHEMA = {
   TWITCH_CHAT_IMPORT: z.object({}),
   KICK_FOLLOW: z.object({}),
   YOUTUBE_VISIT: z.object({}),
-  INSTAGRAM_VISIT: z.object({}),
+  INSTAGRAM_VISIT: z.object({
+    answer: z.string().optional()
+  }),
   INSTAGRAM_LIKE: z.object({}),
   INSTAGRAM_COMMENT: z.object({}),
   FACEBOOK_VISIT_PAGE: z.object({}),

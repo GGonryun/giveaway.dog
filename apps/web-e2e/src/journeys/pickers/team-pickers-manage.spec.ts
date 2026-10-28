@@ -3,8 +3,7 @@ import { E2E_X_FIXTURES } from '@giveaway/e2e-model/fakes';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
-import { TAGS } from '../../helpers/tags';
+import { knownBug, quarantine } from '../../helpers/known-bug';
 import { signInAs } from '../../helpers/personas';
 import {
   createTeamPicker,
@@ -231,7 +230,7 @@ test.describe('team X pickers, as their host', () => {
 
   test(
     'a host schedules a picker for later',
-    { tag: TAGS.slow },
+    quarantine(610),
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
       const { team } = await seedPickerTeam(request, ns);
