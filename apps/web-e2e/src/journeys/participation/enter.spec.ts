@@ -32,7 +32,7 @@ const expectCompleted = async (
   entries: number,
   completed: number
 ) => {
-  await expect(page.getByText('Task completed!')).toBeVisible();
+  await expect(page.getByText('Task completed!').first()).toBeVisible();
   await expectProgress(page, entries, completed);
 };
 
