@@ -19,7 +19,7 @@ const PROFILE = {
 
 describe('E2E_OAUTH_PROVIDERS', () => {
   it('lists the providers that the mock can replace', () => {
-    expect(E2E_OAUTH_PROVIDERS).toEqual(['discord']);
+    expect(E2E_OAUTH_PROVIDERS).toEqual(['discord', 'tiktok']);
   });
 });
 
@@ -110,5 +110,46 @@ describe('parseE2eOAuthProfile', () => {
     expect(
       parseE2eOAuthProfile('discord', toE2eOAuthProfileCookieValue(profile))
     ).toMatchObject(profile);
+  });
+});
+
+describe('parseE2eOAuthProfile for TikTok', () => {
+  const TIKTOK = { open_id: 'e2e-newbie-abc123', username: 'e2e_tiktok' };
+
+  it('wraps the user as the TikTok user info endpoint does', () => {
+    expect(
+      parseE2eOAuthProfile('tiktok', toE2eOAuthProfileCookieValue(TIKTOK))
+    ).toEqual({
+      data: { user: { ...TIKTOK, display_name: null, avatar_url: null } }
+    });
+  });
+
+  it('accepts a display name and a username that looks like an email', () => {
+    const profile = {
+      ...TIKTOK,
+      username: 'e2e-participant-abc123@example.com',
+      display_name: 'E2E TikTok'
+    };
+
+    expect(
+      parseE2eOAuthProfile('tiktok', toE2eOAuthProfileCookieValue(profile))
+    ).toEqual({ data: { user: { ...profile, avatar_url: null } } });
+  });
+
+  it.each([
+    ['an open id that is not an e2e account id', { open_id: '-000abc' }],
+    ['an open id without a namespace', { open_id: 'e2e-newbie' }],
+    ['an empty username', { username: '' }],
+    ['a username that is too long', { username: 'u'.repeat(81) }],
+    ['an empty display name', { display_name: '' }],
+    ['an avatar', { avatar_url: 'https://example.com/a.png' }],
+    ['an email', { email: 'e2e-newbie-abc123@example.com' }]
+  ])('refuses a profile with %s', (_, change) => {
+    expect(
+      parseE2eOAuthProfile(
+        'tiktok',
+        toE2eOAuthProfileCookieValue({ ...TIKTOK, ...change })
+      )
+    ).toBeNull();
   });
 });

@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { isE2eEmail } from './personas';
+import { E2E_PERSONA_ACCOUNT_ID_PATTERN, isE2eEmail } from './personas';
 
-export const E2E_OAUTH_PROVIDERS = ['discord'] as const;
+export const E2E_OAUTH_PROVIDERS = ['discord', 'tiktok'] as const;
 
 export type E2eOAuthProvider = (typeof E2E_OAUTH_PROVIDERS)[number];
 
@@ -34,12 +34,26 @@ export const e2eDiscordProfileSchema = z
 
 export type E2eDiscordProfile = z.input<typeof e2eDiscordProfileSchema>;
 
+export const e2eTikTokProfileSchema = z
+  .object({
+    open_id: z.string().regex(E2E_PERSONA_ACCOUNT_ID_PATTERN),
+    username: z.string().min(1).max(80),
+    display_name: z.string().min(1).max(80).nullable().default(null),
+    avatar_url: z.null().default(null)
+  })
+  .strict()
+  .transform((user) => ({ data: { user } }));
+
+export type E2eTikTokProfile = z.input<typeof e2eTikTokProfileSchema>;
+
 export type E2eOAuthProfiles = {
   discord: E2eDiscordProfile;
+  tiktok: E2eTikTokProfile;
 };
 
 const E2E_OAUTH_PROFILE_SCHEMAS = {
-  discord: e2eDiscordProfileSchema
+  discord: e2eDiscordProfileSchema,
+  tiktok: e2eTikTokProfileSchema
 } satisfies Record<E2eOAuthProvider, z.ZodTypeAny>;
 
 export const toE2eOAuthProfileCookieValue = (profile: object) =>

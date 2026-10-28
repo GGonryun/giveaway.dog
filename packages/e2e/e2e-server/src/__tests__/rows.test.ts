@@ -482,6 +482,73 @@ describe('readE2eRows', () => {
     });
   });
 
+  it('reads the accounts of a mock OAuth user who has no email', async () => {
+    const user = {
+      id: 'user-tiktok',
+      email: null,
+      name: 'E2E TikTok',
+      username: null,
+      source: 'SIGNUP',
+      emailVerified: null,
+      accounts: [
+        {
+          provider: 'tiktok',
+          providerAccountId: 'e2e-newbie-abc123p1',
+          status: 'ACTIVE',
+          scope: 'user.info.profile',
+          label: 'e2e_tiktok'
+        }
+      ]
+    };
+    prismaMock.user.findFirst.mockResolvedValue(user);
+
+    const { accounts, ...rest } = user;
+    expect(
+      await readE2eRows({
+        db,
+        query: {
+          view: 'accounts',
+          persona: 'newbie',
+          ns: 'abc123p1',
+          provider: 'tiktok'
+        }
+      })
+    ).toEqual({ user: rest, accounts });
+    expect(prismaMock.user.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          email: null,
+          accounts: {
+            some: {
+              provider: 'tiktok',
+              providerAccountId: 'e2e-newbie-abc123p1'
+            }
+          }
+        }
+      })
+    );
+    expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+  });
+
+  it('refuses the accounts of a mock OAuth user that does not exist', async () => {
+    prismaMock.user.findFirst.mockResolvedValue(null);
+
+    await expect(
+      readE2eRows({
+        db,
+        query: {
+          view: 'accounts',
+          persona: 'newbie',
+          ns: 'abc123p1',
+          provider: 'tiktok'
+        }
+      })
+    ).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+      message: 'User tiktok account e2e-newbie-abc123p1 not found'
+    });
+  });
+
   it('refuses a view that does not exist', async () => {
     expect(() =>
       readE2eRows({ db, query: { view: 'users' } as never })

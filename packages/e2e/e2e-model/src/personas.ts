@@ -36,6 +36,15 @@ const E2E_PERSONA_EMAIL_PATTERN =
 export const toE2ePersonaEmail = (persona: E2ePersona, ns: string) =>
   `e2e-${persona}-${ns}@example.com`;
 
+export const E2E_PERSONA_ACCOUNT_ID_PATTERN =
+  /^e2e-([a-z0-9]+)-([a-z0-9]{4,10})$/;
+
+export const toE2ePersonaAccountId = (persona: E2ePersona, ns: string) =>
+  `e2e-${persona}-${ns}`;
+
+export const toE2eNamespaceOfAccountId = (id: string | null | undefined) =>
+  id?.match(E2E_PERSONA_ACCOUNT_ID_PATTERN)?.[2];
+
 export const isE2eEmail = (email: string | null | undefined) =>
   !!email?.match(E2E_EMAIL_PATTERN);
 

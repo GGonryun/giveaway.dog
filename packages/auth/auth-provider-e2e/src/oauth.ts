@@ -84,7 +84,8 @@ const toMockFetch =
   };
 
 const MOCK_SCOPES: Record<E2eOAuthProvider, string> = {
-  discord: 'identify email'
+  discord: 'identify email',
+  tiktok: 'user.info.profile'
 };
 
 const toMockProvider = (

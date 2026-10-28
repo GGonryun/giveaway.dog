@@ -424,7 +424,8 @@ describe('e2eRowsQuerySchema', () => {
     { view: 'completions', id: 'aB3_-x' },
     { view: 'draws', id: 'aB3_-x' },
     { view: 'templates', slug: 'e2e-abc123-w0' },
-    { view: 'accounts', persona: 'participant', ns: 'abc123' }
+    { view: 'accounts', persona: 'participant', ns: 'abc123' },
+    { view: 'accounts', persona: 'newbie', ns: 'abc123', provider: 'tiktok' }
   ])('accepts %j', (query) => {
     expect(e2eRowsQuerySchema.parse(query)).toEqual(query);
   });
@@ -441,7 +442,8 @@ describe('e2eRowsQuerySchema', () => {
     { view: 'accounts', persona: 'root', ns: 'abc123' },
     { view: 'accounts', persona: 'participant', ns: 'ab' },
     { view: 'accounts', persona: 'participant', ns: 'abc123', id: 'x' },
-    { view: 'accounts', email: 'someone@gmail.com' }
+    { view: 'accounts', email: 'someone@gmail.com' },
+    { view: 'accounts', persona: 'newbie', ns: 'abc123', provider: 'google' }
   ])('rejects %j', (query) => {
     expect(e2eRowsQuerySchema.safeParse(query).success).toBe(false);
   });

@@ -108,6 +108,29 @@ describe('readE2eOAuthProfiles', () => {
     ).toEqual({});
   });
 
+  it('reads the profile of each provider that has a cookie', async () => {
+    const tiktok = {
+      open_id: 'e2e-newbie-abc123',
+      username: 'e2e_tiktok'
+    };
+
+    expect(
+      await readE2eOAuthProfiles(
+        requestWith({
+          ...OPTED_IN,
+          'e2e-oauth-tiktok': toE2eOAuthProfileCookieValue(tiktok)
+        })
+      )
+    ).toEqual({
+      discord: PARSED_PROFILE,
+      tiktok: {
+        data: {
+          user: { ...tiktok, display_name: null, avatar_url: null }
+        }
+      }
+    });
+  });
+
   it('returns no profile without the profile cookie', async () => {
     expect(
       await readE2eOAuthProfiles(
@@ -231,6 +254,45 @@ describe('withE2eOAuth', () => {
     }) as unknown as MockedProvider[];
 
     expect(provider.options).toMatchObject({ authorization: AUTHORIZE });
+  });
+
+  it('replaces the token and userinfo requests of TikTok with the mock', () => {
+    const tiktok = {
+      id: 'tiktok',
+      name: 'TikTok',
+      type: 'oauth' as const,
+      authorization: {
+        url: 'https://www.tiktok.com/v2/auth/authorize',
+        params: { client_key: 'real-client', scope: 'user.info.profile' }
+      },
+      token: {
+        url: 'https://open.tiktokapis.com/v2/oauth/token/',
+        request: vi.fn()
+      },
+      userinfo: {
+        url: 'https://open.tiktokapis.com/v2/user/info/',
+        request: vi.fn()
+      },
+      options: { clientId: 'real-client', clientSecret: 'real-secret' }
+    };
+
+    const [provider] = withE2eOAuth([tiktok], {
+      tiktok: { data: { user: { open_id: 'e2e-newbie-abc123' } } }
+    }) as unknown as MockedProvider[];
+    const endpoints = {
+      clientId: 'e2e',
+      clientSecret: 'e2e',
+      authorization:
+        'https://preview.giveaway.dog/api/e2e/oauth/authorize?scope=user.info.profile',
+      token: 'https://e2e-oauth.invalid/token',
+      userinfo: 'https://e2e-oauth.invalid/userinfo'
+    };
+
+    expect(provider).toMatchObject({
+      id: 'tiktok',
+      ...endpoints,
+      options: endpoints
+    });
   });
 
   describe('the fetch of the mocked provider', () => {

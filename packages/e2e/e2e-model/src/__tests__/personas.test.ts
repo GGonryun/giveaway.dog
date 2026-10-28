@@ -6,7 +6,9 @@ import {
   e2eNamespaceSchema,
   e2ePersonaSchema,
   isE2eEmail,
+  toE2eNamespaceOfAccountId,
   toE2eNamespaceOfEmail,
+  toE2ePersonaAccountId,
   toE2ePersonaEmail,
   toE2ePersonaUpsert,
   toE2eSharedHostUpsert,
@@ -92,6 +94,28 @@ describe('toE2eNamespaceOfEmail', () => {
 
   it('finds no namespace in another email', () => {
     expect(toE2eNamespaceOfEmail('someone-abc123@example.com')).toBeUndefined();
+  });
+});
+
+describe('toE2ePersonaAccountId', () => {
+  it('names the provider account of a persona, and reads its namespace back', () => {
+    const id = toE2ePersonaAccountId('newbie', 'abc123');
+
+    expect(id).toBe('e2e-newbie-abc123');
+    expect(toE2eNamespaceOfAccountId(id)).toBe('abc123');
+  });
+});
+
+describe('toE2eNamespaceOfAccountId', () => {
+  it.each([
+    ['no id', undefined],
+    ['an id without a namespace', 'e2e-newbie'],
+    ['an id of a real provider account', '1234567890'],
+    ['an id with a namespace that is too short', 'e2e-newbie-abc'],
+    ['an id with a prefix', 'xe2e-newbie-abc123'],
+    ['an id with a suffix', 'e2e-newbie-abc123-x']
+  ])('reads no namespace from %s', (_, id) => {
+    expect(toE2eNamespaceOfAccountId(id)).toBeUndefined();
   });
 });
 

@@ -8,7 +8,10 @@ import {
   E2eUserExtrasRequest,
   toE2eUserNamespace
 } from '@giveaway/e2e-model/extras';
-import { toE2ePersonaUpsert } from '@giveaway/e2e-model/personas';
+import {
+  toE2ePersonaAccountId,
+  toE2ePersonaUpsert
+} from '@giveaway/e2e-model/personas';
 
 const IP_GROUPS = 5;
 
@@ -47,7 +50,7 @@ const seedUser = async (
     ...toE2ePersonaUpsert({ persona: extras.persona, ns, now }),
     select: { id: true, email: true }
   });
-  const accountId = `e2e-${extras.persona}-${ns}`;
+  const accountId = toE2ePersonaAccountId(extras.persona, ns);
   const location = extras.location && {
     ...extras.location,
     ip: toE2eIpAddress()
