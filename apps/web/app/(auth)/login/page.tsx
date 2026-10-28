@@ -2,6 +2,7 @@ import { EmojiLogo } from '@giveaway/ui-brand/emoji-logo';
 import { LoginForm } from '@giveaway/auth-login-ui/login-form';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage() {
+  const host = (await headers()).get('host');
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -25,7 +28,7 @@ export default async function LoginPage() {
           <EmojiLogo />
         </a>
         <Suspense>
-          <LoginForm />
+          <LoginForm host={host} />
         </Suspense>
       </div>
     </div>

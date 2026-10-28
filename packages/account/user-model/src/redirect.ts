@@ -14,6 +14,19 @@ export const toSafeRedirect = (
   return `${url.pathname}${url.search}${url.hash}`;
 };
 
+export const fromCallbackUrl = (
+  value: string | null | undefined,
+  host: string | null | undefined
+) => {
+  const base = `http://${host}`;
+  if (!value || !host || !URL.canParse(value, base)) return '';
+
+  const url = new URL(value, base);
+  if (url.host !== new URL(base).host) return '';
+
+  return toSafeRedirect(`${url.pathname}${url.search}${url.hash}`, '');
+};
+
 export const getUserAuthRedirect = ({
   redirectTo,
   accountType

@@ -173,21 +173,31 @@ describe('login', () => {
   });
 
   describe('email provider', () => {
-    it('signs in with the email and portal redirect', async () => {
-      await run({ provider: IdentityProvider.EMAIL, email: 'e@example.com' });
+    it('sends the link without the Auth.js redirect, then opens the verify page', async () => {
+      await expect(
+        run({ provider: IdentityProvider.EMAIL, email: 'e@example.com' })
+      ).rejects.toMatchObject({
+        message: 'NEXT_REDIRECT',
+        digest: 'NEXT_REDIRECT;replace;/login?verify=true;307;'
+      });
 
       expect(mocks.signIn).toHaveBeenCalledWith('email', {
         email: 'e@example.com',
-        redirectTo: portal({ email: 'e@example.com', provider: 'email' })
+        redirectTo: portal({ email: 'e@example.com', provider: 'email' }),
+        redirect: false
       });
+      expect(mocks.redirect).toHaveBeenCalledWith('/login?verify=true');
     });
 
     it('trims the spaces around the email', async () => {
-      await run({ provider: IdentityProvider.EMAIL, email: ' e@example.com ' });
+      await expect(
+        run({ provider: IdentityProvider.EMAIL, email: ' e@example.com ' })
+      ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
       expect(mocks.signIn).toHaveBeenCalledWith('email', {
         email: 'e@example.com',
-        redirectTo: portal({ email: 'e@example.com', provider: 'email' })
+        redirectTo: portal({ email: 'e@example.com', provider: 'email' }),
+        redirect: false
       });
     });
 
@@ -200,8 +210,23 @@ describe('login', () => {
           'Please enter a valid email address.'
         );
         expect(mocks.signIn).not.toHaveBeenCalled();
+        expect(mocks.redirect).not.toHaveBeenCalled();
       }
     );
+
+    it('does not open the verify page when the email cannot be sent', async () => {
+      mocks.signIn.mockRejectedValue(new AuthError('Send failed'));
+
+      const result = await run({
+        provider: IdentityProvider.EMAIL,
+        email: 'e@example.com'
+      });
+
+      expect(expectFailure(result, 'INTERNAL_SERVER_ERROR').message).toBe(
+        'Send failed'
+      );
+      expect(mocks.redirect).not.toHaveBeenCalled();
+    });
   });
 
   describe('anonymous provider', () => {

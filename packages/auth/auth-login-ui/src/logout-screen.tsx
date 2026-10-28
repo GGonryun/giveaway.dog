@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Progress } from '@giveaway/ui-primitives/progress';
 
+const LOGOUT_DURATION_MS = 5000;
+
 export const LogoutScreen: React.FC<{ onDoneAction: () => Promise<void> }> = ({
   onDoneAction
 }) => {
@@ -29,7 +31,7 @@ export const LogoutScreen: React.FC<{ onDoneAction: () => Promise<void> }> = ({
 
     // Handle progress bar and redirection
     const startTime = Date.now();
-    const duration = 5000; // 5 seconds
+    const duration = LOGOUT_DURATION_MS;
 
     const interval = setInterval(async () => {
       const elapsed = Date.now() - startTime;
@@ -45,6 +47,10 @@ export const LogoutScreen: React.FC<{ onDoneAction: () => Promise<void> }> = ({
     return () => clearInterval(interval);
   }, [router]);
 
+  const secondsLeft = Math.ceil(
+    (LOGOUT_DURATION_MS * (1 - progress / 100)) / 1000
+  );
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-md space-y-8 text-center">
@@ -59,7 +65,7 @@ export const LogoutScreen: React.FC<{ onDoneAction: () => Promise<void> }> = ({
         <div className="w-full space-y-2">
           <Progress value={progress} className="h-2 w-full" />
           <p className="text-xs text-muted-foreground text-right">
-            Redirecting in {Math.ceil((3000 - (progress / 100) * 3000) / 1000)}s
+            Redirecting in {secondsLeft}s
           </p>
         </div>
       </div>

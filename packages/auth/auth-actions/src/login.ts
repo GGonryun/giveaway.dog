@@ -24,6 +24,8 @@ import {
   normalizeFacebookUrl
 } from '@giveaway/meta-model/facebook';
 
+const EMAIL_SENT_PAGE = '/login?verify=true';
+
 const login = procedure()
   .authorization({
     required: false
@@ -232,10 +234,12 @@ const signInHandler = async (args: {
         options
       );
     case 'EMAIL':
-      return await signIn('email', {
+      await signIn('email', {
         email,
-        ...options
+        ...options,
+        redirect: false
       });
+      redirect(EMAIL_SENT_PAGE);
     case 'ANONYMOUS':
       return await signIn('anonymous', options);
     case 'INSTAGRAM': {

@@ -1,7 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { signInAs, toPersonaEmail } from '../../helpers/personas';
 import { seedWorkerTeam } from '../../helpers/seed';
 
@@ -65,18 +64,16 @@ test.describe('logout', () => {
       await expectLoggedOut(page);
     });
 
-    test(
-      '[AUTH-009] the logout page counts down from 5 seconds',
-      knownBug(432),
-      async ({ page }) => {
-        await page.goto('/logout');
+    test('[AUTH-009] the logout page counts down from 5 seconds', async ({
+      page
+    }) => {
+      await page.goto('/logout');
 
-        await expect(page.getByText(/Redirecting in \d+s/)).toHaveText(
-          'Redirecting in 5s',
-          { timeout: 1_000 }
-        );
-      }
-    );
+      await expect(page.getByText(/Redirecting in \d+s/)).toHaveText(
+        'Redirecting in 5s',
+        { timeout: 1_000 }
+      );
+    });
   });
 
   test.describe('as a host', () => {
