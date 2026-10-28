@@ -1,7 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { BASE_URL, E2E_SECRET, RUN_ID, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
 const CODE = `E2E-${RUN_ID.toUpperCase()}`;
@@ -11,7 +10,8 @@ const TASKS = {
   question: 'Tell us about your setup',
   choice: 'Pick a side',
   visit: 'Read our terms',
-  bonus: 'Claim a free entry'
+  bonus: 'Claim a free entry',
+  secondBonus: 'Claim another free entry'
 };
 
 const openTask = async (page: Page, title: string) => {
@@ -33,7 +33,6 @@ const expectCompleted = async (
   completed: number
 ) => {
   await expect(page.getByText('Task completed!')).toBeVisible();
-  await page.reload();
   await expectProgress(page, entries, completed);
 };
 
@@ -179,36 +178,45 @@ test.describe('entering a giveaway', () => {
     }
   );
 
-  test(
-    'the entries update as soon as a task is completed',
-    knownBug(499),
-    async ({ page, request, freshPersona }, testInfo) => {
-      const participant = await freshPersona('participant');
-      await seedApi(request).userExtras({
-        ns: RUN_ID,
-        users: [
-          {
-            persona: 'participant',
-            ns: participant.ns,
-            accounts: [{ identity: 'GOOGLE' }]
-          }
-        ]
-      });
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedApi(request).sweepstakes({
-        ns: RUN_ID,
-        team: team.slug,
-        audience: { allowedIdentities: ['GOOGLE'], formFields: [] },
-        tasks: [{ type: 'BONUS_TASK', title: TASKS.bonus }]
-      });
+  test('the entries update as soon as a task is completed', async ({
+    page,
+    request,
+    freshPersona
+  }, testInfo) => {
+    const participant = await freshPersona('participant');
+    await seedApi(request).userExtras({
+      ns: RUN_ID,
+      users: [
+        {
+          persona: 'participant',
+          ns: participant.ns,
+          accounts: [{ identity: 'GOOGLE' }]
+        }
+      ]
+    });
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedApi(request).sweepstakes({
+      ns: RUN_ID,
+      team: team.slug,
+      audience: { allowedIdentities: ['GOOGLE'], formFields: [] },
+      tasks: [
+        { type: 'BONUS_TASK', title: TASKS.bonus },
+        { type: 'BONUS_TASK', title: TASKS.secondBonus }
+      ]
+    });
 
-      await page.goto(`/browse/${giveaway.id}`);
-      await openTask(page, TASKS.bonus);
-      await page.getByRole('button', { name: 'Continue' }).click();
+    await page.goto(`/browse/${giveaway.id}`);
+    await openTask(page, TASKS.bonus);
+    await page.getByRole('button', { name: 'Continue' }).click();
 
-      await expect(page.getByText('Task completed!')).toBeVisible();
-      await expect(page.getByText('Your entries: 1')).toBeVisible();
-      await expect(page.getByText('1/1 completed')).toBeVisible();
-    }
-  );
+    await expect(page.getByText('Task completed!')).toBeVisible();
+    await expect(page.getByText('Your entries: 1')).toBeVisible();
+    await expect(page.getByText('1/2 completed')).toBeVisible();
+
+    await openTask(page, TASKS.secondBonus);
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    await expect(page.getByText('Your entries: 2')).toBeVisible();
+    await expect(page.getByText('2/2 completed')).toBeVisible();
+  });
 });
