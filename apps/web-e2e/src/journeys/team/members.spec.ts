@@ -203,25 +203,24 @@ test.describe('team members', () => {
       expect(revoked.status()).toBe(404);
     });
 
-    test(
-      'Enter in the invite email field sends the invite',
-      knownBug(84),
-      async ({ page, request }, testInfo) => {
-        const ns = freshNamespace(testInfo.workerIndex);
-        const { team } = await seedApi(request).team({ ns, suffix: 'en' });
-        await signInAs(page.request, 'host', ns);
-        await page.goto(`/app/${team.slug}/settings/team`);
+    test('Enter in the invite email field sends the invite', async ({
+      page,
+      request
+    }, testInfo) => {
+      const ns = freshNamespace(testInfo.workerIndex);
+      const { team } = await seedApi(request).team({ ns, suffix: 'en' });
+      await signInAs(page.request, 'host', ns);
+      await page.goto(`/app/${team.slug}/settings/team`);
 
-        const email = page.getByRole('textbox', { name: 'Email Address' });
-        await email.fill(toE2ePersonaEmail('participant', ns));
-        await email.press('Enter');
+      const email = page.getByRole('textbox', { name: 'Email Address' });
+      await email.fill(toE2ePersonaEmail('participant', ns));
+      await email.press('Enter');
 
-        await expect(
-          page.getByText('Invited 1 member successfully')
-        ).toBeVisible({ timeout: 30_000 });
-        await expect(page).not.toHaveURL(/invitations/);
-      }
-    );
+      await expect(page.getByText('Invited 1 member successfully')).toBeVisible(
+        { timeout: 30_000 }
+      );
+      await expect(page).not.toHaveURL(/invitations/);
+    });
   });
 
   test('only the invited account accepts an email invite, with the role of the invite', async ({
