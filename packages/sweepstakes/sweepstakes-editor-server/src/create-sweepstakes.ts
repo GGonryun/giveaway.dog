@@ -9,7 +9,7 @@ import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { getTemplateById } from '@giveaway/templates-model/data/static-templates';
 import { Prisma, PrismaClient, TeamTier } from '@giveaway/db-model';
 import { toStorableSweepstakesUpdate } from '@giveaway/sweepstakes-model/storable';
-import { isUndefined, omitBy } from 'lodash';
+import { isUndefined, omit, omitBy } from 'lodash';
 import {
   TemplateInputSchema,
   toTemplateInputSchema
@@ -77,7 +77,7 @@ const createFromTemplate = async ({
   base: Prisma.SweepstakesCreateInput;
 }) => {
   const template = await toTemplate({ db, templateId, teamId });
-  const update = toStorableSweepstakesUpdate(template);
+  const update = omit(toStorableSweepstakesUpdate(template), 'timing');
   const omitted = omitBy(update, isUndefined);
 
   return await db.sweepstakes.create({
