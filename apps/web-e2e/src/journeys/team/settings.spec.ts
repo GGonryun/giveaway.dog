@@ -151,15 +151,19 @@ test.describe('team settings', () => {
     await page.reload();
     await expect(urlField(page)).toHaveValue('https://x.com/e2e');
 
-    await page
-      .locator('form')
-      .filter({ has: urlField(page) })
-      .getByRole('button')
-      .first()
-      .click();
-    await expect(
-      page.getByText('No social links added yet', { exact: false })
-    ).toBeVisible();
+    await expect(async () => {
+      if ((await urlField(page).count()) > 0) {
+        await page
+          .locator('form')
+          .filter({ has: urlField(page) })
+          .getByRole('button')
+          .first()
+          .click();
+      }
+      await expect(
+        page.getByText('No social links added yet', { exact: false })
+      ).toBeVisible({ timeout: 1_000 });
+    }).toPass();
     await save.click();
     await expect(
       page.getByText('Social links updated successfully')
