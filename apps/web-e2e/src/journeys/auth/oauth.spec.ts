@@ -1,12 +1,22 @@
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
+import { toE2ePersonaAccountId } from '@giveaway/e2e-model/personas';
 import { E2E_SECRET } from '../../env';
 import { knownBug } from '../../helpers/known-bug';
-import { newDiscordId, useMockOAuth } from '../../helpers/oauth';
+import {
+  clickTikTokLogin,
+  newDiscordId,
+  useMockOAuth
+} from '../../helpers/oauth';
 import { seedApi } from '../../helpers/seed';
 
 type AccountRows = {
-  user: { id: string; email: string; source: string; emailVerified: string };
+  user: {
+    id: string;
+    email: string | null;
+    source: string;
+    emailVerified: string | null;
+  };
   accounts: { provider: string; providerAccountId: string; status: string }[];
 };
 
@@ -73,5 +83,55 @@ test.describe('mock OAuth sign-in', () => {
     }
   );
 
-  test.fixme('[AUTH-015] a TikTok user is signed in and opens their account page', async () => {});
+  test('[AUTH-015] a TikTok user is signed in and opens their account page', async ({
+    page,
+    context,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const openId = toE2ePersonaAccountId('newbie', ns);
+    await useMockOAuth(context, 'tiktok', {
+      open_id: openId,
+      username: `e2e_tiktok_${ns}`,
+      display_name: 'E2E TikTok'
+    });
+
+    await clickTikTokLogin(page);
+    await expect(page).not.toHaveURL(/\/(login|api\/)/, { timeout: 15_000 });
+
+    const session = await page.request.get('/api/auth/session');
+    const { user } = await session.json();
+    expect(user).toMatchObject({ name: 'E2E TikTok' });
+    expect(user.email ?? null).toBeNull();
+
+    const rows = await seedApi(request).rows<AccountRows>({
+      view: 'accounts',
+      persona: 'newbie',
+      ns,
+      provider: 'tiktok'
+    });
+    expect(rows.user).toMatchObject({ id: user.id, email: null });
+    expect(rows.accounts).toEqual([
+      expect.objectContaining({ provider: 'tiktok', providerAccountId: openId })
+    ]);
+
+    await page.goto('/onboarding');
+    await expect(page.getByText('Welcome to Giveaway.dog')).toBeVisible();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByLabel('Username').fill(`e2e_${ns}`);
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('button', { name: 'Complete Setup' }).click();
+    await expect(page).toHaveURL(/\/browse$/, { timeout: 15_000 });
+    const onboarded = await page.request.get('/api/auth/session');
+    expect((await onboarded.json()).user).toMatchObject({
+      id: user.id,
+      onboarded: true
+    });
+
+    await page.goto('/account');
+    await expect(page).toHaveURL(/\/account$/);
+    await expect(
+      page.getByRole('button', { name: 'Logout', exact: true })
+    ).toBeVisible();
+  });
 });

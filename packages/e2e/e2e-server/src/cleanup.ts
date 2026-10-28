@@ -7,8 +7,10 @@ import {
   isE2eTeamSlug,
   toE2eRunTeamSlugPrefix
 } from '@giveaway/e2e-model/naming';
+import { E2E_OAUTH_PROVIDERS } from '@giveaway/e2e-model/oauth';
 import {
   E2E_SHARED_HOST_EMAIL,
+  toE2eNamespaceOfAccountId,
   toE2eNamespaceOfEmail
 } from '@giveaway/e2e-model/personas';
 import { expireE2eSweepstakesTags } from './cache';
@@ -56,6 +58,25 @@ const deleteE2eTeams = async (
   };
 };
 
+const toE2eOAuthAccounts = (
+  providerAccountId: Prisma.StringFilter
+): Prisma.UserWhereInput => ({
+  email: null,
+  accounts: {
+    some: { provider: { in: [...E2E_OAUTH_PROVIDERS] }, providerAccountId }
+  }
+});
+
+const toE2eUserNamespace = (user: {
+  email: string | null;
+  accounts: { providerAccountId: string }[];
+}) =>
+  user.email === null
+    ? user.accounts
+        .map((account) => toE2eNamespaceOfAccountId(account.providerAccountId))
+        .find((ns) => ns !== undefined)
+    : toE2eNamespaceOfEmail(user.email);
+
 const deleteE2eUsers = async (
   db: PrismaClient,
   where: Prisma.UserWhereInput,
@@ -64,21 +85,32 @@ const deleteE2eUsers = async (
   const found = await db.user.findMany({
     where: {
       AND: [
-        { email: { startsWith: 'e2e-', endsWith: '@example.com' } },
-        { NOT: { email: E2E_SHARED_HOST_EMAIL } },
+        {
+          OR: [
+            {
+              email: { startsWith: 'e2e-', endsWith: '@example.com' },
+              NOT: { email: E2E_SHARED_HOST_EMAIL }
+            },
+            toE2eOAuthAccounts({ startsWith: 'e2e-' })
+          ]
+        },
         where
       ]
     },
     select: {
       id: true,
       email: true,
+      accounts: {
+        where: { provider: { in: [...E2E_OAUTH_PROVIDERS] } },
+        select: { providerAccountId: true }
+      },
       teams: { select: { team: { select: { slug: true } } } }
     },
     orderBy: { createdAt: 'asc' },
     take: E2E_USER_BATCH + 1
   });
   const candidates = found.slice(0, E2E_USER_BATCH).filter((user) => {
-    const ns = toE2eNamespaceOfEmail(user.email);
+    const ns = toE2eUserNamespace(user);
     return ns !== undefined && accept(ns);
   });
   const isOwned = (user: (typeof candidates)[number]) =>
@@ -95,7 +127,7 @@ const deleteE2eUsers = async (
 
   return {
     deleted: owned.length,
-    refused: refused.map((user) => user.email),
+    refused: refused.map((user) => user.email ?? user.id),
     more: found.length > E2E_USER_BATCH
   };
 };
@@ -137,7 +169,12 @@ export const deleteE2eRun = async ({
   runId,
   ...(await deleteE2eData(db, {
     teams: { slug: { startsWith: toE2eRunTeamSlugPrefix(runId) } },
-    users: { email: { contains: `-${runId}` } },
+    users: {
+      OR: [
+        { email: { contains: `-${runId}` } },
+        toE2eOAuthAccounts({ contains: `-${runId}` })
+      ]
+    },
     accept: (ns) => isE2eNamespaceOfRun(ns, runId)
   }))
 });

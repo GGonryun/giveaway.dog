@@ -23,7 +23,48 @@ const team = (
 const user = (email: string, teams: string[] = []) => ({
   id: `id-${email}`,
   email,
+  accounts: [],
   teams: teams.map((slug) => ({ team: { slug } }))
+});
+
+const oauthUser = (providerAccountId: string) => ({
+  id: `id-${providerAccountId}`,
+  email: null,
+  accounts: [{ providerAccountId }],
+  teams: []
+});
+
+const USER_SELECT = {
+  id: true,
+  email: true,
+  accounts: {
+    where: { provider: { in: ['discord', 'tiktok'] } },
+    select: { providerAccountId: true }
+  },
+  teams: { select: { team: { select: { slug: true } } } }
+};
+
+const e2eUsers = (where: object) => ({
+  AND: [
+    {
+      OR: [
+        {
+          email: { startsWith: 'e2e-', endsWith: '@example.com' },
+          NOT: { email: 'e2e-host@example.com' }
+        },
+        {
+          email: null,
+          accounts: {
+            some: {
+              provider: { in: ['discord', 'tiktok'] },
+              providerAccountId: { startsWith: 'e2e-' }
+            }
+          }
+        }
+      ]
+    },
+    where
+  ]
 });
 
 beforeEach(() => {
@@ -52,18 +93,21 @@ describe('deleteE2eRun', () => {
       take: E2E_TEAM_BATCH + 1
     });
     expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-      where: {
-        AND: [
-          { email: { startsWith: 'e2e-', endsWith: '@example.com' } },
-          { NOT: { email: 'e2e-host@example.com' } },
-          { email: { contains: '-abc123' } }
+      where: e2eUsers({
+        OR: [
+          { email: { contains: '-abc123' } },
+          {
+            email: null,
+            accounts: {
+              some: {
+                provider: { in: ['discord', 'tiktok'] },
+                providerAccountId: { contains: '-abc123' }
+              }
+            }
+          }
         ]
-      },
-      select: {
-        id: true,
-        email: true,
-        teams: { select: { team: { select: { slug: true } } } }
-      },
+      }),
+      select: USER_SELECT,
       orderBy: { createdAt: 'asc' },
       take: E2E_USER_BATCH + 1
     });
@@ -141,6 +185,49 @@ describe('deleteE2eRun', () => {
       }
     });
     expect(result.users).toEqual({ deleted: 2, refused: [] });
+  });
+
+  it('deletes the mock OAuth users of the run, who have no email', async () => {
+    prismaMock.user.findMany.mockResolvedValue([
+      oauthUser('e2e-newbie-abc123w0c1'),
+      oauthUser('e2e-newbie-xabc123'),
+      oauthUser('e2e-newbie'),
+      {
+        ...oauthUser('e2e-participant-abc123w0c2'),
+        accounts: [
+          { providerAccountId: '1234567890' },
+          { providerAccountId: 'e2e-participant-abc123w0c2' }
+        ]
+      }
+    ]);
+
+    const result = await deleteE2eRun({ db, runId: 'abc123' });
+
+    expect(prismaMock.user.deleteMany).toHaveBeenCalledWith({
+      where: {
+        id: {
+          in: ['id-e2e-newbie-abc123w0c1', 'id-e2e-participant-abc123w0c2']
+        }
+      }
+    });
+    expect(result.users).toEqual({ deleted: 2, refused: [] });
+  });
+
+  it('names a refused mock OAuth user by its id', async () => {
+    prismaMock.user.findMany.mockResolvedValue([
+      {
+        ...oauthUser('e2e-newbie-abc123w0c1'),
+        teams: [{ team: { slug: 'acme' } }]
+      }
+    ]);
+
+    const result = await deleteE2eRun({ db, runId: 'abc123' });
+
+    expect(prismaMock.user.deleteMany).not.toHaveBeenCalled();
+    expect(result.users).toEqual({
+      deleted: 0,
+      refused: ['id-e2e-newbie-abc123w0c1']
+    });
   });
 
   it('refuses a user who is a member of a team outside e2e', async () => {
@@ -259,13 +346,7 @@ describe('sweepE2eData', () => {
     );
     expect(prismaMock.user.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: {
-          AND: [
-            { email: { startsWith: 'e2e-', endsWith: '@example.com' } },
-            { NOT: { email: 'e2e-host@example.com' } },
-            { createdAt: { lt: BEFORE } }
-          ]
-        }
+        where: e2eUsers({ createdAt: { lt: BEFORE } })
       })
     );
     expect(result.before).toEqual(BEFORE);

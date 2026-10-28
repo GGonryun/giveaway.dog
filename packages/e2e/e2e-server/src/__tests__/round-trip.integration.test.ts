@@ -908,6 +908,28 @@ describe('the e2e seed API against a real database', () => {
     expect(await db.user.count({ where: { id: real.user.id } })).toBe(1);
   });
 
+  it('deletes the mock TikTok users of the run, who have no email, and no other user without one', async () => {
+    const tiktokUser = (providerAccountId: string) =>
+      db.user.create({
+        data: {
+          name: 'E2E TikTok',
+          accounts: {
+            create: { type: 'oauth', provider: 'tiktok', providerAccountId }
+          }
+        }
+      });
+    const ofRun = await tiktokUser('e2e-newbie-abc123w0c1');
+    const ofOtherRun = await tiktokUser('e2e-newbie-xyz789w0c1');
+    const real = await tiktokUser('-000realopenid');
+
+    const result = await call('DELETE', 'runs/abc123');
+
+    expect(result.users).toEqual({ deleted: 1, refused: [] });
+    expect(await db.user.count({ where: { id: ofRun.id } })).toBe(0);
+    expect(await db.user.count({ where: { id: ofOtherRun.id } })).toBe(1);
+    expect(await db.user.count({ where: { id: real.id } })).toBe(1);
+  });
+
   it('keeps a team of the run that has a real member', async () => {
     const { teamId } = await seedRun('abc123');
     const real = await createHost();

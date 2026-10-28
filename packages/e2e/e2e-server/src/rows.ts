@@ -1,7 +1,11 @@
 import 'server-only';
 
-import { PrismaClient } from '@giveaway/db-model';
-import { isE2eEmail, toE2ePersonaEmail } from '@giveaway/e2e-model/personas';
+import { Prisma, PrismaClient } from '@giveaway/db-model';
+import {
+  isE2eEmail,
+  toE2ePersonaAccountId,
+  toE2ePersonaEmail
+} from '@giveaway/e2e-model/personas';
 import { E2eRowsQuery } from '@giveaway/e2e-model/requests';
 import { assertNever } from '@giveaway/util-errors';
 import { ApplicationError } from '@giveaway/util-errors';
@@ -173,36 +177,61 @@ const readTemplates = async (db: PrismaClient, slug: string) => {
   return { templates };
 };
 
+const ACCOUNT_ROWS_SELECT = {
+  id: true,
+  email: true,
+  name: true,
+  username: true,
+  source: true,
+  emailVerified: true,
+  accounts: {
+    select: {
+      provider: true,
+      providerAccountId: true,
+      status: true,
+      scope: true,
+      label: true
+    },
+    orderBy: { provider: 'asc' }
+  }
+} satisfies Prisma.UserSelect;
+
+const findAccountRows = (
+  db: PrismaClient,
+  query: E2eRowsQuery & { view: 'accounts' }
+) => {
+  if (!query.provider) {
+    return db.user.findUnique({
+      where: { email: toE2ePersonaEmail(query.persona, query.ns) },
+      select: ACCOUNT_ROWS_SELECT
+    });
+  }
+  return db.user.findFirst({
+    where: {
+      email: null,
+      accounts: {
+        some: {
+          provider: query.provider,
+          providerAccountId: toE2ePersonaAccountId(query.persona, query.ns)
+        }
+      }
+    },
+    select: ACCOUNT_ROWS_SELECT
+  });
+};
+
 const readAccounts = async (
   db: PrismaClient,
-  persona: E2eRowsQuery & { view: 'accounts' }
+  query: E2eRowsQuery & { view: 'accounts' }
 ) => {
-  const email = toE2ePersonaEmail(persona.persona, persona.ns);
-  const user = await db.user.findUnique({
-    where: { email },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      username: true,
-      source: true,
-      emailVerified: true,
-      accounts: {
-        select: {
-          provider: true,
-          providerAccountId: true,
-          status: true,
-          scope: true,
-          label: true
-        },
-        orderBy: { provider: 'asc' }
-      }
-    }
-  });
+  const user = await findAccountRows(db, query);
   if (!user) {
+    const name = query.provider
+      ? `${query.provider} account ${toE2ePersonaAccountId(query.persona, query.ns)}`
+      : toE2ePersonaEmail(query.persona, query.ns);
     throw new ApplicationError({
       code: 'NOT_FOUND',
-      message: `User ${email} not found`
+      message: `User ${name} not found`
     });
   }
   const { accounts, ...rest } = user;

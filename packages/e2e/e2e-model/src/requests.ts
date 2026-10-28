@@ -39,6 +39,7 @@ import {
   visitUrlTaskSchema
 } from '@giveaway/task-model/schemas';
 import { e2eNamespaceSchema, e2ePersonaSchema } from './personas';
+import { E2E_OAUTH_PROVIDERS } from './oauth';
 import {
   E2E_TEAM_SLUG_MAX_LENGTH,
   e2eTeamSlugSchema,
@@ -739,7 +740,8 @@ export const e2eRowsQuerySchema = z.union([
     .object({
       view: z.literal('accounts'),
       persona: e2ePersonaSchema,
-      ns: e2eNamespaceSchema
+      ns: e2eNamespaceSchema,
+      provider: z.enum(E2E_OAUTH_PROVIDERS).optional()
     })
     .strict()
 ]);

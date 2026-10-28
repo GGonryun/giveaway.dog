@@ -57,6 +57,14 @@ describe('authorizeE2eOAuth', () => {
     );
   });
 
+  it('sends the browser to the callback of every mocked provider', async () => {
+    const tiktok = `${ORIGIN}/api/auth/callback/tiktok`;
+
+    const response = await authorize({ params: { redirect_uri: tiktok } });
+
+    expect(await refreshTarget(response)).toBe(`${tiktok}?code=e2e-oauth-code`);
+  });
+
   it('sends no state when the request has none', async () => {
     expect(await refreshTarget(await authorize())).toBe(
       `${CALLBACK}?code=e2e-oauth-code`

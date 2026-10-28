@@ -1,9 +1,10 @@
+import { toE2ePersonaAccountId } from '@giveaway/e2e-model/personas';
 import { expect, test } from '../fixtures/test';
 import { freshNamespace } from '../fixtures/personas';
 import { BYPASS_STATE, E2E_SECRET } from '../env';
 import { knownBug } from '../helpers/known-bug';
 import { requestMagicLink, skipWithoutEmailFake } from '../helpers/magic-link';
-import { newDiscordId, useMockOAuth } from '../helpers/oauth';
+import { clickTikTokLogin, newDiscordId, useMockOAuth } from '../helpers/oauth';
 import { toPersonaEmail } from '../helpers/personas';
 import { seedApi } from '../helpers/seed';
 import { TAGS } from '../helpers/tags';
@@ -83,5 +84,45 @@ test.describe('account linking', { tag: TAGS.security }, () => {
     expect((await session.json())?.user?.id).not.toBe(victim.userId);
   });
 
-  test.fixme('[LINK-003] a TikTok sign-in with a recycled username does not sign into another account', async () => {});
+  test('[LINK-003] a TikTok sign-in signs into an account only through its linked TikTok account', async ({
+    page,
+    context,
+    browser,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const {
+      users: [victim]
+    } = await seedApi(request).userExtras({
+      ns,
+      users: [{ persona: 'participant', accounts: [{ identity: 'TIKTOK' }] }]
+    });
+    await useMockOAuth(context, 'tiktok', {
+      open_id: toE2ePersonaAccountId('newbie', ns),
+      username: victim.email
+    });
+
+    await clickTikTokLogin(page);
+    await page.waitForURL(signInEnded, { timeout: 30_000 });
+
+    const session = await page.request.get('/api/auth/session');
+    expect((await session.json())?.user?.id).not.toBe(victim.userId);
+
+    const owner = await browser.newContext({ storageState: BYPASS_STATE });
+    try {
+      await blockThirdParties(owner);
+      await useMockOAuth(owner, 'tiktok', {
+        open_id: toE2ePersonaAccountId('participant', ns),
+        username: `e2e_${ns}`
+      });
+      const ownerPage = await owner.newPage();
+      await clickTikTokLogin(ownerPage);
+      await ownerPage.waitForURL(signInEnded, { timeout: 30_000 });
+
+      const linked = await ownerPage.request.get('/api/auth/session');
+      expect((await linked.json())?.user?.id).toBe(victim.userId);
+    } finally {
+      await owner.close();
+    }
+  });
 });
