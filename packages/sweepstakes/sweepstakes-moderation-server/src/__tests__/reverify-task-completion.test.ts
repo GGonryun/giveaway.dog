@@ -259,7 +259,8 @@ describe('reverifyTaskCompletion', () => {
         userId: 'entrant-1',
         participantId: 'participant-1',
         teamId: TEAM_ID,
-        data: { code: 'woof' }
+        data: { code: 'woof' },
+        reverify: true
       });
     });
 

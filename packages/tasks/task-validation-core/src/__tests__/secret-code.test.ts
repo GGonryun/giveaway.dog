@@ -236,6 +236,42 @@ describe('checkSecretCode', () => {
       });
     });
   });
+  describe('re-verification', () => {
+    const reverify = <T>(task: T, data: unknown) => ({
+      ...input(task, data),
+      reverify: true
+    });
+
+    it('accepts the right code of a completion that already exists', async () => {
+      prismaMock.taskCompletion.findFirst.mockResolvedValue(
+        taskCompletion('task-secret')
+      );
+
+      await expect(
+        checkSecretCode(db, reverify(buildTask(), { code: 'WoofWoof' }))
+      ).resolves.toBeUndefined();
+      expect(prismaMock.taskCompletion.findFirst).not.toHaveBeenCalled();
+    });
+
+    it('does not count as an attempt of the participant', async () => {
+      prismaMock.taskProgress.upsert.mockResolvedValue(progress(25));
+
+      await checkSecretCode(db, reverify(buildTask(), { code: 'WoofWoof' }));
+
+      expect(prismaMock.taskProgress.upsert).not.toHaveBeenCalled();
+    });
+
+    it('still rejects a wrong code', async () => {
+      const error = await applicationError(
+        checkSecretCode(db, reverify(buildTask(), { code: 'Meow' }))
+      );
+
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'The secret code you entered is incorrect'
+      });
+    });
+  });
 });
 
 describe('checkSecretCodeV2', () => {
@@ -424,6 +460,42 @@ describe('checkSecretCodeV2', () => {
       expect(error).toMatchObject({
         code: 'BAD_REQUEST',
         message: 'Task already completed'
+      });
+    });
+  });
+  describe('re-verification', () => {
+    const reverify = <T>(task: T, data: unknown) => ({
+      ...input(task, data),
+      reverify: true
+    });
+
+    it('accepts the right code of a completion that already exists', async () => {
+      prismaMock.taskCompletion.findFirst.mockResolvedValue(
+        taskCompletion('task-secret-v2')
+      );
+
+      await expect(
+        checkSecretCodeV2(db, reverify(buildTaskV2(), { code: 'Alpha' }))
+      ).resolves.toBeUndefined();
+      expect(prismaMock.taskCompletion.findFirst).not.toHaveBeenCalled();
+    });
+
+    it('does not count as an attempt of the participant', async () => {
+      prismaMock.taskProgress.upsert.mockResolvedValue(progress(25));
+
+      await checkSecretCodeV2(db, reverify(buildTaskV2(), { code: 'Alpha' }));
+
+      expect(prismaMock.taskProgress.upsert).not.toHaveBeenCalled();
+    });
+
+    it('still rejects a wrong code', async () => {
+      const error = await applicationError(
+        checkSecretCodeV2(db, reverify(buildTaskV2(), { code: 'Charlie' }))
+      );
+
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'The secret code you entered is incorrect'
       });
     });
   });
