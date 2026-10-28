@@ -280,19 +280,18 @@ test.describe('onboarding journeys', () => {
     }
   );
 
-  test(
-    '[ONBOARD-006] an onboarded host who opens the onboarding page stays a host',
-    knownBug(566),
-    async ({ page, freshPersona }) => {
-      await freshPersona('host');
+  test('[ONBOARD-006] an onboarded host who opens the onboarding page stays a host', async ({
+    page,
+    freshPersona
+  }) => {
+    await freshPersona('host');
 
-      await page.goto('/onboarding');
+    await page.goto('/onboarding');
 
-      await expect(page).toHaveURL(/\/app$/);
-      expect(await readSession(page)).toMatchObject({
-        onboarded: true,
-        accountType: 'HOST'
-      });
-    }
-  );
+    await expect(page).toHaveURL(/\/app$/);
+    expect(await readSession(page)).toMatchObject({
+      onboarded: true,
+      accountType: 'HOST'
+    });
+  });
 });
