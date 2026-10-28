@@ -7,12 +7,36 @@ import {
 import { Prisma, PrismaClient } from '@giveaway/db-model';
 import { cookies } from 'next/headers';
 import { revalidateTag } from 'next/cache';
-import { toTaskSchema } from '@giveaway/task-model/schemas';
+import { toTaskSchema, toTaskSchemaSafe } from '@giveaway/task-model/schemas';
 
 export type ValidateReferralArgs = {
   participant: Prisma.SweepstakesParticipantGetPayload<{}>;
   completions: Prisma.TaskCompletionGetPayload<{}>[];
   taskId: string;
+};
+
+const toUserActions = async (
+  db: PrismaClient,
+  { participant, completions }: Omit<ValidateReferralArgs, 'taskId'>
+) => {
+  if (completions.length === 0) {
+    return completions;
+  }
+
+  const tasks = await db.task.findMany({
+    where: { sweepstakesId: participant.sweepstakesId }
+  });
+  const automaticTaskIds = new Set(
+    tasks
+      .filter(
+        (task) => toTaskSchemaSafe(task).type === 'BONUS_COMPLETE_PROFILE'
+      )
+      .map((task) => task.id)
+  );
+
+  return completions.filter(
+    (completion) => !automaticTaskIds.has(completion.taskId)
+  );
 };
 
 export const validateReferral = async (
@@ -34,12 +58,14 @@ export const validateReferral = async (
 
   // if the user has already completed a task do nothing.
   // referrals are only valid for users who have not yet completed any action/task.
-  if (completions.length > 0) {
+  // the app completes the profile bonus by itself, so it is not an action of the user.
+  const actions = await toUserActions(db, { completions, participant });
+  if (actions.length > 0) {
     console.info('[Referral] User already has completions, skipping referral', {
       userId: participant.userId,
       sweepstakesId: participant.sweepstakesId,
       referralCode,
-      completionsCount: completions.length
+      completionsCount: actions.length
     });
     clearReferralCodeCookie();
     return;

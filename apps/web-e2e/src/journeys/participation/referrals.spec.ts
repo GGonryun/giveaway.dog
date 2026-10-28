@@ -4,7 +4,6 @@ import type { E2eTaskRequest } from '@giveaway/e2e-model/requests';
 import { expect, test } from '../../fixtures/test';
 import { BYPASS_STATE, E2E_SECRET, RUN_ID } from '../../env';
 import { freshNamespace } from '../../fixtures/personas';
-import { knownBug } from '../../helpers/known-bug';
 import { signInAs } from '../../helpers/personas';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import { blockThirdParties } from '../../helpers/third-party';
@@ -149,27 +148,28 @@ test.describe('referrals', () => {
     await expect(page.getByText('E2E participant2')).toBeVisible();
   });
 
-  test(
-    'a participant earns the referral when the giveaway has the automatic profile bonus',
-    knownBug(520),
-    async ({ page, browser, request, freshPersona }, testInfo) => {
-      const { ns } = await freshPersona('participant');
-      const { team } = await seedWorkerTeam(request, testInfo);
+  test('a participant earns the referral when the giveaway has the automatic profile bonus', async ({
+    page,
+    browser,
+    request,
+    freshPersona
+  }, testInfo) => {
+    const { ns } = await freshPersona('participant');
+    const { team } = await seedWorkerTeam(request, testInfo);
 
-      await referAFriend({
-        page,
-        browser,
-        request,
-        ns,
-        friendNs: freshNamespace(testInfo.workerIndex),
-        team: team.slug,
-        tasks: [
-          { type: 'BONUS_COMPLETE_PROFILE', title: 'Complete your profile' }
-        ],
-        entriesBefore: 2
-      });
+    await referAFriend({
+      page,
+      browser,
+      request,
+      ns,
+      friendNs: freshNamespace(testInfo.workerIndex),
+      team: team.slug,
+      tasks: [
+        { type: 'BONUS_COMPLETE_PROFILE', title: 'Complete your profile' }
+      ],
+      entriesBefore: 2
+    });
 
-      await expect(page.getByText('Your entries: 5')).toBeVisible();
-    }
-  );
+    await expect(page.getByText('Your entries: 5')).toBeVisible();
+  });
 });
