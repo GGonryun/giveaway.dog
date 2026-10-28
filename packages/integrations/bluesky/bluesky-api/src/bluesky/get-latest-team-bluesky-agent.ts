@@ -3,8 +3,18 @@
 import { getTeamBlueskyClient } from './team-bluesky-client';
 import { ApplicationError } from '@giveaway/util-errors';
 import { Agent } from '@atproto/api';
+import {
+  TokenInvalidError,
+  TokenRefreshError,
+  TokenRevokedError
+} from '@atproto/oauth-client-node';
 import { PrismaClient } from '@giveaway/db-model';
 import { Tx } from '@giveaway/db-client/prisma';
+
+const isRejectedSession = (error: unknown) =>
+  error instanceof TokenRefreshError ||
+  error instanceof TokenRevokedError ||
+  error instanceof TokenInvalidError;
 
 export interface BlueskyTeamCredentials {
   agent: Agent;
@@ -69,6 +79,14 @@ export async function getLatestTeamBlueskyCredentials(
     };
   } catch (error) {
     console.error('Failed to restore Bluesky team session:', error);
+
+    if (!isRejectedSession(error)) {
+      throw new ApplicationError({
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'Bluesky could not restore the session. Try again later.',
+        cause: error
+      });
+    }
 
     await db.integration.update({
       where: { id: integration.id },

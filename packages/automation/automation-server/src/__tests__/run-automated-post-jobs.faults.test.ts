@@ -41,7 +41,6 @@ const DISCORD_OK_MESSAGES =
 const ISSUES = {
   retry: '#183',
   timeout: '#303',
-  token: '#304',
   image: '#305'
 };
 
@@ -135,12 +134,7 @@ const CALLS: Call[] = [
     refreshesToken: true,
     bugs: {
       ...HANGS,
-      staysConnected: {
-        timeout: ISSUES.timeout,
-        'rate-limit': ISSUES.token,
-        'rate-limit-retry-after': ISSUES.token,
-        'server-error': ISSUES.token
-      }
+      staysConnected: { timeout: ISSUES.timeout }
     }
   }),
   networkCall('the image download of an X post', 'POST_TO_TWITTER', IMAGE, {
@@ -154,16 +148,7 @@ const CALLS: Call[] = [
     inject: (_, fault) => m.restore.mockRejectedValue(faultError(fault)),
     reached: () => m.restore.mock.calls.length > 0,
     refreshesToken: true,
-    bugs: {
-      retries: RETRIES_LATER,
-      staysConnected: {
-        timeout: ISSUES.token,
-        'rate-limit': ISSUES.token,
-        'rate-limit-retry-after': ISSUES.token,
-        'server-error': ISSUES.token,
-        'network-error': ISSUES.token
-      }
-    }
+    bugs: { retries: RETRIES_LATER }
   },
   networkCall(
     'the image download of a Bluesky post',

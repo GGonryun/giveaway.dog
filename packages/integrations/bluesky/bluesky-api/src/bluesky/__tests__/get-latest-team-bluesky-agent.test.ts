@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { asPrismaClient, prismaMock } from '@giveaway/testing-server/prisma';
 import { ApplicationError } from '@giveaway/util-errors';
+import {
+  TokenInvalidError,
+  TokenRefreshError,
+  TokenRevokedError
+} from '@atproto/oauth-client-node';
 import { getLatestTeamBlueskyCredentials } from '../get-latest-team-bluesky-agent';
 
 const m = vi.hoisted(() => ({
@@ -10,7 +15,8 @@ const m = vi.hoisted(() => ({
   fromImportable: vi.fn()
 }));
 
-vi.mock('@atproto/oauth-client-node', () => ({
+vi.mock('@atproto/oauth-client-node', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@atproto/oauth-client-node')>()),
   NodeOAuthClient: m.NodeOAuthClient,
   requestLocalLock: vi.fn()
 }));
@@ -229,44 +235,120 @@ describe('getLatestTeamBlueskyCredentials', () => {
     });
   });
 
-  describe('when restoring the session fails', () => {
-    it('marks the integration as errored', async () => {
+  describe('when bluesky rejects the session', () => {
+    const rejections = [
+      ['TokenRefreshError', new TokenRefreshError('did:plc:team', 'refused')],
+      ['TokenRevokedError', new TokenRevokedError('did:plc:team')],
+      ['TokenInvalidError', new TokenInvalidError('did:plc:team')]
+    ] as const;
+
+    beforeEach(() => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       prismaMock.integration.findFirst.mockResolvedValue(integration());
-      m.restore.mockRejectedValue(new Error('token revoked'));
-
-      await captureError(
-        getLatestTeamBlueskyCredentials(asPrismaClient(), 'team-1')
-      );
-
-      expect(prismaMock.integration.update).toHaveBeenCalledWith({
-        where: { id: 'integration-1' },
-        data: { status: 'ERROR' }
-      });
     });
 
-    it('throws UNAUTHORIZED with the restore error as the cause', async () => {
-      vi.spyOn(console, 'error').mockImplementation(() => {});
-      const restoreError = new Error('token revoked');
-      prismaMock.integration.findFirst.mockResolvedValue(integration());
-      m.restore.mockRejectedValue(restoreError);
+    it.each(rejections)(
+      'marks the integration as errored for a %s',
+      async (_, rejection) => {
+        m.restore.mockRejectedValue(rejection);
+
+        await captureError(
+          getLatestTeamBlueskyCredentials(asPrismaClient(), 'team-1')
+        );
+
+        expect(prismaMock.integration.update).toHaveBeenCalledTimes(1);
+        expect(prismaMock.integration.update).toHaveBeenCalledWith({
+          where: { id: 'integration-1' },
+          data: { status: 'ERROR' }
+        });
+      }
+    );
+
+    it.each(rejections)(
+      'throws UNAUTHORIZED with the %s as the cause',
+      async (_, rejection) => {
+        m.restore.mockRejectedValue(rejection);
+
+        const error = await captureError(
+          getLatestTeamBlueskyCredentials(asPrismaClient(), 'team-1')
+        );
+
+        expect(error).toBeInstanceOf(ApplicationError);
+        expect(error.code).toBe('UNAUTHORIZED');
+        expect(error.message).toBe(
+          'Failed to restore Bluesky session. Please reconnect your Bluesky integration.'
+        );
+        expect(error.cause).toBe(rejection);
+      }
+    );
+
+    it('propagates the database error when marking the integration fails', async () => {
+      const dbError = new Error('db down');
+      m.restore.mockRejectedValue(new TokenRevokedError('did:plc:team'));
+      prismaMock.integration.update.mockRejectedValue(dbError);
 
       const error = await captureError(
         getLatestTeamBlueskyCredentials(asPrismaClient(), 'team-1')
       );
 
-      expect(error).toBeInstanceOf(ApplicationError);
-      expect(error.code).toBe('UNAUTHORIZED');
-      expect(error.message).toBe(
-        'Failed to restore Bluesky session. Please reconnect your Bluesky integration.'
-      );
-      expect(error.cause).toBe(restoreError);
+      expect(error).toBe(dbError);
     });
+  });
+
+  describe('when restoring the session fails for another reason', () => {
+    const failures = [
+      ['a network error', new TypeError('fetch failed')],
+      [
+        'a timeout',
+        new DOMException('The operation was aborted', 'TimeoutError')
+      ],
+      [
+        'a server error',
+        Object.assign(new Error('Internal Server Error'), { status: 500 })
+      ],
+      ['an unknown error', new Error('token revoked')]
+    ] as const;
+
+    beforeEach(() => {
+      prismaMock.integration.findFirst.mockResolvedValue(integration());
+    });
+
+    it.each(failures)(
+      'keeps the integration connected after %s',
+      async (_, failure) => {
+        vi.spyOn(console, 'error').mockImplementation(() => {});
+        m.restore.mockRejectedValue(failure);
+
+        await captureError(
+          getLatestTeamBlueskyCredentials(asPrismaClient(), 'team-1')
+        );
+
+        expect(prismaMock.integration.update).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each(failures)(
+      'throws SERVICE_UNAVAILABLE with %s as the cause',
+      async (_, failure) => {
+        vi.spyOn(console, 'error').mockImplementation(() => {});
+        m.restore.mockRejectedValue(failure);
+
+        const error = await captureError(
+          getLatestTeamBlueskyCredentials(asPrismaClient(), 'team-1')
+        );
+
+        expect(error).toBeInstanceOf(ApplicationError);
+        expect(error.code).toBe('SERVICE_UNAVAILABLE');
+        expect(error.message).toBe(
+          'Bluesky could not restore the session. Try again later.'
+        );
+        expect(error.cause).toBe(failure);
+      }
+    );
 
     it('logs the restore error', async () => {
       const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      const restoreError = new Error('token revoked');
-      prismaMock.integration.findFirst.mockResolvedValue(integration());
+      const restoreError = new TypeError('fetch failed');
       m.restore.mockRejectedValue(restoreError);
 
       await captureError(
@@ -279,24 +361,9 @@ describe('getLatestTeamBlueskyCredentials', () => {
       );
     });
 
-    it('propagates the database error when marking the integration fails', async () => {
-      vi.spyOn(console, 'error').mockImplementation(() => {});
-      const dbError = new Error('db down');
-      prismaMock.integration.findFirst.mockResolvedValue(integration());
-      m.restore.mockRejectedValue(new Error('token revoked'));
-      prismaMock.integration.update.mockRejectedValue(dbError);
-
-      const error = await captureError(
-        getLatestTeamBlueskyCredentials(asPrismaClient(), 'team-1')
-      );
-
-      expect(error).toBe(dbError);
-    });
-
-    it('marks the integration as errored when creating the agent fails', async () => {
+    it('keeps the integration connected when creating the agent fails', async () => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
       const agentError = new Error('bad session');
-      prismaMock.integration.findFirst.mockResolvedValue(integration());
       m.Agent.mockImplementation(function () {
         throw agentError;
       });
@@ -306,7 +373,7 @@ describe('getLatestTeamBlueskyCredentials', () => {
       );
 
       expect(error.cause).toBe(agentError);
-      expect(prismaMock.integration.update).toHaveBeenCalledTimes(1);
+      expect(prismaMock.integration.update).not.toHaveBeenCalled();
     });
   });
 
