@@ -19,6 +19,9 @@ export interface FileUploadProps {
   fillPreview?: boolean;
   maxSize?: FileSize;
   acceptedFileTypes?: AcceptedFileTypes;
+  id?: string;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
@@ -29,7 +32,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   className = '',
   fillPreview = false,
   maxSize = new FileSize(5, 'MB'),
-  acceptedFileTypes = new AcceptedFileTypes(['JPEG', 'PNG', 'GIF'])
+  acceptedFileTypes = new AcceptedFileTypes(['JPEG', 'PNG', 'GIF']),
+  id,
+  'aria-describedby': ariaDescribedBy,
+  'aria-invalid': ariaInvalid
 }) => {
   const [preview, setPreview] = useState<string | null>(initialUrl || null);
   const [progress, setProgress] = useState<number>(0);
@@ -78,7 +84,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     }
   }, [fillPreview, initialUrl, aspectRatio]);
 
-  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (e: React.DragEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFile(e.dataTransfer.files[0]);
@@ -174,9 +180,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             </div>
           </div>
         ) : (
-          <div
+          <button
+            type="button"
+            id={id}
+            aria-describedby={ariaDescribedBy}
+            aria-invalid={ariaInvalid}
             className={cn(
-              `flex flex-col items-center justify-center border-2 border-dashed rounded-lg w-full cursor-pointer transition-colors bg-white hover:bg-gray-50 dark:bg-input/30 dark:hover:bg-input/40 p-2`,
+              `flex flex-col items-center justify-center border-2 border-dashed rounded-lg w-full cursor-pointer transition-colors bg-white hover:bg-gray-50 dark:bg-input/30 dark:hover:bg-input/40 p-2 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:border-destructive`,
               uploading ? 'opacity-50 pointer-events-none' : '',
               sizeClasses
             )}
@@ -192,7 +202,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               Up to {maxSize.toString()}. Accepts {acceptedFileTypes.toString()}
               .
             </Typography.Caption>
-          </div>
+          </button>
         )}
         <Input
           ref={inputRef}

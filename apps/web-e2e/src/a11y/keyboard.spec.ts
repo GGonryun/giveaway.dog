@@ -2,7 +2,6 @@ import type { Locator, Page } from '@playwright/test';
 import { expect, test } from '../fixtures/test';
 import { E2E_SECRET, personaState } from '../env';
 import { createDraft, headerButton } from '../helpers/editor';
-import { knownBug } from '../helpers/known-bug';
 import { seedWorkerTeam } from '../helpers/seed';
 import { TAGS } from '../helpers/tags';
 
@@ -20,7 +19,7 @@ const tabTo = async (page: Page, target: Locator, name: string) => {
 };
 
 const dropZone = (page: Page) =>
-  page.getByText('Drag and drop files here', { exact: true }).locator('..');
+  page.getByRole('button', { name: 'Banner Image', exact: true });
 
 test.describe('keyboard only', { tag: TAGS.a11y }, () => {
   test('a visitor reaches every login option with the Tab key', async ({
@@ -54,21 +53,20 @@ test.describe('keyboard only', { tag: TAGS.a11y }, () => {
       await tabTo(page, headerButton(page, 'Publish'), 'Publish');
     });
 
-    test(
-      'a host opens the file picker of the banner drop zone with the keyboard',
-      knownBug(116),
-      async ({ page, request }, testInfo) => {
-        const { team } = await seedWorkerTeam(request, testInfo);
-        await createDraft(page, team.slug);
-        await page.reload();
-        await expect(dropZone(page)).toBeVisible();
-        await page.waitForLoadState('networkidle');
+    test('a host opens the file picker of the banner drop zone with the keyboard', async ({
+      page,
+      request
+    }, testInfo) => {
+      const { team } = await seedWorkerTeam(request, testInfo);
+      await createDraft(page, team.slug);
+      await page.reload();
+      await expect(dropZone(page)).toBeVisible();
+      await page.waitForLoadState('networkidle');
 
-        await tabTo(page, dropZone(page), 'The banner drop zone');
-        const chooser = page.waitForEvent('filechooser', { timeout: 5_000 });
-        await page.keyboard.press('Enter');
-        await chooser;
-      }
-    );
+      await tabTo(page, dropZone(page), 'The banner drop zone');
+      const chooser = page.waitForEvent('filechooser', { timeout: 5_000 });
+      await page.keyboard.press('Enter');
+      await chooser;
+    });
   });
 });
