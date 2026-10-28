@@ -17,27 +17,25 @@ export default async function AuthenticatedPage({ params }: PageProps) {
   const { id } = await params;
   const options = { sweepstakesId: id };
 
-  // Fetch ALL data including user-specific
-  const [
-    sweepstakes,
-    participant,
-    relationship,
-    privacy,
-    referral,
-    allocations
-  ] = await Promise.all([
-    getParticipantSweepstake(options),
+  const pending = Promise.all([
     getOrCreateSweepstakesParticipant(options),
     getUserHostRelationship(options),
-    getSweepstakesPrivacy(options),
-    getUserReferral(options),
-    getSweepstakesAllocations(options)
+    getSweepstakesPrivacy(options)
   ]);
+  const sweepstakes = await getParticipantSweepstake(options);
 
   if (!sweepstakes.ok) {
     console.warn('Sweepstake not found:', sweepstakes.data.message);
     notFound();
   }
+
+  const resolved = { sweepstakesId: sweepstakes.data.sweepstakes.id };
+  const [[participant, relationship, privacy], referral, allocations] =
+    await Promise.all([
+      pending,
+      getUserReferral(resolved),
+      getSweepstakesAllocations(resolved)
+    ]);
 
   if (!relationship.ok) {
     console.warn('Host relationship fetch error:', relationship.data?.message);

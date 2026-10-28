@@ -27,8 +27,7 @@ describe('refreshSweepstakes', () => {
         ['sweepstakes-sw-42', 'max'],
         ['participant-sweepstake', 'max'],
         ['sweepstakes-sw-42-privacy', 'max'],
-        ['sweepstakes-sw-42-referral', 'max'],
-        ['sweepstakes-sw-42-host', 'max']
+        ['sweepstakes-sw-42-referral', 'max']
       ]);
     });
 

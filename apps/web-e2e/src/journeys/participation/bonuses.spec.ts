@@ -1,7 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import {
   captureServerAction,
   readActionResult,
@@ -80,41 +79,40 @@ test.describe('limited and loyalty bonuses', () => {
     await expect(page.getByText('Your entries: 0')).toBeVisible();
   });
 
-  test(
-    'a loyalty bonus unlocks once the participant entered another giveaway of the host',
-    knownBug(602),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const first = await seedApi(request).sweepstakes({
-        ns: RUN_ID,
-        team: team.slug,
-        audience: { allowedIdentities: ['GOOGLE'], formFields: [] },
-        tasks: [{ type: 'BONUS_TASK', title: BONUS }]
-      });
-      const second = await seedApi(request).sweepstakes({
-        ns: RUN_ID,
-        team: team.slug,
-        audience: { allowedIdentities: ['GOOGLE'], formFields: [] },
-        tasks: [{ type: 'BONUS_LOYALTY', title: LOYALTY, loyaltyRequired: 1 }]
-      });
-      const locked = tasksPanel(page).getByText(
-        /Unlocks after participating in 1 sweepstakes with this host/
-      );
+  test('a loyalty bonus unlocks once the participant entered another giveaway of the host', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const first = await seedApi(request).sweepstakes({
+      ns: RUN_ID,
+      team: team.slug,
+      audience: { allowedIdentities: ['GOOGLE'], formFields: [] },
+      tasks: [{ type: 'BONUS_TASK', title: BONUS }]
+    });
+    const second = await seedApi(request).sweepstakes({
+      ns: RUN_ID,
+      team: team.slug,
+      audience: { allowedIdentities: ['GOOGLE'], formFields: [] },
+      tasks: [{ type: 'BONUS_LOYALTY', title: LOYALTY, loyaltyRequired: 1 }]
+    });
+    const locked = tasksPanel(page).getByText(
+      /Unlocks after participating in 1 sweepstakes with this host/
+    );
 
-      await page.goto(`/browse/${second.id}`);
-      await page.getByRole('heading', { name: LOYALTY }).click();
-      await expect(locked).toBeVisible();
+    await page.goto(`/browse/${second.id}`);
+    await page.getByRole('heading', { name: LOYALTY }).click();
+    await expect(locked).toBeVisible();
 
-      await page.goto(`/browse/${first.id}`);
-      await page.getByRole('heading', { name: BONUS }).click();
-      await page.getByRole('button', { name: 'Continue' }).click();
-      await expect(page.getByText('Task completed!')).toBeVisible();
+    await page.goto(`/browse/${first.id}`);
+    await page.getByRole('heading', { name: BONUS }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.getByText('Task completed!')).toBeVisible();
 
-      await page.goto(`/browse/${second.id}`);
-      await page.getByRole('heading', { name: LOYALTY }).click();
-      await expect(locked).toBeHidden();
-      await page.getByRole('button', { name: 'Continue' }).click();
-      await expect(page.getByText('Task completed!')).toBeVisible();
-    }
-  );
+    await page.goto(`/browse/${second.id}`);
+    await page.getByRole('heading', { name: LOYALTY }).click();
+    await expect(locked).toBeHidden();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.getByText('Task completed!')).toBeVisible();
+  });
 });

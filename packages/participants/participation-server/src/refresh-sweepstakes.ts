@@ -15,8 +15,7 @@ const refreshSweepstakes = procedure()
     `sweepstakes-${input.sweepstakesId}`,
     `participant-sweepstake`,
     `sweepstakes-${input.sweepstakesId}-privacy`,
-    `sweepstakes-${input.sweepstakesId}-referral`,
-    `sweepstakes-${input.sweepstakesId}-host`
+    `sweepstakes-${input.sweepstakesId}-referral`
   ])
   .handler(async () => {
     // Handler just returns success - the invalidation happens automatically
