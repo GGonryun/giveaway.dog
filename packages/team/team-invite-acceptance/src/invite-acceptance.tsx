@@ -18,7 +18,7 @@ import acceptInvite from '@giveaway/team-invites-server/accept-invite';
 import { EasterEggLogo } from '@giveaway/ui-brand/easter-egg-logo';
 import { toast } from 'sonner';
 import { CheckCircle } from 'lucide-react';
-import { TeamRole } from '@giveaway/db-model';
+import { TeamRole, UserAccountType } from '@giveaway/db-model';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 import Image from 'next/image';
 
@@ -41,14 +41,15 @@ export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const [accepted, setAccepted] = useState(false);
 
   const { isLoading: isAccepting, run: accept } = useProcedure({
     action: acceptInvite,
-    onSuccess(data) {
+    async onSuccess(data) {
       setAccepted(true);
       toast.success(`Successfully joined ${data.teamName}!`);
+      await update({ accountType: UserAccountType.HOST });
       setTimeout(() => {
         router.push('/app');
       }, 1500);
