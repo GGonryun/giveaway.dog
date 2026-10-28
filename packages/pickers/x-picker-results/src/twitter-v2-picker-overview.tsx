@@ -67,6 +67,7 @@ import { deleteTwitterV2Picker } from '@giveaway/x-picker-server/procedures/dele
 import { drawTwitterV2Picker } from '@giveaway/x-picker-server/procedures/draw-twitter-v2-picker';
 import { disqualifyTwitterV2Winner } from '@giveaway/x-picker-server/procedures/disqualify-twitter-v2-winner';
 
+import { toast } from 'sonner';
 import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { TwitterV2ParticipantsSection } from './twitter-v2-participants-section';
 
@@ -174,10 +175,16 @@ export const TwitterV2PickerOverview: React.FC<
   const handleDeletePicker = async () => {
     setIsDeleting(true);
     try {
-      await deleteTwitterV2Picker({ pickerId: picker.id, slug });
+      const result = await deleteTwitterV2Picker({ pickerId: picker.id, slug });
+      if (!result.ok) {
+        toast.error(result.data.message);
+        setIsDeleting(false);
+        return;
+      }
       router.push(`/app/${slug}/pickers`);
     } catch (error) {
       console.error('Failed to delete picker:', error);
+      toast.error('Failed to delete the picker. Please try again.');
       setIsDeleting(false);
     }
   };
@@ -185,10 +192,18 @@ export const TwitterV2PickerOverview: React.FC<
   const handleDrawWinners = async (count?: number) => {
     setIsDrawing(true);
     try {
-      await drawTwitterV2Picker({ pickerId: picker.id, slug, count });
+      const result = await drawTwitterV2Picker({
+        pickerId: picker.id,
+        slug,
+        count
+      });
+      if (!result.ok) {
+        toast.error(result.data.message);
+      }
       router.refresh();
     } catch (error) {
       console.error('Failed to draw winners:', error);
+      toast.error('Failed to draw winners. Please try again.');
     } finally {
       setIsDrawing(false);
     }
@@ -213,17 +228,22 @@ export const TwitterV2PickerOverview: React.FC<
     if (!disqualifyDrawId) return;
     setIsDisqualifying(true);
     try {
-      await disqualifyTwitterV2Winner({
+      const result = await disqualifyTwitterV2Winner({
         drawId: disqualifyDrawId,
         slug,
         reason
       });
+      if (!result.ok) {
+        toast.error(result.data.message);
+        return;
+      }
       await handleDrawWinners(1);
       setDisqualifyModalOpen(false);
       setDisqualifyDrawId(null);
       setDisqualifyWinnerName('');
     } catch (error) {
       console.error('Failed to disqualify winner:', error);
+      toast.error('Failed to disqualify the winner. Please try again.');
     } finally {
       setIsDisqualifying(false);
     }
