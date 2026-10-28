@@ -16,10 +16,13 @@ export async function storeTweetData({
 
   try {
     const tweet = await getTweet({ tweetId });
-    const data = await prisma.twitterPost.create({
-      data: toTwitterPost({ pickerId, tweet })
+    await prisma.twitterPost.createMany({
+      data: toTwitterPost({ pickerId, tweet }),
+      skipDuplicates: true
     });
-    return data;
+    return await prisma.twitterPost.findUniqueOrThrow({
+      where: { pickerId_tweetId: { pickerId, tweetId: tweet.id } }
+    });
   } catch (error) {
     console.error('Error storing tweet data:', error);
     throw new FatalError(

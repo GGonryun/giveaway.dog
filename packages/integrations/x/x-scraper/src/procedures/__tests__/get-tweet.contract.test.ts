@@ -33,7 +33,7 @@ describe('ScrapeBadger tweet contract', () => {
     const tweet = await getTweet({ tweetId: scrapeBadgerTweetFixture.id });
 
     expect(toTwitterPost({ pickerId: 'picker-1', tweet })).toEqual({
-      picker: { connect: { id: 'picker-1' } },
+      pickerId: 'picker-1',
       tweetId: '1900000000000000001',
       text: 'Retweet to enter the Acme giveaway! Winners on Friday.',
       createdAt: new Date('2026-01-05T15:30:00.000Z'),

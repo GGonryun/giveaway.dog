@@ -911,6 +911,8 @@ model TwitterPickerUser {
   followingCount  Int?
   tweetCount      Int?
   verified        Boolean?
+
+  @@unique([pickerId, userId])
 }
 
 model TwitterPost {
@@ -927,6 +929,8 @@ model TwitterPost {
   quoteCount    Int?
   pickerId      String
   picker        TwitterPicker @relation(fields: [pickerId], references: [id], onDelete: Cascade)
+
+  @@unique([pickerId, tweetId])
 }
 
 model TwitterPickerDraw {

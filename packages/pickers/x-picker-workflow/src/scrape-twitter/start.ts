@@ -56,8 +56,8 @@ export const startScrapeTwitter = async ({
     }
   ]);
 
-  await prisma.twitterPicker.update({
-    where: { id: picker.id },
+  const { count } = await prisma.twitterPicker.updateMany({
+    where: { id: picker.id, runId: picker.runId },
     data: {
       runId: result.runId,
       tweetUrls,
@@ -74,6 +74,11 @@ export const startScrapeTwitter = async ({
       runAt
     }
   });
+
+  if (count === 0) {
+    await safeWorldCancel(result.runId);
+    return { runId: null };
+  }
 
   return { runId: result.runId };
 };

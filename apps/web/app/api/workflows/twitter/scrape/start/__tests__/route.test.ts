@@ -75,7 +75,7 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
     m.getRun.mockResolvedValue({ status: 'running' });
     m.cancelRun.mockResolvedValue({ status: 'cancelled' });
     prismaMock.twitterPicker.findUnique.mockResolvedValue(picker());
-    prismaMock.twitterPicker.update.mockResolvedValue({});
+    prismaMock.twitterPicker.updateMany.mockResolvedValue({ count: 1 });
   });
 
   afterEach(() => {
@@ -176,7 +176,7 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
         where: { id: 'picker-1' }
       });
       expect(m.start).not.toHaveBeenCalled();
-      expect(prismaMock.twitterPicker.update).not.toHaveBeenCalled();
+      expect(prismaMock.twitterPicker.updateMany).not.toHaveBeenCalled();
     });
   });
 
@@ -206,8 +206,8 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
     it('stores the run id and picker settings', async () => {
       await POST(buildRequest());
 
-      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith({
-        where: { id: 'picker-1' },
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith({
+        where: { id: 'picker-1', runId: null },
         data: {
           runId: 'run-new',
           tweetUrls: [
@@ -240,8 +240,8 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
       );
 
       expect(res.status).toBe(200);
-      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith({
-        where: { id: 'picker-1' },
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith({
+        where: { id: 'picker-1', runId: null },
         data: expect.objectContaining({
           winners: 1,
           minPostCount: null,
@@ -286,7 +286,7 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
     it('stores the run date on the picker', async () => {
       await POST(jsonRequest(scheduledBody()));
 
-      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith(
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({ runAt: new Date(runAt) })
         })
@@ -362,7 +362,7 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
     it('stores the new run id instead of the previous one', async () => {
       await POST(buildRequest());
 
-      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith(
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({ runId: 'run-new' })
         })
@@ -375,7 +375,8 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
       const [cancel] = m.cancelRun.mock.invocationCallOrder;
       const [cleanup] = prismaMock.$transaction.mock.invocationCallOrder;
       const [start] = m.start.mock.invocationCallOrder;
-      const [update] = prismaMock.twitterPicker.update.mock.invocationCallOrder;
+      const [update] =
+        prismaMock.twitterPicker.updateMany.mock.invocationCallOrder;
       expect(cancel).toBeLessThan(cleanup);
       expect(cleanup).toBeLessThan(start);
       expect(start).toBeLessThan(update);
@@ -430,29 +431,31 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
   });
 
   describe('when the same picker is started twice at the same time', () => {
-    it.fails(
-      'leaves one scrape run going (fails until #308 is fixed)',
-      async () => {
-        let storedRunId: string | null = null;
-        prismaMock.twitterPicker.findUnique.mockImplementation(async () =>
-          picker(storedRunId)
-        );
-        prismaMock.twitterPicker.update.mockImplementation(async ({ data }) => {
+    it('leaves one scrape run going', async () => {
+      let storedRunId: string | null = null;
+      prismaMock.twitterPicker.findUnique.mockImplementation(async () =>
+        picker(storedRunId)
+      );
+      prismaMock.twitterPicker.updateMany.mockImplementation(
+        async ({ where, data }) => {
+          if (where?.runId !== storedRunId) {
+            return { count: 0 };
+          }
           storedRunId = data.runId as string;
-          return {};
-        });
-        m.start
-          .mockResolvedValueOnce({ runId: 'run-a' })
-          .mockResolvedValueOnce({ runId: 'run-b' });
+          return { count: 1 };
+        }
+      );
+      m.start
+        .mockResolvedValueOnce({ runId: 'run-a' })
+        .mockResolvedValueOnce({ runId: 'run-b' });
 
-        await Promise.all([POST(buildRequest()), POST(buildRequest())]);
+      await Promise.all([POST(buildRequest()), POST(buildRequest())]);
 
-        const cancelled = m.cancelRun.mock.calls.map(([runId]) => runId);
-        expect(
-          ['run-a', 'run-b'].filter((runId) => !cancelled.includes(runId))
-        ).toHaveLength(1);
-      }
-    );
+      const cancelled = m.cancelRun.mock.calls.map(([runId]) => runId);
+      expect(
+        ['run-a', 'run-b'].filter((runId) => !cancelled.includes(runId))
+      ).toHaveLength(1);
+    });
   });
 
   describe('when starting the workflow fails', () => {
@@ -460,7 +463,7 @@ describe('POST /api/workflows/twitter/scrape/start', () => {
       m.start.mockRejectedValue(new Error('start failed'));
 
       await expect(POST(buildRequest())).rejects.toThrow('start failed');
-      expect(prismaMock.twitterPicker.update).not.toHaveBeenCalled();
+      expect(prismaMock.twitterPicker.updateMany).not.toHaveBeenCalled();
     });
   });
 });

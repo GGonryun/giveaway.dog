@@ -54,7 +54,7 @@ describe('startScrapeTwitter', () => {
     });
     m.getRun.mockResolvedValue({ status: 'running' });
     m.cancelRun.mockResolvedValue({ status: 'cancelled' });
-    prismaMock.twitterPicker.update.mockResolvedValue({});
+    prismaMock.twitterPicker.updateMany.mockResolvedValue({ count: 1 });
   });
 
   describe('when the picker has never been run', () => {
@@ -83,8 +83,8 @@ describe('startScrapeTwitter', () => {
     it('stores the run id and the picker settings', async () => {
       await startScrapeTwitter({ picker: picker(), data: formData() });
 
-      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith({
-        where: { id: 'picker-1' },
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith({
+        where: { id: 'picker-1', runId: null },
         data: {
           runId: 'run-new',
           tweetUrls: [
@@ -115,7 +115,7 @@ describe('startScrapeTwitter', () => {
       expect(m.start).toHaveBeenCalledWith(scrapeTwitterWorkflow, [
         expect.objectContaining({ runDate: undefined })
       ]);
-      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith(
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({ runAt: null })
         })
@@ -142,7 +142,7 @@ describe('startScrapeTwitter', () => {
     it('stores the run date on the picker', async () => {
       await startScrapeTwitter({ picker: picker(), data: scheduled() });
 
-      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith(
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({ runAt: new Date(runAt) })
         })
@@ -208,11 +208,12 @@ describe('startScrapeTwitter', () => {
       const [cancel] = m.cancelRun.mock.invocationCallOrder;
       const [cleanup] = prismaMock.$transaction.mock.invocationCallOrder;
       const [start] = m.start.mock.invocationCallOrder;
-      const [update] = prismaMock.twitterPicker.update.mock.invocationCallOrder;
+      const [update] =
+        prismaMock.twitterPicker.updateMany.mock.invocationCallOrder;
       expect(cancel).toBeLessThan(cleanup);
       expect(cleanup).toBeLessThan(start);
       expect(start).toBeLessThan(update);
-      expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith(
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({ runId: 'run-new' })
         })
@@ -236,6 +237,35 @@ describe('startScrapeTwitter', () => {
     });
   });
 
+  describe('when another request stored a run since the picker was read', () => {
+    beforeEach(() => {
+      prismaMock.twitterPicker.updateMany.mockResolvedValue({ count: 0 });
+    });
+
+    const run = () =>
+      startScrapeTwitter({ picker: picker('run-old'), data: formData() });
+
+    it('stores the new run only if the picker still has the run it read', async () => {
+      await run();
+
+      expect(prismaMock.twitterPicker.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'picker-1', runId: 'run-old' }
+        })
+      );
+    });
+
+    it('cancels the new run', async () => {
+      await run();
+
+      expect(m.cancelRun).toHaveBeenCalledWith('run-new');
+    });
+
+    it('returns no run id', async () => {
+      await expect(run()).resolves.toEqual({ runId: null });
+    });
+  });
+
   describe('when the workflow does not start', () => {
     it('throws and stores nothing', async () => {
       m.start.mockRejectedValue(new Error('world unavailable'));
@@ -243,7 +273,7 @@ describe('startScrapeTwitter', () => {
       await expect(
         startScrapeTwitter({ picker: picker(), data: formData() })
       ).rejects.toThrow('world unavailable');
-      expect(prismaMock.twitterPicker.update).not.toHaveBeenCalled();
+      expect(prismaMock.twitterPicker.updateMany).not.toHaveBeenCalled();
     });
   });
 });

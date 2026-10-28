@@ -25,7 +25,7 @@ const STEPS = [
     step: 'storeTweetData',
     match: TWEET,
     run: () => storeTweetData({ tweetId: '123', pickerId: 'picker-1' }),
-    stored: () => prismaMock.twitterPost.create
+    stored: () => prismaMock.twitterPost.createMany
   },
   {
     step: 'storeRetweeters',
@@ -56,7 +56,8 @@ beforeEach(() => {
   vi.stubEnv('SCRAPEBADGER_API_KEY', 'scrapebadger-key');
   vi.spyOn(console, 'info').mockImplementation(() => undefined);
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
-  prismaMock.twitterPost.create.mockResolvedValue({ id: 'post-1' });
+  prismaMock.twitterPost.createMany.mockResolvedValue({ count: 1 });
+  prismaMock.twitterPost.findUniqueOrThrow.mockResolvedValue({ id: 'post-1' });
   prismaMock.twitterPickerUser.createMany.mockResolvedValue({ count: 0 });
   network = fakeNetwork();
   network.json(TWEET, {

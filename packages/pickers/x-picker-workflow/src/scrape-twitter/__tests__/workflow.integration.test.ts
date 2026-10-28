@@ -74,49 +74,40 @@ describe('scrapeTwitterWorkflow', () => {
     ).toMatchObject({ status: 'COMPLETE' });
   });
 
-  it.fails(
-    'stores the tweet once when the storeTweetData step runs again (fails until #308 is fixed)',
-    async () => {
-      const picker = await createPicker();
-      const input = { tweetId: TWEET_ID, pickerId: picker.id };
+  it('stores the tweet once when the storeTweetData step runs again', async () => {
+    const picker = await createPicker();
+    const input = { tweetId: TWEET_ID, pickerId: picker.id };
 
-      await storeTweetData(input);
-      await storeTweetData(input);
+    await storeTweetData(input);
+    await storeTweetData(input);
 
-      expect(await storedTweets(picker.id)).toEqual([{ tweetId: TWEET_ID }]);
-    }
-  );
+    expect(await storedTweets(picker.id)).toEqual([{ tweetId: TWEET_ID }]);
+  });
 
-  it.fails(
-    'stores each retweeter once when the storeRetweeters step runs again (fails until #308 is fixed)',
-    async () => {
-      const picker = await createPicker();
-      const input = {
-        tweetId: TWEET_ID,
-        pickerId: picker.id,
-        cursor: undefined
-      };
+  it('stores each retweeter once when the storeRetweeters step runs again', async () => {
+    const picker = await createPicker();
+    const input = {
+      tweetId: TWEET_ID,
+      pickerId: picker.id,
+      cursor: undefined
+    };
 
-      await storeRetweeters(input);
-      await storeRetweeters(input);
+    await storeRetweeters(input);
+    await storeRetweeters(input);
 
-      expect(await storedRetweeters(picker.id)).toEqual(['x-1', 'x-2']);
-    }
-  );
+    expect(await storedRetweeters(picker.id)).toEqual(['x-1', 'x-2']);
+  });
 
-  it.fails(
-    'stores each retweeter once when two runs scrape the same picker (fails until #308 is fixed)',
-    async () => {
-      const picker = await createPicker();
-      const input = { tweetIds: [TWEET_ID], pickerId: picker.id };
+  it('stores each retweeter once when two runs scrape the same picker', async () => {
+    const picker = await createPicker();
+    const input = { tweetIds: [TWEET_ID], pickerId: picker.id };
 
-      await Promise.all([
-        scrapeTwitterWorkflow(input),
-        scrapeTwitterWorkflow(input)
-      ]);
+    await Promise.all([
+      scrapeTwitterWorkflow(input),
+      scrapeTwitterWorkflow(input)
+    ]);
 
-      expect(await storedTweets(picker.id)).toHaveLength(1);
-      expect(await storedRetweeters(picker.id)).toEqual(['x-1', 'x-2']);
-    }
-  );
+    expect(await storedTweets(picker.id)).toHaveLength(1);
+    expect(await storedRetweeters(picker.id)).toEqual(['x-1', 'x-2']);
+  });
 });

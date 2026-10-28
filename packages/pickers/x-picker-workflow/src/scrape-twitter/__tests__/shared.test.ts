@@ -99,7 +99,7 @@ describe('scrape-twitter shared mappers', () => {
       expect(
         toTwitterPost({ pickerId: 'picker-1', tweet: scrapedTweet() })
       ).toEqual({
-        picker: { connect: { id: 'picker-1' } },
+        pickerId: 'picker-1',
         tweetId: '1111',
         text: 'Retweet to win!',
         createdAt: new Date('2025-01-01T00:00:00.000Z'),
