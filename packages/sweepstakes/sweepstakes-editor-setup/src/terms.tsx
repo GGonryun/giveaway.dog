@@ -135,19 +135,11 @@ export const TermsAndConditions = () => {
   }, [hasUnsavedChanges]);
 
   const handleDiscardChanges = useCallback(() => {
-    // Restore the form to initial values when sheet was opened
     if (initialTermsValues.current) {
-      // Get current form values
-      const currentValues = form.getValues();
-
-      // Create new form state with initial terms values restored
-      const restoredValues = {
-        ...currentValues,
-        terms: initialTermsValues.current
-      };
-
-      // Reset the entire form with restored values to clear dirty state
-      form.reset(restoredValues);
+      form.setValue('terms', initialTermsValues.current, {
+        shouldDirty: true,
+        shouldValidate: true
+      });
     }
 
     setShowDiscardDialog(false);
