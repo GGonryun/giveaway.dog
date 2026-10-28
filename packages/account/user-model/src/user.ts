@@ -105,10 +105,11 @@ export const createUserProfileSchema = z.object({
 export const updateUserProfileSchema = z.object({
   name: z
     .string()
-    .min(5, 'Username must be at least 5 characters')
+    .min(5, 'Display name must be at least 5 characters')
+    .max(30, 'Display name must be at most 30 characters')
     .regex(
       /^[a-zA-Z0-9_\- ]+$/,
-      'Username can only contain letters, numbers, spaces, hyphens, and underscores'
+      'Display name can only contain letters, numbers, spaces, hyphens, and underscores'
     )
     .optional(),
   image: z.string().url().nullable().optional(),
