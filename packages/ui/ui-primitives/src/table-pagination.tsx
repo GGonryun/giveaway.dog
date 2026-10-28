@@ -28,7 +28,8 @@ export function TablePagination({
   itemName = 'items',
   isPending = false
 }: TablePaginationProps) {
-  const startItem = (currentPage - 1) * pageSize + 1;
+  const lastPage = Math.max(totalPages, 1);
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
 
   return (
@@ -70,15 +71,15 @@ export function TablePagination({
             {currentPage}
           </Badge>
           <span className="text-xs sm:text-sm">of</span>
-          <span className="text-xs sm:text-sm font-medium">{totalPages}</span>
+          <span className="text-xs sm:text-sm font-medium">{lastPage}</span>
         </div>
 
         <Button
           variant="outline"
           size="icon"
           className="size-8"
-          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-          disabled={currentPage === totalPages || isPending}
+          onClick={() => onPageChange(Math.min(lastPage, currentPage + 1))}
+          disabled={currentPage >= lastPage || isPending}
         >
           <ChevronRight />
           <span className="sr-only">Next page</span>
@@ -88,8 +89,8 @@ export function TablePagination({
           variant="outline"
           size="icon"
           className="size-8"
-          onClick={() => onPageChange(totalPages)}
-          disabled={currentPage === totalPages || isPending}
+          onClick={() => onPageChange(lastPage)}
+          disabled={currentPage >= lastPage || isPending}
         >
           <ChevronsRight />
           <span className="sr-only">Last page</span>

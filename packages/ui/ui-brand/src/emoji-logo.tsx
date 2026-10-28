@@ -10,7 +10,7 @@ export const EmojiLogo: React.FC<React.ComponentProps<'span'>> = ({
     <span
       role="img"
       aria-label="dog face"
-      className={cn('leading-none text-7xl', className)}
+      className={cn('text-7xl', className, 'leading-none')}
       {...props}
     >
       🐶

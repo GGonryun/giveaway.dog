@@ -74,7 +74,7 @@ describe('Typography.Text', () => {
     expect(text).toHaveClass('text-sm', 'font-normal', 'italic');
   });
 
-  it('forwards its variant props to the DOM as attributes', () => {
+  it('keeps its variant props off the DOM', () => {
     render(
       <Typography.Text weight="bold" color="muted" leading="none">
         Inline
@@ -86,9 +86,9 @@ describe('Typography.Text', () => {
       'text-muted-foreground',
       'leading-none'
     );
-    expect(text).toHaveAttribute('weight', 'bold');
-    expect(text).toHaveAttribute('color', 'muted');
-    expect(text).toHaveAttribute('leading', 'none');
+    expect(text).not.toHaveAttribute('weight');
+    expect(text).not.toHaveAttribute('color');
+    expect(text).not.toHaveAttribute('leading');
   });
 });
 

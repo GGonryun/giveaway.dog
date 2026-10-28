@@ -614,7 +614,6 @@ exports[`Audience > matches the snapshot 1`] = `
                   </div>
                   <p
                     class="text-sm font-medium"
-                    weight="medium"
                   >
                     Username
                   </p>

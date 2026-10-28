@@ -132,8 +132,6 @@ export const Typography: TypographyComponent = ({
   );
 };
 
-type CVAOutput = ReturnType<typeof cva>;
-
 type Props<TVariants extends (...args: any) => any> =
   VariantProps<TVariants> & {
     children: React.ReactNode;
@@ -157,10 +155,28 @@ type IntrinsicTypographyComponent<
 function IntrinsicElement<
   T extends Props<TVariants>,
   TVariants extends (...args: any) => any
->(Component: TypographyElement, variants: CVAOutput): React.FC<T> {
-  return ({ className, children, ...props }: T) => {
+>(
+  Component: TypographyElement,
+  variants: typeof typographyVariants
+): React.FC<T> {
+  return ({
+    className,
+    children,
+    size,
+    weight,
+    color,
+    leading,
+    words,
+    ...props
+  }: T) => {
     return (
-      <Component className={cn(variants(props), className)} {...props}>
+      <Component
+        className={cn(
+          variants({ size, weight, color, leading, words }),
+          className
+        )}
+        {...props}
+      >
         {children}
       </Component>
     );

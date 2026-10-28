@@ -35,7 +35,9 @@ export const ObfuscatedEmail: React.FC<ObfuscatedEmailProps> = ({
     setIsRevealed(!isRevealed);
   };
 
-  if (!email) {
+  const masked = strings.obfuscate(email);
+
+  if (!email || !masked) {
     return null;
   }
 
@@ -45,10 +47,10 @@ export const ObfuscatedEmail: React.FC<ObfuscatedEmailProps> = ({
       : size === 'sm'
         ? 'text-sm'
         : size === 'md'
-          ? 'text-md'
+          ? 'text-base'
           : 'text-lg';
 
-  const displayEmail = isRevealed ? email : strings.obfuscate(email);
+  const displayEmail = isRevealed ? email : masked;
 
   return (
     <div className={cn('flex items-center gap-2', className)}>

@@ -42,11 +42,12 @@ const Flex: FlexComponent = ({
   gap,
   full,
   center,
+  items,
   ...props
 }) => {
   return (
     <div
-      className={cn(flexVariants({ gap, full, center }), className)}
+      className={cn(flexVariants({ gap, full, center, items }), className)}
       {...props}
     >
       {children}
@@ -54,10 +55,14 @@ const Flex: FlexComponent = ({
   );
 };
 
-Flex.Stack = ({ className, children, gap, full, center, ...props }) => {
+Flex.Stack = ({ className, children, gap, full, center, items, ...props }) => {
   return (
     <div
-      className={cn(flexVariants({ gap, full, center }), 'flex-col', className)}
+      className={cn(
+        flexVariants({ gap, full, center, items }),
+        'flex-col',
+        className
+      )}
       {...props}
     >
       {children}

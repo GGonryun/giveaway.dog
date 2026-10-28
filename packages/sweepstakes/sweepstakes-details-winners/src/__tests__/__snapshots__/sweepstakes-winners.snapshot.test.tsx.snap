@@ -6,7 +6,7 @@ exports[`SweepstakesWinners > matches the snapshot with partially picked winners
     class="space-y-6"
   >
     <div
-      class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[16_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current text-muted-foreground border-blue-200 bg-blue-50"
+      class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current text-muted-foreground border-blue-200 bg-blue-50"
       data-slot="alert"
       role="alert"
     >
