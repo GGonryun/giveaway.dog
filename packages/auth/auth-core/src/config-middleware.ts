@@ -67,7 +67,7 @@ export const authConfigMiddleware = {
     authorized({ auth, request: { nextUrl } }) {
       const connectionRoutes = ['/login'];
       const hostRoutes = ['/app'];
-      const sensitiveRoutes = [...hostRoutes, '/account'];
+      const sensitiveRoutes = [...hostRoutes, '/account', '/onboarding'];
       const isLoggedIn = !!auth?.user;
 
       const isLogoutRoute = nextUrl.pathname.startsWith('/logout');

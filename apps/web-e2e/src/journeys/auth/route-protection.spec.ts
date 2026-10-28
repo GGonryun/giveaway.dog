@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { BASE_URL, E2E_SECRET, personaState } from '../../env';
 import { expectSameOrigin, noRedirect } from '../../helpers/http';
-import { knownBug } from '../../helpers/known-bug';
 import { seedWorkerTeam } from '../../helpers/seed';
 
 const PROTECTED_PAGES = [
@@ -67,15 +66,13 @@ test.describe('a visitor', () => {
     });
   }
 
-  test(
-    '[ROUTE-008] is sent to the login page from the onboarding page',
-    knownBug(477),
-    async ({ page }) => {
-      await page.goto('/onboarding');
+  test('[ROUTE-008] is sent to the login page from the onboarding page', async ({
+    page
+  }) => {
+    await page.goto('/onboarding');
 
-      await expectLoginFor(page, '/onboarding');
-    }
-  );
+    await expectLoginFor(page, '/onboarding');
+  });
 
   test('[ROUTE-003] is sent home from the logout page', async ({ page }) => {
     await page.goto('/logout');

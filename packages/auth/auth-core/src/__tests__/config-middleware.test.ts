@@ -292,6 +292,10 @@ describe('authConfigMiddleware', () => {
         }
       );
 
+      it('[ROUTE-008] denies signed-out visitors on the onboarding page', () => {
+        expect(authorize(local('/onboarding'))).toBe(false);
+      });
+
       it('allows an onboarded host on the host dashboard', () => {
         expect(authorize(local('/app/giveaways'), host)).toBe(true);
       });
