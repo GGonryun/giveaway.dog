@@ -59,16 +59,14 @@ test.describe('updating a submitted answer', () => {
     await expect(page.getByText('2/2 completed')).toBeVisible();
   });
 
-  test(
-    'a participant sees the profile link they submitted',
-    knownBug(588),
-    async ({ page }) => {
-      await page.getByRole('heading', { name: INSTAGRAM }).click();
-      await expect(page.getByLabel(QUESTION)).toHaveValue(
-        `https://www.instagram.com/e2e${ns}`
-      );
-    }
-  );
+  test('a participant sees the profile link they submitted', async ({
+    page
+  }) => {
+    await page.getByRole('heading', { name: INSTAGRAM }).click();
+    await expect(page.getByLabel(QUESTION)).toHaveValue(
+      `https://www.instagram.com/e2e${ns}`
+    );
+  });
 
   test(
     'a participant updates the profile link after completing another task',

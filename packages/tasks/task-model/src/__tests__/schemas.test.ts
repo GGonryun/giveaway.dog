@@ -1904,7 +1904,8 @@ describe('TASK_INPUT_SCHEMA', () => {
     'ASK_QUESTION',
     'SINGLE_CHOICE',
     'MULTIPLE_CHOICE',
-    'SUBMIT_MEDIA'
+    'SUBMIT_MEDIA',
+    'INSTAGRAM_VISIT'
   ];
 
   it('defines an input schema for every task type', () => {
@@ -1936,7 +1937,9 @@ describe('TASK_INPUT_SCHEMA', () => {
     ['ASK_QUESTION', { answer: 'Corgi' }],
     ['SINGLE_CHOICE', { choice: 'Red' }],
     ['MULTIPLE_CHOICE', { choices: ['Red'] }],
-    ['SUBMIT_MEDIA', { mediaUrl: 'https://cdn.example.com/proof.png' }]
+    ['SUBMIT_MEDIA', { mediaUrl: 'https://cdn.example.com/proof.png' }],
+    ['INSTAGRAM_VISIT', {}],
+    ['INSTAGRAM_VISIT', { answer: 'https://www.instagram.com/corgi' }]
   ] as const)('accepts %s input %j', (type, input) => {
     expect(TASK_INPUT_SCHEMA[type].parse(input)).toEqual(input);
   });
@@ -1954,7 +1957,8 @@ describe('TASK_INPUT_SCHEMA', () => {
     ['ASK_QUESTION', {}, 'Required'],
     ['SINGLE_CHOICE', {}, 'Required'],
     ['SUBMIT_MEDIA', { mediaUrl: 'nope' }, 'Media URL is required'],
-    ['SUBMIT_MEDIA', {}, 'Required']
+    ['SUBMIT_MEDIA', {}, 'Required'],
+    ['INSTAGRAM_VISIT', { answer: 1 }, 'Expected string, received number']
   ] as const)('rejects %s input %j with %s', (type, input, message) => {
     expect(messagesFor(TASK_INPUT_SCHEMA[type], input)).toEqual([message]);
   });

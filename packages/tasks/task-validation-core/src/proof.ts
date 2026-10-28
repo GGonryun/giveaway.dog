@@ -61,9 +61,15 @@ export const saveTaskProof = (task: TaskSchema, data: unknown) => {
         mediaUrl: parsed.mediaUrl
       };
     }
+    case 'INSTAGRAM_VISIT': {
+      const parsed = TASK_INPUT_SCHEMA.INSTAGRAM_VISIT.parse(data);
+      if (!parsed.answer) return Prisma.JsonNull;
+      return {
+        answer: parsed.answer
+      };
+    }
     case 'INSTAGRAM_LIKE':
     case 'INSTAGRAM_COMMENT':
-    case 'INSTAGRAM_VISIT':
     case 'FACEBOOK_VIEW_POST':
     case 'FACEBOOK_VISIT_PAGE':
     case 'BONUS_TASK':
