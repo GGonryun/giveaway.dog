@@ -166,7 +166,7 @@ export const TermsAndConditions = () => {
 
   const handleTermsTypeChange = useCallback(
     (key: SweepstakesTermsType) => {
-      form.setValue('terms.type', key);
+      form.setValue('terms.type', key, { shouldDirty: true });
     },
     [form]
   );
@@ -222,7 +222,7 @@ export const TermsAndConditions = () => {
                 <MinimalTiptap
                   content={field.value.text}
                   onChange={(e) => {
-                    form.setValue('terms.text', e);
+                    form.setValue('terms.text', e, { shouldDirty: true });
                   }}
                   placeholder="Enter a description"
                 />

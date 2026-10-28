@@ -71,6 +71,13 @@ describe('EnableAutomaticProfileEntry', () => {
       ]);
       expect(screen.getByRole('switch')).toBeChecked();
     });
+
+    it('marks the tasks as changed', async () => {
+      const { form } = renderToggle([bonusTask]);
+      await userEvent.click(screen.getByRole('switch'));
+
+      expect(form.getFieldState('tasks').isDirty).toBe(true);
+    });
   });
 
   describe('when turned off', () => {
@@ -86,6 +93,13 @@ describe('EnableAutomaticProfileEntry', () => {
       expect(form.getValues('tasks')).toEqual([bonusTask, visitTask]);
       expect(screen.getByRole('switch')).not.toBeChecked();
       expect(nanoid).not.toHaveBeenCalled();
+    });
+
+    it('marks the tasks as changed', async () => {
+      const { form } = renderToggle([profileTask, bonusTask]);
+      await userEvent.click(screen.getByRole('switch'));
+
+      expect(form.getFieldState('tasks').isDirty).toBe(true);
     });
   });
 

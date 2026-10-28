@@ -109,6 +109,20 @@ describe('TermsAndConditions', () => {
         screen.queryByRole('button', { name: 'Modify' })
       ).not.toBeInTheDocument();
     });
+
+    it('marks the terms type as changed when custom terms are picked', async () => {
+      const { form } = renderTerms();
+      await userEvent.click(getTypeButton('Custom'));
+
+      expect(form.getFieldState('terms.type').isDirty).toBe(true);
+    });
+
+    it('leaves the terms type unchanged when the current type is picked again', async () => {
+      const { form } = renderTerms();
+      await userEvent.click(getTypeButton('Default'));
+
+      expect(form.getFieldState('terms.type').isDirty).toBe(false);
+    });
   });
 
   describe('with custom terms', () => {
@@ -130,6 +144,16 @@ describe('TermsAndConditions', () => {
         type: 'CUSTOM',
         text: 'New rules'
       });
+    });
+
+    it('marks the custom text as changed when it is edited', async () => {
+      const { form } = renderTerms(customTerms);
+      await userEvent.type(
+        screen.getByRole('textbox', { name: 'Enter a description' }),
+        '!'
+      );
+
+      expect(form.getFieldState('terms.text').isDirty).toBe(true);
     });
 
     it('switches back to the default terms', async () => {

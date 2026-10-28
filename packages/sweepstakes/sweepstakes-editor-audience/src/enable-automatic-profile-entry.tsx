@@ -23,12 +23,12 @@ export const EnableAutomaticProfileEntry = () => {
         ...defaultTask,
         id: nanoid()
       };
-      form.setValue('tasks', [newTask, ...tasks]);
+      form.setValue('tasks', [newTask, ...tasks], { shouldDirty: true });
     } else {
       const filteredTasks = tasks.filter(
         (task) => task.type !== 'BONUS_COMPLETE_PROFILE'
       );
-      form.setValue('tasks', filteredTasks);
+      form.setValue('tasks', filteredTasks, { shouldDirty: true });
     }
   };
 
