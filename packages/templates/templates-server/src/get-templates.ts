@@ -59,11 +59,7 @@ export const getTemplates = procedure()
           slug: team.slug,
           logo: team.logo
         },
-        createdBy: {
-          id: t.createdBy.id,
-          name: t.createdBy.name,
-          image: t.createdBy.image
-        },
+        createdBy: t.createdBy,
         isCustom: true,
         template
       };

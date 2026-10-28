@@ -15,7 +15,11 @@ const storedTemplate = (
   id: string,
   name: string,
   description: string,
-  createdBy: { id: string; name: string | null; image: string | null } = {
+  createdBy: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  } | null = {
     id: 'creator-1',
     name: 'Creator',
     image: null
@@ -28,7 +32,7 @@ const storedTemplate = (
   type: 'SWEEPSTAKES',
   content: { setup: { name: `${name} setup` } },
   teamId: 'team-1',
-  createdById: createdBy.id,
+  createdById: createdBy?.id ?? null,
   createdBy
 });
 
@@ -181,6 +185,17 @@ describe('getTemplates', () => {
           }
         }
       });
+    });
+
+    it('lists a stored template whose creator deleted their account', async () => {
+      signIn();
+      prismaMock.team.findUnique.mockResolvedValue(
+        teamWith([storedTemplate('tpl-1', 'Summer Sale', 'Hot deals', null)])
+      );
+
+      const [first] = expectOk(await getTemplates({ slug: 'acme' }));
+
+      expect(first).toMatchObject({ createdBy: null, isCustom: true });
     });
 
     it('treats an empty search as no filter', async () => {

@@ -626,6 +626,12 @@ describe('templateListItemSchema', () => {
     expect(templateListItemSchema.safeParse(item).success).toBe(true);
   });
 
+  it('accepts a list item whose creator deleted their account', () => {
+    expect(
+      templateListItemSchema.safeParse({ ...item, createdBy: null }).success
+    ).toBe(true);
+  });
+
   it.each(['teamId', 'team', 'createdBy', 'isCustom', 'template'] as const)(
     'rejects an item without %s',
     (key) => {

@@ -45,7 +45,7 @@ export const databaseTemplateSchema = z.object({
   image: z.string(),
   content: baseContentSchema,
   teamId: z.string(),
-  createdById: z.string()
+  createdById: z.string().nullable()
 });
 
 export type DatabaseTemplateSchema = z.infer<typeof databaseTemplateSchema>;
@@ -56,7 +56,7 @@ export type StoredTemplateSchema = {
   description: string;
   image: string;
   teamId: string;
-  createdById: string;
+  createdById: string | null;
   content: DeepPartial<DatabaseTemplateSchema>['content'];
 };
 
@@ -187,11 +187,13 @@ export const templateListItemSchema = z.object({
     slug: z.string(),
     logo: z.string()
   }),
-  createdBy: z.object({
-    id: z.string(),
-    name: z.string().nullable(),
-    image: z.string().nullable()
-  }),
+  createdBy: z
+    .object({
+      id: z.string(),
+      name: z.string().nullable(),
+      image: z.string().nullable()
+    })
+    .nullable(),
   isCustom: z.boolean(),
   template: templateInputSchema
 });
