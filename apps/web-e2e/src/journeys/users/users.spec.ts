@@ -145,27 +145,26 @@ test.describe('the team Users area', () => {
     await expect(entries).toContainText(target.giveaway);
   });
 
-  test(
-    'a host sorts the Users list by quality and by last entry',
-    knownBug(491),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedEntrants(request, ns);
-      await signInAs(page.request, 'host', ns);
-      await page.goto(`/app/${team.slug}/users`);
-      await expectSameNames(page, ['participant', 'participant2', 'newbie']);
+  test('a host sorts the Users list by quality and by last entry', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedEntrants(request, ns);
+    await signInAs(page.request, 'host', ns);
+    await page.goto(`/app/${team.slug}/users`);
+    await expectSameNames(page, ['participant', 'participant2', 'newbie']);
 
-      await sortBy(page, 'Quality', 'qualityScore', 'desc');
-      await expectNames(page, ['newbie', 'participant2', 'participant']);
-      await sortBy(page, 'Quality', 'qualityScore', 'asc');
-      await expectNames(page, ['participant', 'participant2', 'newbie']);
+    await sortBy(page, 'Quality', 'qualityScore', 'desc');
+    await expectNames(page, ['newbie', 'participant2', 'participant']);
+    await sortBy(page, 'Quality', 'qualityScore', 'asc');
+    await expectNames(page, ['participant', 'participant2', 'newbie']);
 
-      await sortBy(page, 'Last Entry', 'lastEntry', 'desc');
-      await expectNames(page, ['newbie', 'participant', 'participant2']);
-      await sortBy(page, 'Last Entry', 'lastEntry', 'asc');
-      await expectNames(page, ['participant2', 'participant', 'newbie']);
-    }
-  );
+    await sortBy(page, 'Last Entry', 'lastEntry', 'desc');
+    await expectNames(page, ['newbie', 'participant', 'participant2']);
+    await sortBy(page, 'Last Entry', 'lastEntry', 'asc');
+    await expectNames(page, ['participant2', 'participant', 'newbie']);
+  });
 
   test('a host filters the Users list by source and quality score', async ({
     page,
