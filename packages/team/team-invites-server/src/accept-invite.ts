@@ -1,5 +1,6 @@
 'use server';
 
+import { MAX_USER_TEAMS } from '@giveaway/app-config/settings';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { ApplicationError } from '@giveaway/util-errors';
 import { TeamRole, UserAccountType } from '@giveaway/db-model';
@@ -65,6 +66,19 @@ const acceptInvite = procedure()
       throw new ApplicationError({
         code: 'CONFLICT',
         message: 'You are already a member of this team'
+      });
+    }
+
+    const userTeamCount = await db.membership.count({
+      where: {
+        userId: user.id
+      }
+    });
+
+    if (userTeamCount >= MAX_USER_TEAMS) {
+      throw new ApplicationError({
+        code: 'FORBIDDEN',
+        message: `You cannot be a member of more than ${MAX_USER_TEAMS} teams`
       });
     }
 
