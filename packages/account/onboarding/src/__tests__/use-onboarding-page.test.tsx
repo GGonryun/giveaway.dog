@@ -46,27 +46,37 @@ describe('useOnboardingPage', () => {
   });
 
   describe('when navigating', () => {
-    it('moves to the profile step and updates the url', () => {
-      const { result } = renderHook(() => useOnboardingPage());
+    it('moves to the profile step by updating the url', () => {
+      const { result, rerender } = renderHook(() => useOnboardingPage());
 
       act(() => {
         result.current.navigateToProfileStep();
       });
 
-      expect(result.current.step).toBe(2);
       expect(navigation.router.push).toHaveBeenCalledWith('/onboarding?step=2');
+      expect(result.current.step).toBe(1);
+
+      navigation.searchParams = new URLSearchParams('step=2');
+      rerender();
+
+      expect(result.current.step).toBe(2);
     });
 
-    it('moves back to the account type step and updates the url', () => {
+    it('moves back to the account type step by updating the url', () => {
       navigation.searchParams = new URLSearchParams('step=2');
-      const { result } = renderHook(() => useOnboardingPage());
+      const { result, rerender } = renderHook(() => useOnboardingPage());
 
       act(() => {
         result.current.navigateToAccountTypeStep();
       });
 
-      expect(result.current.step).toBe(1);
       expect(navigation.router.push).toHaveBeenCalledWith('/onboarding?step=1');
+      expect(result.current.step).toBe(2);
+
+      navigation.searchParams = new URLSearchParams('step=1');
+      rerender();
+
+      expect(result.current.step).toBe(1);
     });
   });
 
@@ -102,10 +112,20 @@ describe('useOnboardingPage', () => {
   });
 
   describe('when the url changes after mounting', () => {
-    it('keeps the step it started with', () => {
+    it('moves forward to the step in the url', () => {
       const { result, rerender } = renderHook(() => useOnboardingPage());
 
       navigation.searchParams = new URLSearchParams('step=2');
+      rerender();
+
+      expect(result.current.step).toBe(2);
+    });
+
+    it('moves back to the step in the url', () => {
+      navigation.searchParams = new URLSearchParams('step=2');
+      const { result, rerender } = renderHook(() => useOnboardingPage());
+
+      navigation.searchParams = new URLSearchParams();
       rerender();
 
       expect(result.current.step).toBe(1);
