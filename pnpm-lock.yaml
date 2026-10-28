@@ -10630,6 +10630,9 @@ importers:
       '@giveaway/task-editor':
         specifier: workspace:*
         version: link:../../tasks/task-editor
+      '@giveaway/ui-hooks':
+        specifier: workspace:*
+        version: link:../../ui/ui-hooks
       '@giveaway/ui-layouts':
         specifier: workspace:*
         version: link:../../ui/ui-layouts
