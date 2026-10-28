@@ -9,13 +9,16 @@ import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { cn } from '@giveaway/ui-utils/utils';
 
 interface AccountTypeStepProps {
+  initialAccountType?: UserAccountType;
   onNext: (accountType: UserAccountType) => void;
 }
 
-export const AccountTypeStep: React.FC<AccountTypeStepProps> = ({ onNext }) => {
-  const [selectedType, setSelectedType] = useState<UserAccountType>(
-    UserAccountType.PARTICIPANT
-  );
+export const AccountTypeStep: React.FC<AccountTypeStepProps> = ({
+  initialAccountType = UserAccountType.PARTICIPANT,
+  onNext
+}) => {
+  const [selectedType, setSelectedType] =
+    useState<UserAccountType>(initialAccountType);
 
   const handleNext = () => {
     onNext(selectedType);

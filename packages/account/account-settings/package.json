@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@giveaway/account-server": "workspace:*",
+    "@giveaway/auth-session-ui": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/feature-flags": "workspace:*",
     "@giveaway/rpc-client": "workspace:*",
