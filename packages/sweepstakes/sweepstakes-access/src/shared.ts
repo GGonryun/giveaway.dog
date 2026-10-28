@@ -149,6 +149,8 @@ export const applySweepstakesChanges = async ({
 
   assertNotCompleted(sweepstakes);
 
+  const status = input.status ?? sweepstakes.status;
+
   // TODO: Optimize this process.
   // WARNING: sweepstakes objects are too complex to update directly, instead we
   // delete all nested properties and recreate them. This has catastrophic effects
@@ -241,7 +243,7 @@ export const applySweepstakesChanges = async ({
       });
 
       const created = await tx.sweepstakes.create({
-        data: toStorableSweepstakes(sweepstakes, input),
+        data: toStorableSweepstakes(sweepstakes, { ...input, status }),
         include: {
           tasks: true,
           criteria: true,
@@ -346,10 +348,7 @@ export const applySweepstakesChanges = async ({
         });
       }
 
-      if (
-        input.timing?.startDate &&
-        input.status === SweepstakesStatus.ACTIVE
-      ) {
+      if (input.timing?.startDate && status === SweepstakesStatus.ACTIVE) {
         await tx.sweepstakesJob.upsert({
           where: {
             sweepstakesId_type: {
@@ -372,7 +371,7 @@ export const applySweepstakesChanges = async ({
       if (
         input.timing?.startDate &&
         input.timing?.endDate &&
-        input.status === SweepstakesStatus.ACTIVE
+        status === SweepstakesStatus.ACTIVE
       ) {
         await tx.sweepstakesJob.upsert({
           where: {
@@ -394,7 +393,7 @@ export const applySweepstakesChanges = async ({
         });
       }
 
-      if (input.timing?.endDate && input.status === SweepstakesStatus.ACTIVE) {
+      if (input.timing?.endDate && status === SweepstakesStatus.ACTIVE) {
         await tx.sweepstakesJob.upsert({
           where: {
             sweepstakesId_type: {
@@ -420,7 +419,7 @@ export const applySweepstakesChanges = async ({
     }
   );
 
-  if ((input.status ?? sweepstakes.status) === SweepstakesStatus.ACTIVE) {
+  if (status === SweepstakesStatus.ACTIVE) {
     await requestJobRun();
   }
 

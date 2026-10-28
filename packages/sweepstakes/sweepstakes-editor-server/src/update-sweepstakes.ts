@@ -17,7 +17,7 @@ const updateSweepstakes = procedure()
     const { team } = await applySweepstakesChanges({
       db,
       user,
-      input
+      input: { ...input, status: undefined }
     });
 
     return { slug: team.slug };
