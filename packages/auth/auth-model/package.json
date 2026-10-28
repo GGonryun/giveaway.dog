@@ -17,6 +17,7 @@
   },
   "exports": {
     "./cookies": "./src/cookies.ts",
+    "./email": "./src/email.ts",
     "./util": "./src/util.ts"
   },
   "scripts": {
@@ -28,7 +29,8 @@
   "dependencies": {
     "@giveaway/db-model": "workspace:*",
     "@giveaway/util-types": "workspace:*",
-    "cookies-next": "catalog:"
+    "cookies-next": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",

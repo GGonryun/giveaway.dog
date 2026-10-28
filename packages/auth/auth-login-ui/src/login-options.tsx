@@ -25,6 +25,10 @@ import {
 } from '@giveaway/auth-model/cookies';
 import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
 import { toAuthErrorDescription } from '@giveaway/auth-model/util';
+import {
+  INVALID_LOGIN_EMAIL_MESSAGE,
+  loginEmailSchema
+} from '@giveaway/auth-model/email';
 import { useSearchParams } from 'next/navigation';
 import { IdentityProvider } from '@giveaway/db-model';
 import { assertNever } from '@giveaway/util-errors';
@@ -104,14 +108,15 @@ export function LoginOptions({
   const [showFacebookForm, setShowFacebookForm] = useState(false);
 
   const handleEmailSubmit = () => {
-    if (!email) {
-      setErrorMessage('Please enter a valid email address.');
+    const parsed = loginEmailSchema.safeParse(email);
+    if (!parsed.success) {
+      setErrorMessage(INVALID_LOGIN_EMAIL_MESSAGE);
       return;
     }
 
     loginProcedure.run({
       provider: 'EMAIL',
-      email,
+      email: parsed.data,
       redirectTo,
       returnTo
     });

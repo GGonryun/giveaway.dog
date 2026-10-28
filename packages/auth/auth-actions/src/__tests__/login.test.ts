@@ -189,17 +189,30 @@ describe('login', () => {
       expect(mocks.redirect).toHaveBeenCalledWith('/login?verify=true');
     });
 
-    it('passes an undefined email when none is given', async () => {
+    it('trims the spaces around the email', async () => {
       await expect(
-        run({ provider: IdentityProvider.EMAIL })
+        run({ provider: IdentityProvider.EMAIL, email: ' e@example.com ' })
       ).rejects.toMatchObject({ message: 'NEXT_REDIRECT' });
 
       expect(mocks.signIn).toHaveBeenCalledWith('email', {
-        email: undefined,
-        redirectTo: portal({ provider: 'email' }),
+        email: 'e@example.com',
+        redirectTo: portal({ email: 'e@example.com', provider: 'email' }),
         redirect: false
       });
     });
+
+    it.each([undefined, '', 'not-an-email'])(
+      '[AUTH-011] refuses the email %j and sends no email',
+      async (email) => {
+        const result = await run({ provider: IdentityProvider.EMAIL, email });
+
+        expect(expectFailure(result, 'VALIDATION_ERROR').message).toBe(
+          'Please enter a valid email address.'
+        );
+        expect(mocks.signIn).not.toHaveBeenCalled();
+        expect(mocks.redirect).not.toHaveBeenCalled();
+      }
+    );
 
     it('does not open the verify page when the email cannot be sent', async () => {
       mocks.signIn.mockRejectedValue(new AuthError('Send failed'));

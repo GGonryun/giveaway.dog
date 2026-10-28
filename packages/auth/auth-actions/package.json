@@ -25,6 +25,7 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/auth-model": "workspace:*",
     "@giveaway/auth-server": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",

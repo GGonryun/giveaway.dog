@@ -88,20 +88,18 @@ test.describe('the login page', () => {
     }
   );
 
-  test(
-    '[AUTH-011] refuses an email address that is not valid',
-    knownBug(478),
-    async ({ page }) => {
-      await page.goto('/login');
-      await page.getByRole('button', { name: 'More ways to sign in' }).click();
-      await page.getByRole('button', { name: 'Login with Email' }).click();
-      await page.getByRole('textbox', { name: 'Email' }).fill('not-an-email');
-      await page.getByRole('button', { name: 'Send Login Link' }).click();
+  test('[AUTH-011] refuses an email address that is not valid', async ({
+    page
+  }) => {
+    await page.goto('/login');
+    await page.getByRole('button', { name: 'More ways to sign in' }).click();
+    await page.getByRole('button', { name: 'Login with Email' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('not-an-email');
+    await page.getByRole('button', { name: 'Send Login Link' }).click();
 
-      await expect(
-        page.getByText('Please enter a valid email address.')
-      ).toBeVisible();
-      await expect(page).toHaveURL(/\/login$/);
-    }
-  );
+    await expect(
+      page.getByText('Please enter a valid email address.')
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/login$/);
+  });
 });

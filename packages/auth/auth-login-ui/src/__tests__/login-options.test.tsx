@@ -322,6 +322,38 @@ describe('LoginOptions', () => {
       expect(mocks.login).not.toHaveBeenCalled();
     });
 
+    it('[AUTH-011] refuses an address that is not valid', async () => {
+      await openEmailForm();
+      await userEvent.type(
+        screen.getByPlaceholderText('player@giveaway.dog'),
+        'not-an-email'
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Send Login Link' })
+      );
+      expect(
+        screen.getByText('Please enter a valid email address.')
+      ).toBeInTheDocument();
+      expect(mocks.login).not.toHaveBeenCalled();
+    });
+
+    it('sends the trimmed address', async () => {
+      await openEmailForm();
+      await userEvent.type(
+        screen.getByPlaceholderText('player@giveaway.dog'),
+        ' ada@example.com '
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Send Login Link' })
+      );
+      expect(mocks.login).toHaveBeenCalledExactlyOnceWith({
+        provider: 'EMAIL',
+        email: 'ada@example.com',
+        redirectTo: '/app',
+        returnTo: '/login'
+      });
+    });
+
     it('sends a login link to the entered address', async () => {
       await openEmailForm();
       await userEvent.type(
