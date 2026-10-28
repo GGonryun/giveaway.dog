@@ -84,7 +84,8 @@ export const reverifyTaskCompletion = procedure()
         userId: taskCompletion.participant.userId,
         participantId: taskCompletion.participantId,
         teamId: team.id,
-        data: currentProof
+        data: currentProof,
+        reverify: true
       });
 
       reverificationHistory.push({

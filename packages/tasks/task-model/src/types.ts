@@ -6,4 +6,5 @@ export type ValidateTaskInput<T extends TaskSchema> = {
   participantId: string;
   teamId: string;
   data?: unknown;
+  reverify?: boolean;
 };
