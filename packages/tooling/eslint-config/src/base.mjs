@@ -57,6 +57,9 @@ const base = [
     '**/out/**',
     '**/build/**',
     '**/coverage/**',
+    '**/playwright-report/**',
+    '**/test-results/**',
+    '**/.playwright-results/**',
     '.nx/**',
     '**/next-env.d.ts'
   ])
