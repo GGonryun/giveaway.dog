@@ -2,21 +2,21 @@ import { expect, test } from '../../fixtures/test';
 import { knownBug } from '../../helpers/known-bug';
 import { expectNoErrorMarkers } from '../../helpers/public-pages';
 
-// Each one shows "[ERROR-UNPROCESSABLE_CONTENT]: Input validation failed"
-// with HTTP status 200 (#364).
+// Each one showed "[ERROR-UNPROCESSABLE_CONTENT]: Input validation failed"
+// with HTTP status 200 (#364). /history falls back to the defaults since #562.
 const MALFORMED = [
-  '/winners?page=abc',
-  '/winners?page=0',
-  '/history?page=abc',
-  '/history?sortBy=random',
-  '/history?minEntrants=x'
+  { path: '/winners?page=abc', issue: 364 },
+  { path: '/winners?page=0', issue: 364 },
+  { path: '/history?page=abc' },
+  { path: '/history?sortBy=random' },
+  { path: '/history?minEntrants=x' }
 ];
 
 test.describe('malformed query strings', () => {
-  for (const path of MALFORMED) {
+  for (const { path, issue } of MALFORMED) {
     test(
       `a visitor sees the default list at ${path}`,
-      knownBug(364),
+      issue ? knownBug(issue) : {},
       async ({ request }) => {
         const response = await request.get(path);
 
