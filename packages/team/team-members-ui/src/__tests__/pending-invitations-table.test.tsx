@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TeamRole } from '@giveaway/db-model';
 import { toast } from 'sonner';
 import revokeInvitation from '@giveaway/team-invites-server/revoke-invitation';
+import type { Result } from '@giveaway/rpc-model/types';
 import { PendingInvitationsTable } from '../pending-invitations-table';
 
 vi.mock('@giveaway/team-invites-server/revoke-invitation', () => ({
@@ -18,6 +19,14 @@ expect.addSnapshotSerializer({
   test: (value) => typeof value === 'string' && /_r_[0-9a-z]+_/.test(value),
   serialize: (value: string) => `"${value.replace(/_r_[0-9a-z]+_/g, '_r_id_')}"`
 });
+
+const createDeferred = <T,>() => {
+  let resolve: (value: T) => void = () => {};
+  const promise = new Promise<T>((resolver) => {
+    resolve = resolver;
+  });
+  return { promise, resolve };
+};
 
 type Invitation = React.ComponentProps<
   typeof PendingInvitationsTable
@@ -150,6 +159,53 @@ describe('PendingInvitationsTable', () => {
       await waitFor(() =>
         expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
       );
+    });
+
+    it('keeps the confirmation open while revoking', async () => {
+      const user = userEvent.setup();
+      const request = createDeferred<Result<{ success: boolean }>>();
+      vi.mocked(revokeInvitation).mockReturnValue(request.promise);
+      renderTable();
+
+      await startRevoking(user, 'ada@example\\.com');
+      await user.click(
+        screen.getByRole('button', { name: 'Revoke Invitation' })
+      );
+
+      expect(
+        screen.getByRole('alertdialog', { name: 'Revoke Invitation' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Revoking...' })
+      ).toBeDisabled();
+      expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
+      request.resolve({ ok: true, data: { success: true } });
+      await waitFor(() =>
+        expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+      );
+    });
+
+    it('keeps the confirmation open when revoking fails', async () => {
+      const user = userEvent.setup();
+      vi.mocked(revokeInvitation).mockResolvedValue({
+        ok: false,
+        data: { code: 'NOT_FOUND', message: 'Invitation no longer exists' }
+      });
+      renderTable();
+
+      await startRevoking(user, 'ada@example\\.com');
+      await user.click(
+        screen.getByRole('button', { name: 'Revoke Invitation' })
+      );
+
+      await waitFor(() =>
+        expect(
+          screen.getByRole('button', { name: 'Revoke Invitation' })
+        ).toBeEnabled()
+      );
+      expect(
+        screen.getByRole('alertdialog', { name: 'Revoke Invitation' })
+      ).toBeInTheDocument();
     });
 
     it('shows the error when revoking fails', async () => {

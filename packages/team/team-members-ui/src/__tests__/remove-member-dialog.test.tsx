@@ -90,7 +90,7 @@ describe('RemoveMemberDialog', () => {
       );
     });
 
-    it('asks the parent to close as soon as removal is confirmed', async () => {
+    it('asks the parent to close only after removal succeeds', async () => {
       const user = userEvent.setup();
       const request = createDeferred<Result<{ success: boolean }>>();
       vi.mocked(removeMember).mockReturnValue(request.promise);
@@ -98,10 +98,12 @@ describe('RemoveMemberDialog', () => {
 
       await user.click(screen.getByRole('button', { name: 'Remove Member' }));
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).not.toHaveBeenCalled();
       expect(onSuccess).not.toHaveBeenCalled();
       request.resolve({ ok: true, data: { success: true } });
       await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
     it('shows a removing state while the request is pending', async () => {
@@ -148,6 +150,24 @@ describe('RemoveMemberDialog', () => {
         expect(toast.error).toHaveBeenCalledWith('Admins only')
       );
       expect(onSuccess).not.toHaveBeenCalled();
+    });
+
+    it('stays open so the user can retry when removal fails', async () => {
+      const user = userEvent.setup();
+      vi.mocked(removeMember).mockResolvedValue({
+        ok: false,
+        data: { code: 'FORBIDDEN', message: 'Admins only' }
+      });
+      const { onOpenChange } = renderDialog();
+
+      await user.click(screen.getByRole('button', { name: 'Remove Member' }));
+
+      await waitFor(() =>
+        expect(
+          screen.getByRole('button', { name: 'Remove Member' })
+        ).toBeEnabled()
+      );
+      expect(onOpenChange).not.toHaveBeenCalled();
     });
 
     it('closes without removing when cancelled', async () => {
