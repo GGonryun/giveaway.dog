@@ -3,7 +3,6 @@ import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET } from '../../env';
 import { stubBlobImage, stubBlobUploads } from '../../helpers/blob';
-import { knownBug } from '../../helpers/known-bug';
 import { signInAs } from '../../helpers/personas';
 import { PIXEL_PNG } from '../../helpers/third-party';
 import { seedApi } from '../../helpers/seed';
@@ -171,23 +170,21 @@ test.describe('team settings', () => {
     ).toBeVisible();
   });
 
-  test(
-    'Enter in a social link field saves the links',
-    knownBug(84),
-    async ({ page }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const team = await seedOwnTeam(page, ns, 'ent');
+  test('Enter in a social link field saves the links', async ({
+    page
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const team = await seedOwnTeam(page, ns, 'ent');
 
-      const url = await addSocialLink(page, team.slug);
-      await url.fill('https://x.com/e2e');
-      await url.press('Enter');
+    const url = await addSocialLink(page, team.slug);
+    await url.fill('https://x.com/e2e');
+    await url.press('Enter');
 
-      await expect(
-        page.getByText('Social links updated successfully')
-      ).toBeVisible();
-      await expect(page).not.toHaveURL(/links/);
-    }
-  );
+    await expect(
+      page.getByText('Social links updated successfully')
+    ).toBeVisible();
+    await expect(page).not.toHaveURL(/links/);
+  });
 
   test('the integrations page shows only the messages of the app', async ({
     page

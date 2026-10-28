@@ -85,6 +85,7 @@ export const InviteFormCard: React.FC<InviteFormCardProps> = ({
   });
 
   const onSubmit = (values: InviteFormValues) => {
+    if (isLoading) return;
     sendInvites({ slug, invitations: values.invitations });
   };
 
@@ -126,7 +127,7 @@ export const InviteFormCard: React.FC<InviteFormCardProps> = ({
         }
       >
         <Form {...form}>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             {fields.map((field, index) => (
               <div
                 key={field.id}

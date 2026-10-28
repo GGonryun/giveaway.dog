@@ -96,6 +96,12 @@ export const SocialLinksCard: React.FC<SocialLinksCardProps> = ({
     await saveLinks({ slug, links: data.links });
   });
 
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isLoading || !form.formState.isDirty) return;
+    handleSave();
+  };
+
   const getAvailablePlatformsForLink = (currentIndex: number) => {
     const currentLinks = form.getValues('links');
     return SUPPORTED_SOCIAL_PLATFORMS.filter(
@@ -116,7 +122,7 @@ export const SocialLinksCard: React.FC<SocialLinksCardProps> = ({
       hasChanges={form.formState.isDirty}
     >
       <Form {...form}>
-        <form className="space-y-3">
+        <form className="space-y-3" onSubmit={handleFormSubmit}>
           {fields.map((field, index) => (
             <div key={field.id} className="flex gap-2 items-start">
               <FormField

@@ -59,6 +59,16 @@ const rowOf = (input: HTMLElement) => {
   return row;
 };
 
+const recordSubmits = () => {
+  const submits: Event[] = [];
+  const record = (event: Event) => submits.push(event);
+  window.addEventListener('submit', record);
+  return {
+    submits,
+    stop: () => window.removeEventListener('submit', record)
+  };
+};
+
 const sendButton = () =>
   screen.getByRole('button', { name: 'Send Invitations' });
 
@@ -260,6 +270,45 @@ describe('InviteFormCard', () => {
       await waitFor(() => expect(onInvitesSent).toHaveBeenCalledTimes(1));
       expect(emailInputs()).toHaveLength(1);
       expect(emailInputs()[0]).toHaveValue('');
+    });
+  });
+
+  describe('when Enter is pressed in the email field', () => {
+    it('sends the invitation without reloading the page', async () => {
+      const user = userEvent.setup();
+      const recorder = recordSubmits();
+      const { onInvitesSent } = renderCard();
+
+      await user.type(emailInputs()[0], 'ada@example.com{Enter}');
+
+      await waitFor(() =>
+        expect(inviteMembers).toHaveBeenCalledWith({
+          slug: 'doggo-club',
+          invitations: [{ email: 'ada@example.com', role: TeamRole.MEMBER }]
+        })
+      );
+      await waitFor(() => expect(onInvitesSent).toHaveBeenCalledTimes(1));
+      recorder.stop();
+      expect(recorder.submits).toHaveLength(1);
+      expect(recorder.submits[0].defaultPrevented).toBe(true);
+    });
+
+    it('does not send again while the invitations are sending', async () => {
+      const user = userEvent.setup();
+      const request = createDeferred<Result<InviteResult>>();
+      vi.mocked(inviteMembers).mockReturnValue(request.promise);
+      renderCard();
+
+      await user.type(emailInputs()[0], 'ada@example.com{Enter}');
+      await screen.findByRole('button', { name: 'Sending...' });
+      await user.type(emailInputs()[0], '{Enter}');
+
+      expect(inviteMembers).toHaveBeenCalledTimes(1);
+      request.resolve({
+        ok: true,
+        data: { success: true, invited: ['ada@example.com'], skipped: [] }
+      });
+      await waitFor(() => expect(sendButton()).toBeEnabled());
     });
   });
 

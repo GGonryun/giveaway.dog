@@ -48,6 +48,24 @@ const addButton = () => screen.getByRole('button', { name: 'Add Social Link' });
 const urlInputs = () => screen.queryAllByRole('textbox');
 const platformSelects = () => screen.queryAllByRole('combobox');
 
+const recordSubmits = () => {
+  const submits: Event[] = [];
+  const record = (event: Event) => submits.push(event);
+  window.addEventListener('submit', record);
+  return {
+    submits,
+    stop: () => window.removeEventListener('submit', record)
+  };
+};
+
+const createDeferred = <T,>() => {
+  let resolve: (value: T) => void = () => {};
+  const promise = new Promise<T>((resolver) => {
+    resolve = resolver;
+  });
+  return { promise, resolve };
+};
+
 const rowOf = (input: HTMLElement) => {
   const row = input.parentElement?.parentElement;
   if (!row) throw new Error('Link row not found');
@@ -214,6 +232,57 @@ describe('SocialLinksCard', () => {
           links: []
         })
       );
+    });
+  });
+
+  describe('when Enter is pressed in the url field', () => {
+    it('saves the edited link without reloading the page', async () => {
+      const user = userEvent.setup();
+      const recorder = recordSubmits();
+      const { onUpdate } = renderCard();
+
+      await user.clear(urlInputs()[0]);
+      await user.type(urlInputs()[0], 'https://x.com/pupper{Enter}');
+
+      await waitFor(() =>
+        expect(updateTeamLinks).toHaveBeenCalledWith({
+          slug: 'doggo-club',
+          links: [{ platform: 'x', url: 'https://x.com/pupper' }]
+        })
+      );
+      await waitFor(() => expect(onUpdate).toHaveBeenCalledTimes(1));
+      recorder.stop();
+      expect(recorder.submits).toHaveLength(1);
+      expect(recorder.submits[0].defaultPrevented).toBe(true);
+    });
+
+    it('does nothing when nothing changed', async () => {
+      const user = userEvent.setup();
+      const recorder = recordSubmits();
+      renderCard();
+
+      await user.type(urlInputs()[0], '{Enter}');
+
+      recorder.stop();
+      expect(recorder.submits).toHaveLength(1);
+      expect(recorder.submits[0].defaultPrevented).toBe(true);
+      expect(updateTeamLinks).not.toHaveBeenCalled();
+    });
+
+    it('does not save again while the links are saving', async () => {
+      const user = userEvent.setup();
+      const request =
+        createDeferred<Awaited<ReturnType<typeof updateTeamLinks>>>();
+      vi.mocked(updateTeamLinks).mockReturnValue(request.promise);
+      renderCard();
+
+      await user.type(urlInputs()[0], '1{Enter}');
+      await screen.findByRole('button', { name: 'Saving...' });
+      await user.type(urlInputs()[0], '{Enter}');
+
+      expect(updateTeamLinks).toHaveBeenCalledTimes(1);
+      request.resolve({ ok: true, data: { success: true } });
+      await waitFor(() => expect(saveButton()).toBeDisabled());
     });
   });
 
