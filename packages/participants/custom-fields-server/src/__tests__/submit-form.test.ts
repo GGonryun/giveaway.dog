@@ -810,14 +810,14 @@ describe('submitParticipantForm', () => {
       vi.useRealTimers();
     });
 
-    it("copies a USERNAME value onto the participant user's name and username", async () => {
+    it("copies a USERNAME value onto the participant user's username only", async () => {
       arrange({ participantUser: dbUser({ id: 'db-user-7' }) });
 
       await submit({ username: 'neo' });
 
       expect(prismaMock.user.update).toHaveBeenCalledWith({
         where: { id: 'db-user-7' },
-        data: { name: 'neo', username: 'neo' }
+        data: { username: 'neo' }
       });
     });
 
@@ -898,7 +898,7 @@ describe('saveUserChanges', () => {
     expect(prismaMock.user.update).not.toHaveBeenCalled();
   });
 
-  it('sets name and username from a USERNAME field', async () => {
+  it('sets the username, not the display name, from a USERNAME field', async () => {
     await saveUserChanges({
       db,
       user: dbUser({ id: 'u-9' }),
@@ -908,7 +908,7 @@ describe('saveUserChanges', () => {
 
     expect(prismaMock.user.update).toHaveBeenCalledWith({
       where: { id: 'u-9' },
-      data: { name: 'trinity', username: 'trinity' }
+      data: { username: 'trinity' }
     });
   });
 
@@ -922,7 +922,7 @@ describe('saveUserChanges', () => {
 
     expect(prismaMock.user.update).toHaveBeenCalledWith({
       where: { id: TEST_USER.id },
-      data: { name: true, username: true }
+      data: { username: true }
     });
   });
 
@@ -939,7 +939,7 @@ describe('saveUserChanges', () => {
 
     expect(prismaMock.user.update).toHaveBeenCalledWith({
       where: { id: TEST_USER.id },
-      data: { name: 'trinity', username: 'trinity' }
+      data: { username: 'trinity' }
     });
   });
 
@@ -1069,7 +1069,6 @@ describe('saveUserChanges', () => {
     expect(prismaMock.user.update).toHaveBeenCalledWith({
       where: { id: TEST_USER.id },
       data: {
-        name: 'neo',
         username: 'neo',
         birthday: new Date(2008, 0, 1)
       }

@@ -90,26 +90,25 @@ test.describe('the entry form', () => {
     await expect(page.getByText('Your entries: 1')).toBeVisible();
   });
 
-  test(
-    'the entry form keeps the username of the participant',
-    knownBug(577),
-    async ({ page, request }, testInfo) => {
-      const giveaway = await seedFormGiveaway(request, testInfo);
+  test('the entry form keeps the username of the participant', async ({
+    page,
+    request
+  }, testInfo) => {
+    const giveaway = await seedFormGiveaway(request, testInfo);
 
-      await page.goto(`/browse/${giveaway.id}`);
-      await page.getByRole('checkbox', { name: AGE }).check();
-      await page.getByLabel(X_PROFILE).fill(`https://x.com/e2e${ns}`);
-      await submitForm(page);
-      await expectTasks(page);
+    await page.goto(`/browse/${giveaway.id}`);
+    await page.getByRole('checkbox', { name: AGE }).check();
+    await page.getByLabel(X_PROFILE).fill(`https://x.com/e2e${ns}`);
+    await submitForm(page);
+    await expectTasks(page);
 
-      const { user } = await seedApi(request).rows<Accounts>({
-        view: 'accounts',
-        persona: 'participant',
-        ns
-      });
-      expect(user).toMatchObject({ name: 'E2E participant', username });
-    }
-  );
+    const { user } = await seedApi(request).rows<Accounts>({
+      view: 'accounts',
+      persona: 'participant',
+      ns
+    });
+    expect(user).toMatchObject({ name: 'E2E participant', username });
+  });
 
   test(
     'the entry form explains why an unchecked age box blocks it',

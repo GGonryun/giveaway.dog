@@ -136,8 +136,8 @@ const toFieldValue = (
       return { value, isCustom: true };
 
     case 'USERNAME':
-      if (user?.name) {
-        return { value: user.name, isCustom: false };
+      if (user?.username) {
+        return { value: user.username, isCustom: false };
       }
 
       return { value, isCustom: true };
