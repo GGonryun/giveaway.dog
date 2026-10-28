@@ -102,9 +102,9 @@ describe('DailyEntriesTimeline', () => {
     expect(tickLabels(container).slice(2)).toEqual([
       '0',
       '650',
-      '1k',
-      '2k',
-      '3k'
+      '1.3k',
+      '1.95k',
+      '2.6k'
     ]);
   });
 });

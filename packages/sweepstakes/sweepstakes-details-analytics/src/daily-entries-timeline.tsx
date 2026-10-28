@@ -20,6 +20,11 @@ import {
 } from '@giveaway/ui-charts/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
+const entriesAxisFormat = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 2
+});
+
 const chartConfig = {
   entries: {
     label: 'Total Entries',
@@ -76,11 +81,10 @@ export const DailyEntriesTimeline: React.FC<
             />
             <YAxis
               tick={{ fontSize: 10 }}
-              width={25}
-              tickFormatter={(value) => {
-                if (value >= 1000) return `${(value / 1000).toFixed(0)}k`;
-                return value.toString();
-              }}
+              width={32}
+              tickFormatter={(value: number) =>
+                entriesAxisFormat.format(value).toLowerCase()
+              }
             />
             <ChartTooltip
               content={ChartTooltipContent}
