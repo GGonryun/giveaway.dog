@@ -223,6 +223,44 @@ describe('ProfileStep', () => {
       );
     });
 
+    it('refreshes the session after it loads when the user submits while it is loading', async () => {
+      const user = userEvent.setup();
+      const loadingUpdate = vi.fn().mockResolvedValue(undefined);
+      vi.mocked(useSession).mockReturnValue({
+        data: null,
+        status: 'loading',
+        update: loadingUpdate
+      } as unknown as ReturnType<typeof useSession>);
+      const { rerender } = renderStep();
+
+      await submitUsername(user);
+      await waitFor(() => expect(completeOnboarding).toHaveBeenCalled());
+
+      expect(loadingUpdate).not.toHaveBeenCalled();
+      expect(navigation.router.push).not.toHaveBeenCalled();
+
+      vi.mocked(useSession).mockReturnValue({
+        data: null,
+        status: 'authenticated',
+        update
+      } as unknown as ReturnType<typeof useSession>);
+      rerender(
+        <ProfileStep accountType={UserAccountType.HOST} onBack={vi.fn()} />
+      );
+
+      await waitFor(() =>
+        expect(navigation.router.push).toHaveBeenCalledWith('/app')
+      );
+      expect(update).toHaveBeenCalledWith({
+        onboarded: true,
+        accountType: UserAccountType.HOST,
+        username: 'cool_user'
+      });
+      expect(update.mock.invocationCallOrder[0]).toBeLessThan(
+        navigation.router.push.mock.invocationCallOrder[0]
+      );
+    });
+
     it('welcomes a host and sends them to the app', async () => {
       const user = userEvent.setup();
       renderStep(UserAccountType.HOST);

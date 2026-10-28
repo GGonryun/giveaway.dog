@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useUpdateSession } from '@giveaway/auth-session-ui/hooks/use-update-session';
 import {
   Card,
   CardContent,
@@ -55,7 +56,8 @@ export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
+  const updateSession = useUpdateSession();
   const [accepted, setAccepted] = useState(false);
 
   const { isLoading: isAccepting, run: accept } = useProcedure({
@@ -63,7 +65,7 @@ export const InviteAcceptance: React.FC<InviteAcceptanceProps> = ({
     async onSuccess(data) {
       setAccepted(true);
       toast.success(`Successfully joined ${data.teamName}!`);
-      await update({ accountType: UserAccountType.HOST });
+      await updateSession({ accountType: UserAccountType.HOST });
       setTimeout(() => {
         router.push('/app');
       }, 1500);

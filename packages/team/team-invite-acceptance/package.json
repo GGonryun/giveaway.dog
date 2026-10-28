@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@giveaway/app-config": "workspace:*",
+    "@giveaway/auth-session-ui": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/rpc-client": "workspace:*",
     "@giveaway/team-invites-server": "workspace:*",

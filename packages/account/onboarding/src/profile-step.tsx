@@ -23,7 +23,7 @@ import { UserAccountType } from '@giveaway/db-model';
 import completeOnboarding from '@giveaway/account-server/complete-onboarding';
 import { getUserAuthRedirect } from '@giveaway/user-model/redirect';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useUpdateSession } from '@giveaway/auth-session-ui/hooks/use-update-session';
 import z from 'zod';
 
 const profileFormSchema = z.object({
@@ -52,14 +52,14 @@ export const ProfileStep: React.FC<ProfileStepProps> = ({
   onBack
 }) => {
   const router = useRouter();
-  const { update } = useSession();
+  const updateSession = useUpdateSession();
 
   const procedure = useProcedure({
     action: completeOnboarding,
     async onSuccess(data) {
       // Update the session to refresh the JWT with onboarded: true
       // Pass the data to trigger the JWT callback
-      await update({
+      await updateSession({
         onboarded: true,
         accountType: data.accountType,
         username: data.username
