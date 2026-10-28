@@ -273,7 +273,9 @@ describe('createSweepstakes', () => {
               'https://a8mwfsrzadqc10xo.public.blob.vercel-storage.com/73f5c6fa-953d-4a1d-a4b6-3cd03cddb4a7.png'
           }
         },
-        timing: { create: {} },
+        timing: {
+          create: { ...DEFAULT_SWEEPSTAKES_TIMING, timeZone: TIMEZONE }
+        },
         audience: {
           create: {
             allowedIdentities: DEFAULT_ALLOWED_IDENTITIES,
@@ -335,15 +337,11 @@ describe('createSweepstakes', () => {
       });
     });
 
-    it('replaces the requested timezone with an empty timing section', async () => {
+    it('keeps the default timing with the requested timezone', async () => {
       await createSweepstakes({ ...input, templateId: 'basic-giveaway' });
 
       expect(createdData().timing).toStrictEqual({
-        create: {
-          startDate: undefined,
-          endDate: undefined,
-          timeZone: undefined
-        }
+        create: { ...DEFAULT_SWEEPSTAKES_TIMING, timeZone: TIMEZONE }
       });
     });
 
@@ -421,7 +419,9 @@ describe('createSweepstakes', () => {
         visibility: { create: DEFAULT_SWEEPSTAKES_VISIBILITY },
         criteria: { create: DEFAULT_SWEEPSTAKES_WINNER_CRITERIA },
         details: { create: {} },
-        timing: { create: {} }
+        timing: {
+          create: { ...DEFAULT_SWEEPSTAKES_TIMING, timeZone: TIMEZONE }
+        }
       });
     });
 
@@ -439,7 +439,7 @@ describe('createSweepstakes', () => {
       expect(prismaMock.sweepstakes.create).not.toHaveBeenCalled();
     });
 
-    it('replaces the default details and timing with empty sections', async () => {
+    it('replaces the default details with an empty section and keeps the default timing', async () => {
       prismaMock.template.findFirst.mockResolvedValue(dbTemplate({}));
 
       await createSweepstakes({ ...input, templateId: 'tpl-1' });
@@ -448,11 +448,7 @@ describe('createSweepstakes', () => {
         create: { name: undefined, description: undefined, banner: undefined }
       });
       expect(createdData().timing).toStrictEqual({
-        create: {
-          startDate: undefined,
-          endDate: undefined,
-          timeZone: undefined
-        }
+        create: { ...DEFAULT_SWEEPSTAKES_TIMING, timeZone: TIMEZONE }
       });
     });
 
