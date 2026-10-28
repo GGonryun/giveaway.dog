@@ -19,7 +19,9 @@
     "./integrations": "./src/integrations.tsx"
   },
   "scripts": {
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run",
+    "test:unit": "vitest run --project server",
+    "test:server": "vitest run --project server"
   },
   "dependencies": {
     "@giveaway/bluesky-connect-ui": "workspace:*",

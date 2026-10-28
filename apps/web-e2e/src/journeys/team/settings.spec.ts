@@ -189,19 +189,17 @@ test.describe('team settings', () => {
     }
   );
 
-  test(
-    'the integrations page shows only the messages of the app',
-    knownBug(490),
-    async ({ page }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const team = await seedOwnTeam(page, ns, 'int');
+  test('the integrations page shows only the messages of the app', async ({
+    page
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const team = await seedOwnTeam(page, ns, 'int');
 
-      await page.goto(
-        `/app/${team.slug}/settings/integrations?${new URLSearchParams({ error: 'Your account is suspended' })}`
-      );
-      const alert = page.locator('[data-slot="alert"]');
-      await expect(alert).toBeVisible();
-      await expect(alert).not.toContainText('Your account is suspended');
-    }
-  );
+    await page.goto(
+      `/app/${team.slug}/settings/integrations?${new URLSearchParams({ error: 'Your account is suspended' })}`
+    );
+    const alert = page.locator('[data-slot="alert"]');
+    await expect(alert).toBeVisible();
+    await expect(alert).not.toContainText('Your account is suspended');
+  });
 });
