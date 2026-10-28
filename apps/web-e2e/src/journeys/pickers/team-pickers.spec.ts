@@ -137,30 +137,29 @@ test.describe('team X pickers', () => {
     }
   );
 
-  test(
-    'a host who draws again with no eligible user left sees why nothing was drawn',
-    knownBug(480),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedPickerTeam(request, ns);
-      const picker = await seedApi(request).picker({
-        team: team.slug,
-        users: [{ username: `only_${ns}` }],
-        draws: [{ user: 0 }]
-      });
-      await signInAs(page.request, 'host', ns);
+  test('a host who draws again with no eligible user left sees why nothing was drawn', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedPickerTeam(request, ns);
+    const picker = await seedApi(request).picker({
+      team: team.slug,
+      users: [{ username: `only_${ns}` }],
+      draws: [{ user: 0 }]
+    });
+    await signInAs(page.request, 'host', ns);
 
-      await page.goto(`/app/${team.slug}/pickers/x/${picker.id}`);
-      await expect(page.getByText('Winners (1)')).toBeVisible();
-      await page.waitForLoadState('networkidle');
-      await page.getByRole('button', { name: 'Draw Extra' }).click();
-      await page.getByRole('button', { name: 'Confirm Draw' }).click();
+    await page.goto(`/app/${team.slug}/pickers/x/${picker.id}`);
+    await expect(page.getByText('Winners (1)')).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('button', { name: 'Draw Extra' }).click();
+    await page.getByRole('button', { name: 'Confirm Draw' }).click();
 
-      await expect(
-        page.getByText('All eligible users have already been drawn as winners')
-      ).toBeVisible();
-    }
-  );
+    await expect(
+      page.getByText('All eligible users have already been drawn as winners')
+    ).toBeVisible();
+  });
 
   test.describe('on the ScrapeBadger fixtures', () => {
     skipWithoutScrapeBadgerFixtures();
