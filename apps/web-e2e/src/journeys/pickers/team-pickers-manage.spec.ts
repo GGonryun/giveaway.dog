@@ -228,40 +228,41 @@ test.describe('team X pickers, as their host', () => {
     }
   );
 
-  test('a host schedules a picker for later', async ({
-    page,
-    request
-  }, testInfo) => {
-    const ns = freshNamespace(testInfo.workerIndex);
-    const { team } = await seedPickerTeam(request, ns);
-    await signInAs(page.request, 'host', ns);
-    const pickerId = await createTeamPicker(page, team.slug);
+  test(
+    'a host schedules a picker for later',
+    { tag: '@slow' },
+    async ({ page, request }, testInfo) => {
+      const ns = freshNamespace(testInfo.workerIndex);
+      const { team } = await seedPickerTeam(request, ns);
+      await signInAs(page.request, 'host', ns);
+      const pickerId = await createTeamPicker(page, team.slug);
 
-    await postUrlInput(page).fill(teamPickerPostUrl(E2E_X_FIXTURES.tweet));
-    await page.getByRole('switch', { name: 'Schedule for Later' }).click();
-    await expect(page.getByText('Run Date')).toBeVisible();
+      await postUrlInput(page).fill(teamPickerPostUrl(E2E_X_FIXTURES.tweet));
+      await page.getByRole('switch', { name: 'Schedule for Later' }).click();
+      await expect(page.getByText('Run Date')).toBeVisible();
 
-    await publishFromHeader(page);
-    await publishDialog(page)
-      .getByRole('button', { name: 'Publish', exact: true })
-      .click();
-    await expect(
-      page.getByText('Picker published successfully!')
-    ).toBeVisible();
-    await page.waitForURL(`**/app/${team.slug}/pickers/x/${pickerId}`);
-    await expect(async () => {
-      await page.reload();
-      await expect(page.getByText('Scheduled for Processing')).toBeVisible({
-        timeout: 2_000
-      });
-    }).toPass({ timeout: 60_000, intervals: [2_000] });
+      await publishFromHeader(page);
+      await publishDialog(page)
+        .getByRole('button', { name: 'Publish', exact: true })
+        .click();
+      await expect(
+        page.getByText('Picker published successfully!')
+      ).toBeVisible();
+      await page.waitForURL(`**/app/${team.slug}/pickers/x/${pickerId}`);
+      await expect(async () => {
+        await page.reload();
+        await expect(page.getByText('Scheduled for Processing')).toBeVisible({
+          timeout: 2_000
+        });
+      }).toPass({ timeout: 60_000, intervals: [2_000] });
 
-    await page.goto(`/pickers/x/${pickerId}`);
-    await expect(
-      page.getByRole('heading', { level: 1, name: 'Upcoming Draw' })
-    ).toBeVisible();
-    await expect(page.getByText('Pending', { exact: true })).toBeVisible();
-  });
+      await page.goto(`/pickers/x/${pickerId}`);
+      await expect(
+        page.getByRole('heading', { level: 1, name: 'Upcoming Draw' })
+      ).toBeVisible();
+      await expect(page.getByText('Pending', { exact: true })).toBeVisible();
+    }
+  );
 
   test.describe('on a FREE team', () => {
     test('a host sees the X picker upsell and the pickers that are coming soon', async ({
