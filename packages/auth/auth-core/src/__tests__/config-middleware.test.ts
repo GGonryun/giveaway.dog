@@ -292,6 +292,10 @@ describe('authConfigMiddleware', () => {
         }
       );
 
+      it('[ROUTE-008] denies signed-out visitors on the onboarding page', () => {
+        expect(authorize(local('/onboarding'))).toBe(false);
+      });
+
       it('allows an onboarded host on the host dashboard', () => {
         expect(authorize(local('/app/giveaways'), host)).toBe(true);
       });
@@ -357,17 +361,13 @@ describe('authConfigMiddleware', () => {
         );
       });
 
-      it('allows a signed-out visitor on the onboarding page', () => {
-        expect(authorize(local('/onboarding'))).toBe(true);
-      });
-
-      it('allows a session without a user on the onboarding page', () => {
+      it('[ROUTE-008] denies a session without a user on the onboarding page', () => {
         const result = callbacks.authorized({
           auth: { expires: '2999-01-01T00:00:00.000Z' },
           request: new NextRequest(local('/onboarding'))
         } as unknown as AuthorizedArgs);
 
-        expect(result).toBe(true);
+        expect(result).toBe(false);
       });
 
       it('allows users who are not onboarded on the portal', () => {
