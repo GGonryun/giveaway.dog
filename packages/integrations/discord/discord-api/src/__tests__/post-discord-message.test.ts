@@ -106,7 +106,8 @@ describe('postDiscordMessage', () => {
           body: JSON.stringify({
             embeds: [input.embed],
             components: input.components
-          })
+          }),
+          signal: expect.any(AbortSignal)
         }
       );
     });

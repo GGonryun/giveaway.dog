@@ -17,7 +17,8 @@
   },
   "exports": {
     "./date": "./src/date.ts",
-    "./time": "./src/time.ts"
+    "./time": "./src/time.ts",
+    "./request-timeout": "./src/request-timeout.ts"
   },
   "scripts": {
     "test": "vitest run",

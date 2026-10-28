@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { requestTimeout } from '@giveaway/util-time/request-timeout';
 import { ApplicationError, assertNever } from '@giveaway/util-errors';
 import { html } from '@giveaway/util-html/html';
 import { DEFAULT_TEAM_NAME } from '@giveaway/team-model/team/data';
@@ -324,7 +325,8 @@ const processSweepstakesActivation = async ({
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
+    signal: requestTimeout()
   });
 
   if (!response.ok) {

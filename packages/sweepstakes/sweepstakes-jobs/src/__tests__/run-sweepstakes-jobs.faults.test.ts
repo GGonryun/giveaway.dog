@@ -21,8 +21,7 @@ const DISCORD_MESSAGE =
   'PATCH https://discord.com/api/v10/channels/chan-1/messages/msg-1';
 
 const ISSUES = {
-  retry: '#183',
-  timeout: '#303'
+  retry: '#183'
 };
 
 const job = (id: string, type: SweepstakesJobType) => ({
@@ -64,10 +63,9 @@ type Expectation = 'finishes' | 'retries';
 
 type Bugs = Partial<Record<Expectation, Partial<Record<Fault, string>>>>;
 
-const HANGS: Bugs = {
-  finishes: { timeout: ISSUES.timeout },
+const RETRIES_LATER: Bugs = {
   retries: {
-    timeout: ISSUES.timeout,
+    timeout: ISSUES.retry,
     'rate-limit': ISSUES.retry,
     'rate-limit-retry-after': ISSUES.retry,
     'server-error': ISSUES.retry,
@@ -88,7 +86,7 @@ const CALLS: {
     type: 'PROCESS_ACTIVATION',
     match: WEBHOOK,
     status: 'ACTIVE',
-    bugs: HANGS,
+    bugs: RETRIES_LATER,
     faults: FAULTS.filter((fault) => fault !== 'malformed-body')
   },
   {
@@ -96,14 +94,14 @@ const CALLS: {
     type: 'PROCESS_EXPIRATION',
     match: DISCORD_MESSAGE,
     status: 'ACTIVE',
-    bugs: HANGS
+    bugs: RETRIES_LATER
   },
   {
     call: 'the Discord message update of a PROCESS_COMPLETION job',
     type: 'PROCESS_COMPLETION',
     match: DISCORD_MESSAGE,
     status: 'COMPLETED',
-    bugs: HANGS
+    bugs: RETRIES_LATER
   }
 ];
 

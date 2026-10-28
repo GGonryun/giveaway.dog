@@ -1,5 +1,6 @@
 'use server';
 
+import { requestTimeout } from '@giveaway/util-time/request-timeout';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getLatestTwitterAccessToken } from './get-latest-twitter-access-token';
 import { Tx } from '@giveaway/db-client/prisma';
@@ -46,7 +47,8 @@ export async function twitterApiRequest<T>({
   const response = await fetch(url, {
     method,
     headers,
-    body: formData ? formData : body ? JSON.stringify(body) : undefined
+    body: formData ? formData : body ? JSON.stringify(body) : undefined,
+    signal: requestTimeout()
   });
 
   if (!response.ok) {

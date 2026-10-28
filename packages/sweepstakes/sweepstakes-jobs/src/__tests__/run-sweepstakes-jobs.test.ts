@@ -512,7 +512,8 @@ describe('runSweepstakesJobs', () => {
       expect(fetchMock).toHaveBeenCalledWith(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: expect.any(String)
+        body: expect.any(String),
+        signal: expect.any(AbortSignal)
       });
       expect(lastFetchBody()).toEqual({
         embeds: [

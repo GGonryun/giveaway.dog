@@ -183,7 +183,9 @@ describe('createSkeet', () => {
         imageUrl: IMAGE_URL
       });
 
-      expect(fetchMock).toHaveBeenCalledWith(IMAGE_URL);
+      expect(fetchMock).toHaveBeenCalledWith(IMAGE_URL, {
+        signal: expect.any(AbortSignal)
+      });
     });
 
     it('uploads the image bytes as a Uint8Array', async () => {

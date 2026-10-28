@@ -140,7 +140,9 @@ describe('createTweet', () => {
     it('uploads the image before creating the tweet', async () => {
       await createTweet(tx, imageInput);
 
-      expect(fetchMock).toHaveBeenCalledWith(imageInput.imageUrl);
+      expect(fetchMock).toHaveBeenCalledWith(imageInput.imageUrl, {
+        signal: expect.any(AbortSignal)
+      });
       expect(apiMock).toHaveBeenCalledTimes(2);
       expect(apiMock.mock.calls[0][0]).toMatchObject({
         endpoint: 'https://api.x.com/2/media/upload',

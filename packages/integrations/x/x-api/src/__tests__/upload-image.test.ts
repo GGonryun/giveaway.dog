@@ -66,12 +66,14 @@ describe('uploadImage', () => {
       apiMock.mockResolvedValue(uploaded);
     });
 
-    it('downloads the image url without extra options', async () => {
+    it('downloads the image url with a timeout', async () => {
       fetchMock.mockResolvedValue(imageResponse('image/png'));
 
       await uploadImage(tx, 'team-1', IMAGE_URL, 'int-1');
 
-      expect(fetchMock).toHaveBeenCalledWith(IMAGE_URL);
+      expect(fetchMock).toHaveBeenCalledWith(IMAGE_URL, {
+        signal: expect.any(AbortSignal)
+      });
     });
 
     it('posts the base64 image to the X media upload endpoint', async () => {

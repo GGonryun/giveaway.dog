@@ -34,6 +34,7 @@
     "@giveaway/team-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-html": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
     "server-only": "catalog:"
   },
   "devDependencies": {
