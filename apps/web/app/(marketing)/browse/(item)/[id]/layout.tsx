@@ -3,6 +3,8 @@ import getParticipantSweepstake from '@giveaway/participation-server/get-partici
 import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
 import { Metadata } from 'next';
 import { date } from '@giveaway/util-time/date';
+import { html } from '@giveaway/util-html/html';
+import { environment } from '@giveaway/app-config/environment';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -32,10 +34,14 @@ export async function generateMetadata({
   const { sweepstakes, host } = result.data;
   const prizeNames = sweepstakes.prizes.map((p) => p.name).join(', ');
   const endDate = date.format(sweepstakes.timing.endDate);
+  const summary = html
+    .toPlainText(sweepstakes.setup.description ?? '')
+    .substring(0, 100)
+    .trimEnd();
 
   return {
     title: `${sweepstakes.setup.name} | Giveaway by ${host.name}`,
-    description: `Enter to win ${prizeNames}! Giveaway ends ${endDate}. ${sweepstakes.setup.description?.substring(0, 100) || 'Join now for a chance to win!'}`,
+    description: `Enter to win ${prizeNames}! Giveaway ends ${endDate}. ${summary || 'Join now for a chance to win!'}`,
     keywords: [
       'giveaway',
       'contest',
@@ -47,7 +53,7 @@ export async function generateMetadata({
       title: `${sweepstakes.setup.name} | ${host.name}`,
       description: `Enter to win ${prizeNames}! Ends ${endDate}.`,
       type: 'website',
-      url: `https://giveaway.dog/browse/${id}`,
+      url: `${environment.appUrl()}/browse/${id}`,
       images: [
         {
           url: sweepstakes.setup.banner,

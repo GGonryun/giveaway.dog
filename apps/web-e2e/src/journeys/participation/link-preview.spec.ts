@@ -1,7 +1,6 @@
 import type { APIRequestContext, TestInfo } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
 const BOT = { 'User-Agent': 'Twitterbot/1.0' };
@@ -59,15 +58,13 @@ test.describe('link previews of a giveaway', () => {
     expect(meta(html, 'property', 'og:description')).toContain(PRIZE);
   });
 
-  test(
-    'a link-preview bot reads the description as plain text',
-    knownBug(590),
-    async ({ request }, testInfo) => {
-      const { html } = await loadPreview(request, testInfo);
+  test('a link-preview bot reads the description as plain text', async ({
+    request
+  }, testInfo) => {
+    const { html } = await loadPreview(request, testInfo);
 
-      const description = meta(html, 'name', 'description');
-      expect(description).toContain('Win a mug for your desk');
-      expect(description).not.toMatch(/<[a-z/]/);
-    }
-  );
+    const description = meta(html, 'name', 'description');
+    expect(description).toContain('Win a mug for your desk');
+    expect(description).not.toMatch(/<[a-z/]/);
+  });
 });

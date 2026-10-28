@@ -44,6 +44,29 @@ const sanitizeOptions: sanitizeHtml.IOptions = {
   allowProtocolRelative: false
 };
 
+const BLOCK_TAGS = [
+  'p',
+  'br',
+  'pre',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'ul',
+  'ol',
+  'li',
+  'blockquote'
+];
+
+const plainTextOptions: sanitizeHtml.IOptions = {
+  allowedTags: BLOCK_TAGS
+};
+
+const decodeText = (text: string) =>
+  text.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
 const turndownService = new TurndownService({
   headingStyle: 'atx',
   codeBlockStyle: 'fenced'
@@ -145,6 +168,13 @@ export namespace html {
       sanitized = next;
     }
     return sanitized;
+  }
+
+  export function toPlainText(htmlContent: string): string {
+    const blocks = sanitizeHtml(htmlContent, plainTextOptions);
+    return decodeText(blocks.replace(/<[^>]*>/g, ' '))
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   export function toMarkdown(htmlContent: string): string {
