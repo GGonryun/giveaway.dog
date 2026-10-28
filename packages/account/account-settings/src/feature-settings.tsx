@@ -27,6 +27,7 @@ import {
 } from '@giveaway/feature-flags/feature-flags';
 import { widetype } from '@giveaway/util-types/widetype';
 import { useSession } from 'next-auth/react';
+import { useUpdateSession } from '@giveaway/auth-session-ui/hooks/use-update-session';
 import { UserAccountType } from '@giveaway/db-model';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import updateAccountType from '@giveaway/account-server/update-account-type';
@@ -34,7 +35,8 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 export const FeatureSettings = () => {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
+  const updateSession = useUpdateSession();
   const router = useRouter();
 
   const [showContact, setShowContact] = useState(false);
@@ -52,7 +54,7 @@ export const FeatureSettings = () => {
           ? 'Host access enabled successfully!'
           : 'Host access disabled successfully!'
       );
-      await update({
+      await updateSession({
         accountType: data.accountType
       });
       router.refresh();

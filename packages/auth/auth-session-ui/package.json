@@ -18,6 +18,7 @@
   "exports": {
     "./auth-session-provider": "./src/auth-session-provider.tsx",
     "./hooks/use-logout": "./src/hooks/use-logout.tsx",
+    "./hooks/use-update-session": "./src/hooks/use-update-session.tsx",
     "./logout-button": "./src/logout-button.tsx"
   },
   "scripts": {

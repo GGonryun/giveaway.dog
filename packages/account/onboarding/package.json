@@ -31,6 +31,7 @@
   "dependencies": {
     "@giveaway/account-server": "workspace:*",
     "@giveaway/auth-login-ui": "workspace:*",
+    "@giveaway/auth-session-ui": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/rpc-client": "workspace:*",
     "@giveaway/ui-file-upload": "workspace:*",
@@ -45,7 +46,6 @@
   },
   "peerDependencies": {
     "next": "catalog:",
-    "next-auth": "catalog:",
     "react": "catalog:"
   },
   "devDependencies": {
@@ -59,6 +59,7 @@
     "@testing-library/user-event": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "next-auth": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
