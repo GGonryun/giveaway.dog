@@ -7,16 +7,22 @@ import {
   RadioGroupItem
 } from '@giveaway/ui-primitives/radio-group';
 import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
+import { useIsClient } from './use-is-client';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const isClient = useIsClient();
 
   return (
     <SettingsCard
       title="Appearance"
       description="Choose how the app looks on this device"
     >
-      <RadioGroup className="max-w-2xl" value={theme} onValueChange={setTheme}>
+      <RadioGroup
+        className="max-w-2xl"
+        value={isClient ? (theme ?? '') : ''}
+        onValueChange={setTheme}
+      >
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="light" id="light" />
           <Label htmlFor="light">Light</Label>
