@@ -3,7 +3,6 @@ import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
 import { clickUntilUrl } from '../../helpers/editor';
 import { seedSweepstakes } from '../../helpers/jobs';
-import { knownBug } from '../../helpers/known-bug';
 import { freshSlug, seedApi, seedWorkerTeam } from '../../helpers/seed';
 import { TAGS } from '../../helpers/tags';
 
@@ -220,7 +219,7 @@ test.describe('team templates', () => {
 
   test(
     'a host creates two giveaways from a template that sets a custom slug',
-    knownBug(513, { tag: TAGS.slow }),
+    { tag: TAGS.slow },
     async ({ page, request }, testInfo) => {
       const seed = seedApi(request);
       const { team } = await seedWorkerTeam(request, testInfo);

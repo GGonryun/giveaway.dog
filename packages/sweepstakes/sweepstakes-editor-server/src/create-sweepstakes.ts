@@ -77,7 +77,8 @@ const createFromTemplate = async ({
   base: Prisma.SweepstakesCreateInput;
 }) => {
   const template = await toTemplate({ db, templateId, teamId });
-  const update = omit(toStorableSweepstakesUpdate(template), 'timing');
+  const source = await withAvailableSlug({ db, template });
+  const update = omit(toStorableSweepstakesUpdate(source), 'timing');
   const omitted = omitBy(update, isUndefined);
 
   return await db.sweepstakes.create({
@@ -85,6 +86,26 @@ const createFromTemplate = async ({
       nanoid(SWEEPSTAKE_ID_SIZE)
     )
   });
+};
+
+const withAvailableSlug = async ({
+  db,
+  template
+}: {
+  db: PrismaClient;
+  template: TemplateInputSchema;
+}): Promise<TemplateInputSchema> => {
+  const { visibility } = template;
+  if (!visibility?.slug) return template;
+
+  const taken = await db.sweepstakesVisibility.findUnique({
+    where: { slug: visibility.slug },
+    select: { id: true }
+  });
+
+  return taken
+    ? { ...template, visibility: { ...visibility, slug: '' } }
+    : template;
 };
 
 const toTemplate = async ({
