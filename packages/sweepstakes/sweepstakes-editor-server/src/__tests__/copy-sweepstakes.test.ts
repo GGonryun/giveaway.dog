@@ -49,7 +49,7 @@ const fullOriginal = () => ({
   audience: {
     id: 'audience-1',
     sweepstakesId: SWEEPSTAKES_ID,
-    allowedIdentities: ['TWITTER'],
+    allowedIdentities: ['GOOGLE', 'DISCORD'],
     requirePreEntryLogin: true,
     requireEmail: true,
     regionalRestriction: {
@@ -72,7 +72,22 @@ const fullOriginal = () => ({
         audienceId: 'audience-1',
         label: 'Username',
         type: 'USERNAME',
-        required: true
+        required: true,
+        placeholder: '@you',
+        minimum: null,
+        maximum: null,
+        index: 0
+      },
+      {
+        id: 'field-2',
+        audienceId: 'audience-1',
+        label: 'Age',
+        type: 'AGE',
+        required: false,
+        placeholder: null,
+        minimum: 13,
+        maximum: 99,
+        index: 1
       }
     ]
   },
@@ -353,11 +368,13 @@ describe('copySweepstakes', () => {
       });
     });
 
-    it('copies only the email requirement and the legacy restrictions of the audience', async () => {
+    it('copies every audience setting and recreates the form fields without their ids', async () => {
       await copySweepstakes({ id: SWEEPSTAKES_ID });
 
       expect(copiedData().audience).toEqual({
         create: {
+          allowedIdentities: ['GOOGLE', 'DISCORD'],
+          requirePreEntryLogin: true,
           requireEmail: true,
           regionalRestriction: {
             create: { filter: 'INCLUDE', regions: ['US', 'CA'] }
@@ -368,6 +385,30 @@ describe('copySweepstakes', () => {
               label: 'Must be 18',
               required: true,
               format: 'CHECKBOX'
+            }
+          },
+          formFields: {
+            createMany: {
+              data: [
+                {
+                  label: 'Username',
+                  type: 'USERNAME',
+                  required: true,
+                  placeholder: '@you',
+                  minimum: null,
+                  maximum: null,
+                  index: 0
+                },
+                {
+                  label: 'Age',
+                  type: 'AGE',
+                  required: false,
+                  placeholder: null,
+                  minimum: 13,
+                  maximum: 99,
+                  index: 1
+                }
+              ]
             }
           }
         }
@@ -442,14 +483,16 @@ describe('copySweepstakes', () => {
       });
     });
 
-    it('copies the winner criteria without user selection or external platforms', async () => {
+    it('copies every winner criteria setting', async () => {
       await copySweepstakes({ id: SWEEPSTAKES_ID });
 
       expect(copiedData().criteria).toEqual({
         create: {
           minTasksCompleted: 2,
           minQualityScore: 70,
-          allowMultipleWins: true
+          allowMultipleWins: true,
+          allowUserSelection: true,
+          externalPlatforms: ['TWITTER_IMPORT']
         }
       });
     });
@@ -535,6 +578,8 @@ describe('copySweepstakes', () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue({
         ...bareOriginal(),
         audience: {
+          allowedIdentities: [],
+          requirePreEntryLogin: null,
           requireEmail: null,
           regionalRestriction: null,
           minimumAgeRestriction: null,
@@ -546,9 +591,37 @@ describe('copySweepstakes', () => {
 
       expect(copiedData().audience).toEqual({
         create: {
+          allowedIdentities: [],
+          requirePreEntryLogin: null,
           requireEmail: null,
           regionalRestriction: undefined,
-          minimumAgeRestriction: undefined
+          minimumAgeRestriction: undefined,
+          formFields: { createMany: { data: [] } }
+        }
+      });
+    });
+
+    it('stores missing external platforms as JsonNull', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue({
+        ...bareOriginal(),
+        criteria: {
+          minTasksCompleted: 1,
+          minQualityScore: 50,
+          allowMultipleWins: false,
+          allowUserSelection: false,
+          externalPlatforms: null
+        }
+      });
+
+      await copySweepstakes({ id: SWEEPSTAKES_ID });
+
+      expect(copiedData().criteria).toEqual({
+        create: {
+          minTasksCompleted: 1,
+          minQualityScore: 50,
+          allowMultipleWins: false,
+          allowUserSelection: false,
+          externalPlatforms: Prisma.JsonNull
         }
       });
     });

@@ -2,7 +2,6 @@ import type { APIRequestContext, Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, personaState } from '../../env';
 import { openStep } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import {
   freshGiveawayNamespace,
   openRowMenu,
@@ -10,8 +9,6 @@ import {
   readSweepstakes
 } from '../../helpers/manage';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
-
-const COPY_BUG = 533;
 
 const seedFullGiveaway = (
   request: APIRequestContext,
@@ -59,37 +56,36 @@ test.describe('copying a giveaway', () => {
   test.slow();
   test.use({ storageState: personaState('host') });
 
-  test(
-    '[COPY-001] a copy keeps every setting of the original and is a private draft with no slug',
-    knownBug(COPY_BUG),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const original = await seedFullGiveaway(request, team.slug, testInfo);
+  test('[COPY-001] a copy keeps every setting of the original and is a private draft with no slug', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const original = await seedFullGiveaway(request, team.slug, testInfo);
 
-      const id = await copyFromDashboard(page, team.slug, original.name);
-      expect(id).not.toBe(original.id);
-      expect(await readSweepstakes(request, id)).toMatchObject({
-        status: 'DRAFT',
-        visibility: { visibility: 'PRIVATE', slug: null },
-        _count: { participants: 0, tasks: 2, prizes: 2 }
-      });
+    const id = await copyFromDashboard(page, team.slug, original.name);
+    expect(id).not.toBe(original.id);
+    expect(await readSweepstakes(request, id)).toMatchObject({
+      status: 'DRAFT',
+      visibility: { visibility: 'PRIVATE', slug: null },
+      _count: { participants: 0, tasks: 2, prizes: 2 }
+    });
 
-      await openStep(page, 'Selection');
-      await expect(
-        page.getByRole('switch', { name: 'Allow Prize Selection' })
-      ).toBeChecked();
-      await openStep(page, 'Audience');
-      await expect(
-        page.getByRole('button', { name: 'Remove Username', exact: true })
-      ).toBeVisible();
-      await expect(
-        page.getByRole('switch', { name: 'Require Pre-Entry Login' })
-      ).toBeChecked();
-      await expect(
-        page.getByRole('button', { name: 'Allowed Identities' })
-      ).toHaveText(/^\s*Google\s*Discord\s*$/);
-    }
-  );
+    await openStep(page, 'Selection');
+    await expect(
+      page.getByRole('switch', { name: 'Allow Prize Selection' })
+    ).toBeChecked();
+    await openStep(page, 'Audience');
+    await expect(
+      page.getByRole('button', { name: 'Remove Username', exact: true })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('switch', { name: 'Require Pre-Entry Login' })
+    ).toBeChecked();
+    await expect(
+      page.getByRole('button', { name: 'Allowed Identities' })
+    ).toHaveText(/^\s*Google\s*Discord\s*$/);
+  });
 
   test('[COPY-002] copying a giveaway leaves the original unchanged', async ({
     page,
