@@ -27,6 +27,7 @@ const job = (
   data: null,
   error: null,
   runAt: new Date('2026-03-01T11:00:00.000Z'),
+  attempts: 0,
   createdAt: new Date('2026-02-01T00:00:00.000Z'),
   updatedAt: new Date('2026-02-01T00:00:00.000Z'),
   ...overrides
@@ -46,7 +47,7 @@ const completed = (id: string) => ({
 
 const failed = (id: string, error: string) => ({
   where: { id },
-  data: { status: 'FAILED', error }
+  data: { status: 'FAILED', attempts: { increment: 1 }, error }
 });
 
 const fetchMock = vi.fn<typeof fetch>();
@@ -607,7 +608,23 @@ describe('runSweepstakesJobs', () => {
       expect(lastFetchBody().embeds[0].description).toBe('a'.repeat(4096));
     });
 
-    it('fails the job with the status when the webhook responds with an error', async () => {
+    it('fails the job with the status when the webhook refuses the request', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        activationSweepstakes()
+      );
+      fetchMock.mockResolvedValue(
+        new Response('nope', { status: 403, statusText: 'Forbidden' })
+      );
+
+      await runSweepstakesJobs(db);
+
+      expect(updateCalls()).toEqual([
+        failed(JOB_ID, 'Failed to send Discord webhook: 403 Forbidden')
+      ]);
+    });
+
+    it('schedules the job again with backoff when the webhook is rate limited', async () => {
+      vi.spyOn(console, 'warn').mockImplementation(() => undefined);
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         activationSweepstakes()
       );
@@ -618,7 +635,54 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        failed(JOB_ID, 'Failed to send Discord webhook: 429 Too Many Requests')
+        {
+          where: { id: JOB_ID },
+          data: {
+            status: 'PENDING',
+            runAt: new Date(NOW.getTime() + 5 * 60_000),
+            attempts: { increment: 1 },
+            error: 'Failed to send Discord webhook: 429 Too Many Requests'
+          }
+        }
+      ]);
+    });
+
+    it('waits until the retry time that the webhook sends', async () => {
+      vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        activationSweepstakes()
+      );
+      fetchMock.mockResolvedValue(
+        new Response('nope', {
+          status: 429,
+          statusText: 'Too Many Requests',
+          headers: { 'retry-after': '3600' }
+        })
+      );
+
+      await runSweepstakesJobs(db);
+
+      expect(updateCalls()[0].data.runAt).toEqual(
+        new Date(NOW.getTime() + 3600_000)
+      );
+    });
+
+    it('fails the job for good when the webhook still fails on its last attempt', async () => {
+      givenJobs(job('PROCESS_ACTIVATION', { attempts: 4 }));
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(
+        activationSweepstakes()
+      );
+      fetchMock.mockResolvedValue(
+        new Response('nope', { status: 503, statusText: 'Service Unavailable' })
+      );
+
+      await runSweepstakesJobs(db);
+
+      expect(updateCalls()).toEqual([
+        failed(
+          JOB_ID,
+          'Failed to send Discord webhook: 503 Service Unavailable'
+        )
       ]);
     });
 

@@ -50,6 +50,24 @@ describe('uploadImage', () => {
       expect(apiMock).not.toHaveBeenCalled();
     });
 
+    it('throws an error that a job can retry when the image host is down', async () => {
+      fetchMock.mockResolvedValue(
+        new Response('down', { status: 503, statusText: 'Service Unavailable' })
+      );
+
+      const error = await uploadImage(tx, 'team-1', IMAGE_URL, 'int-1').catch(
+        (e: unknown) => e
+      );
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'Failed to fetch image from URL: 503 Service Unavailable',
+        data: { status: 503 }
+      });
+      expect(apiMock).not.toHaveBeenCalled();
+    });
+
     it('propagates a network failure', async () => {
       const failure = new TypeError('fetch failed');
       fetchMock.mockRejectedValue(failure);

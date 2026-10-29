@@ -1,7 +1,11 @@
 'use server';
 
 import { requestTimeout } from '@giveaway/util-time/request-timeout';
-import { ApplicationError } from '@giveaway/util-errors';
+import {
+  ApplicationError,
+  isTransientHttpStatus,
+  toTransientHttpError
+} from '@giveaway/util-errors';
 import { getLatestTwitterAccessToken } from './get-latest-twitter-access-token';
 import { Tx } from '@giveaway/db-client/prisma';
 import { z } from 'zod';
@@ -85,6 +89,13 @@ export async function twitterApiRequest<T>({
 
     const errorText = await response.clone().text();
     console.error('[twitterApiRequest] Error response:', errorText);
+
+    if (isTransientHttpStatus(response.status)) {
+      throw toTransientHttpError(
+        response,
+        'Failed to fetch data from Twitter API'
+      );
+    }
 
     throw new ApplicationError({
       code: 'BAD_REQUEST',

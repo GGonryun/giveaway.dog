@@ -20,10 +20,6 @@ const WEBHOOK = 'POST https://discord.com/api/webhooks/1/secret';
 const DISCORD_MESSAGE =
   'PATCH https://discord.com/api/v10/channels/chan-1/messages/msg-1';
 
-const ISSUES = {
-  retry: '#183'
-};
-
 const job = (id: string, type: SweepstakesJobType) => ({
   id,
   sweepstakesId: 'sw-1',
@@ -32,6 +28,7 @@ const job = (id: string, type: SweepstakesJobType) => ({
   data: null,
   error: null,
   runAt: new Date('2026-03-01T11:00:00.000Z'),
+  attempts: 0,
   createdAt: new Date('2026-02-01T00:00:00.000Z'),
   updatedAt: new Date('2026-02-01T00:00:00.000Z')
 });
@@ -63,16 +60,6 @@ type Expectation = 'finishes' | 'retries';
 
 type Bugs = Partial<Record<Expectation, Partial<Record<Fault, string>>>>;
 
-const RETRIES_LATER: Bugs = {
-  retries: {
-    timeout: ISSUES.retry,
-    'rate-limit': ISSUES.retry,
-    'rate-limit-retry-after': ISSUES.retry,
-    'server-error': ISSUES.retry,
-    'network-error': ISSUES.retry
-  }
-};
-
 const CALLS: {
   call: string;
   type: SweepstakesJobType;
@@ -86,7 +73,7 @@ const CALLS: {
     type: 'PROCESS_ACTIVATION',
     match: WEBHOOK,
     status: 'ACTIVE',
-    bugs: RETRIES_LATER,
+    bugs: {},
     faults: FAULTS.filter((fault) => fault !== 'malformed-body')
   },
   {
@@ -94,14 +81,14 @@ const CALLS: {
     type: 'PROCESS_EXPIRATION',
     match: DISCORD_MESSAGE,
     status: 'ACTIVE',
-    bugs: RETRIES_LATER
+    bugs: {}
   },
   {
     call: 'the Discord message update of a PROCESS_COMPLETION job',
     type: 'PROCESS_COMPLETION',
     match: DISCORD_MESSAGE,
     status: 'COMPLETED',
-    bugs: RETRIES_LATER
+    bugs: {}
   }
 ];
 

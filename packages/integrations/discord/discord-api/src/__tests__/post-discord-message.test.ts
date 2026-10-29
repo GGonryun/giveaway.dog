@@ -212,30 +212,56 @@ describe('postDiscordMessage', () => {
       expect(error).toMatchObject({ code: 'BAD_REQUEST', data: '{}' });
     });
 
-    it('includes the status and status text for other failures', async () => {
+    it('throws a BAD_GATEWAY error that a job can retry for a 502', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({}, { status: 502, statusText: 'Bad Gateway' })
       );
 
       const error = await captureError(postDiscordMessage(options()));
 
+      expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toMatchObject({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to post Discord message: 502 Bad Gateway'
+        code: 'BAD_GATEWAY',
+        message: 'Failed to post Discord message: 502 Bad Gateway',
+        data: { status: 502 }
       });
     });
 
-    it('treats a rate limit response as an internal server error', async () => {
+    it('throws a rate limit error with the retry time that Discord sends', async () => {
       fetchMock.mockResolvedValue(
-        jsonResponse({}, { status: 429, statusText: 'Too Many Requests' })
+        jsonResponse(
+          {},
+          {
+            status: 429,
+            statusText: 'Too Many Requests',
+            headers: { 'retry-after': '30' }
+          }
+        )
       );
+      const now = Date.now();
 
       const error = await captureError(postDiscordMessage(options()));
 
       expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toMatchObject({
-        code: 'INTERNAL_SERVER_ERROR',
+        code: 'TOO_MANY_REQUESTS',
         message: 'Failed to post Discord message: 429 Too Many Requests'
+      });
+      expect(
+        (error as ApplicationError<{ retryAfter: number }>).data.retryAfter
+      ).toBeGreaterThanOrEqual(now + 30_000);
+    });
+
+    it('keeps an internal server error for another failure', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({}, { status: 405, statusText: 'Method Not Allowed' })
+      );
+
+      const error = await captureError(postDiscordMessage(options()));
+
+      expect(error).toMatchObject({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to post Discord message: 405 Method Not Allowed'
       });
     });
   });

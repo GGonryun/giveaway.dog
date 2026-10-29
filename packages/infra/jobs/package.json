@@ -17,6 +17,7 @@
   },
   "exports": {
     "./util": "./src/util.ts",
+    "./retry": "./src/retry.ts",
     "./schedule": "./src/schedule.ts"
   },
   "scripts": {
@@ -28,6 +29,7 @@
   "dependencies": {
     "@giveaway/cache": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/util-errors": "workspace:*",
     "server-only": "catalog:"
   },
   "peerDependencies": {

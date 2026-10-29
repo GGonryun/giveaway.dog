@@ -166,21 +166,18 @@ describe('processPostToDiscord', () => {
       expect(prismaMock.sweepstakes.update).not.toHaveBeenCalled();
     });
 
-    it('marks the job as completed with the message location', async () => {
+    it('saves the message location right after the post, then marks the job as completed', async () => {
       await run();
 
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledTimes(1);
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'COMPLETED',
-          response: {
-            channelId: 'channel-1',
-            messageId: 'msg-1',
-            messageUrl: MESSAGE_URL
-          }
-        }
-      });
+      const response = {
+        channelId: 'channel-1',
+        messageId: 'msg-1',
+        messageUrl: MESSAGE_URL
+      };
+      expect(prismaMock.automatedPostJob.update.mock.calls).toEqual([
+        [{ where: { id: 'job-1' }, data: { response } }],
+        [{ where: { id: 'job-1' }, data: { status: 'COMPLETED', response } }]
+      ]);
     });
 
     it('resolves to undefined', async () => {
@@ -251,14 +248,79 @@ describe('processPostToDiscord', () => {
       });
     });
 
-    it('creates the task before marking the job as completed', async () => {
+    it('saves the task id with the message before it creates the task', async () => {
       await run(interactionJob());
 
       const [taskOrder] =
         prismaMock.sweepstakes.update.mock.invocationCallOrder;
-      const [jobOrder] =
+      const [savedOrder, completedOrder] =
         prismaMock.automatedPostJob.update.mock.invocationCallOrder;
-      expect(taskOrder).toBeLessThan(jobOrder);
+      expect(savedOrder).toBeLessThan(taskOrder);
+      expect(taskOrder).toBeLessThan(completedOrder);
+      expect(prismaMock.automatedPostJob.update).toHaveBeenNthCalledWith(1, {
+        where: { id: 'job-1' },
+        data: {
+          response: {
+            channelId: 'channel-1',
+            messageId: 'msg-1',
+            messageUrl: MESSAGE_URL,
+            taskId: 'task-abc'
+          }
+        }
+      });
+    });
+
+    it('creates the task and completes the job in one transaction', async () => {
+      await run(interactionJob());
+
+      expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+      expect(prismaMock.$transaction.mock.invocationCallOrder[0]).toBeLessThan(
+        prismaMock.sweepstakes.update.mock.invocationCallOrder[0]
+      );
+    });
+
+    it('does not post again when the job already holds its message', async () => {
+      const response = {
+        channelId: 'channel-1',
+        messageId: 'msg-old',
+        messageUrl: 'https://discord.com/channels/guild-1/channel-1/msg-old',
+        taskId: 'task-old',
+        error: 'Write failed'
+      };
+
+      await run({ ...interactionJob(), response });
+
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(m.nanoid).not.toHaveBeenCalled();
+      expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
+      expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: {
+            tasks: {
+              create: expect.objectContaining({
+                id: 'task-old',
+                config: expect.objectContaining({ link: response.messageUrl })
+              })
+            }
+          }
+        })
+      );
+      expect(prismaMock.automatedPostJob.update.mock.calls).toEqual([
+        [
+          {
+            where: { id: 'job-1' },
+            data: {
+              status: 'COMPLETED',
+              response: {
+                channelId: 'channel-1',
+                messageId: 'msg-old',
+                messageUrl: response.messageUrl,
+                taskId: 'task-old'
+              }
+            }
+          }
+        ]
+      ]);
     });
 
     it('creates the task on the id of the loaded sweepstakes record', async () => {
@@ -291,25 +353,19 @@ describe('processPostToDiscord', () => {
   });
 
   describe('when a lookup fails', () => {
-    it('marks the job failed and rethrows when the sweepstakes does not exist', async () => {
+    it('rethrows without a write to the job when the sweepstakes does not exist', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
       await expect(run()).rejects.toMatchObject({
         code: 'NOT_FOUND',
         message: 'Sweepstakes not found'
       });
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'FAILED',
-          response: { error: 'Sweepstakes not found' }
-        }
-      });
+      expect(prismaMock.automatedPostJob.update).not.toHaveBeenCalled();
       expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
-    it('marks the job failed when the sweepstakes has no team', async () => {
+    it('rethrows when the sweepstakes has no team', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         discordPostSweepstakes({ teamId: null })
       );
@@ -318,34 +374,22 @@ describe('processPostToDiscord', () => {
         code: 'NOT_FOUND',
         message: 'Sweepstakes team not found'
       });
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'FAILED',
-          response: { error: 'Sweepstakes team not found' }
-        }
-      });
+      expect(prismaMock.automatedPostJob.update).not.toHaveBeenCalled();
       expect(prismaMock.integration.findFirst).not.toHaveBeenCalled();
     });
 
-    it('marks the job failed when the integration is not found', async () => {
+    it('rethrows when the integration is not found', async () => {
       prismaMock.integration.findFirst.mockResolvedValue(null);
 
       await expect(run()).rejects.toMatchObject({
         code: 'NOT_FOUND',
         message: 'Discord integration not found'
       });
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'FAILED',
-          response: { error: 'Discord integration not found' }
-        }
-      });
+      expect(prismaMock.automatedPostJob.update).not.toHaveBeenCalled();
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
-    it('marks the job failed when the integration has no guild id', async () => {
+    it('rethrows when the integration has no guild id', async () => {
       prismaMock.integration.findFirst.mockResolvedValue({
         label: 'Acme Server',
         account_id: null
@@ -355,19 +399,13 @@ describe('processPostToDiscord', () => {
         code: 'NOT_FOUND',
         message: 'Discord guild ID not found'
       });
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'FAILED',
-          response: { error: 'Discord guild ID not found' }
-        }
-      });
+      expect(prismaMock.automatedPostJob.update).not.toHaveBeenCalled();
       expect(fetchMock).not.toHaveBeenCalled();
     });
   });
 
   describe('when posting to discord fails', () => {
-    it('marks the job failed with the discord error and rethrows it', async () => {
+    it('rethrows the discord error without a write to the job', async () => {
       fetchMock.mockResolvedValue(jsonResponse({}, { status: 403 }));
 
       await expect(run()).rejects.toMatchObject({
@@ -375,19 +413,10 @@ describe('processPostToDiscord', () => {
         message:
           'Bot does not have permission to send messages in this channel. Please check bot permissions.'
       });
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'FAILED',
-          response: {
-            error:
-              'Bot does not have permission to send messages in this channel. Please check bot permissions.'
-          }
-        }
-      });
+      expect(prismaMock.automatedPostJob.update).not.toHaveBeenCalled();
     });
 
-    it('marks the job failed when the bot token is not configured', async () => {
+    it('rethrows when the bot token is not configured', async () => {
       vi.stubEnv('DISCORD_BOT_TOKEN', undefined);
 
       await expect(run()).rejects.toMatchObject({
@@ -395,13 +424,7 @@ describe('processPostToDiscord', () => {
         message: 'Discord bot token is not configured'
       });
       expect(fetchMock).not.toHaveBeenCalled();
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'FAILED',
-          response: { error: 'Discord bot token is not configured' }
-        }
-      });
+      expect(prismaMock.automatedPostJob.update).not.toHaveBeenCalled();
     });
 
     it('does not create the interaction task when the post fails', async () => {
@@ -424,7 +447,7 @@ describe('processPostToDiscord', () => {
   });
 
   describe('when a later write fails', () => {
-    it('marks the job failed after the message was already posted when the task cannot be created', async () => {
+    it('keeps the posted message saved when the task cannot be created', async () => {
       prismaMock.sweepstakes.update.mockRejectedValue(
         new Error('task create failed')
       );
@@ -433,51 +456,39 @@ describe('processPostToDiscord', () => {
         'task create failed'
       );
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledTimes(1);
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: { status: 'FAILED', response: { error: 'task create failed' } }
-      });
+      expect(prismaMock.automatedPostJob.update.mock.calls).toEqual([
+        [
+          {
+            where: { id: 'job-1' },
+            data: {
+              response: {
+                channelId: 'channel-1',
+                messageId: 'msg-1',
+                messageUrl: MESSAGE_URL,
+                taskId: 'task-abc'
+              }
+            }
+          }
+        ]
+      ]);
     });
 
-    it('tries to mark the job failed when marking it completed fails', async () => {
+    it('rethrows when marking the job completed fails', async () => {
       prismaMock.automatedPostJob.update
-        .mockRejectedValueOnce(new Error('completion write failed'))
-        .mockResolvedValueOnce({});
+        .mockResolvedValueOnce({})
+        .mockRejectedValueOnce(new Error('completion write failed'));
 
       await expect(run()).rejects.toThrow('completion write failed');
       expect(prismaMock.automatedPostJob.update).toHaveBeenCalledTimes(2);
-      expect(prismaMock.automatedPostJob.update).toHaveBeenLastCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'FAILED',
-          response: { error: 'completion write failed' }
-        }
-      });
-    });
-
-    it('surfaces the failure-recording error instead of the original error', async () => {
-      prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
-      prismaMock.automatedPostJob.update.mockRejectedValue(
-        new Error('db down')
-      );
-
-      await expect(run()).rejects.toThrow('db down');
     });
   });
 
   describe('when a non-error value is thrown', () => {
-    it('records a generic error message and rethrows the original value', async () => {
+    it('rethrows the original value without a write to the job', async () => {
       prismaMock.sweepstakes.findUnique.mockRejectedValue('kaboom');
 
       await expect(run()).rejects.toBe('kaboom');
-      expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
-        where: { id: 'job-1' },
-        data: {
-          status: 'FAILED',
-          response: { error: 'Unknown error occurred' }
-        }
-      });
+      expect(prismaMock.automatedPostJob.update).not.toHaveBeenCalled();
     });
   });
 });

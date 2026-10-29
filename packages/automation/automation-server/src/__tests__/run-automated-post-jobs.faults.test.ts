@@ -39,7 +39,6 @@ const DISCORD_OK_MESSAGES =
   'POST https://discord.com/api/v10/channels/chan-ok/';
 
 const ISSUES = {
-  retry: '#183',
   image: '#305'
 };
 
@@ -53,6 +52,7 @@ const job = (
   type,
   status: 'PENDING',
   runAt: new Date('2026-06-01T11:00:00.000Z'),
+  attempts: 0,
   createdAt: new Date('2026-06-01T10:00:00.000Z'),
   updatedAt: new Date('2026-06-01T10:00:00.000Z'),
   request,
@@ -95,16 +95,6 @@ type Call = {
   faults?: readonly Fault[];
 };
 
-const RETRIES_LATER: Partial<Record<Fault, string>> = {
-  timeout: ISSUES.retry,
-  'rate-limit': ISSUES.retry,
-  'rate-limit-retry-after': ISSUES.retry,
-  'server-error': ISSUES.retry,
-  'network-error': ISSUES.retry
-};
-
-const RETRIES: Bugs = { retries: RETRIES_LATER };
-
 const requested = (matcher: string) => (network: FakeNetwork) =>
   network.requests(matcher).length > 0;
 
@@ -118,7 +108,7 @@ const networkCall = (
   type,
   inject: (network, fault) => network.fault(matcher, fault),
   reached: requested(matcher),
-  bugs: RETRIES,
+  bugs: {},
   ...options
 });
 
@@ -140,7 +130,7 @@ const CALLS: Call[] = [
     inject: (_, fault) => m.restore.mockRejectedValue(faultError(fault)),
     reached: () => m.restore.mock.calls.length > 0,
     refreshesToken: true,
-    bugs: { retries: RETRIES_LATER }
+    bugs: {}
   },
   networkCall(
     'the image download of a Bluesky post',
@@ -149,8 +139,12 @@ const CALLS: Call[] = [
     {
       faults: IMAGE_FAULTS,
       bugs: {
-        ...RETRIES,
         finishes: {
+          'rate-limit': ISSUES.image,
+          'rate-limit-retry-after': ISSUES.image,
+          'server-error': ISSUES.image
+        },
+        retries: {
           'rate-limit': ISSUES.image,
           'rate-limit-retry-after': ISSUES.image,
           'server-error': ISSUES.image

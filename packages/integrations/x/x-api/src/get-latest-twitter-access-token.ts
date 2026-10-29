@@ -129,6 +129,7 @@ export const getLatestTwitterAccessToken = async (
         cause: JSON.stringify(error),
         data: {
           twitterError: error,
+          status: tokenResponse.status,
           statusCode: tokenResponse.status
         }
       });
