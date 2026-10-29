@@ -1,6 +1,8 @@
 import type { APIRequestContext, Page } from '@playwright/test';
+import type { E2eFakeService } from '@giveaway/e2e-model/fakes';
 import type { E2eSweepstakesRequestInput } from '@giveaway/e2e-model/requests';
-import { expect } from '../fixtures/test';
+import { expect, test } from '../fixtures/test';
+import { fakesOf } from './outbox';
 import { seedApi, type SeededJob, type SeededJobs } from './seed';
 
 export const MIN_TIME_MARGIN_SECONDS = 60;
@@ -42,6 +44,24 @@ export const seedSweepstakes = async (
       endsIn === undefined ? giveaway.endDate : seededAt + endsIn * 1000
     )
   };
+};
+
+export const requireFakes = async (
+  request: APIRequestContext,
+  services: E2eFakeService[],
+  { allowPublic = false } = {}
+) => {
+  const health = await seedApi(request).health();
+  const fakes = fakesOf(health);
+  const missing = services.filter((service) => !fakes.includes(service));
+  test.skip(
+    missing.length > 0,
+    `Set E2E_FAKE_EXTERNALS to ${missing.join(',')} on the deployment`
+  );
+  test.skip(
+    allowPublic && !health?.allowPublic,
+    'Set E2E_ALLOW_PUBLIC=1 on the deployment to seed PUBLIC giveaways'
+  );
 };
 
 export const waitUntil = (at: Date) =>

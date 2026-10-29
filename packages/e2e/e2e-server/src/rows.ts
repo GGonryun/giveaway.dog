@@ -63,6 +63,7 @@ const readParticipants = async (db: PrismaClient, id: string) => {
         },
         orderBy: { taskId: 'asc' }
       },
+      allocations: { select: { prizeId: true } },
       _count: { select: { taskCompletions: true } }
     },
     orderBy: { createdAt: 'asc' },
@@ -70,9 +71,10 @@ const readParticipants = async (db: PrismaClient, id: string) => {
   });
   return {
     participants: participants.map(
-      ({ user, _count, referrals, ...participant }) => ({
+      ({ user, _count, referrals, allocations, ...participant }) => ({
         ...participant,
         userId: user.id,
+        prizeId: allocations?.prizeId ?? null,
         email: isE2eEmail(user.email) ? user.email : null,
         completions: _count.taskCompletions,
         referrals: referrals.map(({ _count, ...referral }) => ({

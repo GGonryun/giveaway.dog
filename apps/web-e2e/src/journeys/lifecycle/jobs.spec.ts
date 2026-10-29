@@ -1,5 +1,4 @@
 import type { APIRequestContext, Page } from '@playwright/test';
-import type { E2eFakeService } from '@giveaway/e2e-model/fakes';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
@@ -7,6 +6,7 @@ import { pickDate } from '../../helpers/editor';
 import {
   MIN_TIME_MARGIN_SECONDS,
   jobStatuses,
+  requireFakes,
   runJobs,
   seedSweepstakes,
   sweepstakesJobStatuses,
@@ -14,7 +14,6 @@ import {
 } from '../../helpers/jobs';
 import { knownBug } from '../../helpers/known-bug';
 import { expectSaved, openEditor, saveChanges } from '../../helpers/manage';
-import { fakesOf } from '../../helpers/outbox';
 import { signInAs } from '../../helpers/personas';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import { TAGS } from '../../helpers/tags';
@@ -25,24 +24,6 @@ const EXPIRATION_BUG = 538;
 const START_DATE_BUG = 182;
 
 type DiscordAlert = { embeds: { title: string; url: string }[] };
-
-const requireFakes = async (
-  request: APIRequestContext,
-  services: E2eFakeService[],
-  { allowPublic = false } = {}
-) => {
-  const health = await seedApi(request).health();
-  const fakes = fakesOf(health);
-  const missing = services.filter((service) => !fakes.includes(service));
-  test.skip(
-    missing.length > 0,
-    `Set E2E_FAKE_EXTERNALS to ${missing.join(',')} on the deployment`
-  );
-  test.skip(
-    allowPublic && !health?.allowPublic,
-    'Set E2E_ALLOW_PUBLIC=1 on the deployment to seed PUBLIC giveaways'
-  );
-};
 
 const alertsOf = (request: APIRequestContext, sweepstakesId: string) =>
   seedApi(request).outbox({ channel: 'discord-alert', target: sweepstakesId });
