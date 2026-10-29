@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import prisma from '@giveaway/db-client/prisma';
 import {
   extractTweetId,
@@ -18,19 +19,36 @@ import { fetchRetweetersWithCoverage } from '@giveaway/x-picker-server/fetch-ret
 import { ApplicationError } from '@giveaway/util-errors';
 import { checkAndConsumeCredits } from '@giveaway/x-scraper/credits';
 import { CREDIT_COSTS } from '@giveaway/x-scraper/settings';
+import { twitterUserFiltersSchema } from '@giveaway/x-picker-model/schemas/form';
+
+const pickWinnersSchema = z.object({
+  postUrl: z
+    .string({
+      required_error: 'Invalid X post URL',
+      invalid_type_error: 'Invalid X post URL'
+    })
+    .refine(isXPostUrl, { message: 'Invalid X post URL' }),
+  winnersCount: z.number().int().min(1),
+  filters: twitterUserFiltersSchema
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { postUrl, winnersCount, filters } = body;
-
-    const tweetId = isXPostUrl(postUrl) ? extractTweetId(postUrl) : null;
-    if (!tweetId) {
+    const parseResult = pickWinnersSchema.safeParse(await request.json());
+    const tweetId = parseResult.success
+      ? extractTweetId(parseResult.data.postUrl)
+      : null;
+    if (!parseResult.success || !tweetId) {
       return NextResponse.json(
-        { success: false, error: 'Invalid X post URL' },
+        {
+          success: false,
+          error: parseResult.error?.errors[0]?.message || 'Invalid request'
+        },
         { status: 400 }
       );
     }
+
+    const { winnersCount, filters } = parseResult.data;
 
     // Charge credits upfront for this endpoint call
     await checkAndConsumeCredits(

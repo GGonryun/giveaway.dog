@@ -1,4 +1,23 @@
 import { getRun } from 'workflow/api';
+import {
+  WorkflowAPIError,
+  WorkflowRunNotFoundError
+} from 'workflow/internal/errors';
+
+const isUnknownRun = (error: unknown) =>
+  WorkflowRunNotFoundError.is(error) ||
+  (WorkflowAPIError.is(error) &&
+    (error.status === 400 || error.status === 404));
+
+const readStatus = async (run: ReturnType<typeof getRun>) => {
+  try {
+    return await run.status;
+  } catch (error) {
+    if (isUnknownRun(error)) return null;
+    throw error;
+  }
+};
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
 
@@ -7,10 +26,11 @@ export async function GET(request: Request) {
     return new Response('Bad Request: Missing runId', { status: 400 });
   }
 
-  // Retrieve the existing run
   const run = getRun(runId);
-  // Return the readable stream to the client
-  const status = await run.status;
+  const status = await readStatus(run);
+  if (!status) {
+    return new Response('Not Found: Unknown runId', { status: 404 });
+  }
 
   if (status === 'running' || status === 'pending') {
     const readable = run.readable.pipeThrough(

@@ -577,19 +577,6 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
       const { data } = await res.json();
       expect(data.winners).toHaveLength(3);
     });
-
-    it('accepts a request for zero winners and stores an empty draw', async () => {
-      const res = await POST(buildRequest(buildBody({ winnersCount: 0 })));
-
-      expect(res.status).toBe(200);
-      expect((await res.json()).data.winners).toEqual([]);
-      expect(prismaMock.twitterPicker.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ winners: 0 })
-      });
-      expect(prismaMock.twitterPickerDraw.createMany).toHaveBeenCalledWith({
-        data: []
-      });
-    });
   });
 
   describe('winner and author fallbacks', () => {
@@ -700,13 +687,34 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
     });
   });
 
-  describe('when the filters object is missing', () => {
-    it('returns a generic 500 after charging credits', async () => {
-      const res = await POST(buildRequest(buildBody({ filters: undefined })));
+  describe('when the body does not match the schema', () => {
+    it.each([
+      ['the filters are missing', { filters: undefined }],
+      ['a filter has the wrong type', { filters: { minimumFollowers: '10' } }],
+      ['the winners count is missing', { winnersCount: undefined }],
+      ['the winners count is zero', { winnersCount: 0 }],
+      ['the winners count is not an integer', { winnersCount: 1.5 }],
+      ['the post url is not a string', { postUrl: 123 }]
+    ])('returns 400 without charging credits when %s', async (_, overrides) => {
+      const res = await POST(buildRequest(buildBody(overrides)));
 
-      expect(res.status).toBe(500);
-      expect(await res.json()).toEqual(genericError);
-      expect(m.creditsLimit).toHaveBeenCalledTimes(1);
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({
+        success: false,
+        error: expect.any(String)
+      });
+      expect(m.creditsLimit).not.toHaveBeenCalled();
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('returns 400 for an empty body', async () => {
+      const res = await POST(buildRequest({}));
+
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({
+        success: false,
+        error: 'Invalid X post URL'
+      });
     });
   });
 

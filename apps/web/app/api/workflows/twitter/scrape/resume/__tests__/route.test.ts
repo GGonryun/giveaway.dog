@@ -123,6 +123,44 @@ describe('GET /api/workflows/twitter/scrape/resume', () => {
     );
   });
 
+  describe('when the run does not exist', () => {
+    const apiError = (status: number) =>
+      Object.assign(new Error(`GET /v1/runs/wrun_missing -> HTTP ${status}`), {
+        name: 'WorkflowAPIError',
+        status
+      });
+    const notFound = Object.assign(
+      new Error('Workflow run "wrun_missing" not found'),
+      { name: 'WorkflowRunNotFoundError' }
+    );
+
+    it.each([
+      ['the run is not found', notFound],
+      ['the workflow API refuses the run id', apiError(400)],
+      ['the workflow API does not know the run', apiError(404)]
+    ])('returns 404 when %s', async (_, error) => {
+      m.getRun.mockReturnValue({
+        status: Promise.reject(error),
+        readable: streamOf([])
+      });
+
+      const res = await GET(buildRequest('?runId=wrun_missing'));
+
+      expect(res.status).toBe(404);
+      expect(await res.text()).toBe('Not Found: Unknown runId');
+    });
+
+    it('rejects when the workflow API fails', async () => {
+      const failure = apiError(503);
+      m.getRun.mockReturnValue({
+        status: Promise.reject(failure),
+        readable: streamOf([])
+      });
+
+      await expect(GET(buildRequest('?runId=run-1'))).rejects.toBe(failure);
+    });
+  });
+
   describe('when the run status cannot be read', () => {
     it('rejects with the underlying error', async () => {
       m.getRun.mockReturnValue({
