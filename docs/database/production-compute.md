@@ -25,14 +25,14 @@ At $0.14 per CU-hour (Launch plan), 357 CU-h cost about $50 for 28 days. The cos
 
 ## Ranked changes
 
-| Rank | Change                                                                                                                                           | Estimated saving                                   | Where                                |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- | ------------------------------------ |
-| 1    | Index the foreign keys that the app filters by (migration `20261029000000`)                                                                      | Most of the CU above 0.25: up to $25 a month       | This pull request                    |
-| 2    | Apply the 5 pending migrations to production (`prisma:migrate:production`), which adds the `TwitterPickerUser` index                             | The scans of the 1 GB table, part of rank 1        | By hand, see Postgres in `CLAUDE.md` |
-| 3    | Serve the giveaway page and its task list from the Next.js cache or Redis for visitors, and read Postgres only for the entrant's own completions | Fewer wakes between entries                        | Follow-up issue                      |
-| 4    | Lengthen the interval of the recurring import jobs while a giveaway has no new entries, or run them only when someone opens the giveaway         | Up to 12 wakes (1 h at 0.25 CU) a day: about $1.30 | Follow-up issue                      |
-| 5    | Lower the suspend timeout from 300 s to the minimum that the plan allows, and keep the maximum at 0.5 CU                                         | Each wake runs for less time                       | Neon console, no code                |
-| 6    | Delete the `TwitterPickerUser` rows of old pickers, or move them to Redis with a TTL                                                             | Storage, and the cost of each scan that is left    | Follow-up issue                      |
+| Rank | Change                                                                                                                                           | Estimated saving                                   | Where                 |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- | --------------------- |
+| 1    | Index the foreign keys that the app filters by (migration `20261029000000`)                                                                      | Most of the CU above 0.25: up to $25 a month       | This pull request     |
+| 2    | Apply the 5 pending migrations to production (`prisma:migrate:production`), which adds the `TwitterPickerUser` index                             | The scans of the 1 GB table, part of rank 1        | #685 (by hand)        |
+| 3    | Serve the giveaway page and its task list from the Next.js cache or Redis for visitors, and read Postgres only for the entrant's own completions | Fewer wakes between entries                        | #686                  |
+| 4    | Lengthen the interval of the recurring import jobs while a giveaway has no new entries, or run them only when someone opens the giveaway         | Up to 12 wakes (1 h at 0.25 CU) a day: about $1.30 | #687                  |
+| 5    | Lower the suspend timeout from 300 s to the minimum that the plan allows, and keep the maximum at 0.5 CU                                         | Each wake runs for less time                       | Neon console, no code |
+| 6    | Delete the `TwitterPickerUser` rows of old pickers, or move them to Redis with a TTL                                                             | Storage, and the cost of each scan that is left    | #688                  |
 
 ## After the changes
 
