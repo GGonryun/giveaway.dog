@@ -124,13 +124,13 @@ describe('GiveawayParticipationCard', () => {
       expect(container).toHaveTextContent('Starts in 10 seconds');
     });
 
-    it('hydrates a date range that the browser time zone puts on other days', async () => {
+    it('hydrates the date range in the time zone of the giveaway', async () => {
       const props = buildParticipationProps({
         sweepstakes: buildSweepstakes({
           timing: {
             startDate: new Date('2026-09-24T03:00:00Z'),
             endDate: new Date('2026-10-08T03:00:00Z'),
-            timeZone: 'UTC'
+            timeZone: 'America/New_York'
           }
         })
       });
@@ -147,7 +147,7 @@ describe('GiveawayParticipationCard', () => {
       document.body.appendChild(container);
       const onRecoverableError = vi.fn();
       const serverTimeZone = process.env.TZ;
-      process.env.TZ = 'America/Los_Angeles';
+      process.env.TZ = 'Pacific/Kiritimati';
       onTestFinished(() => {
         process.env.TZ = serverTimeZone;
       });
@@ -160,7 +160,7 @@ describe('GiveawayParticipationCard', () => {
         container.remove();
       });
 
-      expect(html).toContain('Sep 24, 2026 - Oct 8, 2026');
+      expect(html).toContain('Sep 23, 2026 - Oct 7, 2026');
       expect(onRecoverableError).not.toHaveBeenCalled();
       expect(container).toHaveTextContent('Sep 23, 2026 - Oct 7, 2026');
     });

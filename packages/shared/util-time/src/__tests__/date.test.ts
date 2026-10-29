@@ -1,4 +1,12 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  onTestFinished
+} from 'vitest';
 import { date, datetime } from '../date';
 
 const localDate = new Date(2024, 2, 5, 14, 7);
@@ -112,6 +120,69 @@ describe('date', () => {
           'iso' as unknown as Parameters<typeof date.format>[1]
         )
       ).toThrow(new Error('Unexpected value: iso'));
+    });
+
+    describe('in a time zone', () => {
+      const instant = new Date('2027-02-15T03:00:00Z');
+
+      it.each([
+        ['UTC', 'Feb 15, 2027'],
+        ['America/Los_Angeles', 'Feb 14, 2027'],
+        ['Pacific/Kiritimati', 'Feb 15, 2027'],
+        ['Etc/GMT+12', 'Feb 14, 2027']
+      ])('formats the date of the instant in %s', (timeZone, expected) => {
+        expect(date.format(instant, 'short', timeZone)).toBe(expected);
+      });
+
+      it('gives the same date whatever the local time zone', () => {
+        const localTimeZone = process.env.TZ;
+        onTestFinished(() => {
+          process.env.TZ = localTimeZone;
+        });
+
+        process.env.TZ = 'Pacific/Kiritimati';
+        const east = date.format(instant, 'long', 'Asia/Tokyo');
+        process.env.TZ = 'America/Los_Angeles';
+        const west = date.format(instant, 'long', 'Asia/Tokyo');
+
+        expect(east).toBe('February 15, 2027');
+        expect(west).toBe('February 15, 2027');
+      });
+
+      it('applies the time zone to every format', () => {
+        const lateUtc = new Date('2024-12-31T23:30:00Z');
+        expect(date.format(lateUtc, 'dashed', 'Asia/Tokyo')).toBe('2025-01-01');
+        expect(date.format(lateUtc, 'slashed', 'Asia/Tokyo')).toBe(
+          '2025/01/01'
+        );
+        expect(date.format(lateUtc, 'long', 'UTC')).toBe('December 31, 2024');
+      });
+
+      it('accepts a numeric timestamp and a date string', () => {
+        expect(date.format(instant.getTime(), 'dashed', 'Etc/GMT+12')).toBe(
+          '2027-02-14'
+        );
+        expect(
+          date.format('2027-02-15T03:00:00Z', 'dashed', 'Etc/GMT+12')
+        ).toBe('2027-02-14');
+      });
+
+      it('formats in the local time zone without a time zone', () => {
+        expect(date.format(localDate, 'dashed', '')).toBe('2024-03-05');
+        expect(date.format(localDate, 'dashed', undefined)).toBe('2024-03-05');
+      });
+
+      it('formats in the local time zone for an unknown time zone', () => {
+        expect(date.format(localDate, 'dashed', 'Not/AZone')).toBe(
+          '2024-03-05'
+        );
+      });
+
+      it('throws a RangeError for an invalid date', () => {
+        expect(() => date.format('garbage', 'short', 'UTC')).toThrow(
+          new RangeError('Invalid time value')
+        );
+      });
     });
   });
 });
