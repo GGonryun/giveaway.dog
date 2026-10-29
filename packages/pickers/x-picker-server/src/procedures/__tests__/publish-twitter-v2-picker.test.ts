@@ -224,7 +224,6 @@ describe('publishTwitterV2Picker', () => {
             minimumAccountAgeDays: null,
             minimumFollowers: null,
             minimumFollowing: null,
-            lastPostWithin: null,
             hasProfileImage: false,
             hasBanner: false,
             hasLocation: false,

@@ -61,13 +61,9 @@ test.describe('team X pickers, as their host', () => {
     await page
       .getByRole('spinbutton', { name: 'Minimum Followers' })
       .fill('50');
-    const lastPost = page.getByRole('switch', { name: 'Last Post' });
-    if (!(await lastPost.isChecked())) await lastPost.click();
-    await page
-      .getByRole('combobox')
-      .filter({ hasText: /^Past / })
-      .click();
-    await page.getByRole('option', { name: 'Past Day' }).click();
+    await expect(page.getByRole('switch', { name: 'Last Post' })).toHaveCount(
+      0
+    );
     const bio = page.getByRole('switch', { name: 'Bio/Description' });
     if (!(await bio.isChecked())) await bio.click();
 
@@ -91,10 +87,6 @@ test.describe('team X pickers, as their host', () => {
     await expect(
       page.getByRole('spinbutton', { name: 'Minimum Followers' })
     ).toHaveValue('50');
-    await expect(page.getByRole('switch', { name: 'Last Post' })).toBeChecked();
-    await expect(
-      page.getByRole('combobox').filter({ hasText: 'Past Day' })
-    ).toBeVisible();
     await expect(
       page.getByRole('switch', { name: 'Bio/Description' })
     ).toBeChecked();

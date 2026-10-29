@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { TwitterV2PickerFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import {
   FormControl,
@@ -16,27 +16,9 @@ import {
   SwitchFormHeader
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { Switch } from '@giveaway/ui-primitives/switch';
-import {
-  Collapsible,
-  CollapsibleContent
-} from '@giveaway/ui-primitives/collapsible';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@giveaway/ui-primitives/select';
-
-const LAST_POST_OPTIONS = [
-  { label: 'Past Day', value: 'PAST_DAY' },
-  { label: 'Past Week', value: 'PAST_WEEK' },
-  { label: 'Past Month', value: 'PAST_MONTH' }
-];
 
 export function TwitterV2FiltersSection() {
   const { control } = useFormContext<TwitterV2PickerFormSchema>();
-  const lastPostWithin = useWatch({ control, name: 'filters.lastPostWithin' });
 
   return (
     <UnifiedSectionHeader
@@ -143,61 +125,6 @@ export function TwitterV2FiltersSection() {
       </div>
 
       <div className="space-y-4 mt-2">
-        <SwitchBox>
-          <FormField
-            control={control}
-            name="filters.lastPostWithin"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start justify-between">
-                <SwitchFormHeader
-                  label="Last Post"
-                  description="Only include users who have posted within the selected timeframe."
-                />
-                <FormControl>
-                  <Switch
-                    checked={lastPostWithin != null}
-                    onClick={() => {
-                      if (lastPostWithin == null) {
-                        field.onChange('PAST_WEEK');
-                      } else {
-                        field.onChange(null);
-                      }
-                    }}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <Collapsible open={lastPostWithin != null}>
-            <CollapsibleContent>
-              <FormField
-                control={control}
-                name="filters.lastPostWithin"
-                render={({ field }) => (
-                  <FormItem className="mt-2">
-                    <Select
-                      value={field.value ?? 'PAST_WEEK'}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {LAST_POST_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-            </CollapsibleContent>
-          </Collapsible>
-        </SwitchBox>
-
         <SwitchBox>
           <FormField
             control={control}

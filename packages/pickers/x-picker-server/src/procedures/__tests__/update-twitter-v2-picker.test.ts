@@ -195,7 +195,6 @@ describe('updateTwitterV2Picker', () => {
             requireBannerImage: false,
             requireLocation: true,
             requireBio: false,
-            lastPostWithin: 'PAST_WEEK',
             runAt: null
           }
         });
@@ -271,8 +270,7 @@ describe('updateTwitterV2Picker', () => {
           requireProfileImage: false,
           requireBannerImage: false,
           requireLocation: false,
-          requireBio: false,
-          lastPostWithin: null
+          requireBio: false
         });
       });
 

@@ -59,7 +59,6 @@ export const getTwitterV2PickerForm = procedure()
         minimumAccountAgeDays: picker.minAccountAgeDays,
         minimumFollowers: picker.minFollowersCount,
         minimumFollowing: picker.minFollowingCount,
-        lastPostWithin: picker.lastPostWithin,
         hasProfileImage: picker.requireProfileImage ?? false,
         hasBanner: picker.requireBannerImage ?? false,
         hasLocation: picker.requireLocation ?? false,

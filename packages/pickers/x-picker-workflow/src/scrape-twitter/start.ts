@@ -70,7 +70,6 @@ export const startScrapeTwitter = async ({
       requireBannerImage: data.filters.hasBanner,
       requireLocation: data.filters.hasLocation,
       requireBio: data.filters.hasDescription,
-      lastPostWithin: data.filters.lastPostWithin,
       runAt
     }
   });
