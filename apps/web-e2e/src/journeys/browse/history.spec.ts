@@ -10,7 +10,6 @@ import {
   requirePublicSeeds
 } from '../../helpers/browse';
 import { seedSweepstakes } from '../../helpers/jobs';
-import { knownBug } from '../../helpers/known-bug';
 import { freshSlug, seedWorkerTeam } from '../../helpers/seed';
 import { TAGS } from '../../helpers/tags';
 
@@ -64,34 +63,33 @@ test.describe('the search of /history', { tag: TAGS.slow }, () => {
     await expect(page).toHaveURL(/\/history$/);
   });
 
-  test(
-    'a search finds a giveaway that ended before the 20 most recent ones',
-    knownBug(563),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const token = freshSlug(testInfo);
-      const older = await seedSweepstakes(request, {
+  test('a search finds a giveaway that ended before the 20 most recent ones', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const token = freshSlug(testInfo);
+    const older = await seedSweepstakes(request, {
+      ns: RUN_ID,
+      team: team.slug,
+      preset: 'ended',
+      visibility: 'PUBLIC',
+      endsIn: ENDED_LONG_AGO - DAY,
+      name: `${token} older`
+    });
+    for (let index = 0; index < 20; index++) {
+      await seedSweepstakes(request, {
         ns: RUN_ID,
         team: team.slug,
         preset: 'ended',
         visibility: 'PUBLIC',
-        endsIn: ENDED_LONG_AGO - DAY,
-        name: `${token} older`
+        endsIn: ENDED_LONG_AGO,
+        name: `${freshSlug(testInfo)} newer`
       });
-      for (let index = 0; index < 20; index++) {
-        await seedSweepstakes(request, {
-          ns: RUN_ID,
-          team: team.slug,
-          preset: 'ended',
-          visibility: 'PUBLIC',
-          endsIn: ENDED_LONG_AGO,
-          name: `${freshSlug(testInfo)} newer`
-        });
-      }
-
-      await page.goto(`/history?search=${token}`);
-
-      await expect(giveawayCard(page, older.name)).toBeVisible();
     }
-  );
+
+    await page.goto(`/history?search=${token}`);
+
+    await expect(giveawayCard(page, older.name)).toBeVisible();
+  });
 });
