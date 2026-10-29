@@ -53,7 +53,14 @@ export const runAutomatedPostJobs = async (
     try {
       await processAutomatedPostJob({ db, job });
     } catch (error) {
-      await recordAutomatedPostJobFailure({ db, job, error });
+      try {
+        await recordAutomatedPostJobFailure({ db, job, error });
+      } catch (recordError) {
+        console.error(
+          `Failed to record the failure of automated post job ${job.id}`,
+          recordError
+        );
+      }
     }
   }
 

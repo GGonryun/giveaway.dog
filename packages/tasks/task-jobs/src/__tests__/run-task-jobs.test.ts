@@ -2,11 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { runTaskJobs } from '../run-task-jobs';
 import { taskJobInclude } from '@giveaway/task-jobs-core/types';
 import { ApplicationError } from '@giveaway/util-errors';
-import {
-  prismaMock,
-  knownRequestError,
-  asPrismaClient
-} from '@giveaway/testing-server/prisma';
+import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
   buildTiming
@@ -38,7 +34,13 @@ const retweetJob = (id: string) =>
   });
 
 const updateCalls = () =>
-  prismaMock.taskJob.update.mock.calls.map(([arg]) => arg);
+  [prismaMock.taskJob.update.mock, prismaMock.taskJob.updateMany.mock]
+    .flatMap(({ calls, invocationCallOrder }) =>
+      calls.map(([arg], index) => ({ arg, order: invocationCallOrder[index] }))
+    )
+    .sort((a, b) => a.order - b.order)
+    .map(({ arg }) => arg)
+    .filter((arg) => arg.where?.id !== undefined);
 
 describe('runTaskJobs', () => {
   beforeEach(() => {
@@ -95,7 +97,7 @@ describe('runTaskJobs', () => {
       const result = await runTaskJobs(db);
 
       expect(result).toEqual({ processed: 0 });
-      expect(prismaMock.taskJob.update).not.toHaveBeenCalled();
+      expect(updateCalls()).toEqual([]);
     });
 
     it('loads at most five due pending jobs, oldest first, with their sweepstakes timing', async () => {
@@ -151,8 +153,10 @@ describe('runTaskJobs', () => {
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } }
       ]);
-      const [inProgressOrder, completedOrder] =
+      const [inProgressOrder] =
         prismaMock.taskJob.update.mock.invocationCallOrder;
+      const [, completedOrder] =
+        prismaMock.taskJob.updateMany.mock.invocationCallOrder;
       const [deleteOrder] = prismaMock.taskJob.delete.mock.invocationCallOrder;
       expect(inProgressOrder).toBeLessThan(deleteOrder);
       expect(deleteOrder).toBeLessThan(completedOrder);
@@ -329,29 +333,19 @@ describe('runTaskJobs', () => {
   });
 
   describe('when recording the outcome fails', () => {
-    it('throws when the job record no longer exists', async () => {
+    it('keeps processing the next job when the job record no longer exists', async () => {
       prismaMock.taskJob.findMany.mockResolvedValue([
         inactiveJob('job-1'),
         inactiveJob('job-2')
       ]);
-      prismaMock.taskJob.update
-        .mockResolvedValueOnce({})
-        .mockRejectedValueOnce(knownRequestError('P2025'))
-        .mockRejectedValueOnce(knownRequestError('P2025'));
+      prismaMock.taskJob.updateMany.mockResolvedValue({ count: 0 });
 
-      await expect(runTaskJobs(db)).rejects.toMatchObject({
-        code: 'P2025'
-      });
+      await expect(runTaskJobs(db)).resolves.toEqual({ processed: 2 });
       expect(updateCalls()).toEqual([
         { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } },
-        {
-          where: { id: 'job-1' },
-          data: {
-            status: 'FAILED',
-            data: expect.stringContaining('"code":"P2025"')
-          }
-        }
+        { where: { id: 'job-2' }, data: { status: 'IN_PROGRESS' } },
+        { where: { id: 'job-2' }, data: { status: 'COMPLETED' } }
       ]);
     });
   });

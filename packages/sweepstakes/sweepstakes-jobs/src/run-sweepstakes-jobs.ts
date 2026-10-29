@@ -66,7 +66,14 @@ export const runSweepstakesJobs = async (
     try {
       await processSweepstakesJob({ db, job });
     } catch (error) {
-      await recordSweepstakesJobFailure({ db, job, error });
+      try {
+        await recordSweepstakesJobFailure({ db, job, error });
+      } catch (recordError) {
+        console.error(
+          `Failed to record the failure of sweepstakes job ${job.id}`,
+          recordError
+        );
+      }
     }
   }
 

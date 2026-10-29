@@ -206,24 +206,21 @@ describe('runAutomatedPostJobs', () => {
       ).toMatchObject({ status: 'COMPLETED' });
     });
 
-    it.fails(
-      'still processes the next job when the giveaway of a job is deleted during the run (fails until #300 is fixed)',
-      async () => {
-        const deleted = await setupTweet();
-        const next = await setupDiscordPost();
-        network.on(TWEETS, async () => {
-          await db.sweepstakes.delete({
-            where: { id: deleted.sweepstakes.id }
-          });
-          return new Response(null, { status: 503 });
+    it('still processes the next job when the giveaway of a job is deleted during the run', async () => {
+      const deleted = await setupTweet();
+      const next = await setupDiscordPost();
+      network.on(TWEETS, async () => {
+        await db.sweepstakes.delete({
+          where: { id: deleted.sweepstakes.id }
         });
+        return new Response(null, { status: 503 });
+      });
 
-        await runAutomatedPostJobs(prisma);
+      await runAutomatedPostJobs(prisma);
 
-        expect(
-          await db.automatedPostJob.findUnique({ where: { id: next.job.id } })
-        ).toMatchObject({ status: 'COMPLETED' });
-      }
-    );
+      expect(
+        await db.automatedPostJob.findUnique({ where: { id: next.job.id } })
+      ).toMatchObject({ status: 'COMPLETED' });
+    });
   });
 });

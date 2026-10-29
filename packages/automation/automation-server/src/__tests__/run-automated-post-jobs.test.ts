@@ -909,7 +909,7 @@ describe('runAutomatedPostJobs', () => {
       expect(prismaMock.automatedPostJob.update).toHaveBeenCalledTimes(2);
     });
 
-    it('throws when recording a job failure itself fails', async () => {
+    it('keeps processing later jobs when recording a job failure itself fails', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([
         discordJob(),
         discordJob()
@@ -921,8 +921,14 @@ describe('runAutomatedPostJobs', () => {
         new Error('db down')
       );
 
-      await expect(runAutomatedPostJobs(db)).rejects.toThrow('db down');
-      expect(mocks.processPostToDiscord).toHaveBeenCalledTimes(1);
+      await expect(runAutomatedPostJobs(db)).resolves.toEqual({
+        processed: 2
+      });
+      expect(mocks.processPostToDiscord).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledWith(
+        'Failed to record the failure of automated post job job-3',
+        new Error('db down')
+      );
     });
   });
 });

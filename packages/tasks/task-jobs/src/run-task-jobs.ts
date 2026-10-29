@@ -55,7 +55,7 @@ export const runTaskJobs = async (
         }
       });
       await processTaskJob(db, job);
-      await db.taskJob.update({
+      await db.taskJob.updateMany({
         where: { id: job.id },
         data: {
           status: TaskJobStatus.COMPLETED
@@ -65,7 +65,7 @@ export const runTaskJobs = async (
       if (isRetryableApplicationError(error)) {
         const retryAfter = new Date(error.data.retryAfter);
         console.warn('Retrying job', job.id, retryAfter);
-        await db.taskJob.update({
+        await db.taskJob.updateMany({
           where: { id: job.id },
           data: {
             status: TaskJobStatus.PENDING,
@@ -74,7 +74,7 @@ export const runTaskJobs = async (
         });
       } else {
         console.error(`Failed to process job ${job.id}`, error);
-        await db.taskJob.update({
+        await db.taskJob.updateMany({
           where: { id: job.id },
           data: {
             status: TaskJobStatus.FAILED,

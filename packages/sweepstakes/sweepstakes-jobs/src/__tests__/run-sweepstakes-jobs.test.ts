@@ -178,13 +178,21 @@ describe('runSweepstakesJobs', () => {
       ]);
     });
 
-    it('rejects when marking a job as failed also fails', async () => {
-      givenJobs(job('UNKNOWN_TYPE'));
-      prismaMock.sweepstakesJob.update.mockRejectedValue(
+    it('keeps processing later jobs when marking a job as failed also fails', async () => {
+      givenJobs(job('UNKNOWN_TYPE'), job('PROCESS_MODIFICATION'));
+      prismaMock.sweepstakesJob.update.mockRejectedValueOnce(
         new Error('update failed')
       );
 
-      await expect(runSweepstakesJobs(db)).rejects.toThrow('update failed');
+      await expect(runSweepstakesJobs(db)).resolves.toEqual({ processed: 2 });
+      expect(updateCalls()).toEqual([
+        expect.objectContaining({ where: { id: 'job-UNKNOWN_TYPE' } }),
+        completed('job-PROCESS_MODIFICATION')
+      ]);
+      expect(console.error).toHaveBeenCalledWith(
+        'Failed to record the failure of sweepstakes job job-UNKNOWN_TYPE',
+        new Error('update failed')
+      );
     });
   });
 

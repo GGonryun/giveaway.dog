@@ -254,9 +254,22 @@ describe('runTaskJobs', () => {
       'processes each job once (fails until #299 is fixed)',
       async () => {
         const { task } = await setupImport();
+        const withoutStuckReset = prisma.$extends({
+          query: {
+            taskJob: {
+              updateMany: ({ args, query }) =>
+                args.where?.status === 'IN_PROGRESS'
+                  ? Promise.resolve({ count: 0 })
+                  : query(args)
+            }
+          }
+        }) as unknown as typeof prisma;
 
         await holdTableWrites('TaskJob', { writers: 2 }, () =>
-          Promise.all([runTaskJobs(prisma), runTaskJobs(prisma)])
+          Promise.all([
+            runTaskJobs(withoutStuckReset),
+            runTaskJobs(withoutStuckReset)
+          ])
         );
 
         expect(network.requests(RETWEETERS)).toHaveLength(1);
@@ -299,21 +312,18 @@ describe('runTaskJobs', () => {
       expect(await nextJobs(working.task.id)).toHaveLength(1);
     });
 
-    it.fails(
-      'still processes the next job after deleting the job of a giveaway that has ended (fails until #300 is fixed)',
-      async () => {
-        const ended = await createImport({ status: 'COMPLETED' });
-        const working = await setupImport();
+    it('still processes the next job after deleting the job of a giveaway that has ended', async () => {
+      const ended = await createImport({ status: 'COMPLETED' });
+      const working = await setupImport();
 
-        await runTaskJobs(prisma);
+      await runTaskJobs(prisma);
 
-        expect(
-          await db.taskJob.findUnique({ where: { id: ended.job.id } })
-        ).toBeNull();
-        expect(
-          await db.taskJob.findUnique({ where: { id: working.job.id } })
-        ).toMatchObject({ status: 'COMPLETED' });
-      }
-    );
+      expect(
+        await db.taskJob.findUnique({ where: { id: ended.job.id } })
+      ).toBeNull();
+      expect(
+        await db.taskJob.findUnique({ where: { id: working.job.id } })
+      ).toMatchObject({ status: 'COMPLETED' });
+    });
   });
 });
