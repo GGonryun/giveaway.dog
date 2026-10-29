@@ -697,6 +697,35 @@ jobs:
       E2E_LOGIN_SECRET: ${{ secrets.E2E_LOGIN_SECRET }}
       TWITCH_EVENTSUB_SECRET: ${{ secrets.TWITCH_EVENTSUB_SECRET }}
 
+  migrate:
+    name: Production migrations
+    needs:
+      - lint
+      - type-check
+      - server
+      - property
+      - frontend
+      - snapshot
+      - visual
+      - integration
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    environment: production-database
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up the project
+        uses: ./.github/actions/setup
+
+      - name: Apply the pending migrations to the production database
+        env:
+          POSTGRES_URL_NON_POOLING: ${{ secrets.PRODUCTION_POSTGRES_URL_NON_POOLING }}
+        run: .github/scripts/production-migrations.sh
+
   checks:
     name: Checks
     needs:
@@ -709,6 +738,7 @@ jobs:
       - visual
       - integration
       - e2e
+      - migrate
     if: ${{ always() }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 5
@@ -724,7 +754,7 @@ jobs:
             echo "| --- | --- |"
             jq -r 'to_entries[] | "| \(.key) | \(.value.result) |"' <<< "$RESULTS"
           } | tee -a "$GITHUB_STEP_SUMMARY"
-          failed=$(jq -r '[to_entries[] | select(.value.result != "success" and (.key != "e2e" or .value.result != "skipped")) | .key] | join(", ")' <<< "$RESULTS")
+          failed=$(jq -r '[to_entries[] | select(.value.result != "success" and ((.key != "e2e" and .key != "migrate") or .value.result != "skipped")) | .key] | join(", ")' <<< "$RESULTS")
           if [ -n "$failed" ]; then
             echo "::error::These jobs did not pass: $failed. The log of each failed shard names the check that failed."
             exit 1
