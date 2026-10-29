@@ -1,14 +1,5 @@
-'use client';
-
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 export default function PricingPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.replace('/home#pricing');
-  }, [router]);
-
-  return null;
+  redirect('/home#pricing');
 }

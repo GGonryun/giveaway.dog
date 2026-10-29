@@ -1,11 +1,13 @@
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
-import { Mail, MessageCircle } from 'lucide-react';
+import { Crown, Mail, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { DISCORD_INVITE_LINK } from '@giveaway/app-config/settings';
 import type { Metadata } from 'next';
 import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
+
+const PRO_EMAIL_LINK = 'mailto:support@giveaway.dog?subject=Giveaway.dog%20Pro';
 
 export const metadata: Metadata = {
   title: 'Support & Help Center | Giveaway.dog',
@@ -34,6 +36,46 @@ export default function SupportPage() {
           description="Get assistance with your account and technical issues"
         />
       </div>
+
+      <section id="pro" className="w-full max-w-3xl mx-auto mb-6 scroll-mt-24">
+        <Card className="border-primary">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-center mb-4">
+              <div className="p-3 bg-primary/10 rounded-full">
+                <Crown className="h-6 w-6 text-primary" />
+              </div>
+            </div>
+            <Typography.Header
+              level={2}
+              className="text-xl font-semibold text-center mb-3"
+            >
+              Get Giveaway.dog Pro
+            </Typography.Header>
+            <Typography.Paragraph className="text-center text-muted-foreground mb-4">
+              To upgrade your team to Pro, email us the name of your team and
+              whether you want monthly or yearly billing, or ask in our Discord.
+              We will help you get set up.
+            </Typography.Paragraph>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button asChild>
+                <a href={PRO_EMAIL_LINK}>Email us about Pro</a>
+              </Button>
+              <Button variant="outline" asChild>
+                <a
+                  href={DISCORD_INVITE_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Ask in Discord
+                </a>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="/home#pricing">Compare plans</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
       <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
         <Card>
