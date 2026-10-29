@@ -5,9 +5,14 @@ test.describe('pricing', () => {
   test('a visitor opens /pricing and sees the yearly price', async ({
     page
   }) => {
+    const response = await page.request.get('/pricing');
+    expect(await response.text()).toContain(
+      'Flexible pricing options for creators of all sizes.'
+    );
+
     await page.goto('/pricing');
 
-    await expect(page).toHaveURL(/\/home#pricing$/);
+    await expect(page).toHaveURL(/\/pricing$/);
     await expect(
       page.getByRole('heading', { name: /Get more views with less effort/ })
     ).toBeInViewport();
