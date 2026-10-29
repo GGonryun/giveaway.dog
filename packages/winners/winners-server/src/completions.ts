@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { PrismaClient, TeamTier } from '@giveaway/db-model';
+import { Prisma, TeamTier } from '@giveaway/db-model';
 import {
   ELIGIBLE_TASK_COMPLETION_INCLUDE_QUERY,
   EligibleTaskCompletion
@@ -83,7 +83,7 @@ export const toUserCompletionCounts = (
 };
 
 export const getEligibleCompletions = async (args: {
-  db: PrismaClient;
+  db: Prisma.TransactionClient;
   user: RecursiveRequired<User>;
   sweepstakesId: string;
   criteria: SweepstakesCriteriaSchema;

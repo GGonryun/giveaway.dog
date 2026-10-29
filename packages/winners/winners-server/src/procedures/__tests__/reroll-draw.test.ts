@@ -206,7 +206,9 @@ describe('rerollDraw', () => {
       expect(expectFailure(result, 'VALIDATION_ERROR').message).toBe(
         'No eligible participants meet the criteria'
       );
-      expect(prismaMock.prizeDraw.findUnique).not.toHaveBeenCalled();
+      expect(prismaMock.prizeDraw.update).not.toHaveBeenCalled();
+      expect(prismaMock.taskCompletion.updateMany).not.toHaveBeenCalled();
+      expect(prismaMock.prizeDraw.createMany).not.toHaveBeenCalled();
     });
 
     it('returns NOT_FOUND when the draw does not exist', async () => {

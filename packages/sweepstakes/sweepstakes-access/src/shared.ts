@@ -49,7 +49,7 @@ export const findUserSweepstakes = async ({
   permission,
   tier
 }: {
-  db: PrismaClient;
+  db: Prisma.TransactionClient;
   user: RecursiveRequired<User>;
   id: string;
   permission: TeamPermission;

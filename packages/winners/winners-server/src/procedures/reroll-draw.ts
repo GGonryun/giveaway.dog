@@ -14,6 +14,7 @@ import {
   getPrizeAllocations
 } from '@giveaway/winners-model/slots';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
+import { withLockedPrizes } from '../prize-lock';
 import { PrizeDrawResult } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
 
@@ -57,23 +58,6 @@ export const rerollDraw = procedure()
         sweepstakesId
       });
 
-      const draws = await getDrawsInfo({
-        db,
-        sweepstakesId
-      });
-
-      const completions = await getEligibleCompletions({
-        db,
-        user,
-        sweepstakesId,
-        criteria
-      });
-
-      const allocations = await getPrizeAllocations({
-        db,
-        sweepstakesId
-      });
-
       const draw = await db.prizeDraw.findUnique({
         where: {
           id: drawId,
@@ -103,42 +87,63 @@ export const rerollDraw = procedure()
         ? toDuplicatePrizeDraw
         : toUniquePrizeDraw;
 
-      await db.$transaction(async (tx) => {
-        await tx.prizeDraw.update({
-          where: {
-            id: drawId
-          },
-          data: {
-            result: PrizeDrawResult.DISQUALIFIED,
-            disqualificationReason: disqualificationReason.trim()
-          }
-        });
+      await withLockedPrizes({
+        db,
+        sweepstakesId,
+        run: async (tx) => {
+          const draws = await getDrawsInfo({
+            db: tx,
+            sweepstakesId
+          });
 
-        await tx.taskCompletion.updateMany({
-          where: {
-            participantId: participantId,
-            task: {
-              sweepstakesId: sweepstakesId
+          const completions = await getEligibleCompletions({
+            db: tx,
+            user,
+            sweepstakesId,
+            criteria
+          });
+
+          const allocations = await getPrizeAllocations({
+            db: tx,
+            sweepstakesId
+          });
+
+          await tx.prizeDraw.update({
+            where: {
+              id: drawId
             },
-            status: {
-              not: 'REJECTED'
+            data: {
+              result: PrizeDrawResult.DISQUALIFIED,
+              disqualificationReason: disqualificationReason.trim()
             }
-          },
-          data: {
-            status: 'REJECTED',
-            reason: `Participant disqualified: ${disqualificationReason.trim() || 'No reason provided'}`
-          }
-        });
+          });
 
-        await tx.prizeDraw.createMany({
-          data: toPrizeDraw({
-            draws,
-            slots: [{ prizeId: draw.prizeId }],
-            completions,
-            criteria,
-            allocations
-          }).map((d) => ({ ...d, previousDrawId: drawId }))
-        });
+          await tx.taskCompletion.updateMany({
+            where: {
+              participantId: participantId,
+              task: {
+                sweepstakesId: sweepstakesId
+              },
+              status: {
+                not: 'REJECTED'
+              }
+            },
+            data: {
+              status: 'REJECTED',
+              reason: `Participant disqualified: ${disqualificationReason.trim() || 'No reason provided'}`
+            }
+          });
+
+          await tx.prizeDraw.createMany({
+            data: toPrizeDraw({
+              draws,
+              slots: [{ prizeId: draw.prizeId }],
+              completions,
+              criteria,
+              allocations
+            }).map((d) => ({ ...d, previousDrawId: drawId }))
+          });
+        }
       });
 
       return { success: true };
