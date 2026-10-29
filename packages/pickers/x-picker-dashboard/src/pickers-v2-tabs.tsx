@@ -1,7 +1,12 @@
 'use client';
 
 import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
-import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@giveaway/ui-primitives/tabs';
 import { useState } from 'react';
 import { ListPickersV2FilterSchema } from '@giveaway/x-picker-model/schemas/list';
 import { PICKER_FILTER_STATUS_OPTIONS } from '@giveaway/picker-model/schemas/status';
@@ -31,7 +36,9 @@ export const PickersV2Tabs: React.PC<{
         ))}
       </TabsList>
 
-      <div className="space-y-4">{children}</div>
+      <TabsContent value={tab} className="space-y-4">
+        {children}
+      </TabsContent>
     </Tabs>
   );
 };

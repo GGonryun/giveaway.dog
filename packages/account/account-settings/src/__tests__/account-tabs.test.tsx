@@ -48,6 +48,17 @@ describe('AccountTabs', () => {
     ]);
   });
 
+  it('points the selected tab at the panel that holds its children', () => {
+    renderTabs();
+
+    const panel = screen.getByRole('tabpanel', { name: 'Profile' });
+    expect(panel).toHaveTextContent('Tab content');
+    expect(screen.getByRole('tab', { name: 'Profile' })).toHaveAttribute(
+      'aria-controls',
+      panel.id
+    );
+  });
+
   it('renders its children', () => {
     renderTabs();
 

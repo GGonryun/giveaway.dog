@@ -97,6 +97,20 @@ describe('MobileFormLayout', () => {
       expect(context.setCurrentStep).toHaveBeenCalledExactlyOnceWith('prizes');
     });
 
+    it('points every tab at the form panel of the current step', () => {
+      renderMobile({ currentStep: 'prizes' });
+      const panel = screen.getByRole('tabpanel', { name: 'Prizes' });
+      expect(panel).toHaveTextContent('Form body');
+      for (const tab of screen.getAllByRole('tab')) {
+        expect(tab).toHaveAttribute('aria-controls', panel.id);
+      }
+    });
+
+    it('has no tab panel when the tabs are hidden', () => {
+      renderMobile({}, true);
+      expect(screen.queryByRole('tabpanel')).not.toBeInTheDocument();
+    });
+
     it('can be hidden with a shorter header', () => {
       renderMobile({}, true);
       expect(screen.queryByRole('tablist')).not.toBeInTheDocument();
