@@ -422,10 +422,14 @@ const processSweepstakesExpiration = async ({
   }
 
   if (sweepstakes.status === 'COMPLETED') {
-    throw new ApplicationError({
-      code: 'CONFLICT',
-      message: `Sweepstakes ${sweepstakes.id} is already expired`
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: { status: SweepstakesJobStatus.COMPLETED }
     });
+    console.info(
+      `Sweepstakes ${sweepstakes.id} is already completed, skipping expiration`
+    );
+    return;
   }
 
   if (sweepstakes.status === 'DRAFT') {
