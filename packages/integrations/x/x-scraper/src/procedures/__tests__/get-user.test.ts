@@ -8,7 +8,8 @@ const m = vi.hoisted(() => ({
   ScrapeBadger: vi.fn()
 }));
 
-vi.mock('scrapebadger', () => ({
+vi.mock('scrapebadger', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('scrapebadger')>()),
   ScrapeBadger: m.ScrapeBadger
 }));
 
