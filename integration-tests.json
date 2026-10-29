@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "label": "integration tests",
-  "message": "110 passed",
-  "color": "brightgreen"
+  "message": "1 failed",
+  "color": "red"
 }
