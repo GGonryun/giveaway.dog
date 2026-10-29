@@ -96,7 +96,7 @@ export const PricingSection = () => {
       border: true,
       buttonSubtext: 'Billed monthly or yearly',
       buttonText: 'Contact Us',
-      buttonLink: '/login',
+      buttonLink: '/contact#pro',
       buttonIcon: <ArrowRightIcon />,
       buttonVariant: 'default',
       features: [

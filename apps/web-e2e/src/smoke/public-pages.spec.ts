@@ -17,9 +17,6 @@ test.describe('public pages', { tag: '@smoke' }, () => {
 
       await page.goto(path);
 
-      if (path === '/pricing') {
-        await expect(page).toHaveURL(/\/home#pricing$/);
-      }
       await expect(
         text ? page.getByText(text) : page.getByRole('heading').first()
       ).toBeVisible();

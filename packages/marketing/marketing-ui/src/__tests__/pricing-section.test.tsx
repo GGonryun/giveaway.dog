@@ -112,11 +112,11 @@ describe('PricingSection', () => {
       expect(tierCard('Creator')).not.toHaveClass('border-primary');
     });
 
-    it('links the contact button to the login page', () => {
+    it('links the contact button to the Pro section of the contact page', () => {
       render(<PricingSection />);
       expect(
         within(tierCard('Pro')).getByRole('link', { name: 'Contact Us' })
-      ).toHaveAttribute('href', '/login');
+      ).toHaveAttribute('href', '/contact#pro');
     });
   });
 
