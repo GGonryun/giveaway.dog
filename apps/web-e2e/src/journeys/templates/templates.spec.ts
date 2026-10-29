@@ -306,38 +306,36 @@ test.describe('team templates', () => {
       return page.locator('[data-slot="card"]').filter({ hasText: name });
     };
 
-    test(
-      'a host edits a custom template from the dashboard',
-      knownBug(514),
-      async ({ page, request }, testInfo) => {
-        const { team } = await seedWorkerTeam(request, testInfo);
-        const card = await seedTemplate(page, team.slug, freshSlug(testInfo));
+    test('a host edits a custom template from the dashboard', async ({
+      page,
+      request
+    }, testInfo) => {
+      const { team } = await seedWorkerTeam(request, testInfo);
+      const card = await seedTemplate(page, team.slug, freshSlug(testInfo));
 
-        await card.click();
-        await page
-          .getByRole('dialog')
-          .getByRole('button', { name: 'Edit Template' })
-          .click();
-        await expect(page).toHaveURL(/\/templates\/[^/]+\/edit$/, {
-          timeout: 10_000
-        });
-      }
-    );
+      await card.click();
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: 'Edit Template' })
+        .click();
+      await expect(page).toHaveURL(/\/templates\/[^/]+\/edit$/, {
+        timeout: 10_000
+      });
+    });
 
-    test(
-      'a host deletes a custom template from the dashboard',
-      knownBug(514),
-      async ({ page, request }, testInfo) => {
-        const { team } = await seedWorkerTeam(request, testInfo);
-        const tag = freshSlug(testInfo);
-        const card = await seedTemplate(page, team.slug, tag);
+    test('a host deletes a custom template from the dashboard', async ({
+      page,
+      request
+    }, testInfo) => {
+      const { team } = await seedWorkerTeam(request, testInfo);
+      const tag = freshSlug(testInfo);
+      const card = await seedTemplate(page, team.slug, tag);
 
-        await card.getByRole('button', { name: 'Template actions' }).click();
-        await page.getByRole('menuitem', { name: 'Delete' }).click();
-        await expect(
-          page.getByRole('dialog', { name: 'Delete Template' })
-        ).toBeVisible({ timeout: 10_000 });
-      }
-    );
+      await card.getByRole('button', { name: 'Template actions' }).click();
+      await page.getByRole('menuitem', { name: 'Delete' }).click();
+      await expect(
+        page.getByRole('dialog', { name: 'Delete Template' })
+      ).toBeVisible({ timeout: 10_000 });
+    });
   });
 });
