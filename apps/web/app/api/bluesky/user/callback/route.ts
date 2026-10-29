@@ -33,9 +33,22 @@ export async function GET(req: NextRequest) {
     redirectTo
   });
 
-  // Process the OAuth callback
-  // This validates the code, exchanges it for tokens, and stores the session
-  const { session } = await client.callback(searchParams);
+  const session = await client
+    .callback(searchParams)
+    .then((result) => result.session)
+    .catch((error: unknown) => {
+      console.error('Bluesky OAuth callback failed:', error);
+      return null;
+    });
+
+  if (!session) {
+    const errorUrl = new URL(
+      currentSession?.user?.id ? redirectTo || '/account' : '/login',
+      req.url
+    );
+    errorUrl.searchParams.set('error', 'OAuthCallbackError');
+    redirect(errorUrl.toString());
+  }
 
   // Create an Agent to fetch the user's profile
   const agent = new Agent(session);

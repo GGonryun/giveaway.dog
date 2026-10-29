@@ -123,6 +123,22 @@ describe('GET /api/workflows/twitter/scrape/resume', () => {
     );
   });
 
+  describe('when the run does not exist', () => {
+    it('returns 404', async () => {
+      const notFound = new Error('Workflow run "wrun_missing" not found');
+      notFound.name = 'WorkflowRunNotFoundError';
+      m.getRun.mockReturnValue({
+        status: Promise.reject(notFound),
+        readable: streamOf([])
+      });
+
+      const res = await GET(buildRequest('?runId=wrun_missing'));
+
+      expect(res.status).toBe(404);
+      expect(await res.text()).toBe('Not Found: Unknown runId');
+    });
+  });
+
   describe('when the run status cannot be read', () => {
     it('rejects with the underlying error', async () => {
       m.getRun.mockReturnValue({

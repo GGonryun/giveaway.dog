@@ -1,7 +1,6 @@
 import type { APIRequestContext } from '@playwright/test';
 import { expect, test } from '../fixtures/test';
 import { expectNoStackTrace, noRedirect } from '../helpers/http';
-import { knownBug } from '../helpers/known-bug';
 
 type Probe = { method: 'GET' | 'POST'; path: string; data?: string };
 
@@ -62,15 +61,13 @@ test.describe('error responses', { tag: ['@security', '@prod-safe'] }, () => {
   });
 
   for (const probe of SERVER_ERRORS) {
-    test(
-      `${probe.method} ${probe.path} answers ${probe.why} with a 4xx`,
-      knownBug(350),
-      async ({ request }) => {
-        const response = await send(request, probe);
+    test(`${probe.method} ${probe.path} answers ${probe.why} with a 4xx`, async ({
+      request
+    }) => {
+      const response = await send(request, probe);
 
-        expect(response.status()).toBeLessThan(500);
-      }
-    );
+      expect(response.status()).toBeLessThan(500);
+    });
   }
 
   test('the X picker refuses a malformed post URL', async ({ request }) => {

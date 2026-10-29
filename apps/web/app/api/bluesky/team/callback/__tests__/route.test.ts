@@ -107,30 +107,27 @@ describe('bluesky team callback GET', () => {
   });
 
   describe('when the user is not authenticated', () => {
-    it('throws an UNAUTHORIZED application error when there is no session', async () => {
+    it('redirects to the login page when there is no session', async () => {
       m.auth.mockResolvedValue(null);
 
-      const promise = GET(request());
+      const res = await GET(request());
 
-      await expect(promise).rejects.toBeInstanceOf(ApplicationError);
-      await expect(promise).rejects.toMatchObject({
-        code: 'UNAUTHORIZED',
-        message: 'Authentication required'
-      });
+      expect(res.status).toBe(307);
+      expect(res.headers.get('location')).toBe(`${APP_URL}/login`);
     });
 
-    it('throws when the session has no user id', async () => {
+    it('redirects to the login page when the session has no user id', async () => {
       m.auth.mockResolvedValue({ user: {}, expires: '2999-01-01' });
 
-      await expect(GET(request())).rejects.toMatchObject({
-        code: 'UNAUTHORIZED'
-      });
+      const res = await GET(request());
+
+      expect(res.headers.get('location')).toBe(`${APP_URL}/login`);
     });
 
     it('does not touch the database or the Bluesky client', async () => {
       m.auth.mockResolvedValue(null);
 
-      await GET(request()).catch(() => undefined);
+      await GET(request());
 
       expect(prismaMock.team.findUnique).not.toHaveBeenCalled();
       expect(m.getTeamBlueskyClient).not.toHaveBeenCalled();

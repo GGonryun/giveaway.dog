@@ -6,7 +6,7 @@ import { MAX_PICKER_SCHEDULE_DAYS } from '@giveaway/app-config/settings';
 import { DeepPartial } from '@giveaway/util-types/types';
 import { z } from 'zod';
 
-const twitterUserFiltersSchema = z.object({
+export const twitterUserFiltersSchema = z.object({
   minimumPostCount: z.number().nullable().default(null),
   minimumAccountAgeDays: z.number().nullable().default(null),
   minimumFollowers: z.number().nullable().default(null),

@@ -32,10 +32,7 @@ export async function GET(request: NextRequest) {
 
   const userSession = await auth();
   if (!userSession?.user?.id) {
-    throw new ApplicationError({
-      code: 'UNAUTHORIZED',
-      message: 'Authentication required'
-    });
+    return NextResponse.redirect(new URL('/login', environment.appUrl()));
   }
 
   const slug = request.cookies.get('bluesky_team_slug')?.value;

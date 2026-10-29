@@ -118,12 +118,56 @@ describe('bluesky user callback GET', () => {
       expect(m.auth).not.toHaveBeenCalled();
     });
 
-    it('propagates a failure of the OAuth callback', async () => {
+    it('redirects a signed-out visitor to the login page when the OAuth callback fails', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      m.callback.mockRejectedValue(new Error('invalid_grant'));
+
+      await expect(GET(request())).rejects.toMatchObject({
+        digest: redirectDigest(
+          'http://localhost:3000/login?error=OAuthCallbackError'
+        )
+      });
+      expect(prismaMock.account.findUnique).not.toHaveBeenCalled();
+      expect(m.signIn).not.toHaveBeenCalled();
+    });
+
+    it('redirects a signed-in user to the stored redirect target when the OAuth callback fails', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      m.auth.mockResolvedValue(createSession());
+      m.callback.mockRejectedValue(new Error('invalid_grant'));
+
+      await expect(GET(request('/app/settings'))).rejects.toMatchObject({
+        digest: redirectDigest(
+          'http://localhost:3000/app/settings?error=OAuthCallbackError'
+        )
+      });
+    });
+
+    it('redirects a signed-in user to the account page by default when the OAuth callback fails', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      m.auth.mockResolvedValue(createSession());
+      m.callback.mockRejectedValue(new Error('invalid_grant'));
+
+      await expect(GET(request())).rejects.toMatchObject({
+        digest: redirectDigest(
+          'http://localhost:3000/account?error=OAuthCallbackError'
+        )
+      });
+    });
+
+    it('logs the failure of the OAuth callback', async () => {
+      const consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       const failure = new Error('invalid_grant');
       m.callback.mockRejectedValue(failure);
 
-      await expect(GET(request())).rejects.toBe(failure);
-      expect(prismaMock.account.findUnique).not.toHaveBeenCalled();
+      await GET(request()).catch(() => undefined);
+
+      expect(consoleError).toHaveBeenCalledWith(
+        'Bluesky OAuth callback failed:',
+        failure
+      );
     });
 
     it('passes the callback query parameters to the Bluesky client', async () => {
