@@ -314,3 +314,4 @@ date,commit,url,target,trigger,result,run
 2026-10-29T03:54:08Z,8061260256d00c7e8cf19819dae4538e7c80cd68,https://giveaway-bvfgrjeqh-charity-games.vercel.app,deployment,deployment,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/40814635927
 2026-10-29T04:04:34Z,8061260256d00c7e8cf19819dae4538e7c80cd68,https://www.giveaway.dog,domain,promotion,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/40815565144
 2026-10-29T04:05:13Z,1debda9c093f349e4fe1a33e64180b30d1a93d40,https://giveaway-hwfm26o0v-charity-games.vercel.app,deployment,deployment,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/40815628107
+2026-10-29T04:06:15Z,1debda9c093f349e4fe1a33e64180b30d1a93d40,https://www.giveaway.dog,domain,promotion,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/40815659445
