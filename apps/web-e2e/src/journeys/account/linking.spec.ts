@@ -205,5 +205,58 @@ test.describe('expired connections', () => {
     await expect(row.getByRole('button', { name: 'Reconnect' })).toBeVisible();
   });
 
-  test.fixme('[ACCOUNT-018] signing in again with Discord clears an expired connection (#569)', async () => {});
+  test('[ACCOUNT-018] signing in again with Discord clears an expired connection', async ({
+    context,
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const profile: E2eDiscordProfile = {
+      id: newDiscordId(),
+      username: `e2e_${ns}`,
+      email: toPersonaEmail('participant', ns)
+    };
+    await seedApi(request).userExtras({
+      ns,
+      users: [
+        {
+          persona: 'participant',
+          accounts: [
+            {
+              identity: 'DISCORD',
+              status: 'ERROR',
+              providerAccountId: profile.id
+            }
+          ]
+        }
+      ]
+    });
+    await signInAs(page.request, 'participant', ns);
+    await useMockOAuth(context, 'discord', profile);
+
+    await page.goto('/account');
+    await page.waitForLoadState('networkidle');
+    await accountRow(page, 'Discord')
+      .getByRole('button', { name: 'Reconnect' })
+      .click();
+
+    await expect(page).toHaveURL(/\/account/, { timeout: SIGN_IN_TIMEOUT });
+    await page.reload();
+    const row = accountRow(page, 'Discord');
+    await expect(row).not.toContainText('Not connected');
+    await expect(row).not.toContainText('has expired or been revoked');
+    await expect(row).not.toContainText('Missing Permissions');
+    const { accounts } = await seedApi(request).rows<AccountRows>({
+      view: 'accounts',
+      persona: 'participant',
+      ns
+    });
+    expect(accounts).toEqual([
+      expect.objectContaining({
+        provider: 'discord',
+        providerAccountId: profile.id,
+        status: 'ACTIVE'
+      })
+    ]);
+  });
 });
