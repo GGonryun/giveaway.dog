@@ -229,24 +229,21 @@ describe('runTaskJobs', () => {
       expect(network.requests(RETWEETERS)).toHaveLength(0);
     });
 
-    it.fails(
-      'reaches the same final state as a clean run after a stop at any write, once the job is pending again (fails until #301 is fixed)',
-      async () => {
-        const { writes, mismatches } = await crashAtEveryWrite({
-          setup: setupImport,
-          run: () => runTaskJobs(prisma),
-          recover: () =>
-            db.taskJob.updateMany({
-              where: { status: 'IN_PROGRESS' },
-              data: { status: 'PENDING' }
-            }),
-          state: importState
-        });
+    it('reaches the same final state as a clean run after a stop at any write, once the job is pending again', async () => {
+      const { writes, mismatches } = await crashAtEveryWrite({
+        setup: setupImport,
+        run: () => runTaskJobs(prisma),
+        recover: () =>
+          db.taskJob.updateMany({
+            where: { status: 'IN_PROGRESS' },
+            data: { status: 'PENDING' }
+          }),
+        state: importState
+      });
 
-        expect(writes).toBeGreaterThan(1);
-        expect(mismatches).toEqual([]);
-      }
-    );
+      expect(writes).toBeGreaterThan(1);
+      expect(mismatches).toEqual([]);
+    });
   });
 
   describe('when two runs overlap', () => {

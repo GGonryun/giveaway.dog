@@ -183,19 +183,16 @@ describe('runSweepstakesJobs', () => {
       }
     );
 
-    it.fails(
-      'reaches the same final state as a clean run after a stop at any write of a PROCESS_COMPLETION job (fails until #301 is fixed)',
-      async () => {
-        const { mismatches } = await crashAtEveryWrite({
-          setup: () => setupDiscordUpdate('PROCESS_COMPLETION'),
-          run: () => runSweepstakesJobs(prisma),
-          recover: releaseStoppedJobs,
-          state: jobState
-        });
+    it('reaches the same final state as a clean run after a stop at any write of a PROCESS_COMPLETION job', async () => {
+      const { mismatches } = await crashAtEveryWrite({
+        setup: () => setupDiscordUpdate('PROCESS_COMPLETION'),
+        run: () => runSweepstakesJobs(prisma),
+        recover: releaseStoppedJobs,
+        state: jobState
+      });
 
-        expect(mismatches).toEqual([]);
-      }
-    );
+      expect(mismatches).toEqual([]);
+    });
   });
 
   describe('when the run names one giveaway', () => {

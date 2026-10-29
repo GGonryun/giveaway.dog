@@ -269,12 +269,16 @@ describe('processBlueskyTaskJob', () => {
       });
     });
 
-    it('schedules the prize allocation job when a completion is created', async () => {
+    it('schedules the prize allocation job when a participant of the giveaway has no prize allocation', async () => {
       importResult([], [imported('b')]);
       prismaMock.taskCompletion.findFirst.mockResolvedValue(null);
+      prismaMock.sweepstakesParticipant.count.mockResolvedValue(1);
 
       await processBlueskyTaskJob(db, likeTask, jobWith({ runs: 0 }), action());
 
+      expect(prismaMock.sweepstakesParticipant.count).toHaveBeenCalledWith({
+        where: { sweepstakesId: 'sweep-1', allocations: null }
+      });
       expect(prismaMock.sweepstakesJob.upsert).toHaveBeenCalledWith({
         where: {
           sweepstakesId_type: {
@@ -290,6 +294,59 @@ describe('processBlueskyTaskJob', () => {
         },
         update: { status: 'PENDING', runAt: NOW }
       });
+    });
+
+    it('schedules the prize allocation job when an earlier run created the completions', async () => {
+      importResult([], [imported('b')]);
+      prismaMock.taskCompletion.findFirst.mockResolvedValue({
+        id: 'completion-1',
+        status: 'COMPLETED'
+      });
+      prismaMock.sweepstakesParticipant.count.mockResolvedValue(1);
+
+      await processBlueskyTaskJob(db, likeTask, jobWith({ runs: 0 }), action());
+
+      expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+      expect(prismaMock.sweepstakesJob.upsert).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not schedule prize allocation when every participant has a prize allocation', async () => {
+      importResult([], [imported('b')]);
+      prismaMock.taskCompletion.findFirst.mockResolvedValue(null);
+      prismaMock.sweepstakesParticipant.count.mockResolvedValue(0);
+
+      await processBlueskyTaskJob(db, likeTask, jobWith({ runs: 0 }), action());
+
+      expect(prismaMock.taskCompletion.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.sweepstakesJob.upsert).not.toHaveBeenCalled();
+    });
+
+    it('schedules the next run and completes the job in one transaction', async () => {
+      importResult([], [imported('b')]);
+      prismaMock.taskCompletion.findFirst.mockResolvedValue(null);
+      prismaMock.sweepstakesParticipant.count.mockResolvedValue(1);
+      const outside = [
+        prismaMock.sweepstakesJob.upsert,
+        prismaMock.taskJob.create,
+        prismaMock.taskJob.update
+      ];
+      prismaMock.$transaction.mockImplementation(async (run: unknown) => {
+        expect(outside.every((fn) => fn.mock.calls.length === 0)).toBe(true);
+        return (run as (tx: typeof prismaMock) => Promise<unknown>)(prismaMock);
+      });
+
+      await processBlueskyTaskJob(db, likeTask, jobWith({ runs: 0 }), action());
+
+      expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+      expect(prismaMock.sweepstakesJob.upsert).toHaveBeenCalledTimes(1);
+      expect(prismaMock.taskJob.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.taskJob.update).toHaveBeenCalledWith({
+        where: { id: 'job-1' },
+        data: { status: 'COMPLETED' }
+      });
+      expect(
+        prismaMock.taskJob.update.mock.invocationCallOrder[0]
+      ).toBeGreaterThan(prismaMock.taskJob.create.mock.invocationCallOrder[0]);
     });
 
     it('marks a pending completion as completed without attaching a proof', async () => {

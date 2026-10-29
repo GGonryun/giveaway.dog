@@ -134,28 +134,34 @@ export const processBlueskyTaskJob = async <
     `[${type}] Created ${created} and updated ${updated} task completions for task job ${job.id}`
   );
 
-  // Schedule prize allocation job if participants were created
-  if (created > 0) {
-    await scheduleRandomlyAssignPrizesJob({
-      db,
-      sweepstakesId
-    });
-  }
-
   const nextRunAt = datetime.minutesFromNow(
     parsed.data.runs * 5 + BLUESKY_API_RATE_LIMIT_MINUTES
   );
 
-  await db.taskJob.create({
-    data: {
-      taskId: job.taskId,
-      status: TaskJobStatus.PENDING,
-      runAt: nextRunAt,
-      data: {
-        runs: parsed.data.runs + 1,
-        lastProcessedDid: response.data?.at(0)?.did
+  await db.$transaction(async (tx) => {
+    const participantsWithoutAllocation = await tx.sweepstakesParticipant.count(
+      {
+        where: { sweepstakesId, allocations: null }
       }
+    );
+    if (participantsWithoutAllocation > 0) {
+      await scheduleRandomlyAssignPrizesJob({ db: tx, sweepstakesId });
     }
+    await tx.taskJob.create({
+      data: {
+        taskId: job.taskId,
+        status: TaskJobStatus.PENDING,
+        runAt: nextRunAt,
+        data: {
+          runs: parsed.data.runs + 1,
+          lastProcessedDid: response.data?.at(0)?.did
+        }
+      }
+    });
+    await tx.taskJob.update({
+      where: { id: job.id },
+      data: { status: TaskJobStatus.COMPLETED }
+    });
   });
 
   console.info(
