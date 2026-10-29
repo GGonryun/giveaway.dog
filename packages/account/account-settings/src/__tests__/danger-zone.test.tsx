@@ -56,20 +56,20 @@ describe('DangerZone', () => {
       const dialog = await openConfirmation(user);
 
       expect(dialog).toHaveTextContent(
-        'This action cannot be undone. Your account will be permanently deleted.'
+        'This action cannot be undone. Your account will be permanently deleted right away.'
       );
       expect(deleteUser).not.toHaveBeenCalled();
     });
 
-    it('explains that deletion waits for entered giveaways to finish', async () => {
+    it('[ACCOUNT-028] says that the account is deleted at once', async () => {
       const user = userEvent.setup();
       render(<DangerZone />);
 
-      await openConfirmation(user);
+      const dialog = await openConfirmation(user);
 
-      expect(screen.getByRole('alert')).toHaveTextContent(
-        "Your account deletion will be fully processed after any giveaways you've entered have completed."
-      );
+      expect(dialog).toHaveTextContent('permanently deleted right away');
+      expect(dialog).not.toHaveTextContent(/processed after/);
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     });
   });
 
