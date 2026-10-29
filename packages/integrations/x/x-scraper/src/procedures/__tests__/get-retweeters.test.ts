@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { RateLimitError } from 'scrapebadger';
 import {
   getAllRetweeters,
   getRetweeters,
@@ -12,7 +13,8 @@ const m = vi.hoisted(() => ({
   ScrapeBadger: vi.fn()
 }));
 
-vi.mock('scrapebadger', () => ({
+vi.mock('scrapebadger', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('scrapebadger')>()),
   ScrapeBadger: m.ScrapeBadger
 }));
 
@@ -450,6 +452,20 @@ describe('scrapebadger retweeter procedures', () => {
       await expect(
         getRetweetersUntilUser({ tweetId: 't-1', stopAtUserId: '1' })
       ).rejects.toThrow('rate limited');
+    });
+
+    it('turns a ScrapeBadger rate limit into a retryable error at its reset time', async () => {
+      m.getRetweeters.mockRejectedValue(
+        new RateLimitError('Too many', { retryAfter: 1_790_000_000 })
+      );
+
+      await expect(
+        getRetweetersUntilUser({ tweetId: 't-1', stopAtUserId: '1' })
+      ).rejects.toMatchObject({
+        code: 'TOO_MANY_REQUESTS',
+        message: 'ScrapeBadger rate limited the retweeters request',
+        data: { status: 429, retryAfter: 1_790_000_000_000 }
+      });
     });
 
     it('does not truncate to maxUsers when the stop user is found', async () => {

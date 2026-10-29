@@ -20,7 +20,8 @@ vi.mock('@giveaway/cache/redis', () => ({
   redis: { get: m.redisGet, set: m.redisSet }
 }));
 
-vi.mock('scrapebadger', () => ({
+vi.mock('scrapebadger', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('scrapebadger')>()),
   ScrapeBadger: class {
     twitter = {
       tweets: { getById: m.getById, getRetweeters: m.getRetweeters }

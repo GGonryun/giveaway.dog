@@ -28,6 +28,7 @@
   "dependencies": {
     "@giveaway/bluesky-task-jobs": "workspace:*",
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
     "@giveaway/task-jobs-core": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
