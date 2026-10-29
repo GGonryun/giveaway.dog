@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useSyncExternalStore } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Separator } from '@giveaway/ui-primitives/separator';
@@ -56,16 +56,6 @@ export const GiveawayParticipationCard: React.PC<{
   );
 };
 
-const subscribeToNothing = () => () => {};
-
-// False on the server and while React hydrates, true after.
-const useHydrated = () =>
-  useSyncExternalStore(
-    subscribeToNothing,
-    () => true,
-    () => false
-  );
-
 const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
   device
 }) => {
@@ -75,9 +65,8 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
     startDate: sweepstakes.timing.startDate,
     endDate: sweepstakes.timing.endDate
   });
-  const startDate = date.format(sweepstakes.timing.startDate);
-  const endDate = date.format(sweepstakes.timing.endDate);
-  const hydrated = useHydrated();
+  const { startDate, endDate, timeZone } = sweepstakes.timing;
+  const range = `${date.format(startDate, 'short', timeZone)} - ${date.format(endDate, 'short', timeZone)}`;
 
   return (
     <CardContent>
@@ -89,15 +78,8 @@ const TimeRemainingSection: React.FC<{ device?: DeviceType }> = ({
           )}
         >
           <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-          {/* The server formats the dates in its own time zone, which can
-              give another day than the browser. The new key replaces the
-              server text with the dates of the browser after hydration. */}
-          <div
-            key={hydrated ? 'browser' : 'server'}
-            className="text-xs text-muted-foreground font-semibold"
-            suppressHydrationWarning
-          >
-            {`${startDate} - ${endDate}`}
+          <div className="text-xs text-muted-foreground font-semibold">
+            {range}
           </div>
         </div>
         <Separator

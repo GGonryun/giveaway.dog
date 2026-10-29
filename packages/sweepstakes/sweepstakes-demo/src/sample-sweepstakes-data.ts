@@ -19,7 +19,6 @@ import {
   YOUTUBE_CHANNEL_NAME,
   YOUTUBE_CHANNEL_URL
 } from '@giveaway/app-config/settings';
-import { timezone } from '@giveaway/util-time/time';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
   DEFAULT_ALLOW_USER_SELECTION,
@@ -37,7 +36,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   timing: {
     startDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
     endDate: new Date(Date.now() + 128 * 24 * 60 * 60 * 1000),
-    timeZone: timezone.current()
+    timeZone: 'UTC'
   },
   prizes: [
     {
