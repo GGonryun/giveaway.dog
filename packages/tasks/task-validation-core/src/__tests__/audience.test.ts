@@ -250,7 +250,26 @@ describe('validateAudience', () => {
       await expectRefusal(INCOMPLETE);
     });
 
-    it('refuses a participant whose stored values miss a field', async () => {
+    it('refuses a participant whose stored values miss a required field', async () => {
+      givenSweepstakes({
+        formFields: [
+          formField(),
+          formField({
+            id: 'field-twitter',
+            type: 'TWITTER',
+            label: 'X profile',
+            required: true,
+            minimum: null
+          })
+        ]
+      });
+      givenUser({ birthday: new Date('2000-01-01T00:00:00.000Z') });
+      givenFormValues({ 'field-other': 'value' });
+
+      await expectRefusal(INCOMPLETE);
+    });
+
+    it('accepts a participant whose stored values miss only an optional field', async () => {
       givenSweepstakes({
         formFields: [
           formField(),
@@ -264,9 +283,9 @@ describe('validateAudience', () => {
         ]
       });
       givenUser({ birthday: new Date('2000-01-01T00:00:00.000Z') });
-      givenFormValues({ 'field-other': 'value' });
+      givenFormValues({ 'field-twitter': '' });
 
-      await expectRefusal(INCOMPLETE);
+      await expect(validateAudience(db, ARGS)).resolves.toBeUndefined();
     });
 
     it('accepts a user whose profile has the required age', async () => {

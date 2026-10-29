@@ -912,7 +912,7 @@ describe('saveUserChanges', () => {
     });
   });
 
-  it('passes a boolean USERNAME value through unchanged', async () => {
+  it('ignores a boolean USERNAME value', async () => {
     await saveUserChanges({
       db,
       user: dbUser(),
@@ -920,10 +920,18 @@ describe('saveUserChanges', () => {
       fields: [usernameField]
     });
 
-    expect(prismaMock.user.update).toHaveBeenCalledWith({
-      where: { id: TEST_USER.id },
-      data: { username: true }
+    expect(prismaMock.user.update).not.toHaveBeenCalled();
+  });
+
+  it('keeps the username when an optional USERNAME field is left blank', async () => {
+    await saveUserChanges({
+      db,
+      user: dbUser(),
+      data: { username: '  ' },
+      fields: [usernameField]
     });
+
+    expect(prismaMock.user.update).not.toHaveBeenCalled();
   });
 
   it('keeps the last USERNAME value when several username fields are sent', async () => {

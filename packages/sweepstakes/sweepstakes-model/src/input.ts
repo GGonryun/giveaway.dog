@@ -27,7 +27,7 @@ const toSetup = (
 ): SweepstakesInputSchema['setup'] => {
   return {
     name: data?.name ?? undefined,
-    banner: data?.banner ?? undefined,
+    banner: data?.banner ?? '',
     description: data?.description ?? undefined
   };
 };

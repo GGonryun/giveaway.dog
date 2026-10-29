@@ -251,7 +251,7 @@ describe('toSweepstakesInput', () => {
       vi.setSystemTime(new Date(2026, 9, 1, 15, 30));
 
       expect(toSweepstakesInput(emptyPayload())).toEqual({
-        setup: { name: undefined, banner: undefined, description: undefined },
+        setup: { name: undefined, banner: '', description: undefined },
         terms: {
           type: undefined,
           sponsorName: undefined,
@@ -292,7 +292,7 @@ describe('toSweepstakesInput', () => {
   });
 
   describe('setup and terms', () => {
-    it('turns null details fields into undefined', () => {
+    it('turns null details fields into undefined and a null banner into an empty one', () => {
       const input = toSweepstakesInput(
         emptyPayload({
           details: {
@@ -307,7 +307,7 @@ describe('toSweepstakesInput', () => {
 
       expect(input.setup).toEqual({
         name: undefined,
-        banner: undefined,
+        banner: '',
         description: 'Only a description'
       });
     });

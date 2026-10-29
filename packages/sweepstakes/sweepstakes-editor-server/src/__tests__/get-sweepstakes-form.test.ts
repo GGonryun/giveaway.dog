@@ -254,7 +254,7 @@ describe('getSweepstakesForm', () => {
       expect(expectOk(result)).toEqual({
         id: SWEEPSTAKES_ID,
         status: 'DRAFT',
-        setup: {},
+        setup: { banner: '' },
         terms: {},
         audience: {
           allowedIdentities: DEFAULT_ALLOWED_IDENTITIES,

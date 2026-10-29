@@ -5,7 +5,6 @@ import { freshNamespace } from '../../fixtures/personas';
 import { BASE_URL, E2E_SECRET } from '../../env';
 import { postCredentials } from '../../helpers/credentials';
 import { noRedirect } from '../../helpers/http';
-import { knownBug } from '../../helpers/known-bug';
 import { fakesOf, linkInEmail, waitForEmail } from '../../helpers/outbox';
 import { signInAs } from '../../helpers/personas';
 import { seedApi } from '../../helpers/seed';
@@ -417,31 +416,30 @@ test.describe('team members', () => {
       await expect(page.getByText(/MANAGE_ROLES/)).toBeVisible();
     });
 
-    test(
-      'the edit dialog shows the role of the member it opens for',
-      knownBug(71),
-      async ({ page, request }, testInfo) => {
-        const ns = freshNamespace(testInfo.workerIndex);
-        const { team } = await seedApi(request).team({
-          ns,
-          suffix: 'edit',
-          members: [{ persona: 'guest', role: 'GUEST' }]
-        });
-        await signInAs(page.request, 'host', ns);
-        await page.goto(`/app/${team.slug}/settings/team`);
+    test('the edit dialog shows the role of the member it opens for', async ({
+      page,
+      request
+    }, testInfo) => {
+      const ns = freshNamespace(testInfo.workerIndex);
+      const { team } = await seedApi(request).team({
+        ns,
+        suffix: 'edit',
+        members: [{ persona: 'guest', role: 'GUEST' }]
+      });
+      await signInAs(page.request, 'host', ns);
+      await page.goto(`/app/${team.slug}/settings/team`);
 
-        await openMemberAction(page, 'E2E host', 'Edit Member');
-        await page
-          .getByRole('dialog')
-          .getByRole('button', { name: 'Cancel' })
-          .click();
-        await openMemberAction(page, 'E2E guest', 'Edit Member');
+      await openMemberAction(page, 'E2E host', 'Edit Member');
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: 'Cancel' })
+        .click();
+      await openMemberAction(page, 'E2E guest', 'Edit Member');
 
-        await expect(page.getByRole('dialog').getByRole('combobox')).toHaveText(
-          'Guest'
-        );
-      }
-    );
+      await expect(page.getByRole('dialog').getByRole('combobox')).toHaveText(
+        'Guest'
+      );
+    });
   });
 
   test.describe('leaving', () => {

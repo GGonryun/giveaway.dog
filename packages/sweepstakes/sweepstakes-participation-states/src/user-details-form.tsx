@@ -42,23 +42,26 @@ const createFormSchema = (formFields: SweepstakesFormFieldSchema[]) => {
 
     switch (field.type) {
       case SweepstakesFormFieldType.USERNAME:
-        fieldSchema = z
-          .string()
-          .min(1, 'Username must be at least 1 characters')
-          .max(50, 'Username must be at most 50 characters');
-
-        if (!field.required) {
-          fieldSchema = fieldSchema.optional();
+        if (field.required) {
+          fieldSchema = z
+            .string()
+            .min(1, 'Username must be at least 1 characters')
+            .max(50, 'Username must be at most 50 characters');
+        } else {
+          fieldSchema = z
+            .string()
+            .max(50, 'Username must be at most 50 characters')
+            .optional();
         }
         break;
 
       case SweepstakesFormFieldType.AGE:
-        fieldSchema = z.boolean().refine((val) => val === true, {
-          message: 'You must confirm you meet the age requirement'
-        });
-
-        if (!field.required) {
-          fieldSchema = fieldSchema.optional();
+        if (field.required) {
+          fieldSchema = z.boolean().refine((val) => val === true, {
+            message: 'You must confirm you meet the age requirement'
+          });
+        } else {
+          fieldSchema = z.union([z.boolean(), z.literal('')]).optional();
         }
         break;
 

@@ -224,6 +224,19 @@ describe('toSweepstakesState', () => {
         ).toBe('active');
       });
 
+      it('returns active when an optional field was submitted blank', () => {
+        expect(
+          toSweepstakesState(
+            build({
+              formFields: [{ ...usernameField, required: false }],
+              participant: participant({
+                formValues: { 'field-username': '' }
+              })
+            })
+          )
+        ).toBe('active');
+      });
+
       it('checks the profile before eligibility', () => {
         expect(
           toSweepstakesState(

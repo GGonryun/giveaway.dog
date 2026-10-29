@@ -218,19 +218,20 @@ describe('UserDetailsForm', () => {
       );
     });
 
-    it('blocks an empty optional username', async () => {
+    it('allows an optional username to stay empty', async () => {
       const user = userEvent.setup();
       const { props } = renderForm([buildUsernameField({ required: false })]);
 
       await user.click(continueButton());
 
-      expect(
-        await screen.findByText('Username must be at least 1 characters')
-      ).toBeInTheDocument();
-      expect(props.onFormSubmit).not.toHaveBeenCalled();
+      await waitFor(() =>
+        expect(props.onFormSubmit).toHaveBeenCalledWith({
+          'field-username': ''
+        })
+      );
     });
 
-    it('silently blocks submission when an optional age checkbox is left unchecked', async () => {
+    it('allows an optional age checkbox to stay unchecked', async () => {
       const user = userEvent.setup();
       const { props } = renderForm([
         buildEmailField(),
@@ -240,11 +241,7 @@ describe('UserDetailsForm', () => {
       await user.type(emailInput(), 'jane@example.com');
       await user.click(continueButton());
 
-      await waitFor(() =>
-        expect(ageCheckbox()).toHaveAttribute('aria-invalid', 'true')
-      );
-      expect(props.onFormSubmit).not.toHaveBeenCalled();
-      expect(screen.queryByText(/Expected boolean/)).not.toBeInTheDocument();
+      await waitFor(() => expect(props.onFormSubmit).toHaveBeenCalledTimes(1));
     });
   });
 
