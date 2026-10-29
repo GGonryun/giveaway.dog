@@ -22,7 +22,6 @@ import { UnifiedFormAction } from '@giveaway/ui-layouts/form-layout/types';
 interface PublishConfirmationModalProps {
   open: boolean;
   onClose: () => void;
-  onContinueEditing: (fieldName?: string) => void;
   onCancel: () => void;
   onSave: () => void;
   onPublish: () => void;
@@ -49,6 +48,7 @@ export const PublishConfirmationModal: React.FC<
 
   const isDraft = action === 'create';
   const isDemo = action === 'demo';
+  const isRunning = isDraft ? isPublishing : isSaving;
 
   const startDate = useWatch({
     name: 'timing.startDate',
@@ -132,7 +132,7 @@ export const PublishConfirmationModal: React.FC<
                 disabled={isLoading}
                 className="sm:ml-auto"
               >
-                {isPublishing ? (
+                {isRunning ? (
                   <>
                     <Spinner size="sm" />
                     {isDraft ? 'Publishing...' : 'Saving...'}

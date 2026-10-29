@@ -227,11 +227,11 @@ describe('MinimalTiptap', () => {
     expect(onChange).toHaveBeenLastCalledWith('<h2>Hello world</h2><p></p>');
   });
 
-  it('registers the link extension twice', async () => {
+  it('registers the link extension once', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await renderEditor();
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining("Duplicate extension names found: ['link']")
+    expect(warn).not.toHaveBeenCalledWith(
+      expect.stringContaining('Duplicate extension names found')
     );
   });
 

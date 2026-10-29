@@ -883,7 +883,7 @@ export const SweepstakesWinners = ({
 
       {!hasEnded && (
         <Alert variant="warning">
-          <Info className="h-5 w-" />
+          <Info className="h-5 w-5" />
           <AlertTitle>
             Winners Can Only Be Selected After Giveaway Ends
           </AlertTitle>

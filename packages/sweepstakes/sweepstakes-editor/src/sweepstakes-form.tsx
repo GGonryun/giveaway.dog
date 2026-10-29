@@ -219,17 +219,6 @@ const FormContent: React.FC<{
     publishSweepstakesProcedure.run({ id, ...currentValues });
   }, [id, publishSweepstakesProcedure, action]);
 
-  const handleContinueEditing = useCallback(
-    (fieldName?: string) => {
-      setShowPublishModal(false);
-
-      if (fieldName) {
-        form.setFocus(fieldName as any);
-      }
-    },
-    [form]
-  );
-
   const handleClosePublishModal = () => setShowPublishModal(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -282,7 +271,6 @@ const FormContent: React.FC<{
         <PublishConfirmationModal
           open={showPublishModal}
           onClose={handleClosePublishModal}
-          onContinueEditing={handleContinueEditing}
           onCancel={handleCancelSubmission}
           onSave={handleSaveChanges}
           onPublish={handlePublish}

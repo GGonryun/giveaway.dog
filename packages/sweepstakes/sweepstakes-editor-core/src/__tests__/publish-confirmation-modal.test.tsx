@@ -29,7 +29,6 @@ const renderModal = (
 ) => {
   const handlers = {
     onClose: vi.fn(),
-    onContinueEditing: vi.fn(),
     onCancel: vi.fn(),
     onSave: vi.fn(),
     onPublish: vi.fn()
@@ -168,15 +167,10 @@ describe('PublishConfirmationModal', () => {
         .forEach((button) => expect(button).toBeDisabled());
     });
 
-    it.fails(
-      'shows the saving state on the confirm button while saving',
-      () => {
-        renderModal({ action: 'edit', isSaving: true });
-        expect(
-          screen.getByRole('button', { name: 'Saving...' })
-        ).toBeDisabled();
-      }
-    );
+    it('shows the saving state on the confirm button while saving', () => {
+      renderModal({ action: 'edit', isSaving: true });
+      expect(screen.getByRole('button', { name: 'Saving...' })).toBeDisabled();
+    });
   });
 
   describe('in the demo', () => {
