@@ -1,4 +1,4 @@
-import { PrismaClient, PrizeDrawResult } from '@giveaway/db-model';
+import { Prisma, PrizeDrawResult } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
 
 export type PrizeSlot = {
@@ -13,16 +13,16 @@ export type DrawInfo = {
 export const getEmptyPrizeSlots = async (
   args:
     | {
-        db: PrismaClient;
+        db: Prisma.TransactionClient;
         sweepstakesId: string;
       }
     | {
-        db: PrismaClient;
+        db: Prisma.TransactionClient;
         sweepstakesId: string;
         prizeId: string;
       }
     | {
-        db: PrismaClient;
+        db: Prisma.TransactionClient;
         sweepstakesId: string;
         drawId: string;
       }
@@ -76,7 +76,7 @@ export const getEmptyPrizeSlots = async (
 };
 
 export const getDrawsInfo = async (args: {
-  db: PrismaClient;
+  db: Prisma.TransactionClient;
   sweepstakesId: string;
 }): Promise<DrawInfo[]> => {
   const { db, sweepstakesId } = args;
@@ -103,7 +103,7 @@ export const getDrawsInfo = async (args: {
 };
 
 export const getPrizeAllocations = async (args: {
-  db: PrismaClient;
+  db: Prisma.TransactionClient;
   sweepstakesId: string;
 }) => {
   const { db, sweepstakesId } = args;

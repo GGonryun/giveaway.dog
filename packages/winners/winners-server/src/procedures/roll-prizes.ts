@@ -15,6 +15,7 @@ import {
   getPrizeAllocations
 } from '@giveaway/winners-model/slots';
 import { toDuplicatePrizeDraw, toUniquePrizeDraw } from '../selection';
+import { withLockedPrizes } from '../prize-lock';
 
 export const rollPrizes = procedure()
   .authorization({
@@ -49,40 +50,46 @@ export const rollPrizes = procedure()
       sweepstakesId
     });
 
-    const slots = await getEmptyPrizeSlots({
-      db,
-      sweepstakesId
-    });
-
-    const draws = await getDrawsInfo({
-      db,
-      sweepstakesId
-    });
-
-    const allocations = await getPrizeAllocations({
-      db,
-      sweepstakesId
-    });
-
-    const completions = await getEligibleCompletions({
-      db,
-      user,
-      sweepstakesId,
-      criteria
-    });
-
     const toPrizeDraw = criteria.allowMultipleWins
       ? toDuplicatePrizeDraw
       : toUniquePrizeDraw;
 
-    await db.prizeDraw.createMany({
-      data: toPrizeDraw({
-        draws,
-        slots,
-        criteria,
-        completions,
-        allocations
-      })
+    await withLockedPrizes({
+      db,
+      sweepstakesId,
+      run: async (tx) => {
+        const slots = await getEmptyPrizeSlots({
+          db: tx,
+          sweepstakesId
+        });
+
+        const draws = await getDrawsInfo({
+          db: tx,
+          sweepstakesId
+        });
+
+        const allocations = await getPrizeAllocations({
+          db: tx,
+          sweepstakesId
+        });
+
+        const completions = await getEligibleCompletions({
+          db: tx,
+          user,
+          sweepstakesId,
+          criteria
+        });
+
+        await tx.prizeDraw.createMany({
+          data: toPrizeDraw({
+            draws,
+            slots,
+            criteria,
+            completions,
+            allocations
+          })
+        });
+      }
     });
 
     return { success: true };

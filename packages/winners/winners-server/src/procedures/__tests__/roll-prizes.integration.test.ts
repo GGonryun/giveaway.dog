@@ -64,58 +64,49 @@ describe('rollPrizes', () => {
     expectFailure(await rollPrizes(input), 'CONFLICT');
   });
 
-  it.fails(
-    '[DRAW-004] never creates more winners than the quota when two rolls run at the same time (fails until #135 is fixed)',
-    async () => {
-      const { input, first, second } = await setup({
-        quotas: [1, 2],
-        entries: 3
-      });
+  it('[DRAW-004] never creates more winners than the quota when two rolls run at the same time', async () => {
+    const { input, first, second } = await setup({
+      quotas: [1, 2],
+      entries: 3
+    });
 
-      await holdTableWrites('PrizeDraw', { writers: 2 }, () =>
-        Promise.all([rollPrizes(input), rollPrizes(input)])
-      );
+    await holdTableWrites('PrizeDraw', { writers: 2 }, () =>
+      Promise.all([rollPrizes(input), rollPrizes(input)])
+    );
 
-      expect(await countWinners(input.sweepstakesId)).toEqual({
-        [first.id]: 1,
-        [second.id]: 2
-      });
-    }
-  );
+    expect(await countWinners(input.sweepstakesId)).toEqual({
+      [first.id]: 1,
+      [second.id]: 2
+    });
+  });
 
-  it.fails(
-    '[DRAW-004] never creates more winners than the quota when rollPrize and rollPrizes run at the same time (fails until #135 is fixed)',
-    async () => {
-      const { input, first, second } = await setup({
-        quotas: [1, 2],
-        entries: 3
-      });
+  it('[DRAW-004] never creates more winners than the quota when rollPrize and rollPrizes run at the same time', async () => {
+    const { input, first, second } = await setup({
+      quotas: [1, 2],
+      entries: 3
+    });
 
-      await holdTableWrites('PrizeDraw', { writers: 2 }, () =>
-        Promise.all([
-          rollPrizes(input),
-          rollPrize({ ...input, prizeId: second.id })
-        ])
-      );
+    await holdTableWrites('PrizeDraw', { writers: 2 }, () =>
+      Promise.all([
+        rollPrizes(input),
+        rollPrize({ ...input, prizeId: second.id })
+      ])
+    );
 
-      expect(await countWinners(input.sweepstakesId)).toEqual({
-        [first.id]: 1,
-        [second.id]: 2
-      });
-    }
-  );
+    expect(await countWinners(input.sweepstakesId)).toEqual({
+      [first.id]: 1,
+      [second.id]: 2
+    });
+  });
 
-  it.fails(
-    '[DRAW-002] lets a user win at most one prize when two rolls run at the same time and multiple wins are off (fails until #135 is fixed)',
-    async () => {
-      const { input } = await setup({ quotas: [1, 2], entries: 3 });
+  it('[DRAW-002] lets a user win at most one prize when two rolls run at the same time and multiple wins are off', async () => {
+    const { input } = await setup({ quotas: [1, 2], entries: 3 });
 
-      await holdTableWrites('PrizeDraw', { writers: 2 }, () =>
-        Promise.all([rollPrizes(input), rollPrizes(input)])
-      );
+    await holdTableWrites('PrizeDraw', { writers: 2 }, () =>
+      Promise.all([rollPrizes(input), rollPrizes(input)])
+    );
 
-      const winners = await findWinningUserIds(input.sweepstakesId);
-      expect(winners.length).toBe(new Set(winners).size);
-    }
-  );
+    const winners = await findWinningUserIds(input.sweepstakesId);
+    expect(winners.length).toBe(new Set(winners).size);
+  });
 });

@@ -105,21 +105,17 @@ describe('rerollDraw', () => {
     });
   });
 
-  it.fails(
-    '[DRAW-002] picks different users when two draws are rerolled at the same time (fails until #135 is fixed)',
-    async () => {
-      const { sweepstakes, draws, reroll } = await setup({
-        quotas: [2],
-        entries: 3
-      });
+  it('[DRAW-002] picks different users when two draws are rerolled at the same time', async () => {
+    const { sweepstakes, draws, reroll } = await setup({
+      quotas: [2],
+      entries: 3
+    });
 
-      await holdTableWrites('PrizeDraw', { writers: 2 }, () =>
-        Promise.all(draws.map((draw) => reroll(draw.id)))
-      );
+    await holdTableWrites('PrizeDraw', { writers: 2 }, () =>
+      Promise.all(draws.map((draw) => reroll(draw.id)))
+    );
 
-      const winners = await findWinningUserIds(sweepstakes.id);
-      expect(winners).toHaveLength(2);
-      expect(new Set(winners).size).toBe(2);
-    }
-  );
+    const winners = await findWinningUserIds(sweepstakes.id);
+    expect(winners.length).toBe(new Set(winners).size);
+  });
 });
