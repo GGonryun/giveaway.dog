@@ -211,7 +211,7 @@ test.describe('host access', () => {
     await expect(
       page.getByText('Host access enabled successfully!')
     ).toBeVisible();
-    await expect(card.getByRole('button', { name: 'Enabled' })).toBeVisible();
+    await expect(card.getByRole('button', { name: 'Disable' })).toBeVisible();
     expect(await readSession(page)).toMatchObject({ accountType: 'HOST' });
 
     await page.goto('/app');
@@ -228,7 +228,13 @@ test.describe('host access', () => {
     await page.waitForLoadState('networkidle');
 
     const card = hostSweepstakesCard(page);
-    await card.getByRole('button', { name: 'Enabled' }).click();
+    await card.getByRole('button', { name: 'Disable' }).click();
+    await page.getByRole('button', { name: 'Cancel' }).click();
+    await expect(page.getByRole('alertdialog')).toBeHidden();
+    expect(await readSession(page)).toMatchObject({ accountType: 'HOST' });
+
+    await card.getByRole('button', { name: 'Disable' }).click();
+    await page.getByRole('button', { name: 'Disable Host Access' }).click();
 
     await expect(
       page.getByText('Host access disabled successfully!')

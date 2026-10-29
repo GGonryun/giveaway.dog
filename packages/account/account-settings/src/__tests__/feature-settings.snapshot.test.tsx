@@ -61,4 +61,12 @@ describe('FeatureSettings', () => {
 
     expect(container.firstChild).toMatchSnapshot();
   });
+
+  it('matches the snapshot for a host', () => {
+    signInAs(UserAccountType.HOST);
+
+    const { container } = render(<FeatureSettings />);
+
+    expect(container.firstChild).toMatchSnapshot();
+  });
 });

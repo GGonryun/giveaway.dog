@@ -216,7 +216,7 @@ test.describe('onboarding journeys', () => {
       page
         .locator('[data-slot="card"]')
         .filter({ hasText: 'Host Sweepstakes' })
-        .getByRole('button', { name: 'Enabled' })
+        .getByRole('button', { name: 'Disable' })
     ).toBeVisible();
 
     const menu = await openAccountMenu(page, 'E2E newbie');
