@@ -3,6 +3,19 @@ import { withWorkflow } from 'workflow/next';
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['*.ngrok-free.app'],
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' }
+        ]
+      }
+    ];
+  },
   transpilePackages: [
     '@giveaway/account-context',
     '@giveaway/account-email',
