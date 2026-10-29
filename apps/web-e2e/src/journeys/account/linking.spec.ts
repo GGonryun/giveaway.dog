@@ -158,59 +158,53 @@ test.describe('account linking', () => {
 test.describe('expired connections', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
-  test(
-    '[ACCOUNT-017] the account page offers to reconnect an expired connection',
-    knownBug(568),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      await seedApi(request).userExtras({
-        ns,
-        users: [
-          {
-            persona: 'participant',
-            accounts: [{ identity: 'DISCORD', status: 'ERROR' }]
-          }
-        ]
-      });
-      await signInAs(page.request, 'participant', ns);
+  test('[ACCOUNT-017] the account page offers to reconnect an expired connection', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    await seedApi(request).userExtras({
+      ns,
+      users: [
+        {
+          persona: 'participant',
+          accounts: [{ identity: 'DISCORD', status: 'ERROR' }]
+        }
+      ]
+    });
+    await signInAs(page.request, 'participant', ns);
 
-      await page.goto('/account');
+    await page.goto('/account');
 
-      const row = accountRow(page, 'Discord');
-      await expect(row).toContainText(
-        'Your Discord connection has expired or been revoked'
-      );
-      await expect(
-        row.getByRole('button', { name: 'Reconnect' })
-      ).toBeVisible();
-    }
-  );
+    const row = accountRow(page, 'Discord');
+    await expect(row).toContainText(
+      'Your Discord connection has expired or been revoked'
+    );
+    await expect(row.getByRole('button', { name: 'Reconnect' })).toBeVisible();
+  });
 
-  test(
-    '[ACCOUNT-017] the account page offers to reconnect a connection that is missing permissions',
-    knownBug(568),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      await seedApi(request).userExtras({
-        ns,
-        users: [
-          {
-            persona: 'participant',
-            accounts: [{ identity: 'DISCORD', scopes: [] }]
-          }
-        ]
-      });
-      await signInAs(page.request, 'participant', ns);
+  test('[ACCOUNT-017] the account page offers to reconnect a connection that is missing permissions', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    await seedApi(request).userExtras({
+      ns,
+      users: [
+        {
+          persona: 'participant',
+          accounts: [{ identity: 'DISCORD', scopes: [] }]
+        }
+      ]
+    });
+    await signInAs(page.request, 'participant', ns);
 
-      await page.goto('/account');
+    await page.goto('/account');
 
-      const row = accountRow(page, 'Discord');
-      await expect(row).toContainText('Missing Permissions');
-      await expect(
-        row.getByRole('button', { name: 'Reconnect' })
-      ).toBeVisible();
-    }
-  );
+    const row = accountRow(page, 'Discord');
+    await expect(row).toContainText('Missing Permissions');
+    await expect(row.getByRole('button', { name: 'Reconnect' })).toBeVisible();
+  });
 
   test.fixme('[ACCOUNT-018] signing in again with Discord clears an expired connection (#569)', async () => {});
 });
