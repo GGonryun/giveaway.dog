@@ -219,18 +219,15 @@ describe('runSweepstakesJobs', () => {
   });
 
   describe('when two runs overlap', () => {
-    it.fails(
-      'announces a giveaway once (fails until #299 is fixed)',
-      async () => {
-        await setupActivation();
+    it('announces a giveaway once', async () => {
+      await setupActivation();
 
-        await holdTableWrites('SweepstakesJob', { writers: 2 }, () =>
-          Promise.all([runSweepstakesJobs(prisma), runSweepstakesJobs(prisma)])
-        );
+      await holdTableWrites('SweepstakesJob', { writers: 2 }, () =>
+        Promise.all([runSweepstakesJobs(prisma), runSweepstakesJobs(prisma)])
+      );
 
-        expect(network.requests(`POST ${WEBHOOK_URL}`)).toHaveLength(1);
-      }
-    );
+      expect(network.requests(`POST ${WEBHOOK_URL}`)).toHaveLength(1);
+    });
 
     it('gives each participant one prize', async () => {
       const { sweepstakes } = await setupPrizeAssignment();

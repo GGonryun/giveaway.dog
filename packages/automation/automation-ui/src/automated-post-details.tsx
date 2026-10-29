@@ -139,6 +139,7 @@ export function AutomatedPostDetails({ job }: AutomatedPostDetailsProps) {
               {job.status === 'PENDING' && (
                 <span>Will post {datetime.format(job.runAt, 'long')}</span>
               )}
+              {job.status === 'IN_PROGRESS' && <span>Posting now</span>}
               {job.status === 'COMPLETED' && (
                 <span>Posted {datetime.format(job.runAt, 'long')}</span>
               )}

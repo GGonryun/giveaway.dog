@@ -250,36 +250,33 @@ describe('runTaskJobs', () => {
   });
 
   describe('when two runs overlap', () => {
-    it.fails(
-      'processes each job once (fails until #299 is fixed)',
-      async () => {
-        const { task } = await setupImport();
-        const withoutStuckReset = prisma.$extends({
-          query: {
-            taskJob: {
-              updateMany: ({ args, query }) =>
-                args.where?.status === 'IN_PROGRESS'
-                  ? Promise.resolve({ count: 0 })
-                  : query(args)
-            }
+    it('processes each job once', async () => {
+      const { task } = await setupImport();
+      const withoutStuckReset = prisma.$extends({
+        query: {
+          taskJob: {
+            updateMany: ({ args, query }) =>
+              args.where?.status === 'IN_PROGRESS'
+                ? Promise.resolve({ count: 0 })
+                : query(args)
           }
-        }) as unknown as typeof prisma;
+        }
+      }) as unknown as typeof prisma;
 
-        await holdTableWrites('TaskJob', { writers: 2 }, () =>
-          Promise.all([
-            runTaskJobs(withoutStuckReset),
-            runTaskJobs(withoutStuckReset)
-          ])
-        );
+      await holdTableWrites('TaskJob', { writers: 2 }, () =>
+        Promise.all([
+          runTaskJobs(withoutStuckReset),
+          runTaskJobs(withoutStuckReset)
+        ])
+      );
 
-        expect(network.requests(RETWEETERS)).toHaveLength(1);
-        expect(await nextJobs(task.id)).toHaveLength(1);
-        expect(await completionsByAccount(task.id)).toEqual([
-          'x-existing',
-          'x-new'
-        ]);
-      }
-    );
+      expect(network.requests(RETWEETERS)).toHaveLength(1);
+      expect(await nextJobs(task.id)).toHaveLength(1);
+      expect(await completionsByAccount(task.id)).toEqual([
+        'x-existing',
+        'x-new'
+      ]);
+    });
   });
 
   describe('when one job of the run fails', () => {

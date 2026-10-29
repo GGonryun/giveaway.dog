@@ -27,6 +27,7 @@ import { recordE2eOutbox } from '@giveaway/e2e-fakes/outbox';
 import { toJobRetryAt } from '@giveaway/jobs/retry';
 
 const MAX_JOBS_PER_RUN = 5;
+const STUCK_JOB_TIMEOUT_MS = 10 * 60 * 1000;
 
 const recordE2eDiscordAlert =
   (sweepstakesId: string) => async (url: string, init: { body: string }) => {
@@ -43,6 +44,19 @@ export const runSweepstakesJobs = async (
   { sweepstakesId }: { sweepstakesId?: string } = {}
 ) => {
   const now = new Date();
+
+  await db.sweepstakesJob.updateMany({
+    where: {
+      status: SweepstakesJobStatus.IN_PROGRESS,
+      updatedAt: {
+        lt: new Date(now.getTime() - STUCK_JOB_TIMEOUT_MS)
+      },
+      ...(sweepstakesId ? { sweepstakesId } : {})
+    },
+    data: {
+      status: SweepstakesJobStatus.PENDING
+    }
+  });
 
   const pending = await db.sweepstakesJob.findMany({
     where: {
@@ -62,7 +76,20 @@ export const runSweepstakesJobs = async (
 
   console.info(`Found ${pending.length} sweepstakes jobs to process`);
 
+  let processed = 0;
   for (const job of pending) {
+    const { count } = await db.sweepstakesJob.updateMany({
+      where: {
+        id: job.id,
+        status: SweepstakesJobStatus.PENDING,
+        runAt: { lte: now }
+      },
+      data: {
+        status: SweepstakesJobStatus.IN_PROGRESS
+      }
+    });
+    if (count === 0) continue;
+    processed++;
     try {
       await processSweepstakesJob({ db, job });
     } catch (error) {
@@ -78,7 +105,7 @@ export const runSweepstakesJobs = async (
   }
 
   return {
-    processed: pending.length
+    processed
   };
 };
 

@@ -46,14 +46,21 @@ export const runTaskJobs = async (
   });
 
   console.info(`Found ${pending.length} task jobs to process`);
+  let processed = 0;
   for (const job of pending) {
+    const { count } = await db.taskJob.updateMany({
+      where: {
+        id: job.id,
+        status: TaskJobStatus.PENDING,
+        runAt: { lte: now }
+      },
+      data: {
+        status: TaskJobStatus.IN_PROGRESS
+      }
+    });
+    if (count === 0) continue;
+    processed++;
     try {
-      await db.taskJob.update({
-        where: { id: job.id },
-        data: {
-          status: TaskJobStatus.IN_PROGRESS
-        }
-      });
       await processTaskJob(db, job);
       await db.taskJob.updateMany({
         where: { id: job.id },
@@ -86,6 +93,6 @@ export const runTaskJobs = async (
   }
 
   return {
-    processed: pending.length
+    processed
   };
 };
