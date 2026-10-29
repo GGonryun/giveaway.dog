@@ -38,7 +38,7 @@ export const PUBLIC_PAGES: PublicPage[] = [
   { path: '/pricing' },
   { path: '/contact' },
   { path: '/examples', text: 'Coming Soon' },
-  { path: '/apps' },
+  { path: '/apps', text: 'Coming Soon' },
   { path: '/privacy' },
   { path: '/terms' },
   { path: '/learn/integrations' },
