@@ -1,5 +1,4 @@
 import { useProcedure } from '@giveaway/rpc-client/hook';
-import { Label } from 'recharts';
 import selectTeam from '@giveaway/team-server/select-team';
 import { Button } from '@giveaway/ui-primitives/button';
 import { PlusIcon } from 'lucide-react';
@@ -36,7 +35,7 @@ export const SelectTeamForm: React.FC = () => {
     <div className="grid gap-4">
       {teams.data.length > 0 ? (
         <div className="grid gap-3">
-          <Label>Your Teams</Label>
+          <h3 className="text-sm font-medium">Your Teams</h3>
           <div className="flex flex-col gap-3">
             {teams.data.map((team) => (
               <Button
@@ -97,14 +96,14 @@ export const SelectTeamForm: React.FC = () => {
             }
           />
           {teams.data.length >= MAX_USER_TEAMS
-            ? 'Team limit reached (5/5)'
+            ? `Team limit reached (${MAX_USER_TEAMS}/${MAX_USER_TEAMS})`
             : teams.data.length === 0
               ? 'Create your first team'
               : 'Create new team'}
         </Button>
-        {teams.data.length >= 5 && (
+        {teams.data.length >= MAX_USER_TEAMS && (
           <p className="text-xs text-muted-foreground text-center mt-2">
-            You can only be a member of up to 5 teams
+            You can only be a member of up to {MAX_USER_TEAMS} teams
           </p>
         )}
       </div>

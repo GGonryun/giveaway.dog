@@ -20,9 +20,9 @@ exports[`DemoBanner > in demo mode > matches the snapshot 1`] = `
       <span
         class="hidden sm:inline"
       >
-        - You're exploring 
+        - You're exploring the 
         sweepstake
-         the editor in evaluation mode.
+         editor in evaluation mode.
       </span>
       <span
         class="sm:hidden"

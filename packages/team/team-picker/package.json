@@ -42,7 +42,6 @@
     "@hookform/resolvers": "catalog:",
     "lucide-react": "catalog:",
     "react-hook-form": "catalog:",
-    "recharts": "catalog:",
     "sonner": "catalog:"
   },
   "peerDependencies": {

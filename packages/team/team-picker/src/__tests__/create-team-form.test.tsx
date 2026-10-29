@@ -101,13 +101,13 @@ describe('CreateTeamForm', () => {
       ).toBeInTheDocument();
     });
 
-    it('keeps a trailing hyphen when the name ends with a space', async () => {
+    it('drops the hyphens at the edges of the slug', async () => {
       const user = userEvent.setup();
       render(<CreateTeamForm />);
 
-      await user.type(nameInput(), 'Dog Team ');
+      await user.type(nameInput(), ' Dog Team -');
 
-      expect(slugInput()).toHaveValue('dog-team-');
+      expect(slugInput()).toHaveValue('dog-team');
     });
 
     it('shows a validation message for a name that is too short', async () => {

@@ -104,10 +104,10 @@ describe('WinnerCriteria', () => {
       expect(form.getValues('criteria.allowMultipleWins')).toBe(true);
     });
 
-    it('reuses the description of the require email setting', () => {
+    it('describes multiple wins', () => {
       renderCriteria();
       expect(getSwitch()).toHaveAccessibleDescription(
-        'A valid email address is required to enter.'
+        'Let the same participant win more than one prize.'
       );
     });
   });

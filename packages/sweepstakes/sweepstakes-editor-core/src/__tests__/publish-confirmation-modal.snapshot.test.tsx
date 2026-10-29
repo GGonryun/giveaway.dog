@@ -29,7 +29,6 @@ const renderModal = (
 ) => {
   const handlers = {
     onClose: vi.fn(),
-    onContinueEditing: vi.fn(),
     onCancel: vi.fn(),
     onSave: vi.fn(),
     onPublish: vi.fn()

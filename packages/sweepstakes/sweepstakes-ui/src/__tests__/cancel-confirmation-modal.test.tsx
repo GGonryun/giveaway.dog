@@ -111,11 +111,14 @@ describe('CancelConfirmationModal', () => {
   });
 
   describe('when viewing', () => {
-    it('offers to delete the draft without saving', () => {
+    it('offers to discard the changes without saving', () => {
       renderModal({ action: 'view' });
       expect(
-        screen.getByRole('button', { name: 'Delete Draft' })
+        screen.getByRole('button', { name: 'Discard Changes' })
       ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: 'Delete Draft' })
+      ).not.toBeInTheDocument();
       expect(
         screen.queryByRole('button', { name: 'Save & Exit' })
       ).not.toBeInTheDocument();

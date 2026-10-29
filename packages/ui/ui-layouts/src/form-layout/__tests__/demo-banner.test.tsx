@@ -55,7 +55,7 @@ describe('DemoBanner', () => {
       const alert = screen.getByRole('alert');
       expect(alert).toHaveTextContent('Demo Mode');
       expect(alert).toHaveTextContent(
-        "- You're exploring picker the editor in evaluation mode."
+        "- You're exploring the picker editor in evaluation mode."
       );
       expect(alert).toHaveTextContent('- Sign up to save!');
     });
