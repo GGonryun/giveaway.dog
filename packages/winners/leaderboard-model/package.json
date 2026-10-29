@@ -16,7 +16,8 @@
     }
   },
   "exports": {
-    "./winners": "./src/winners.ts"
+    "./winners": "./src/winners.ts",
+    "./query": "./src/query.ts"
   },
   "scripts": {
     "test": "vitest run",
