@@ -14,7 +14,6 @@ import {
   AlertDialogFooter
 } from '@giveaway/ui-primitives/alert-dialog';
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
-import Link from 'next/link';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Label } from '@giveaway/ui-primitives/label';
 import { CheckCircle2, PlusCircle } from 'lucide-react';
@@ -39,8 +38,6 @@ export const FeatureSettings = () => {
   const updateSession = useUpdateSession();
   const router = useRouter();
 
-  const [showContact, setShowContact] = useState(false);
-  const [showCannotDisableDialog, setShowCannotDisableDialog] = useState(false);
   const [showEnableHostDialog, setShowEnableHostDialog] = useState(false);
 
   const isHost = session?.user?.accountType === UserAccountType.HOST;
@@ -79,14 +76,6 @@ export const FeatureSettings = () => {
     });
   };
 
-  const handleDisableAction = () => {
-    setShowCannotDisableDialog(true);
-  };
-
-  const handleRequestAction = () => {
-    setShowContact(true);
-  };
-
   return (
     <>
       <div className="space-y-4">
@@ -103,12 +92,8 @@ export const FeatureSettings = () => {
               label={USER_FEATURE_FLAG_LABELS[key]}
               description={USER_FEATURE_FLAG_DESCRIPTIONS[key]}
               enabled={enabled}
-              onDisable={
-                isHostFeature ? handleDisableHost : handleDisableAction
-              }
-              onRequest={
-                isHostFeature ? handleEnableHostClick : handleRequestAction
-              }
+              onDisable={isHostFeature ? handleDisableHost : undefined}
+              onRequest={isHostFeature ? handleEnableHostClick : undefined}
               isLoading={isHostFeature && updateAccountTypeProcedure.isLoading}
               disableToggle={isParticipateFeature}
             />
@@ -116,11 +101,6 @@ export const FeatureSettings = () => {
         })}
       </div>
 
-      <ContactSupportDialog open={showContact} onOpenChange={setShowContact} />
-      <CannotDisableDialog
-        open={showCannotDisableDialog}
-        onOpenChange={setShowCannotDisableDialog}
-      />
       <EnableHostDialog
         open={showEnableHostDialog}
         onOpenChange={setShowEnableHostDialog}
@@ -135,8 +115,8 @@ const FeatureFlagCard: React.FC<{
   label: string;
   description: string;
   enabled: boolean;
-  onRequest: () => void;
-  onDisable: () => void;
+  onRequest?: () => void;
+  onDisable?: () => void;
   isLoading?: boolean;
   disableToggle?: boolean;
 }> = ({
@@ -181,66 +161,6 @@ const FeatureFlagCard: React.FC<{
         </div>
       </CardContent>
     </Card>
-  );
-};
-
-const ContactSupportDialog: React.FC<{
-  open: boolean;
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ open, onOpenChange }) => {
-  return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Contact Support</AlertDialogTitle>
-          <AlertDialogDescription>
-            In order to enable this feature, please contact our support team.
-            We&apos;d be happy to discuss your needs and see how we can assist
-            you.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onOpenChange(false)}>
-            Okay
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Link href="/contact" className="inline-flex">
-              Contact Support
-            </Link>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
-
-const CannotDisableDialog: React.FC<{
-  open: boolean;
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ open, onOpenChange }) => {
-  return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Contact Support</AlertDialogTitle>
-          <AlertDialogDescription>
-            In order to disable this feature, please contact our support team.
-            We&apos;d be happy to discuss your needs and see how we can assist
-            you.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onOpenChange(false)}>
-            Okay
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Link href="/contact" className="inline-flex">
-              Contact Support
-            </Link>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   );
 };
 
