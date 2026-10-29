@@ -240,23 +240,31 @@ test.describe('expired connections', () => {
       .getByRole('button', { name: 'Reconnect' })
       .click();
 
+    await expect
+      .poll(
+        async () =>
+          (
+            await seedApi(request).rows<AccountRows>({
+              view: 'accounts',
+              persona: 'participant',
+              ns
+            })
+          ).accounts,
+        { timeout: SIGN_IN_TIMEOUT }
+      )
+      .toEqual([
+        expect.objectContaining({
+          provider: 'discord',
+          providerAccountId: profile.id,
+          status: 'ACTIVE'
+        })
+      ]);
     await expect(page).toHaveURL(/\/account/, { timeout: SIGN_IN_TIMEOUT });
-    await page.reload();
+    await page.goto('/account');
     const row = accountRow(page, 'Discord');
-    await expect(row).not.toContainText('Not connected');
+    await expect(row.getByRole('button', { name: 'Disconnect' })).toBeVisible();
     await expect(row).not.toContainText('has expired or been revoked');
     await expect(row).not.toContainText('Missing Permissions');
-    const { accounts } = await seedApi(request).rows<AccountRows>({
-      view: 'accounts',
-      persona: 'participant',
-      ns
-    });
-    expect(accounts).toEqual([
-      expect.objectContaining({
-        provider: 'discord',
-        providerAccountId: profile.id,
-        status: 'ACTIVE'
-      })
-    ]);
+    await expect(row.getByRole('button', { name: 'Reconnect' })).toBeHidden();
   });
 });
