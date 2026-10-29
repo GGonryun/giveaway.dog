@@ -294,36 +294,33 @@ test.describe('connected accounts', () => {
     await expectAccountRow(page, 'Facebook', `e2e.${ns}`);
   });
 
-  test(
-    '[ACCOUNT-008] a user cannot disconnect their last account that signs in',
-    knownBug(505),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      await seedApi(request).userExtras({
-        ns,
-        users: [{ persona: 'participant', accounts: [{ identity: 'TWITTER' }] }]
-      });
-      await signInAs(page.request, 'participant', ns);
-      await page.goto('/account');
-      await linkProfile(page, 'Instagram', `https://instagram.com/e2e_${ns}`);
-      await expectAccountRow(page, 'Instagram', `@e2e_${ns}`);
+  test('[ACCOUNT-008] a user cannot disconnect their last account that signs in', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    await seedApi(request).userExtras({
+      ns,
+      users: [{ persona: 'participant', accounts: [{ identity: 'TWITTER' }] }]
+    });
+    await signInAs(page.request, 'participant', ns);
+    await page.goto('/account');
+    await linkProfile(page, 'Instagram', `https://instagram.com/e2e_${ns}`);
+    await expectAccountRow(page, 'Instagram', `@e2e_${ns}`);
 
-      await page.waitForLoadState('networkidle');
-      await accountRow(page, 'X (Twitter)')
-        .getByRole('button', { name: 'Disconnect' })
-        .click();
-      await expect(
-        page
-          .getByRole('region', { name: /Notifications/ })
-          .getByRole('listitem')
-      ).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    await accountRow(page, 'X (Twitter)')
+      .getByRole('button', { name: 'Disconnect' })
+      .click();
+    await expect(
+      page.getByRole('region', { name: /Notifications/ }).getByRole('listitem')
+    ).toBeVisible();
 
-      await page.reload();
-      await expect(accountRow(page, 'X (Twitter)')).not.toContainText(
-        'Not connected'
-      );
-    }
-  );
+    await page.reload();
+    await expect(accountRow(page, 'X (Twitter)')).not.toContainText(
+      'Not connected'
+    );
+  });
 
   test(
     '[ACCOUNT-009] a user cannot claim a profile that another user linked',
