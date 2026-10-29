@@ -13,6 +13,9 @@ import {
 
 const prismaAdapter = PrismaAdapter(prisma);
 
+const isUnder = (pathname: string, route: string) =>
+  pathname === route || pathname.startsWith(`${route}/`);
+
 export const authConfigMiddleware = {
   logger: {
     error(error: any) {
@@ -70,16 +73,16 @@ export const authConfigMiddleware = {
       const sensitiveRoutes = [...hostRoutes, '/account', '/onboarding'];
       const isLoggedIn = !!auth?.user;
 
-      const isLogoutRoute = nextUrl.pathname.startsWith('/logout');
-      const isOnboardingRoute = nextUrl.pathname.startsWith('/onboarding');
-      const isPortalRoute = nextUrl.pathname.startsWith('/portal');
+      const isLogoutRoute = isUnder(nextUrl.pathname, '/logout');
+      const isOnboardingRoute = isUnder(nextUrl.pathname, '/onboarding');
+      const isPortalRoute = isUnder(nextUrl.pathname, '/portal');
 
       const isConnectionRoute = connectionRoutes.some((r) =>
-        nextUrl.pathname.startsWith(r)
+        isUnder(nextUrl.pathname, r)
       );
 
       const isSensitiveRoute = sensitiveRoutes.some((r) =>
-        nextUrl.pathname.startsWith(r)
+        isUnder(nextUrl.pathname, r)
       );
 
       if (isLogoutRoute && !isLoggedIn)
@@ -97,7 +100,7 @@ export const authConfigMiddleware = {
       const onboardingRequiredRoutes = ['/account', '/app', '/browse'];
       const roleHomeRoutes = ['/app', '/browse'];
       const requiresOnboarding = onboardingRequiredRoutes.some((r) =>
-        nextUrl.pathname.startsWith(r)
+        isUnder(nextUrl.pathname, r)
       );
 
       if (
@@ -122,7 +125,7 @@ export const authConfigMiddleware = {
       }
 
       // Check if user is trying to access host dashboard without HOST account type
-      const isHostDashboard = nextUrl.pathname.startsWith('/app');
+      const isHostDashboard = isUnder(nextUrl.pathname, '/app');
       if (
         isLoggedIn &&
         isHostDashboard &&

@@ -6,8 +6,7 @@ import { PUBLIC_PAGES } from '../../helpers/public-pages';
 // The title of the root layout, which a page without its own metadata gets.
 const ROOT_TITLE = 'GiveawayDog';
 
-// These pages have no metadata of their own (#365). /apps also redirects to
-// the login page (#360).
+// These pages have no metadata of their own (#365).
 const WITHOUT_TITLE = new Set([
   '/pricing',
   '/examples',
