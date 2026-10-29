@@ -2,7 +2,7 @@
 
 import { Button } from '@giveaway/ui-primitives/button';
 import { ProviderIcon } from '@giveaway/integration-icons/provider-icon';
-import { CircleAlertIcon, Plus, UnlinkIcon, UnplugIcon } from 'lucide-react';
+import { CircleAlertIcon, Plus, RefreshCwIcon, UnlinkIcon } from 'lucide-react';
 import { useUser } from '@giveaway/account-context/user-provider';
 import { toast } from 'sonner';
 
@@ -72,6 +72,23 @@ export const SocialProviders = () => {
           const isConnectingThis = loginProcedure.isLoading;
           const isEnabled = ENABLED_IDENTITY_PROVIDERS[providerId];
 
+          const connect = () => {
+            if (providerId === 'BLUESKY') {
+              setShowBlueskyInput(true);
+            } else if (providerId === 'INSTAGRAM') {
+              setShowInstagramInput(true);
+            } else if (providerId === 'FACEBOOK') {
+              setShowFacebookInput(true);
+            } else {
+              return loginProcedure.run({
+                provider: providerId,
+                redirectTo: '/account',
+                returnTo: '/account',
+                revalidate: 'true'
+              });
+            }
+          };
+
           return (
             <div key={i} className="p-2 border rounded-lg space-y-2">
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-2 items-center justify-between">
@@ -96,38 +113,44 @@ export const SocialProviders = () => {
                 (providerId === 'INSTAGRAM' && showInstagramInput) ||
                 (providerId === 'FACEBOOK' &&
                   showFacebookInput) ? null : provider ? (
-                  <Button
-                    variant={needsReconnect ? 'destructive' : 'outline'}
-                    size="sm"
-                    disabled={isConnectingThis || !isEnabled}
-                    onClick={() => {
-                      disconnectAccountProcedure.run(provider);
-                    }}
-                    className="w-full sm:w-[125px]"
-                  >
-                    {isConnectingThis ? <Spinner size="xs" /> : <UnlinkIcon />}
-                    Disconnect
-                  </Button>
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    {needsReconnect && (
+                      <Button
+                        size="sm"
+                        disabled={isConnectingThis || !isEnabled}
+                        onClick={connect}
+                        className="w-full sm:w-[125px]"
+                      >
+                        {isConnectingThis ? (
+                          <Spinner size="xs" />
+                        ) : (
+                          <RefreshCwIcon />
+                        )}
+                        Reconnect
+                      </Button>
+                    )}
+                    <Button
+                      variant={needsReconnect ? 'destructive' : 'outline'}
+                      size="sm"
+                      disabled={isConnectingThis || !isEnabled}
+                      onClick={() => {
+                        disconnectAccountProcedure.run(provider);
+                      }}
+                      className="w-full sm:w-[125px]"
+                    >
+                      {isConnectingThis ? (
+                        <Spinner size="xs" />
+                      ) : (
+                        <UnlinkIcon />
+                      )}
+                      Disconnect
+                    </Button>
+                  </div>
                 ) : (
                   <Button
                     size="sm"
                     className="w-full sm:w-[125px]"
-                    onClick={() => {
-                      if (providerId === 'BLUESKY') {
-                        setShowBlueskyInput(true);
-                      } else if (providerId === 'INSTAGRAM') {
-                        setShowInstagramInput(true);
-                      } else if (providerId === 'FACEBOOK') {
-                        setShowFacebookInput(true);
-                      } else {
-                        return loginProcedure.run({
-                          provider: providerId,
-                          redirectTo: '/account',
-                          returnTo: '/account',
-                          revalidate: 'true'
-                        });
-                      }
-                    }}
+                    onClick={connect}
                     disabled={isConnectingThis || !isEnabled}
                   >
                     {isConnectingThis ? <Spinner size="xs" /> : <Plus />}
