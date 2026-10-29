@@ -4,28 +4,16 @@ import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Crown, Mail, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { DISCORD_INVITE_LINK } from '@giveaway/app-config/settings';
-import type { Metadata } from 'next';
+import { pageMetadata } from '@giveaway/marketing-model/page-metadata';
 import { MarketingPageHeader } from '@giveaway/marketing-ui/marketing/marketing-page-header';
 
 const PRO_EMAIL_LINK = 'mailto:support@giveaway.dog?subject=Giveaway.dog%20Pro';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Support & Help Center | Giveaway.dog',
   description:
-    'Get help with Giveaway.dog. Join our Discord community for real-time support or contact us via email. We are here to assist you with any questions.',
-  openGraph: {
-    title: 'Support & Help Center | Giveaway.dog',
-    description:
-      'Get help with Giveaway.dog. Join our Discord community for real-time support or contact us via email. We are here to assist you with any questions.',
-    type: 'website'
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Support & Help Center | Giveaway.dog',
-    description:
-      'Get help with Giveaway.dog. Join our Discord community for real-time support or contact us via email. We are here to assist you with any questions.'
-  }
-};
+    'Get help with Giveaway.dog. Join our Discord community for real-time support or contact us via email. We are here to assist you with any questions.'
+});
 
 export default function SupportPage() {
   return (
