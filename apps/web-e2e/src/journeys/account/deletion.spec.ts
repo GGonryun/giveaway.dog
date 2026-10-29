@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, RUN_ID } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { readParticipants, readSweepstakes } from '../../helpers/manage';
 import { signInAs } from '../../helpers/personas';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
@@ -76,18 +75,17 @@ test.describe('account deletion', () => {
     expect(members.map(({ role }) => role)).toEqual(['ADMIN']);
   });
 
-  test(
-    '[ACCOUNT-028] the deletion dialog says that the account is deleted at once',
-    knownBug(572),
-    async ({ page, freshPersona }) => {
-      await freshPersona('participant');
-      await page.goto('/account/danger-zone');
+  test('[ACCOUNT-028] the deletion dialog says that the account is deleted at once', async ({
+    page,
+    freshPersona
+  }) => {
+    await freshPersona('participant');
+    await page.goto('/account/danger-zone');
 
-      await page.getByRole('button', { name: 'Delete Account' }).click();
+    await page.getByRole('button', { name: 'Delete Account' }).click();
 
-      const dialog = page.getByRole('alertdialog');
-      await expect(dialog).toContainText('permanently deleted');
-      await expect(dialog).not.toContainText(/processed after/);
-    }
-  );
+    const dialog = page.getByRole('alertdialog');
+    await expect(dialog).toContainText('permanently deleted');
+    await expect(dialog).not.toContainText(/processed after/);
+  });
 });
