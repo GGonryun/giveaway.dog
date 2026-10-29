@@ -12925,6 +12925,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/jobs':
+        specifier: workspace:*
+        version: link:../../infra/jobs
       '@giveaway/task-jobs-core':
         specifier: workspace:*
         version: link:../task-jobs-core

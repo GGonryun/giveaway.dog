@@ -11,8 +11,6 @@ import {
 import { BrowsePageFilters } from '@giveaway/browse-list/filters';
 import { AllGiveawaysGrid } from '@giveaway/browse-list/components/all-giveaways-grid';
 
-export const revalidate = 60; // 1 minute in seconds
-
 export const metadata: Metadata = {
   title: 'Browse Active Giveaways & Contests | Giveaway.dog',
   description:

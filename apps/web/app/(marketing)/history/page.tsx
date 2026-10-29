@@ -7,8 +7,6 @@ import { parseGiveawayFilters } from '@giveaway/sweepstakes-model/filters/giveaw
 import { HistoryFilters } from '@giveaway/account-history/filters';
 import { AllGiveawaysGrid } from '@giveaway/browse-list/components/all-giveaways-grid';
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: 'Giveaway History | Past Contests & Sweepstakes | Giveaway.dog',
   description:
