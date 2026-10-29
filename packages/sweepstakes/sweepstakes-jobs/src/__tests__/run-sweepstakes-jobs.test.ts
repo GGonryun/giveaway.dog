@@ -786,16 +786,15 @@ describe('runSweepstakesJobs', () => {
       ]);
     });
 
-    it('fails the job when the sweepstakes is already completed', async () => {
+    it('completes without touching discord when the sweepstakes is already completed', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
-        discordSweepstakes({ status: 'COMPLETED' })
+        discordSweepstakes({ status: 'COMPLETED', posts: [discordPost()] })
       );
 
       await runSweepstakesJobs(db);
 
-      expect(updateCalls()).toEqual([
-        failed(JOB_ID, 'Sweepstakes sw-1 is already expired')
-      ]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
+      expect(fetchMock).not.toHaveBeenCalled();
     });
 
     it('fails the job when the sweepstakes is still a draft', async () => {

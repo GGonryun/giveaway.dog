@@ -21,7 +21,6 @@ import { TAGS } from '../../helpers/tags';
 
 const TIME_MARGIN_MS = 2_000;
 
-const EXPIRATION_BUG = 538;
 const START_DATE_BUG = 182;
 
 type DiscordAlert = { embeds: { title: string; url: string }[] };
@@ -135,7 +134,7 @@ test.describe('the lifecycle jobs of a giveaway', () => {
 
   test(
     'a giveaway completed before its end date ends every job without an error',
-    knownBug(EXPIRATION_BUG, { tag: TAGS.slow }),
+    { tag: TAGS.slow },
     async ({ page, request }, testInfo) => {
       const { team } = await seedWorkerTeam(request, testInfo);
       const giveaway = await seedSweepstakes(request, {
