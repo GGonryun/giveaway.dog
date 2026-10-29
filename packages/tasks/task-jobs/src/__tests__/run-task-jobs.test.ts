@@ -52,6 +52,44 @@ describe('runTaskJobs', () => {
     vi.useRealTimers();
   });
 
+  describe('resetting stuck jobs', () => {
+    it('sets jobs in progress for more than 10 minutes back to pending before it loads the due jobs', async () => {
+      await runTaskJobs(db);
+
+      expect(prismaMock.taskJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * 60 * 1000) }
+        },
+        data: { status: 'PENDING' }
+      });
+      const [resetOrder] =
+        prismaMock.taskJob.updateMany.mock.invocationCallOrder;
+      const [loadOrder] = prismaMock.taskJob.findMany.mock.invocationCallOrder;
+      expect(resetOrder).toBeLessThan(loadOrder);
+    });
+
+    it('resets only the stuck jobs of one sweepstakes when it is given', async () => {
+      await runTaskJobs(db, { sweepstakesId: 'sweepstakes-1' });
+
+      expect(prismaMock.taskJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * 60 * 1000) },
+          task: { sweepstakesId: 'sweepstakes-1' }
+        },
+        data: { status: 'PENDING' }
+      });
+    });
+
+    it('throws when the reset fails', async () => {
+      prismaMock.taskJob.updateMany.mockRejectedValue(new Error('db down'));
+
+      await expect(runTaskJobs(db)).rejects.toThrow('db down');
+      expect(prismaMock.taskJob.findMany).not.toHaveBeenCalled();
+    });
+  });
+
   describe('querying pending jobs', () => {
     it('returns zero processed jobs when nothing is due', async () => {
       const result = await runTaskJobs(db);

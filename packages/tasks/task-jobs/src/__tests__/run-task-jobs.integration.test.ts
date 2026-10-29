@@ -191,26 +191,43 @@ describe('runTaskJobs', () => {
       });
     });
 
-    it.fails(
-      'runs a job again on the next cron run when the function stopped while the job was in progress (fails until #181 is fixed)',
-      async () => {
-        const startedAt = vi.getRealSystemTime();
-        vi.setSystemTime(startedAt);
-        const { task } = await setupImport();
-        crashes.afterWrites(1);
-        await runTaskJobs(prisma);
-        crashes.reset();
-        vi.setSystemTime(startedAt + 15 * MINUTE);
+    it('runs a job again on the next cron run when the function stopped while the job was in progress', async () => {
+      const startedAt = vi.getRealSystemTime();
+      vi.setSystemTime(startedAt);
+      const { task, job } = await setupImport();
+      crashes.afterWrites(2);
+      await expect(runTaskJobs(prisma)).rejects.toThrow('simulated crash');
+      crashes.reset();
+      expect(
+        await db.taskJob.findUnique({ where: { id: job.id } })
+      ).toMatchObject({ status: 'IN_PROGRESS' });
+      vi.setSystemTime(startedAt + 15 * MINUTE);
 
-        await runTaskJobs(prisma);
+      await runTaskJobs(prisma);
 
-        expect(await completionsByAccount(task.id)).toEqual([
-          'x-existing',
-          'x-new'
-        ]);
-        expect(await nextJobs(task.id)).toHaveLength(1);
-      }
-    );
+      expect(await completionsByAccount(task.id)).toEqual([
+        'x-existing',
+        'x-new'
+      ]);
+      expect(await nextJobs(task.id)).toHaveLength(1);
+    });
+
+    it('leaves a job in progress that started less than 10 minutes ago', async () => {
+      const startedAt = vi.getRealSystemTime();
+      vi.setSystemTime(startedAt);
+      const { job } = await setupImport();
+      crashes.afterWrites(2);
+      await expect(runTaskJobs(prisma)).rejects.toThrow('simulated crash');
+      crashes.reset();
+      vi.setSystemTime(startedAt + 5 * MINUTE);
+
+      expect(await runTaskJobs(prisma)).toEqual({ processed: 0 });
+
+      expect(
+        await db.taskJob.findUnique({ where: { id: job.id } })
+      ).toMatchObject({ status: 'IN_PROGRESS' });
+      expect(network.requests(RETWEETERS)).toHaveLength(0);
+    });
 
     it.fails(
       'reaches the same final state as a clean run after a stop at any write, once the job is pending again (fails until #301 is fixed)',
