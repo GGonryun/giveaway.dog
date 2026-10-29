@@ -61,19 +61,18 @@ const readAccounts = (page: Page, ns: string) =>
 test.describe('account linking', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to use the mock OAuth provider');
 
-  test(
-    '[ACCOUNT-016] the account page says that an account was merged',
-    knownBug(507),
-    async ({ page, freshPersona }) => {
-      await freshPersona('participant');
+  test('[ACCOUNT-016] the account page says that an account was merged', async ({
+    page,
+    freshPersona
+  }) => {
+    await freshPersona('participant');
 
-      await page.goto('/account?merged=true');
+    await page.goto('/account?merged=true');
 
-      await expect(
-        page.getByRole('alert').filter({ hasText: /merged/i })
-      ).toBeVisible();
-    }
-  );
+    await expect(
+      page.getByRole('alert').filter({ hasText: /merged/i })
+    ).toBeVisible();
+  });
 
   test('[ACCOUNT-024] a user who links the account of an imported user gets its entries', async ({
     browser,

@@ -1876,6 +1876,9 @@ importers:
       '@giveaway/auth-login-ui':
         specifier: workspace:*
         version: link:../../auth/auth-login-ui
+      '@giveaway/auth-model':
+        specifier: workspace:*
+        version: link:../../auth/auth-model
       '@giveaway/bluesky-connect-ui':
         specifier: workspace:*
         version: link:../../integrations/bluesky/bluesky-connect-ui
