@@ -2,7 +2,6 @@ import type { Locator, Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { signInAs, toPersonaEmail } from '../../helpers/personas';
 import { seedApi } from '../../helpers/seed';
 
@@ -348,23 +347,22 @@ test.describe('connected accounts', () => {
     await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
   });
 
-  test(
-    '[ACCOUNT-010] the account page says why linking an account failed',
-    knownBug(507),
-    async ({ page, freshPersona }) => {
-      await freshPersona('participant');
+  test('[ACCOUNT-010] the account page says why linking an account failed', async ({
+    page,
+    freshPersona
+  }) => {
+    await freshPersona('participant');
 
-      for (const error of [
-        'OAuthAccountAlreadyLinked',
-        'instagram_link_failed'
-      ]) {
-        await page.goto(`/account?error=${error}`);
-        await expect(
-          page.getByRole('alert').filter({ hasText: /link/i })
-        ).toBeVisible();
-      }
+    for (const error of [
+      'OAuthAccountAlreadyLinked',
+      'instagram_link_failed'
+    ]) {
+      await page.goto(`/account?error=${error}`);
+      await expect(
+        page.getByRole('alert').filter({ hasText: /link/i })
+      ).toBeVisible();
     }
-  );
+  });
 });
 
 test.describe('account deletion', () => {
