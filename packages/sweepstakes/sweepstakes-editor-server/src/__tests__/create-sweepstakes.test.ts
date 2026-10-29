@@ -467,6 +467,54 @@ describe('createSweepstakes', () => {
       });
     });
 
+    it('keeps the custom slug of the template when no giveaway uses it', async () => {
+      prismaMock.template.findFirst.mockResolvedValue(
+        dbTemplate({ visibility: { visibility: 'PUBLIC', slug: 'my-slug' } })
+      );
+      prismaMock.sweepstakesVisibility.findUnique.mockResolvedValue(null);
+
+      await createSweepstakes({ ...input, templateId: 'tpl-1' });
+
+      expect(prismaMock.sweepstakesVisibility.findUnique).toHaveBeenCalledWith({
+        where: { slug: 'my-slug' },
+        select: { id: true }
+      });
+      expect(createdData().visibility).toStrictEqual({
+        create: { visibility: 'PUBLIC', slug: 'my-slug' }
+      });
+    });
+
+    it('creates the giveaway without the custom slug when another giveaway uses it (#513)', async () => {
+      prismaMock.template.findFirst.mockResolvedValue(
+        dbTemplate({ visibility: { visibility: 'PUBLIC', slug: 'my-slug' } })
+      );
+      prismaMock.sweepstakesVisibility.findUnique.mockResolvedValue({
+        id: 'visibility-1'
+      } as never);
+
+      const result = await createSweepstakes({ ...input, templateId: 'tpl-1' });
+
+      expect(expectOk(result)).toStrictEqual({ id: 'created-3' });
+      expect(createdData().visibility).toStrictEqual({
+        create: { visibility: 'PUBLIC', slug: null }
+      });
+    });
+
+    it('does not look up a slug when the template has none', async () => {
+      prismaMock.template.findFirst.mockResolvedValue(
+        dbTemplate({ visibility: { visibility: 'UNLISTED', slug: '' } })
+      );
+
+      await createSweepstakes({ ...input, templateId: 'tpl-1' });
+
+      expect(
+        prismaMock.sweepstakesVisibility.findUnique
+      ).not.toHaveBeenCalled();
+      expect(createdData().visibility).toStrictEqual({
+        create: { visibility: 'UNLISTED', slug: null }
+      });
+    });
+
     it('stores template content with freshly generated ids', async () => {
       prismaMock.template.findFirst.mockResolvedValue(
         dbTemplate({
