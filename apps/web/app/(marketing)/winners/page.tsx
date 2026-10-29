@@ -15,8 +15,6 @@ import {
   TableRow
 } from '@giveaway/ui-primitives/table';
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: 'Winners Leaderboard | Top Giveaway Winners | Giveaway.dog',
   description:
