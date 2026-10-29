@@ -9,7 +9,8 @@ import { sweepstakesParticipantSchema } from '@giveaway/participant-model/schema
 import { SweepstakesStatus } from '@giveaway/db-model';
 
 import z from 'zod';
-import { canViewSweepstakes, VISIBILITY_SELECT_QUERY } from './visibility';
+import { canViewSweepstakes } from './visibility';
+import { findSweepstakesAccess } from './access';
 
 export const getOrCreateSweepstakesParticipant = procedure()
   .authorization({ required: false })
@@ -18,18 +19,9 @@ export const getOrCreateSweepstakesParticipant = procedure()
   .handler(async ({ db, user, input }) => {
     if (!user?.id) return undefined;
 
-    const sweepstakes = await db.sweepstakes.findFirst({
-      where: {
-        OR: [
-          { id: input.sweepstakesId },
-          { visibility: { slug: input.sweepstakesId } }
-        ]
-      },
-      select: {
-        id: true,
-        timing: { select: { startDate: true, endDate: true } },
-        ...VISIBILITY_SELECT_QUERY
-      }
+    const sweepstakes = await findSweepstakesAccess({
+      db,
+      sweepstakesId: input.sweepstakesId
     });
 
     if (!sweepstakes) {

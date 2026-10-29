@@ -5,6 +5,7 @@ import { userHostRelationshipSchema } from '@giveaway/loyalty-model/schemas';
 import { procedure } from '@giveaway/rpc-server/procedures';
 
 import z from 'zod';
+import { findSweepstakesAccess } from './access';
 
 export const getUserHostRelationship = procedure()
   .authorization({ required: false })
@@ -19,16 +20,9 @@ export const getUserHostRelationship = procedure()
 
     if (!profile) return undefined;
 
-    const host = await db.sweepstakes.findFirst({
-      where: {
-        OR: [
-          { id: input.sweepstakesId },
-          { visibility: { slug: input.sweepstakesId } }
-        ]
-      },
-      select: {
-        teamId: true
-      }
+    const host = await findSweepstakesAccess({
+      db,
+      sweepstakesId: input.sweepstakesId
     });
 
     if (!host?.teamId) return undefined;

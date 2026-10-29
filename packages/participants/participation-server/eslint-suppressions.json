@@ -1,7 +1,0 @@
-{
-  "packages/participants/participation-server/src/get-sweepstakes-privacy.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  }
-}
