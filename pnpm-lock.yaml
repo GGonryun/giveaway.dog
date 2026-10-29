@@ -765,6 +765,9 @@ importers:
       '@giveaway/marketing-learn':
         specifier: workspace:*
         version: link:../../packages/marketing/marketing-learn
+      '@giveaway/marketing-model':
+        specifier: workspace:*
+        version: link:../../packages/marketing/marketing-model
       '@giveaway/marketing-server':
         specifier: workspace:*
         version: link:../../packages/marketing/marketing-server
@@ -7550,6 +7553,9 @@ importers:
       '@giveaway/util-strings':
         specifier: workspace:*
         version: link:../../shared/util-strings
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       zod:
         specifier: 'catalog:'
         version: 3.25.76

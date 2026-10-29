@@ -2,6 +2,13 @@ import { MarketingHeader } from '@giveaway/marketing-ui/shared';
 import { CallToAction } from '@giveaway/marketing-ui/pricing-cta';
 import { IntegrationsShowcase } from '@giveaway/marketing-learn/learn/integrations-showcase';
 import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
+import { pageMetadata } from '@giveaway/marketing-model/page-metadata';
+
+export const metadata = pageMetadata({
+  title: 'Integrations | Giveaway.dog',
+  description:
+    'Use over 100 entry methods to create engaging giveaways and grow your audience across social media, gaming, and more.'
+});
 
 export default async function IntegrationsPage() {
   const theme = await getServerTheme();

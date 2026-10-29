@@ -16,7 +16,8 @@
     }
   },
   "exports": {
-    "./email-subscription": "./src/email-subscription.ts"
+    "./email-subscription": "./src/email-subscription.ts",
+    "./page-metadata": "./src/page-metadata.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -27,6 +28,9 @@
   "dependencies": {
     "@giveaway/util-strings": "workspace:*",
     "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "next": "catalog:"
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
