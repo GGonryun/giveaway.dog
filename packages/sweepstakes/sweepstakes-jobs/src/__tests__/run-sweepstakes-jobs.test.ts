@@ -70,6 +70,7 @@ beforeEach(() => {
   vi.spyOn(console, 'info').mockImplementation(() => undefined);
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
   prismaMock.sweepstakesJob.update.mockResolvedValue({});
+  prismaMock.sweepstakesJob.updateMany.mockResolvedValue({ count: 1 });
 });
 
 afterEach(() => {
@@ -80,6 +81,81 @@ afterEach(() => {
 });
 
 describe('runSweepstakesJobs', () => {
+  describe('claiming jobs', () => {
+    it('sets jobs in progress for more than 10 minutes back to pending before it loads the due jobs', async () => {
+      givenJobs();
+
+      await runSweepstakesJobs(db, { sweepstakesId: 'sw-1' });
+
+      expect(prismaMock.sweepstakesJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * 60 * 1000) },
+          sweepstakesId: 'sw-1'
+        },
+        data: { status: 'PENDING' }
+      });
+      const [releaseOrder] =
+        prismaMock.sweepstakesJob.updateMany.mock.invocationCallOrder;
+      const [findOrder] =
+        prismaMock.sweepstakesJob.findMany.mock.invocationCallOrder;
+      expect(releaseOrder).toBeLessThan(findOrder);
+    });
+
+    it('releases stuck jobs of every sweepstakes when none is given', async () => {
+      givenJobs();
+
+      await runSweepstakesJobs(db);
+
+      expect(prismaMock.sweepstakesJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * 60 * 1000) }
+        },
+        data: { status: 'PENDING' }
+      });
+    });
+
+    it('claims a due pending job before it processes it', async () => {
+      givenJobs(job('PROCESS_MODIFICATION'));
+
+      await runSweepstakesJobs(db);
+
+      expect(prismaMock.sweepstakesJob.updateMany).toHaveBeenLastCalledWith({
+        where: {
+          id: 'job-PROCESS_MODIFICATION',
+          status: 'PENDING',
+          runAt: { lte: NOW }
+        },
+        data: { status: 'IN_PROGRESS' }
+      });
+      expect(updateCalls()).toEqual([completed('job-PROCESS_MODIFICATION')]);
+    });
+
+    it('skips a job that another run claimed first', async () => {
+      givenJobs(job('PROCESS_MODIFICATION'), job('PROCESS_COMPLETION'));
+      prismaMock.sweepstakesJob.updateMany
+        .mockResolvedValueOnce({ count: 0 })
+        .mockResolvedValueOnce({ count: 0 })
+        .mockResolvedValueOnce({ count: 0 });
+
+      await expect(runSweepstakesJobs(db)).resolves.toEqual({
+        processed: 0
+      });
+      expect(prismaMock.sweepstakesJob.update).not.toHaveBeenCalled();
+    });
+
+    it('stops the run without processing the job when its claim fails', async () => {
+      givenJobs(job('PROCESS_COMPLETION'), job('PROCESS_MODIFICATION'));
+      prismaMock.sweepstakesJob.updateMany
+        .mockResolvedValueOnce({ count: 0 })
+        .mockRejectedValueOnce(new Error('locked'));
+
+      await expect(runSweepstakesJobs(db)).rejects.toThrow('locked');
+      expect(prismaMock.sweepstakesJob.update).not.toHaveBeenCalled();
+    });
+  });
+
   describe('job selection', () => {
     it('queries up to five due pending jobs ordered by creation time', async () => {
       givenJobs();

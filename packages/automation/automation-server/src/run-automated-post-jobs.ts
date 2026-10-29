@@ -25,12 +25,26 @@ import { processPostToDiscord } from '@giveaway/discord-connect/process-post-to-
 import { toJobRetryAt } from '@giveaway/jobs/retry';
 
 const MAX_JOBS_PER_RUN = 5;
+const STUCK_JOB_TIMEOUT_MS = 10 * 60 * 1000;
 
 export const runAutomatedPostJobs = async (
   db: PrismaClient,
   { sweepstakesId }: { sweepstakesId?: string } = {}
 ) => {
   const now = new Date();
+
+  await db.automatedPostJob.updateMany({
+    where: {
+      status: AutomatedPostJobStatus.IN_PROGRESS,
+      updatedAt: {
+        lt: new Date(now.getTime() - STUCK_JOB_TIMEOUT_MS)
+      },
+      ...(sweepstakesId ? { sweepstakesId } : {})
+    },
+    data: {
+      status: AutomatedPostJobStatus.PENDING
+    }
+  });
 
   const pending = await db.automatedPostJob.findMany({
     where: {
@@ -49,7 +63,20 @@ export const runAutomatedPostJobs = async (
   });
 
   console.info(`Found ${pending.length} automated post jobs to process`);
+  let processed = 0;
   for (const job of pending) {
+    const { count } = await db.automatedPostJob.updateMany({
+      where: {
+        id: job.id,
+        status: AutomatedPostJobStatus.PENDING,
+        runAt: { lte: now }
+      },
+      data: {
+        status: AutomatedPostJobStatus.IN_PROGRESS
+      }
+    });
+    if (count === 0) continue;
+    processed++;
     try {
       await processAutomatedPostJob({ db, job });
     } catch (error) {
@@ -65,7 +92,7 @@ export const runAutomatedPostJobs = async (
   }
 
   return {
-    processed: pending.length
+    processed
   };
 };
 

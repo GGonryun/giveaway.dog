@@ -108,6 +108,7 @@ beforeEach(() => {
   vi.spyOn(console, 'info').mockImplementation(() => undefined);
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
   prismaMock.sweepstakesJob.update.mockResolvedValue({});
+  prismaMock.sweepstakesJob.updateMany.mockResolvedValue({ count: 1 });
   prismaMock.sweepstakesParticipant.count.mockResolvedValue(12);
   prismaMock.taskCompletion.count.mockResolvedValue(30);
 });

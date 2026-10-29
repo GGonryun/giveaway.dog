@@ -161,6 +161,11 @@ describe('runAutomatedPostJobs', () => {
         const { writes, mismatches } = await crashAtEveryWrite({
           setup,
           run: () => runAutomatedPostJobs(prisma),
+          recover: () =>
+            db.automatedPostJob.updateMany({
+              where: { status: 'IN_PROGRESS' },
+              data: { status: 'PENDING' }
+            }),
           state: postState
         });
 
@@ -171,7 +176,7 @@ describe('runAutomatedPostJobs', () => {
   });
 
   describe('when two runs overlap', () => {
-    it.fails('posts each tweet once (fails until #299 is fixed)', async () => {
+    it('posts each tweet once', async () => {
       const { sweepstakes } = await setupTweet();
 
       await holdTableWrites('AutomatedPostJob', { writers: 2 }, () =>

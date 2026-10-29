@@ -532,6 +532,7 @@ enum AutomatedPostJobType {
 
 enum AutomatedPostJobStatus {
   PENDING
+  IN_PROGRESS
   COMPLETED
   FAILED
 }

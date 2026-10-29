@@ -274,6 +274,7 @@ beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
   prismaMock.automatedPostJob.update.mockResolvedValue({});
+  prismaMock.automatedPostJob.updateMany.mockResolvedValue({ count: 1 });
   prismaMock.sweepstakes.findUnique.mockResolvedValue(sweepstakes);
   prismaMock.sweepstakes.update.mockResolvedValue({});
   prismaMock.integration.update.mockResolvedValue({});

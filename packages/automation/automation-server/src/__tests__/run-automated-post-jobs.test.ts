@@ -120,6 +120,7 @@ describe('runAutomatedPostJobs', () => {
     vi.spyOn(console, 'info').mockImplementation(() => undefined);
     vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    prismaMock.automatedPostJob.updateMany.mockResolvedValue({ count: 1 });
     mocks.createTweet.mockReset();
     mocks.createSkeet.mockReset();
     mocks.processPostToDiscord.mockReset();
@@ -131,6 +132,86 @@ describe('runAutomatedPostJobs', () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+  });
+
+  describe('when claiming jobs', () => {
+    it('sets jobs in progress for more than 10 minutes back to pending before it loads the due jobs', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
+
+      await runAutomatedPostJobs(db, { sweepstakesId: 'sweep-1' });
+
+      expect(prismaMock.automatedPostJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * MINUTE) },
+          sweepstakesId: 'sweep-1'
+        },
+        data: { status: 'PENDING' }
+      });
+      const [releaseOrder] =
+        prismaMock.automatedPostJob.updateMany.mock.invocationCallOrder;
+      const [findOrder] =
+        prismaMock.automatedPostJob.findMany.mock.invocationCallOrder;
+      expect(releaseOrder).toBeLessThan(findOrder);
+    });
+
+    it('releases stuck jobs of every sweepstakes when none is given', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
+
+      await runAutomatedPostJobs(db);
+
+      expect(prismaMock.automatedPostJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * MINUTE) }
+        },
+        data: { status: 'PENDING' }
+      });
+    });
+
+    it('claims a due pending job before it processes it', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([discordJob()]);
+
+      await expect(runAutomatedPostJobs(db)).resolves.toEqual({
+        processed: 1
+      });
+
+      expect(prismaMock.automatedPostJob.updateMany).toHaveBeenLastCalledWith({
+        where: { id: 'job-3', status: 'PENDING', runAt: { lte: NOW } },
+        data: { status: 'IN_PROGRESS' }
+      });
+      const [, claimOrder] =
+        prismaMock.automatedPostJob.updateMany.mock.invocationCallOrder;
+      const [processOrder] =
+        mocks.processPostToDiscord.mock.invocationCallOrder;
+      expect(claimOrder).toBeLessThan(processOrder);
+    });
+
+    it('skips a job that another run claimed first', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([discordJob()]);
+      prismaMock.automatedPostJob.updateMany
+        .mockResolvedValueOnce({ count: 0 })
+        .mockResolvedValueOnce({ count: 0 });
+
+      await expect(runAutomatedPostJobs(db)).resolves.toEqual({
+        processed: 0
+      });
+      expect(mocks.processPostToDiscord).not.toHaveBeenCalled();
+    });
+
+    it('stops the run without processing the job when its claim fails', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([
+        twitterJob(),
+        discordJob()
+      ]);
+      prismaMock.automatedPostJob.updateMany
+        .mockResolvedValueOnce({ count: 0 })
+        .mockRejectedValueOnce(new Error('locked'));
+
+      await expect(runAutomatedPostJobs(db)).rejects.toThrow('locked');
+      expect(mocks.createTweet).not.toHaveBeenCalled();
+      expect(mocks.processPostToDiscord).not.toHaveBeenCalled();
+    });
   });
 
   describe('when selecting jobs', () => {
