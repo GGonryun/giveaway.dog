@@ -109,9 +109,13 @@ const CALLS: Call[] = [
 ];
 
 const updatesOf = (id: string) =>
-  prismaMock.taskJob.update.mock.calls
-    .map(([arg]) => arg)
-    .filter((arg) => arg.where.id === id);
+  [prismaMock.taskJob.update.mock, prismaMock.taskJob.updateMany.mock]
+    .flatMap(({ calls, invocationCallOrder }) =>
+      calls.map(([arg], index) => ({ arg, order: invocationCallOrder[index] }))
+    )
+    .sort((a, b) => a.order - b.order)
+    .map(({ arg }) => arg)
+    .filter((arg) => arg.where?.id === id);
 
 const lastUpdateOf = (id: string) => updatesOf(id).at(-1);
 
@@ -137,6 +141,7 @@ beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
   prismaMock.taskJob.update.mockResolvedValue({});
+  prismaMock.taskJob.updateMany.mockResolvedValue({ count: 1 });
   prismaMock.integration.findFirst.mockResolvedValue({
     id: 'bluesky-integration',
     teamId: 'team-1',

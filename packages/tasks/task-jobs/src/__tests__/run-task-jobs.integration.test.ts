@@ -282,21 +282,18 @@ describe('runTaskJobs', () => {
       expect(await nextJobs(working.task.id)).toHaveLength(1);
     });
 
-    it.fails(
-      'still processes the next job after deleting the job of a giveaway that has ended (fails until #300 is fixed)',
-      async () => {
-        const ended = await createImport({ status: 'COMPLETED' });
-        const working = await setupImport();
+    it('still processes the next job after deleting the job of a giveaway that has ended', async () => {
+      const ended = await createImport({ status: 'COMPLETED' });
+      const working = await setupImport();
 
-        await runTaskJobs(prisma);
+      await runTaskJobs(prisma);
 
-        expect(
-          await db.taskJob.findUnique({ where: { id: ended.job.id } })
-        ).toBeNull();
-        expect(
-          await db.taskJob.findUnique({ where: { id: working.job.id } })
-        ).toMatchObject({ status: 'COMPLETED' });
-      }
-    );
+      expect(
+        await db.taskJob.findUnique({ where: { id: ended.job.id } })
+      ).toBeNull();
+      expect(
+        await db.taskJob.findUnique({ where: { id: working.job.id } })
+      ).toMatchObject({ status: 'COMPLETED' });
+    });
   });
 });

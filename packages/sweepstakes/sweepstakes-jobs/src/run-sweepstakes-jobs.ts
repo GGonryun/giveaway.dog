@@ -61,13 +61,20 @@ export const runSweepstakesJobs = async (
       await processSweepstakesJob({ db, job });
     } catch (error) {
       console.error(`Failed to process sweepstakes job ${job.id}`, error);
-      await db.sweepstakesJob.update({
-        where: { id: job.id },
-        data: {
-          status: SweepstakesJobStatus.FAILED,
-          error: ApplicationError.toMessage(error)
-        }
-      });
+      try {
+        await db.sweepstakesJob.update({
+          where: { id: job.id },
+          data: {
+            status: SweepstakesJobStatus.FAILED,
+            error: ApplicationError.toMessage(error)
+          }
+        });
+      } catch (recordError) {
+        console.error(
+          `Failed to record the failure of sweepstakes job ${job.id}`,
+          recordError
+        );
+      }
     }
   }
 

@@ -53,15 +53,22 @@ export const runAutomatedPostJobs = async (
       await processAutomatedPostJob({ db, job });
     } catch (error) {
       console.error(`Failed to process automated post job ${job.id}`, error);
-      await db.automatedPostJob.update({
-        where: { id: job.id },
-        data: {
-          status: AutomatedPostJobStatus.FAILED,
-          response: {
-            error: ApplicationError.toMessage(error)
+      try {
+        await db.automatedPostJob.update({
+          where: { id: job.id },
+          data: {
+            status: AutomatedPostJobStatus.FAILED,
+            response: {
+              error: ApplicationError.toMessage(error)
+            }
           }
-        }
-      });
+        });
+      } catch (recordError) {
+        console.error(
+          `Failed to record the failure of automated post job ${job.id}`,
+          recordError
+        );
+      }
     }
   }
 

@@ -269,26 +269,23 @@ describe('runSweepstakesJobs', () => {
       ).toMatchObject({ status: 'COMPLETED' });
     });
 
-    it.fails(
-      'still processes the next job when the giveaway of a job is deleted during the run (fails until #300 is fixed)',
-      async () => {
-        const deleted = await setupActivation();
-        const next = await setupDiscordUpdate('PROCESS_EXPIRATION');
-        network.on(`POST ${WEBHOOK_URL}`, async () => {
-          await db.sweepstakes.delete({
-            where: { id: deleted.sweepstakes.id }
-          });
-          return new Response(null, { status: 500 });
+    it('still processes the next job when the giveaway of a job is deleted during the run', async () => {
+      const deleted = await setupActivation();
+      const next = await setupDiscordUpdate('PROCESS_EXPIRATION');
+      network.on(`POST ${WEBHOOK_URL}`, async () => {
+        await db.sweepstakes.delete({
+          where: { id: deleted.sweepstakes.id }
         });
+        return new Response(null, { status: 500 });
+      });
 
-        await expect(runSweepstakesJobs(prisma)).resolves.toEqual({
-          processed: 2
-        });
+      await expect(runSweepstakesJobs(prisma)).resolves.toEqual({
+        processed: 2
+      });
 
-        expect(
-          await db.sweepstakesJob.findUnique({ where: { id: next.job.id } })
-        ).toMatchObject({ status: 'COMPLETED' });
-      }
-    );
+      expect(
+        await db.sweepstakesJob.findUnique({ where: { id: next.job.id } })
+      ).toMatchObject({ status: 'COMPLETED' });
+    });
   });
 });
