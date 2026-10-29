@@ -31,9 +31,6 @@ const HOST_REDIRECTS: Record<string, string> = {
   '/login': '/app'
 };
 
-// A direct load of a template returns 404 (#362). templates.spec.ts covers it.
-const isSkipped = (path: string) => path.startsWith('/learn/templates/');
-
 const ORIGIN = new URL(BASE_URL).origin;
 
 // Each start page opens in its own tab. Auth.js fetches the session again
@@ -52,9 +49,7 @@ const collectLinks = async (context: BrowserContext, path: string) => {
       return [];
     }
     const url = new URL(href, `${ORIGIN}${path}`);
-    return url.origin === ORIGIN && !isSkipped(url.pathname)
-      ? [`${url.pathname}${url.search}`]
-      : [];
+    return url.origin === ORIGIN ? [`${url.pathname}${url.search}`] : [];
   });
 };
 

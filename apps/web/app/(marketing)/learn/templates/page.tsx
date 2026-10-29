@@ -1,13 +1,6 @@
 import { MarketingHeader } from '@giveaway/marketing-ui/shared';
 import { CallToAction } from '@giveaway/marketing-ui/pricing-cta';
 import { TemplatesShowcase } from '@giveaway/marketing-learn/learn/templates-showcase';
-import { pageMetadata } from '@giveaway/marketing-model/page-metadata';
-
-export const metadata = pageMetadata({
-  title: 'Giveaway Templates | Giveaway.dog',
-  description:
-    'Save time with professionally designed giveaway templates tailored for different platforms and goals.'
-});
 
 export default function TemplatesPage() {
   return (
