@@ -322,29 +322,31 @@ test.describe('connected accounts', () => {
     );
   });
 
-  test(
-    '[ACCOUNT-009] a user cannot claim a profile that another user linked',
-    knownBug(506),
-    async ({ page, freshPersona }) => {
-      const first = await freshPersona('participant');
-      const url = `https://instagram.com/e2e_${first.ns}`;
-      await page.goto('/account');
-      await linkProfile(page, 'Instagram', url);
-      await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
+  test('[ACCOUNT-009] a user cannot claim a profile that another user linked', async ({
+    page,
+    freshPersona
+  }) => {
+    const first = await freshPersona('participant');
+    const url = `https://instagram.com/e2e_${first.ns}`;
+    await page.goto('/account');
+    await linkProfile(page, 'Instagram', url);
+    await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
 
-      await freshPersona('participant2');
-      await page.goto('/account');
-      await linkProfile(page, 'Instagram', url);
+    await freshPersona('participant2');
+    await page.goto('/account');
+    await linkProfile(page, 'Instagram', url);
 
-      await expect(page).toHaveURL(/\/account\?error=/);
-      await expect(accountRow(page, 'Instagram')).toContainText(
-        'Not connected'
-      );
-      await signInAs(page.request, 'participant', first.ns);
-      await page.goto('/account');
-      await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
-    }
-  );
+    await expect(
+      page.getByText(
+        'This Instagram profile is already linked to another account.'
+      )
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/account$/);
+    await expect(accountRow(page, 'Instagram')).toContainText('Not connected');
+    await signInAs(page.request, 'participant', first.ns);
+    await page.goto('/account');
+    await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
+  });
 
   test(
     '[ACCOUNT-010] the account page says why linking an account failed',
