@@ -68,6 +68,7 @@ const getHistoricalSweepstakesList = procedure()
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
         visibility: { visibility: 'PUBLIC' },
+        status: { not: 'DRAFT' },
         timing: {
           endDate: {
             lt: daysAgo

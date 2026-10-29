@@ -37,11 +37,12 @@ describe('getHistoricalSweepstakesList', () => {
   });
 
   describe('query shape', () => {
-    it('queries public sweepstakes that ended more than a day ago, regardless of status', async () => {
+    it('[VIS-001] queries public sweepstakes that ended more than a day ago and are not drafts', async () => {
       await getHistoricalSweepstakesList(undefined);
 
       expect(findManyArgs().where).toEqual({
         visibility: { visibility: 'PUBLIC' },
+        status: { not: 'DRAFT' },
         timing: { endDate: { lt: daysFromFixedNow(-1) } }
       });
     });
