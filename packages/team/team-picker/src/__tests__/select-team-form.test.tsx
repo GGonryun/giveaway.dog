@@ -103,6 +103,14 @@ describe('SelectTeamForm', () => {
       ).toBeInTheDocument();
     });
 
+    it('shows the "Your Teams" heading', async () => {
+      render(<SelectTeamForm />);
+
+      expect(
+        await screen.findByRole('heading', { name: 'Your Teams' })
+      ).toBeInTheDocument();
+    });
+
     it('offers to create another team', async () => {
       render(<SelectTeamForm />);
 

@@ -74,11 +74,12 @@ export const CreateTeamForm: React.FC = () => {
 
   const generateSlugFromName = (name: string) => {
     return name
+      .trim()
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-      .trim();
+      .replace(/^-+|-+$/g, '');
   };
 
   if (procedure.isLoading) return <LoadingState text="Creating your team..." />;

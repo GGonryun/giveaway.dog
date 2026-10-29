@@ -22,6 +22,7 @@ import {
 } from '@giveaway/sweepstakes-model/storable';
 
 import { processPostToDiscord } from '@giveaway/discord-connect/process-post-to-discord';
+import { toJobRetryAt } from '@giveaway/jobs/retry';
 
 const MAX_JOBS_PER_RUN = 5;
 
@@ -52,17 +53,8 @@ export const runAutomatedPostJobs = async (
     try {
       await processAutomatedPostJob({ db, job });
     } catch (error) {
-      console.error(`Failed to process automated post job ${job.id}`, error);
       try {
-        await db.automatedPostJob.update({
-          where: { id: job.id },
-          data: {
-            status: AutomatedPostJobStatus.FAILED,
-            response: {
-              error: ApplicationError.toMessage(error)
-            }
-          }
-        });
+        await recordAutomatedPostJobFailure({ db, job, error });
       } catch (recordError) {
         console.error(
           `Failed to record the failure of automated post job ${job.id}`,
@@ -75,6 +67,53 @@ export const runAutomatedPostJobs = async (
   return {
     processed: pending.length
   };
+};
+
+const recordAutomatedPostJobFailure = async ({
+  db,
+  job,
+  error
+}: {
+  db: PrismaClient;
+  job: Prisma.AutomatedPostJobGetPayload<{}>;
+  error: unknown;
+}) => {
+  const retryAt = toJobRetryAt({ error, attempts: job.attempts });
+  const stored = await db.automatedPostJob.findUnique({
+    where: { id: job.id },
+    select: { response: true }
+  });
+  const response = {
+    ...(stored?.response as Prisma.JsonObject | null | undefined),
+    error: ApplicationError.toMessage(error)
+  };
+
+  if (retryAt) {
+    console.warn(
+      `Retrying automated post job ${job.id} at ${retryAt.toISOString()}`,
+      error
+    );
+    await db.automatedPostJob.update({
+      where: { id: job.id },
+      data: {
+        status: AutomatedPostJobStatus.PENDING,
+        runAt: retryAt,
+        attempts: { increment: 1 },
+        response
+      }
+    });
+    return;
+  }
+
+  console.error(`Failed to process automated post job ${job.id}`, error);
+  await db.automatedPostJob.update({
+    where: { id: job.id },
+    data: {
+      status: AutomatedPostJobStatus.FAILED,
+      attempts: { increment: 1 },
+      response
+    }
+  });
 };
 
 async function processAutomatedPostJob({
@@ -98,6 +137,117 @@ async function processAutomatedPostJob({
   }
 }
 
+const findSweepstakesToPost = async (
+  db: PrismaClient,
+  sweepstakesId: string
+) => {
+  const sweepstakes = await db.sweepstakes.findUnique({
+    where: { id: sweepstakesId },
+    select: { id: true, tasks: true, teamId: true }
+  });
+
+  if (!sweepstakes) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Sweepstakes not found'
+    });
+  }
+
+  if (!sweepstakes.teamId) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Sweepstakes team not found'
+    });
+  }
+
+  return { ...sweepstakes, teamId: sweepstakes.teamId };
+};
+
+const completePostJob = async ({
+  db,
+  jobId,
+  sweepstakesId,
+  tasks,
+  response
+}: {
+  db: PrismaClient;
+  jobId: string;
+  sweepstakesId: string;
+  tasks: StorableTaskSchema[];
+  response: Prisma.InputJsonObject;
+}) => {
+  await db.$transaction(async (tx) => {
+    await tx.sweepstakes.update({
+      where: { id: sweepstakesId },
+      data: {
+        tasks: {
+          create: tasks.map((task) =>
+            toStorableTask(task, SweepstakesStatus.ACTIVE)
+          )
+        }
+      }
+    });
+
+    await tx.automatedPostJob.update({
+      where: { id: jobId },
+      data: {
+        status: 'COMPLETED',
+        response
+      }
+    });
+  });
+};
+
+const postTweet = async ({
+  db,
+  job,
+  teamId
+}: {
+  db: PrismaClient;
+  job: PostToTwitterJobSchema;
+  teamId: string;
+}) => {
+  if (job.response?.tweetId && job.response.tweetUrl) {
+    return { tweetId: job.response.tweetId, tweetUrl: job.response.tweetUrl };
+  }
+
+  const integration = await db.integration.findFirst({
+    where: {
+      id: job.request.integrationId,
+      teamId,
+      provider: 'TWITTER',
+      status: 'ACTIVE'
+    },
+    select: {
+      label: true
+    }
+  });
+
+  if (!integration) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Twitter integration not found'
+    });
+  }
+
+  const tweetResult = await createTweet(db, {
+    teamId,
+    integrationId: job.request.integrationId,
+    text: job.request.text,
+    imageUrl: job.request.imageUrl
+  });
+
+  const tweetId = tweetResult.data.id;
+  const tweetUrl = `https://x.com/${integration.label}/status/${tweetId}`;
+
+  await db.automatedPostJob.update({
+    where: { id: job.id },
+    data: { response: { tweetId, tweetUrl } }
+  });
+
+  return { tweetId, tweetUrl };
+};
+
 const processPostToTwitter = async ({
   db,
   job
@@ -105,124 +255,99 @@ const processPostToTwitter = async ({
   db: PrismaClient;
   job: PostToTwitterJobSchema;
 }) => {
-  try {
-    const sweepstakes = await db.sweepstakes.findUnique({
-      where: { id: job.sweepstakesId },
-      select: { id: true, tasks: true, teamId: true }
+  const sweepstakes = await findSweepstakesToPost(db, job.sweepstakesId);
+
+  const { tweetId, tweetUrl } = await postTweet({
+    db,
+    job,
+    teamId: sweepstakes.teamId
+  });
+
+  let index = sweepstakes.tasks.length;
+  const newTasks: StorableTaskSchema[] = [];
+
+  if (job.request.tasks.includes('REPOST')) {
+    newTasks.push({
+      ...toDefaultValues('TWITTER_RETWEET_IMPORT'),
+      id: nanoid(),
+      index,
+      tweetId: tweetUrl,
+      importingAccount: job.request.integrationId
     });
-
-    if (!sweepstakes) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Sweepstakes not found'
-      });
-    }
-
-    if (!sweepstakes.teamId) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Sweepstakes team not found'
-      });
-    }
-
-    const integration = await db.integration.findFirst({
-      where: {
-        id: job.request.integrationId,
-        teamId: sweepstakes.teamId,
-        provider: 'TWITTER',
-        status: 'ACTIVE'
-      },
-      select: {
-        label: true
-      }
-    });
-
-    if (!integration) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Twitter integration not found'
-      });
-    }
-
-    const tweetResult = await createTweet(db, {
-      teamId: sweepstakes.teamId,
-      integrationId: job.request.integrationId,
-      text: job.request.text,
-      imageUrl: job.request.imageUrl
-    });
-
-    const tweetId = tweetResult.data.id;
-    const tweetUrl = `https://x.com/${integration.label}/status/${tweetId}`;
-
-    let index = sweepstakes.tasks.length;
-    const newTasks: StorableTaskSchema[] = [];
-
-    // 5. Add import tasks based on job.request.tasks
-    if (job.request.tasks.includes('REPOST')) {
-      const retweetImportTask = {
-        ...toDefaultValues('TWITTER_RETWEET_IMPORT'),
-        id: nanoid(),
-        index,
-        tweetId: tweetUrl,
-        importingAccount: job.request.integrationId
-      };
-      newTasks.push(retweetImportTask);
-      index++;
-    }
-
-    if (job.request.tasks.includes('LIKE')) {
-      const likeImportTask = {
-        ...toDefaultValues('TWITTER_LIKE_IMPORT'),
-        id: nanoid(),
-        index,
-        tweetId: tweetUrl,
-        importingAccount: job.request.integrationId
-      };
-      newTasks.push(likeImportTask);
-      index++;
-    }
-
-    await db.sweepstakes.update({
-      where: { id: sweepstakes.id },
-      data: {
-        tasks: {
-          create: newTasks.map((task) =>
-            toStorableTask(task, SweepstakesStatus.ACTIVE)
-          )
-        }
-      }
-    });
-
-    await db.automatedPostJob.update({
-      where: { id: job.id },
-      data: {
-        status: 'COMPLETED',
-        response: {
-          tweetId,
-          tweetUrl
-        }
-      }
-    });
-
-    console.info(
-      `[processPostToTwitter] Successfully posted tweet ${tweetId} for job ${job.id}`
-    );
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error occurred';
-
-    await db.automatedPostJob.update({
-      where: { id: job.id },
-      data: {
-        status: 'FAILED',
-        response: {
-          error: errorMessage
-        }
-      }
-    });
-
-    throw error;
+    index++;
   }
+
+  if (job.request.tasks.includes('LIKE')) {
+    newTasks.push({
+      ...toDefaultValues('TWITTER_LIKE_IMPORT'),
+      id: nanoid(),
+      index,
+      tweetId: tweetUrl,
+      importingAccount: job.request.integrationId
+    });
+  }
+
+  await completePostJob({
+    db,
+    jobId: job.id,
+    sweepstakesId: sweepstakes.id,
+    tasks: newTasks,
+    response: { tweetId, tweetUrl }
+  });
+
+  console.info(
+    `[processPostToTwitter] Successfully posted tweet ${tweetId} for job ${job.id}`
+  );
+};
+
+const postSkeet = async ({
+  db,
+  job,
+  teamId
+}: {
+  db: PrismaClient;
+  job: PostToBlueskyJobSchema;
+  teamId: string;
+}) => {
+  if (job.response?.postUri && job.response.postUrl) {
+    return { postUri: job.response.postUri, postUrl: job.response.postUrl };
+  }
+
+  const integration = await db.integration.findFirst({
+    where: {
+      id: job.request.integrationId,
+      teamId,
+      provider: 'BLUESKY',
+      status: 'ACTIVE'
+    },
+    select: {
+      label: true,
+      account_id: true
+    }
+  });
+
+  if (!integration) {
+    throw new ApplicationError({
+      code: 'NOT_FOUND',
+      message: 'Bluesky integration not found'
+    });
+  }
+
+  const skeetResult = await createSkeet(db, {
+    teamId,
+    text: job.request.text,
+    imageUrl: job.request.imageUrl
+  });
+
+  const postUri = skeetResult.uri;
+  const postUrl = `https://bsky.app/profile/${integration.account_id}/post/${postUri.split('/').pop()}`;
+
+  await db.automatedPostJob.update({
+    where: { id: job.id },
+    data: { response: { postUri, postUrl } }
+  });
+
+  return { postUri, postUrl };
 };
 
 const processPostToBluesky = async ({
@@ -232,121 +357,47 @@ const processPostToBluesky = async ({
   db: PrismaClient;
   job: PostToBlueskyJobSchema;
 }) => {
-  try {
-    const sweepstakes = await db.sweepstakes.findUnique({
-      where: { id: job.sweepstakesId },
-      select: { id: true, tasks: true, teamId: true }
+  const sweepstakes = await findSweepstakesToPost(db, job.sweepstakesId);
+
+  const { postUri, postUrl } = await postSkeet({
+    db,
+    job,
+    teamId: sweepstakes.teamId
+  });
+
+  let index = sweepstakes.tasks.length;
+  const newTasks: StorableTaskSchema[] = [];
+
+  if (job.request.tasks.includes('REPOST')) {
+    newTasks.push({
+      ...toDefaultValues('BLUESKY_REPOST_IMPORT'),
+      id: nanoid(),
+      index,
+      postUrl,
+      importingAccount: job.request.integrationId
     });
-
-    if (!sweepstakes) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Sweepstakes not found'
-      });
-    }
-
-    if (!sweepstakes.teamId) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Sweepstakes team not found'
-      });
-    }
-
-    const integration = await db.integration.findFirst({
-      where: {
-        id: job.request.integrationId,
-        teamId: sweepstakes.teamId,
-        provider: 'BLUESKY',
-        status: 'ACTIVE'
-      },
-      select: {
-        label: true,
-        account_id: true
-      }
-    });
-
-    if (!integration) {
-      throw new ApplicationError({
-        code: 'NOT_FOUND',
-        message: 'Bluesky integration not found'
-      });
-    }
-
-    const skeetResult = await createSkeet(db, {
-      teamId: sweepstakes.teamId,
-      text: job.request.text,
-      imageUrl: job.request.imageUrl
-    });
-
-    const postUri = skeetResult.uri;
-    const postUrl = `https://bsky.app/profile/${integration.account_id}/post/${postUri.split('/').pop()}`;
-
-    let index = sweepstakes.tasks.length;
-    const newTasks: StorableTaskSchema[] = [];
-
-    if (job.request.tasks.includes('REPOST')) {
-      const repostImportTask = {
-        ...toDefaultValues('BLUESKY_REPOST_IMPORT'),
-        id: nanoid(),
-        index,
-        postUrl: postUrl,
-        importingAccount: job.request.integrationId
-      };
-      newTasks.push(repostImportTask);
-      index++;
-    }
-
-    if (job.request.tasks.includes('LIKE')) {
-      const likeImportTask = {
-        ...toDefaultValues('BLUESKY_LIKE_IMPORT'),
-        id: nanoid(),
-        index,
-        postUrl: postUrl,
-        importingAccount: job.request.integrationId
-      };
-      newTasks.push(likeImportTask);
-      index++;
-    }
-
-    await db.sweepstakes.update({
-      where: { id: sweepstakes.id },
-      data: {
-        tasks: {
-          create: newTasks.map((task) =>
-            toStorableTask(task, SweepstakesStatus.ACTIVE)
-          )
-        }
-      }
-    });
-
-    await db.automatedPostJob.update({
-      where: { id: job.id },
-      data: {
-        status: 'COMPLETED',
-        response: {
-          postUri,
-          postUrl
-        }
-      }
-    });
-
-    console.info(
-      `[processPostToBluesky] Successfully posted to Bluesky ${postUri} for job ${job.id}`
-    );
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error occurred';
-
-    await db.automatedPostJob.update({
-      where: { id: job.id },
-      data: {
-        status: 'FAILED',
-        response: {
-          error: errorMessage
-        }
-      }
-    });
-
-    throw error;
+    index++;
   }
+
+  if (job.request.tasks.includes('LIKE')) {
+    newTasks.push({
+      ...toDefaultValues('BLUESKY_LIKE_IMPORT'),
+      id: nanoid(),
+      index,
+      postUrl,
+      importingAccount: job.request.integrationId
+    });
+  }
+
+  await completePostJob({
+    db,
+    jobId: job.id,
+    sweepstakesId: sweepstakes.id,
+    tasks: newTasks,
+    response: { postUri, postUrl }
+  });
+
+  console.info(
+    `[processPostToBluesky] Successfully posted to Bluesky ${postUri} for job ${job.id}`
+  );
 };

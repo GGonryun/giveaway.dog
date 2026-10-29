@@ -432,7 +432,9 @@ export const saveUserChanges = async ({
       }
 
       case SweepstakesFormFieldType.USERNAME: {
-        updates.username = value as string;
+        if (typeof value === 'string' && value.trim() !== '') {
+          updates.username = value;
+        }
         break;
       }
 

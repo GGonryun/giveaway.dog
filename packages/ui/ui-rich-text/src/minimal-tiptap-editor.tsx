@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { Toggle } from '@giveaway/ui-primitives/toggle';
@@ -56,12 +55,12 @@ function MinimalTiptap({
         horizontalRule: false,
         hardBreak: {
           keepMarks: false
-        }
-      }),
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          class: 'text-primary underline hover:text-primary/80'
+        },
+        link: {
+          openOnClick: false,
+          HTMLAttributes: {
+            class: 'text-primary underline hover:text-primary/80'
+          }
         }
       }),
       TextAlign.configure({

@@ -1,7 +1,11 @@
 import 'server-only';
 
 import { requestTimeout } from '@giveaway/util-time/request-timeout';
-import { ApplicationError } from '@giveaway/util-errors';
+import {
+  ApplicationError,
+  isTransientHttpStatus,
+  toTransientHttpError
+} from '@giveaway/util-errors';
 import {
   discordMessageResponseSchema,
   UpdateDiscordMessageOptions,
@@ -82,6 +86,10 @@ export async function updateDiscordMessage(
       message: 'Invalid message data sent to Discord',
       data: errorData
     });
+  }
+
+  if (isTransientHttpStatus(response.status)) {
+    throw toTransientHttpError(response, 'Failed to update Discord message');
   }
 
   if (!response.ok) {

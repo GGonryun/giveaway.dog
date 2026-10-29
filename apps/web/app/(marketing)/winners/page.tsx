@@ -1,3 +1,4 @@
+import { parseWinnersQuery } from '@giveaway/leaderboard-model/query';
 import getWinnersLeaderboard from '@giveaway/leaderboard-server/get-winners-leaderboard';
 import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { Metadata } from 'next';
@@ -135,8 +136,7 @@ export default async function Page({
 }
 
 const Wrapper: React.FC<{ params: SearchParams }> = async ({ params }) => {
-  const page = parseInt(params.page ?? '1', 10);
-  const search = params.search;
+  const { page, search } = parseWinnersQuery(params);
 
   const winners = await getWinnersLeaderboard({
     page,

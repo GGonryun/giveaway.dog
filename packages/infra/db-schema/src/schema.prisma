@@ -81,6 +81,8 @@ model UserQuality {
   score     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
 }
 
 model UserEvent {
@@ -226,6 +228,7 @@ model Account {
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@index([userId])
 }
 
 enum IntegrationStatus {
@@ -514,6 +517,7 @@ model SweepstakesJob {
   type          SweepstakesJobType
   status        SweepstakesJobStatus
   runAt         DateTime
+  attempts      Int                  @default(0)
   createdAt     DateTime             @default(now())
   updatedAt     DateTime             @updatedAt
 
@@ -541,6 +545,7 @@ model AutomatedPostJob {
   type          AutomatedPostJobType
   status        AutomatedPostJobStatus
   runAt         DateTime
+  attempts      Int                    @default(0)
   createdAt     DateTime               @default(now())
   updatedAt     DateTime               @updatedAt
 
@@ -563,6 +568,8 @@ model TaskJob {
   status    TaskJobStatus @default(PENDING)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
+
+  @@index([status, runAt])
 }
 
 enum SweepstakesStatus {
@@ -676,6 +683,7 @@ model SweepstakesParticipant {
 
   @@unique([userId, sweepstakesId])
   @@map("Participant")
+  @@index([sweepstakesId])
 }
 
 model SweepstakesAllocation {
@@ -689,6 +697,8 @@ model SweepstakesAllocation {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([prizeId])
 }
 
 model Task {
@@ -719,6 +729,9 @@ model TaskCompletion {
   proof         Json?
   reason        String? // reason for rejection, if applicable
   status        CompletionStatus       @default(COMPLETED)
+
+  @@index([participantId])
+  @@index([taskId])
 }
 
 model TaskProgress {
@@ -944,6 +957,9 @@ model TwitterPickerDraw {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([pickerId])
+  @@index([userId])
 }
 
 enum LastPostedType {

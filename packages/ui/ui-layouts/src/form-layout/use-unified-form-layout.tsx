@@ -49,6 +49,8 @@ export type UnifiedFormLayoutDerivedState<TSteps extends string> = {
 export type UnifiedFormLayoutContext<TSteps extends string> =
   UnifiedFormLayoutState<TSteps> & UnifiedFormLayoutDerivedState<TSteps>;
 
+export const FORM_STEP_PANEL_ID = 'form-step-panel';
+
 export const UnifiedFormLayoutContext = React.createContext<
   UnifiedFormLayoutContext<string>
 >({

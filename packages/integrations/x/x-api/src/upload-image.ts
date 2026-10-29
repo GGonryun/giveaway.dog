@@ -1,7 +1,11 @@
 import 'server-only';
 
 import { requestTimeout } from '@giveaway/util-time/request-timeout';
-import { ApplicationError } from '@giveaway/util-errors';
+import {
+  ApplicationError,
+  isTransientHttpStatus,
+  toTransientHttpError
+} from '@giveaway/util-errors';
 import { Tx } from '@giveaway/db-client/prisma';
 import { twitterApiRequest } from './twitter-api-request';
 import { uploadMediaResponseSchema } from '@giveaway/integration-model/api';
@@ -13,6 +17,9 @@ export async function uploadImage(
   integrationId: string
 ): Promise<string> {
   const imageResponse = await fetch(imageUrl, { signal: requestTimeout() });
+  if (isTransientHttpStatus(imageResponse.status)) {
+    throw toTransientHttpError(imageResponse, 'Failed to fetch image from URL');
+  }
   if (!imageResponse.ok) {
     throw new ApplicationError({
       code: 'BAD_REQUEST',

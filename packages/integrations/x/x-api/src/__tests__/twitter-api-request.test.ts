@@ -390,7 +390,7 @@ describe('twitterApiRequest', () => {
   });
 
   describe('when twitter returns another error status', () => {
-    it.each([400, 401, 403, 404, 500, 503])(
+    it.each([400, 401, 403, 404])(
       'throws BAD_REQUEST with the response text for status %i',
       async (status) => {
         fetchMock.mockResolvedValue(
@@ -405,6 +405,29 @@ describe('twitterApiRequest', () => {
           message: 'Failed to fetch data from Twitter API',
           cause: '{"title":"Forbidden"}'
         });
+      }
+    );
+
+    it.each([
+      [500, 'BAD_GATEWAY'],
+      [502, 'BAD_GATEWAY'],
+      [503, 'SERVICE_UNAVAILABLE'],
+      [504, 'GATEWAY_TIMEOUT']
+    ])(
+      'throws an error that a job can retry for status %i',
+      async (status, code) => {
+        fetchMock.mockResolvedValue(textResponse('Down', status));
+
+        const error = await captureError(request());
+
+        expect(error).toBeInstanceOf(ApplicationError);
+        expect(error).toMatchObject({
+          code,
+          data: { status }
+        });
+        expect((error as Error).message).toMatch(
+          /^Failed to fetch data from Twitter API: \d{3}/
+        );
       }
     );
 

@@ -8,6 +8,7 @@ export type ParticipantRow = {
   id: string;
   userId: string;
   email: string | null;
+  prizeId: string | null;
   completions: number;
   formValues: { fieldId: string; value: string }[];
   referrals: { taskId: string; code: string; referred: number }[];

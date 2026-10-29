@@ -17,7 +17,6 @@ import { TAGS } from '../../helpers/tags';
 
 const ISSUES = [
   'setup.name String must contain at least 3 character(s)',
-  'setup.banner Required',
   'tasks At least one entry method is required',
   'prizes At least one prize is required'
 ];
@@ -56,17 +55,17 @@ test.describe('an incomplete giveaway in the editor', () => {
       await headerButton(page, 'Publish').click();
       await expectIssues(page, ISSUES);
 
-      await issuesDialog(page).getByRole('button', { name: ISSUES[3] }).click();
+      await issuesDialog(page).getByRole('button', { name: ISSUES[2] }).click();
       await expect(issuesDialog(page)).toBeHidden();
       await expect(editorTab(page, 'Prizes')).toHaveAttribute(
         'aria-selected',
         'true'
       );
-      await expect(editorTab(page, 'Setup')).toHaveAccessibleName('Setup 2');
+      await expect(editorTab(page, 'Setup')).toHaveAccessibleName('Setup 1');
       await expect(editorTab(page, 'Tasks')).toHaveAccessibleName('Tasks 1');
       await expect(editorTab(page, 'Prizes')).toHaveAccessibleName('Prizes 1');
 
-      await page.getByRole('button', { name: '4 Issues' }).click();
+      await page.getByRole('button', { name: '3 Issues' }).click();
       await issuesDialog(page)
         .getByRole('button', { name: 'Save & Exit' })
         .click();

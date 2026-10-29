@@ -34,6 +34,7 @@ const givenPublicActivation = () => {
       data: null,
       error: null,
       runAt: new Date('2026-03-01T11:00:00.000Z'),
+      attempts: 0,
       createdAt: new Date('2026-02-01T00:00:00.000Z'),
       updatedAt: new Date('2026-02-01T00:00:00.000Z')
     }
@@ -131,7 +132,7 @@ describe('the activation alert with the discord fake', () => {
       stubE2eFakeEnvironment(environment, 'discord');
       vi.stubEnv('DISCORD_WEBHOOK_URL', WEBHOOK_URL);
       fetchMock.mockResolvedValue(
-        new Response(null, { status: 500, statusText: 'Server Error' })
+        new Response(null, { status: 400, statusText: 'Bad Request' })
       );
 
       await runSweepstakesJobs(db);
@@ -140,7 +141,8 @@ describe('the activation alert with the discord fake', () => {
         where: { id: JOB_ID },
         data: {
           status: 'FAILED',
-          error: 'Failed to send Discord webhook: 500 Server Error'
+          attempts: { increment: 1 },
+          error: 'Failed to send Discord webhook: 400 Bad Request'
         }
       });
     }

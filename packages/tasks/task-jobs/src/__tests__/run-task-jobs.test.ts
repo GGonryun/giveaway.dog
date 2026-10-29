@@ -39,7 +39,8 @@ const updateCalls = () =>
       calls.map(([arg], index) => ({ arg, order: invocationCallOrder[index] }))
     )
     .sort((a, b) => a.order - b.order)
-    .map(({ arg }) => arg);
+    .map(({ arg }) => arg)
+    .filter((arg) => arg.where?.id !== undefined);
 
 describe('runTaskJobs', () => {
   beforeEach(() => {
@@ -51,6 +52,44 @@ describe('runTaskJobs', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  describe('resetting stuck jobs', () => {
+    it('sets jobs in progress for more than 10 minutes back to pending before it loads the due jobs', async () => {
+      await runTaskJobs(db);
+
+      expect(prismaMock.taskJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * 60 * 1000) }
+        },
+        data: { status: 'PENDING' }
+      });
+      const [resetOrder] =
+        prismaMock.taskJob.updateMany.mock.invocationCallOrder;
+      const [loadOrder] = prismaMock.taskJob.findMany.mock.invocationCallOrder;
+      expect(resetOrder).toBeLessThan(loadOrder);
+    });
+
+    it('resets only the stuck jobs of one sweepstakes when it is given', async () => {
+      await runTaskJobs(db, { sweepstakesId: 'sweepstakes-1' });
+
+      expect(prismaMock.taskJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * 60 * 1000) },
+          task: { sweepstakesId: 'sweepstakes-1' }
+        },
+        data: { status: 'PENDING' }
+      });
+    });
+
+    it('throws when the reset fails', async () => {
+      prismaMock.taskJob.updateMany.mockRejectedValue(new Error('db down'));
+
+      await expect(runTaskJobs(db)).rejects.toThrow('db down');
+      expect(prismaMock.taskJob.findMany).not.toHaveBeenCalled();
+    });
   });
 
   describe('querying pending jobs', () => {
@@ -116,7 +155,7 @@ describe('runTaskJobs', () => {
       ]);
       const [inProgressOrder] =
         prismaMock.taskJob.update.mock.invocationCallOrder;
-      const [completedOrder] =
+      const [, completedOrder] =
         prismaMock.taskJob.updateMany.mock.invocationCallOrder;
       const [deleteOrder] = prismaMock.taskJob.delete.mock.invocationCallOrder;
       expect(inProgressOrder).toBeLessThan(deleteOrder);

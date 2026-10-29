@@ -115,6 +115,7 @@ describe('readE2eRows', () => {
         referrals: [
           { taskId: 'task-1', code: 'ref-1', _count: { referredUsers: 3 } }
         ],
+        allocations: { prizeId: 'prize-1' },
         _count: { taskCompletions: 2 }
       },
       {
@@ -123,6 +124,7 @@ describe('readE2eRows', () => {
         user: realUser(),
         formValues: [],
         referrals: [],
+        allocations: null,
         _count: { taskCompletions: 0 }
       }
     ]);
@@ -136,6 +138,7 @@ describe('readE2eRows', () => {
           createdAt: NOW,
           userId: 'user-participant',
           email: 'e2e-participant-abc123@example.com',
+          prizeId: 'prize-1',
           formValues: [{ fieldId: 'field-1', value: 'goodboy' }],
           completions: 2,
           referrals: [{ taskId: 'task-1', code: 'ref-1', referred: 3 }]
@@ -145,6 +148,7 @@ describe('readE2eRows', () => {
           createdAt: NOW,
           userId: 'user-real',
           email: null,
+          prizeId: null,
           formValues: [],
           completions: 0,
           referrals: []
@@ -169,6 +173,7 @@ describe('readE2eRows', () => {
           },
           orderBy: { taskId: 'asc' }
         },
+        allocations: { select: { prizeId: true } },
         _count: { select: { taskCompletions: true } }
       },
       orderBy: { createdAt: 'asc' },

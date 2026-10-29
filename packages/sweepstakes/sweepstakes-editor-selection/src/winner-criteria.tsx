@@ -141,9 +141,9 @@ const AllowMultipleWinsField = () => {
           <FormItem className="flex flex-row items-center justify-between">
             <SwitchFormHeader
               label="Allow Multiple Wins"
-              description="A valid email address is required to enter."
+              description="Let the same participant win more than one prize."
               help={{
-                title: 'Help: Require Email',
+                title: 'Help: Allow Multiple Wins',
                 content: (
                   <p>
                     Allow the same participant to win multiple prizes if they

@@ -10,7 +10,7 @@ import {
   expandCountries,
   includesCountryCode
 } from '@giveaway/util-geo/countries';
-import { isFormFilled } from './participant';
+import { isProfileComplete } from './participant';
 import { SweepstakesParticipantSchema } from './schemas';
 
 type ComputeStateOptions = Pick<
@@ -44,7 +44,7 @@ export const toSweepstakesState = (
     case 'RUNNING': {
       if (!participant) return 'not-logged-in';
       if (
-        !isFormFilled(
+        !isProfileComplete(
           sweepstakes.audience.formFields,
           participant.user,
           participant.formValues

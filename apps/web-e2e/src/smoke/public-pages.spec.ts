@@ -1,19 +1,13 @@
 import { expect, test } from '../fixtures/test';
-import { knownBug } from '../helpers/known-bug';
 import {
   NOT_FOUND_PAGES,
   PUBLIC_PAGES,
   expectNoErrorMarkers
 } from '../helpers/public-pages';
 
-// The middleware treats every path that starts with /app as the dashboard.
-const KNOWN_BUGS: Record<string, number> = { '/apps': 360 };
-
 test.describe('public pages', { tag: '@smoke' }, () => {
   for (const { path, text } of PUBLIC_PAGES) {
-    const details = KNOWN_BUGS[path] ? knownBug(KNOWN_BUGS[path]) : {};
-
-    test(`a visitor loads ${path}`, details, async ({ page, request }) => {
+    test(`a visitor loads ${path}`, async ({ page, request }) => {
       const response = await request.get(path);
       expect(response.status(), `GET ${path} ends at ${response.url()}`).toBe(
         200

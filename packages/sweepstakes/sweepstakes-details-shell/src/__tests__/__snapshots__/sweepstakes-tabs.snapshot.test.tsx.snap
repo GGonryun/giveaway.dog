@@ -113,7 +113,15 @@ exports[`SweepstakesDetailsTabs > matches the snapshot 1`] = `
       </div>
     </div>
     <div
-      class="space-y-4"
+      aria-labelledby="generated-id-trigger-preview"
+      class="flex-1 outline-none space-y-4"
+      data-orientation="horizontal"
+      data-slot="tabs-content"
+      data-state="active"
+      id="generated-id-content-preview"
+      role="tabpanel"
+      style="animation-duration: 0s;"
+      tabindex="0"
     >
       <p>
         tab body

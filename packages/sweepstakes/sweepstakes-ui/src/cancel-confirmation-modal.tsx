@@ -78,7 +78,7 @@ export const CancelConfirmationModal: React.FC<
                 className="flex-1 sm:flex-none"
               >
                 <TrashIcon className="h-4 w-4 mr-2" />
-                {action === 'edit' ? 'Discard Changes' : 'Delete Draft'}
+                {action === 'create' ? 'Delete Draft' : 'Discard Changes'}
               </Button>
 
               {action === 'create' && (

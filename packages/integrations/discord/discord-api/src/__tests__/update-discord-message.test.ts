@@ -189,30 +189,56 @@ describe('updateDiscordMessage', () => {
       expect((error as ApplicationError).data).toEqual({});
     });
 
-    it('includes the status and status text for other failures', async () => {
+    it('throws a SERVICE_UNAVAILABLE error that a job can retry for a 503', async () => {
       fetchMock.mockResolvedValue(
         jsonResponse({}, { status: 503, statusText: 'Service Unavailable' })
       );
 
       const error = await captureError(updateDiscordMessage(options()));
 
+      expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toMatchObject({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to update Discord message: 503 Service Unavailable'
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'Failed to update Discord message: 503 Service Unavailable',
+        data: { status: 503 }
       });
     });
 
-    it('treats a rate limit response as an internal server error', async () => {
+    it('throws a rate limit error with the retry time that Discord sends', async () => {
       fetchMock.mockResolvedValue(
-        jsonResponse({}, { status: 429, statusText: 'Too Many Requests' })
+        jsonResponse(
+          {},
+          {
+            status: 429,
+            statusText: 'Too Many Requests',
+            headers: { 'retry-after': '30' }
+          }
+        )
       );
+      const now = Date.now();
 
       const error = await captureError(updateDiscordMessage(options()));
 
       expect(error).toBeInstanceOf(ApplicationError);
       expect(error).toMatchObject({
-        code: 'INTERNAL_SERVER_ERROR',
+        code: 'TOO_MANY_REQUESTS',
         message: 'Failed to update Discord message: 429 Too Many Requests'
+      });
+      expect(
+        (error as ApplicationError<{ retryAfter: number }>).data.retryAfter
+      ).toBeGreaterThanOrEqual(now + 30_000);
+    });
+
+    it('keeps an internal server error for another failure', async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse({}, { status: 405, statusText: 'Method Not Allowed' })
+      );
+
+      const error = await captureError(updateDiscordMessage(options()));
+
+      expect(error).toMatchObject({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to update Discord message: 405 Method Not Allowed'
       });
     });
   });

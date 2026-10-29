@@ -3907,6 +3907,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../db-model
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../shared/util-errors
       next:
         specifier: 'catalog:'
         version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -11499,6 +11502,9 @@ importers:
       '@giveaway/e2e-fakes':
         specifier: workspace:*
         version: link:../../e2e/e2e-fakes
+      '@giveaway/jobs':
+        specifier: workspace:*
+        version: link:../../infra/jobs
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../sweepstakes-model
@@ -13667,9 +13673,6 @@ importers:
       react-hook-form:
         specifier: 'catalog:'
         version: 7.71.1(react@19.2.4)
-      recharts:
-        specifier: 'catalog:'
-        version: 3.7.0(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react-is@17.0.2)(react@19.2.4)(redux@5.0.1)
       sonner:
         specifier: 'catalog:'
         version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -15366,9 +15369,6 @@ importers:
       '@giveaway/util-html':
         specifier: workspace:*
         version: link:../../shared/util-html
-      '@tiptap/extension-link':
-        specifier: 'catalog:'
-        version: 3.18.0(@tiptap/core@3.18.0(@tiptap/pm@3.18.0))(@tiptap/pm@3.18.0)
       '@tiptap/extension-text-align':
         specifier: 'catalog:'
         version: 3.18.0(@tiptap/core@3.18.0(@tiptap/pm@3.18.0))

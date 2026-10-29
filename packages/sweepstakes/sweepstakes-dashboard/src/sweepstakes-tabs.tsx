@@ -1,10 +1,16 @@
 'use client';
 
 import { useSweepstakesPage } from '@giveaway/sweepstakes-routes/use-sweepstakes-page';
-import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@giveaway/ui-primitives/tabs';
 import {
   ListSweepstakesFilters,
-  SWEEPSTAKES_FILTER_STATUS_OPTIONS
+  SWEEPSTAKES_FILTER_STATUS_OPTIONS,
+  SweepstakesFilterStatus
 } from '@giveaway/sweepstakes-model/sweepstakes';
 import { useState } from 'react';
 
@@ -12,15 +18,15 @@ export const SweepstakesTabs: React.PC<{
   filters: ListSweepstakesFilters;
 }> = ({ filters, children }) => {
   const page = useSweepstakesPage();
-  const [tab, setTab] = useState<ListSweepstakesFilters['status']>(
-    filters.status
+  const [tab, setTab] = useState<SweepstakesFilterStatus>(
+    filters.status ?? 'ALL'
   );
 
   return (
     <Tabs
       value={tab}
       onValueChange={(value) => {
-        setTab(value as ListSweepstakesFilters['status']);
+        setTab(value as SweepstakesFilterStatus);
         page.updateParams((params) => {
           params.set('status', value);
         });
@@ -36,7 +42,9 @@ export const SweepstakesTabs: React.PC<{
         )}
       </TabsList>
 
-      <div className="space-y-4">{children}</div>
+      <TabsContent value={tab} className="space-y-4">
+        {children}
+      </TabsContent>
     </Tabs>
   );
 };

@@ -1,6 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
+import { beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { ThemeToggle } from '../theme-toggle';
 
 const themeState = vi.hoisted(() => ({
@@ -58,6 +60,32 @@ describe('ThemeToggle', () => {
       expect(radio).not.toBeChecked();
     });
   });
+
+  it.each(['light', 'dark', 'system'])(
+    'hydrates the %s theme without a mismatch, then checks its option',
+    async (theme) => {
+      themeState.theme = theme;
+      const html = renderToString(<ThemeToggle />);
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      document.body.appendChild(container);
+      const onRecoverableError = vi.fn();
+
+      const root = await act(async () =>
+        hydrateRoot(container, <ThemeToggle />, { onRecoverableError })
+      );
+      onTestFinished(() => {
+        act(() => root.unmount());
+        container.remove();
+      });
+
+      expect(html).not.toContain('aria-checked="true"');
+      expect(onRecoverableError).not.toHaveBeenCalled();
+      expect(
+        container.querySelector(`[role="radio"][value="${theme}"]`)
+      ).toHaveAttribute('aria-checked', 'true');
+    }
+  );
 
   it('changes the theme when an option is chosen', async () => {
     render(<ThemeToggle />);

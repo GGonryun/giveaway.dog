@@ -39,7 +39,7 @@ export const DemoBanner: React.FC = () => {
         <div className="min-w-0">
           <strong>Demo Mode</strong>{' '}
           <span className="hidden sm:inline">
-            - You're exploring {type} the editor in evaluation mode.
+            - You're exploring the {type} editor in evaluation mode.
           </span>
           <span className="sm:hidden"> - Sign up to save!</span>
         </div>

@@ -1,7 +1,12 @@
 import 'server-only';
 
 import { requestTimeout } from '@giveaway/util-time/request-timeout';
-import { ApplicationError, assertNever } from '@giveaway/util-errors';
+import {
+  ApplicationError,
+  assertNever,
+  isTransientHttpStatus,
+  toTransientHttpError
+} from '@giveaway/util-errors';
 import { html } from '@giveaway/util-html/html';
 import { DEFAULT_TEAM_NAME } from '@giveaway/team-model/team/data';
 import { DEFAULT_SWEEPSTAKES_NAME } from '@giveaway/app-config/settings';
@@ -19,6 +24,7 @@ import { toSweepstakesEmbed } from '@giveaway/discord-api/embeds';
 import { toExpiredSweepstakeComponents } from '@giveaway/discord-api/util';
 import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
 import { recordE2eOutbox } from '@giveaway/e2e-fakes/outbox';
+import { toJobRetryAt } from '@giveaway/jobs/retry';
 
 const MAX_JOBS_PER_RUN = 5;
 
@@ -60,15 +66,8 @@ export const runSweepstakesJobs = async (
     try {
       await processSweepstakesJob({ db, job });
     } catch (error) {
-      console.error(`Failed to process sweepstakes job ${job.id}`, error);
       try {
-        await db.sweepstakesJob.update({
-          where: { id: job.id },
-          data: {
-            status: SweepstakesJobStatus.FAILED,
-            error: ApplicationError.toMessage(error)
-          }
-        });
+        await recordSweepstakesJobFailure({ db, job, error });
       } catch (recordError) {
         console.error(
           `Failed to record the failure of sweepstakes job ${job.id}`,
@@ -81,6 +80,45 @@ export const runSweepstakesJobs = async (
   return {
     processed: pending.length
   };
+};
+
+const recordSweepstakesJobFailure = async ({
+  db,
+  job,
+  error
+}: {
+  db: PrismaClient;
+  job: Prisma.SweepstakesJobGetPayload<{}>;
+  error: unknown;
+}) => {
+  const retryAt = toJobRetryAt({ error, attempts: job.attempts });
+
+  if (retryAt) {
+    console.warn(
+      `Retrying sweepstakes job ${job.id} at ${retryAt.toISOString()}`,
+      error
+    );
+    await db.sweepstakesJob.update({
+      where: { id: job.id },
+      data: {
+        status: SweepstakesJobStatus.PENDING,
+        runAt: retryAt,
+        attempts: { increment: 1 },
+        error: ApplicationError.toMessage(error)
+      }
+    });
+    return;
+  }
+
+  console.error(`Failed to process sweepstakes job ${job.id}`, error);
+  await db.sweepstakesJob.update({
+    where: { id: job.id },
+    data: {
+      status: SweepstakesJobStatus.FAILED,
+      attempts: { increment: 1 },
+      error: ApplicationError.toMessage(error)
+    }
+  });
 };
 
 async function processSweepstakesJob({
@@ -335,6 +373,10 @@ const processSweepstakesActivation = async ({
     body: JSON.stringify(payload),
     signal: requestTimeout()
   });
+
+  if (isTransientHttpStatus(response.status)) {
+    throw toTransientHttpError(response, 'Failed to send Discord webhook');
+  }
 
   if (!response.ok) {
     throw new ApplicationError({

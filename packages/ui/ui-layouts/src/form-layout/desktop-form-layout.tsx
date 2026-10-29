@@ -12,7 +12,10 @@ import React, { useRef, useEffect } from 'react';
 import { FormLayoutProps } from './types';
 import { UnifiedFormFooter } from './unified-form-footer';
 import { DemoBanner } from './demo-banner';
-import { useUnifiedFormLayout } from './use-unified-form-layout';
+import {
+  FORM_STEP_PANEL_ID,
+  useUnifiedFormLayout
+} from './use-unified-form-layout';
 import { NonNavigationalLink } from '../links';
 import { capitalize } from 'lodash';
 
@@ -23,7 +26,7 @@ const DesktopTabTrigger: React.FC<{
   onStepChange: () => void;
 }> = ({ step, label, errors = 0, onStepChange }) => {
   return (
-    <TabsTrigger asChild value={step}>
+    <TabsTrigger asChild value={step} aria-controls={FORM_STEP_PANEL_ID}>
       <NonNavigationalLink
         href={`?step=${step}`}
         className="flex gap-1"
@@ -132,7 +135,7 @@ export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
   previewFooter,
   hideTabs
 }) => {
-  const { currentStep } = useUnifiedFormLayout();
+  const { currentStep, stepLabels } = useUnifiedFormLayout();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -152,7 +155,17 @@ export const DesktopFormLayout: React.FC<FormLayoutProps> = ({
             defaultSize={30}
             className="min-w-[450px] xl:max-w-[800px] flex flex-col"
           >
-            <div ref={scrollContainerRef} className="overflow-y-scroll flex-1">
+            <div
+              ref={scrollContainerRef}
+              className="overflow-y-scroll flex-1"
+              {...(hideTabs
+                ? {}
+                : {
+                    id: FORM_STEP_PANEL_ID,
+                    role: 'tabpanel',
+                    'aria-label': stepLabels[currentStep]
+                  })}
+            >
               {form}
             </div>
             <UnifiedFormFooter />

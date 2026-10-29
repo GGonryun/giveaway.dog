@@ -497,16 +497,6 @@ describe('getParticipantSweepstake', () => {
       ['there are no prizes', { prizes: [] }],
       ['there are no tasks', { tasks: [] }],
       [
-        'the banner is missing',
-        {
-          details: {
-            name: 'Great Giveaway',
-            description: 'Win something nice',
-            banner: null
-          }
-        }
-      ],
-      [
         'the name is shorter than three characters',
         {
           details: {
@@ -536,6 +526,22 @@ describe('getParticipantSweepstake', () => {
         expect(failure.cause).toMatchObject({ name: 'ZodError' });
       }
     );
+
+    it('loads a giveaway without a banner', async () => {
+      givenSweepstakes(
+        sweepstakesRow({
+          details: {
+            name: 'Great Giveaway',
+            description: 'Win something nice',
+            banner: null
+          }
+        })
+      );
+
+      const result = await getParticipantSweepstake({ sweepstakesId: 'sw-1' });
+
+      expect(expectOk(result).sweepstakes.setup.banner).toBe('');
+    });
 
     it('fills defaults for missing visibility and criteria rows', async () => {
       givenSweepstakes(sweepstakesRow({ visibility: null, criteria: null }));

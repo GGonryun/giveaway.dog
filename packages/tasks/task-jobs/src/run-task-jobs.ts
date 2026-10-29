@@ -6,12 +6,27 @@ import { PrismaClient, TaskJobStatus } from '@giveaway/db-model';
 import { isRetryableApplicationError } from '@giveaway/util-errors';
 
 const MAX_JOBS_PER_RUN = 5;
+const STUCK_JOB_TIMEOUT_MS = 10 * 60 * 1000;
 
 export const runTaskJobs = async (
   db: PrismaClient,
   { sweepstakesId }: { sweepstakesId?: string } = {}
 ) => {
   const now = new Date();
+  const sweepstakesFilter = sweepstakesId ? { task: { sweepstakesId } } : {};
+
+  await db.taskJob.updateMany({
+    where: {
+      status: TaskJobStatus.IN_PROGRESS,
+      updatedAt: {
+        lt: new Date(now.getTime() - STUCK_JOB_TIMEOUT_MS)
+      },
+      ...sweepstakesFilter
+    },
+    data: {
+      status: TaskJobStatus.PENDING
+    }
+  });
 
   const pending = await db.taskJob.findMany({
     where: {
@@ -21,7 +36,7 @@ export const runTaskJobs = async (
       status: {
         in: [TaskJobStatus.PENDING]
       },
-      ...(sweepstakesId ? { task: { sweepstakesId } } : {})
+      ...sweepstakesFilter
     },
     orderBy: {
       createdAt: 'asc'

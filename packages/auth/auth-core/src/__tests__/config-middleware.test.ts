@@ -414,9 +414,27 @@ describe('authConfigMiddleware', () => {
         );
       });
 
-      it('treats any path starting with /app as the host dashboard', () => {
-        expectRedirect(authorize(local('/apple'), participant), local('/'));
-      });
+      it.each(['/apps', '/apple-touch-icon.png', '/application'])(
+        '[ROUTE-002] does not treat %s as the host dashboard',
+        (path) => {
+          expect(authorize(local(path))).toBe(true);
+          expect(authorize(local(path), participant)).toBe(true);
+          expect(authorize(local(path), notOnboarded)).toBe(true);
+        }
+      );
+    });
+
+    it.each([
+      '/accounts',
+      '/browser',
+      '/login-help',
+      '/logouts',
+      '/onboarding-tips',
+      '/portals'
+    ])('matches %s by its whole first segment, not as a prefix', (path) => {
+      expect(authorize(local(path))).toBe(true);
+      expect(authorize(local(path), notOnboarded)).toBe(true);
+      expect(authorize(local(path), host)).toBe(true);
     });
 
     it('allows everyone on public pages', () => {

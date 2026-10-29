@@ -1,7 +1,11 @@
 import 'server-only';
 
 import { requestTimeout } from '@giveaway/util-time/request-timeout';
-import { ApplicationError } from '@giveaway/util-errors';
+import {
+  ApplicationError,
+  isTransientHttpStatus,
+  toTransientHttpError
+} from '@giveaway/util-errors';
 import {
   discordMessageResponseSchema,
   PostDiscordMessageOptions,
@@ -83,6 +87,10 @@ export async function postDiscordMessage(
       message: 'Invalid message data sent to Discord',
       data: JSON.stringify(errorData)
     });
+  }
+
+  if (isTransientHttpStatus(response.status)) {
+    throw toTransientHttpError(response, 'Failed to post Discord message');
   }
 
   if (!response.ok) {

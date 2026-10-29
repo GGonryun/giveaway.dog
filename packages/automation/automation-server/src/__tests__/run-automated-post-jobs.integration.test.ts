@@ -152,11 +152,11 @@ describe('runAutomatedPostJobs', () => {
       });
     });
 
-    it.fails.each([
+    it.each([
       ['POST_TO_TWITTER', setupTweet],
       ['POST_TO_DISCORD', setupDiscordPost]
     ] as const)(
-      'reaches the same final state as a clean run after a stop at any write of a %s job (fails until #183 is fixed)',
+      'reaches the same final state as a clean run after a stop at any write of a %s job',
       async (_, setup) => {
         const { writes, mismatches } = await crashAtEveryWrite({
           setup,

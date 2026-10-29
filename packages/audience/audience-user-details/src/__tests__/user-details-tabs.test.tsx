@@ -71,6 +71,17 @@ describe('UserDetailsTabs', () => {
     expect(screen.getByText('User details content')).toBeInTheDocument();
   });
 
+  it('points the selected tab at the panel that holds its children', () => {
+    render(tabs());
+
+    const panel = screen.getByRole('tabpanel');
+    expect(panel).toHaveTextContent('User details content');
+    expect(screen.getByRole('tab', { selected: true })).toHaveAttribute(
+      'aria-controls',
+      panel.id
+    );
+  });
+
   describe('selection from the url', () => {
     it('selects the overview tab when the url has no tab', () => {
       render(tabs());

@@ -253,8 +253,8 @@ describe('runSweepstakesJobs', () => {
       const next = await setupDiscordUpdate('PROCESS_EXPIRATION');
       network.json(
         `POST ${WEBHOOK_URL}`,
-        { message: 'Internal Server Error' },
-        { status: 500 }
+        { message: 'Missing Permissions' },
+        { status: 403 }
       );
 
       await expect(runSweepstakesJobs(prisma)).resolves.toEqual({
@@ -267,6 +267,28 @@ describe('runSweepstakesJobs', () => {
       expect(
         await db.sweepstakesJob.findUnique({ where: { id: next.job.id } })
       ).toMatchObject({ status: 'COMPLETED' });
+    });
+
+    it('schedules that job again when the webhook fails for a moment', async () => {
+      const failing = await setupActivation();
+      network.json(
+        `POST ${WEBHOOK_URL}`,
+        { message: 'Internal Server Error' },
+        { status: 500 }
+      );
+      const before = Date.now();
+
+      await runSweepstakesJobs(prisma);
+
+      const job = await db.sweepstakesJob.findUniqueOrThrow({
+        where: { id: failing.job.id }
+      });
+      expect(job).toMatchObject({
+        status: 'PENDING',
+        attempts: 1,
+        error: 'Failed to send Discord webhook: 500'
+      });
+      expect(job.runAt.getTime()).toBeGreaterThanOrEqual(before + 5 * MINUTE);
     });
 
     it('still processes the next job when the giveaway of a job is deleted during the run', async () => {
