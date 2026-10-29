@@ -24,7 +24,7 @@ export const scheduleRandomlyAssignPrizesJob = async ({
   db,
   sweepstakesId
 }: {
-  db: PrismaClient;
+  db: Pick<PrismaClient, 'sweepstakesJob'>;
   sweepstakesId: string;
 }) => {
   await db.sweepstakesJob.upsert({

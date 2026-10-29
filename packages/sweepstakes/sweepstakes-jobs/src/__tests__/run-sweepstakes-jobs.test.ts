@@ -1046,18 +1046,17 @@ describe('runSweepstakesJobs', () => {
       givenDiscordUpdateSucceeds();
     });
 
-    it('marks the job completed before loading the sweepstakes', async () => {
+    it('marks the job completed only after updating discord', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
-        discordSweepstakes({ status: 'COMPLETED' })
+        discordSweepstakes({ status: 'COMPLETED', posts: [discordPost()] })
       );
 
       await runSweepstakesJobs(db);
 
       const updateOrder =
         prismaMock.sweepstakesJob.update.mock.invocationCallOrder[0];
-      const findOrder =
-        prismaMock.sweepstakes.findUnique.mock.invocationCallOrder[0];
-      expect(updateOrder).toBeLessThan(findOrder);
+      const fetchOrder = fetchMock.mock.invocationCallOrder[0];
+      expect(fetchOrder).toBeLessThan(updateOrder);
       expect(console.info).toHaveBeenCalledWith(
         'Sweepstakes sw-1 marked as completed in job job-PROCESS_COMPLETION'
       );
@@ -1074,18 +1073,17 @@ describe('runSweepstakesJobs', () => {
       });
     });
 
-    it('completes then fails the job when the sweepstakes does not exist', async () => {
+    it('fails the job when the sweepstakes does not exist', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(JOB_ID, 'Sweepstakes with id sw-1 not found')
       ]);
     });
 
-    it('completes then fails the job when the sweepstakes is not completed', async () => {
+    it('fails the job when the sweepstakes is not completed', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         discordSweepstakes({ status: 'ACTIVE' })
       );
@@ -1093,19 +1091,18 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(JOB_ID, 'Sweepstakes sw-1 is not completed yet')
       ]);
     });
 
-    it('marks the job completed twice when there is no discord post', async () => {
+    it('marks the job completed once when there is no discord post', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         discordSweepstakes({ status: 'COMPLETED' })
       );
 
       await runSweepstakesJobs(db);
 
-      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
@@ -1120,7 +1117,7 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(fetchMock).not.toHaveBeenCalled();
-      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
     });
 
     it('updates the discord post even when it is not the first post', async () => {
@@ -1153,7 +1150,7 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(fetchMock).not.toHaveBeenCalled();
-      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
     });
 
     it('fails the job when the discord response has no channel id', async () => {
@@ -1167,7 +1164,6 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(
           JOB_ID,
           'Post to Discord job for sweepstakes sw-1 is missing channelId in response'
@@ -1186,7 +1182,6 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(
           JOB_ID,
           'Post to Discord job for sweepstakes sw-1 is missing messageId in response'
@@ -1215,14 +1210,14 @@ describe('runSweepstakesJobs', () => {
       ).toEqual(['View Details', 'Browse Giveaways']);
     });
 
-    it('marks the job completed again after updating discord', async () => {
+    it('marks the job completed once after updating discord', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         discordSweepstakes({ status: 'COMPLETED', posts: [discordPost()] })
       );
 
       await runSweepstakesJobs(db);
 
-      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
     });
 
     it('fails the job when discord rejects the bot token', async () => {
@@ -1234,7 +1229,6 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(JOB_ID, 'Discord bot token is invalid')
       ]);
     });

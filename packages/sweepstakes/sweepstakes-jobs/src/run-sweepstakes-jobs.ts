@@ -495,17 +495,6 @@ const processSweepstakesCompletion = async ({
   db: PrismaClient;
   job: Prisma.SweepstakesJobGetPayload<{}>;
 }) => {
-  // For now, completing a sweepstakes is just marking the job as completed.
-  // Additional logic can be added here as needed.
-  await db.sweepstakesJob.update({
-    where: { id: job.id },
-    data: { status: SweepstakesJobStatus.COMPLETED }
-  });
-
-  console.info(
-    `Sweepstakes ${job.sweepstakesId} marked as completed in job ${job.id}`
-  );
-
   const sweepstakes = await db.sweepstakes.findUnique({
     where: { id: job.sweepstakesId },
     select: SWEEPSTAKES_DISCORD_POST_SELECT_QUERY
@@ -563,4 +552,7 @@ const processSweepstakesCompletion = async ({
     where: { id: job.id },
     data: { status: SweepstakesJobStatus.COMPLETED }
   });
+  console.info(
+    `Sweepstakes ${job.sweepstakesId} marked as completed in job ${job.id}`
+  );
 };
