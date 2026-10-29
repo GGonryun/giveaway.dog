@@ -135,7 +135,7 @@ describe('runAutomatedPostJobs', () => {
       vi.setSystemTime(NOW);
     });
 
-    it('posts the tweet and adds the repost and like tasks in a clean run', async () => {
+    it('posts the tweet and adds only the maintained repost import task in a clean run', async () => {
       const scenario = await setupTweet();
 
       await runAutomatedPostJobs(prisma);
@@ -144,8 +144,7 @@ describe('runAutomatedPostJobs', () => {
         jobs: [{ type: 'POST_TO_TWITTER', status: 'COMPLETED' }],
         tasks: [
           { index: 0, type: 'BONUS_TASK', jobs: 0 },
-          { index: 1, type: 'TWITTER_RETWEET_IMPORT', jobs: 1 },
-          { index: 2, type: 'TWITTER_LIKE_IMPORT', jobs: 1 }
+          { index: 1, type: 'TWITTER_RETWEET_IMPORT_V2', jobs: 1 }
         ],
         tweeted: true,
         postedToDiscord: false
@@ -189,7 +188,7 @@ describe('runAutomatedPostJobs', () => {
       expect(network.requests(TWEETS)).toHaveLength(1);
       expect(
         await db.task.count({ where: { sweepstakesId: sweepstakes.id } })
-      ).toBe(3);
+      ).toBe(2);
     });
   });
 
