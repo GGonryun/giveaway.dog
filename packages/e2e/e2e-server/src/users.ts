@@ -69,7 +69,7 @@ const seedUser = async (
           userId: user.id,
           type: 'oauth',
           provider: account.identity.toLowerCase(),
-          providerAccountId: accountId,
+          providerAccountId: account.providerAccountId ?? accountId,
           status: account.status,
           scope: account.scopes.join(' '),
           label: account.label ?? accountId

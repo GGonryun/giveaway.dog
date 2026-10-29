@@ -6,6 +6,7 @@ import { unstable_rethrow } from 'next/navigation';
 import type { NextRequest } from 'next/server';
 import { environment } from '@giveaway/app-config/environment';
 import { isE2eGateOpen, verifyE2eSecret } from '@giveaway/e2e-gate/gate';
+import { REQUIRED_DISCORD_SCOPES } from '@giveaway/integration-model/scopes';
 import {
   E2E_OAUTH_ACCESS_TOKEN,
   E2E_OAUTH_AUTHORIZE_PATH,
@@ -84,7 +85,7 @@ const toMockFetch =
   };
 
 const MOCK_SCOPES: Record<E2eOAuthProvider, string> = {
-  discord: 'identify email',
+  discord: REQUIRED_DISCORD_SCOPES.join(' '),
   tiktok: 'user.info.profile'
 };
 

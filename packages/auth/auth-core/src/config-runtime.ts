@@ -1,7 +1,7 @@
 import 'server-only';
 
 import prisma from '@giveaway/db-client/prisma';
-import { NextAuthConfig, Session } from 'next-auth';
+import { Account, NextAuthConfig, Session } from 'next-auth';
 import { tryAutoMerge } from './auto-merge';
 import { authConfigMiddleware } from './config-middleware';
 import { getAccountLabel, getAccountLink } from './get-account-data';
@@ -11,6 +11,14 @@ import { VERIFIED_EMAIL_PROVIDERS } from '@giveaway/integration-model/scopes';
 import { parseAuthProvider } from '@giveaway/integration-model/providers';
 
 export type GetSession = () => Promise<Session | null>;
+
+const toAccountRefresh = (account: Account) => ({
+  ...(account.scope && { scope: account.scope }),
+  ...(account.access_token && { access_token: account.access_token }),
+  ...(account.refresh_token && { refresh_token: account.refresh_token }),
+  ...(account.expires_at && { expires_at: account.expires_at }),
+  status: 'ACTIVE' as const
+});
 
 export const createAuthConfig = (getSession: GetSession) =>
   ({
@@ -93,50 +101,30 @@ export const createAuthConfig = (getSession: GetSession) =>
           const session = await getSession();
           console.info('Current session user ID:', session?.user);
 
-          if (existing) {
-            return await tryAutoMerge({
-              existing,
-              account,
-              profile,
-              session
+          if (!existing) {
+            return true;
+          }
+
+          const merged = await tryAutoMerge({
+            existing,
+            account,
+            profile,
+            session
+          });
+
+          if (merged !== false) {
+            await prisma.account.update({
+              where: {
+                provider_providerAccountId: {
+                  provider: account.provider,
+                  providerAccountId: account.providerAccountId
+                }
+              },
+              data: toAccountRefresh(account)
             });
           }
 
-          try {
-            const updateData: {
-              scope?: string;
-              access_token?: string;
-              refresh_token?: string;
-              expires_at?: number;
-              status?: 'ACTIVE';
-            } = {};
-
-            if (account.scope) updateData.scope = account.scope;
-            if (account.access_token)
-              updateData.access_token = account.access_token;
-            if (account.refresh_token)
-              updateData.refresh_token = account.refresh_token;
-            if (account.expires_at) updateData.expires_at = account.expires_at;
-
-            // Always reset status to ACTIVE on successful OAuth
-            updateData.status = 'ACTIVE';
-
-            if (Object.keys(updateData).length > 0) {
-              // if we are connecting an anonymous user, then there's not going to be an account and this will throw.
-              // allowing the anonymous user to upgrade to a full account is handled in linkAccount event
-              await prisma.account.update({
-                where: {
-                  provider_providerAccountId: {
-                    provider: account.provider,
-                    providerAccountId: account.providerAccountId
-                  }
-                },
-                data: updateData
-              });
-            }
-          } catch (error) {
-            // Account doesn't exist yet, will be created by linkAccount event
-          }
+          return merged;
         }
         return true;
       }

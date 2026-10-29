@@ -90,7 +90,11 @@ export const e2eAccountRequestSchema = z
     identity: z.nativeEnum(IdentityProvider),
     status: z.nativeEnum(AccountStatus).default(AccountStatus.ACTIVE),
     scopes: scopesSchema.default([]),
-    label: labelSchema.optional()
+    label: labelSchema.optional(),
+    providerAccountId: z
+      .string()
+      .regex(/^\d{1,20}$/)
+      .optional()
   })
   .strict();
 

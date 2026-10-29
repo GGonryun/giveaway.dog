@@ -183,6 +183,27 @@ describe('seedE2eUserExtras', () => {
     ).toBeLessThan(prismaMock.account.createMany.mock.invocationCallOrder[0]);
   });
 
+  it('gives an account the provider account id of the request', async () => {
+    await seed([
+      {
+        persona: 'participant',
+        accounts: [
+          { identity: 'DISCORD', providerAccountId: '1730000000123456' }
+        ]
+      }
+    ]);
+
+    expect(prismaMock.account.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          provider: 'discord',
+          providerAccountId: '1730000000123456',
+          label: 'e2e-participant-abc123w0'
+        })
+      ]
+    });
+  });
+
   it('removes every account when the request sends none', async () => {
     await seed([{ persona: 'participant', accounts: [] }]);
 

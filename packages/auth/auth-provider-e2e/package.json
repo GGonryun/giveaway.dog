@@ -29,6 +29,7 @@
     "@giveaway/db-client": "workspace:*",
     "@giveaway/e2e-gate": "workspace:*",
     "@giveaway/e2e-model": "workspace:*",
+    "@giveaway/integration-model": "workspace:*",
     "server-only": "catalog:"
   },
   "peerDependencies": {
