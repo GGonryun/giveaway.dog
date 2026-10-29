@@ -16,6 +16,11 @@ const tx = asPrismaClient();
 const NOW = new Date('2026-03-04T05:06:07.000Z');
 const IMAGE_URL = 'https://cdn.giveaway.test/prize.png';
 
+const imageResponse = (bytes: number[], contentType = 'image/png') =>
+  new Response(new Uint8Array(bytes), {
+    headers: { 'content-type': contentType }
+  });
+
 const createAgent = () => {
   const post = vi.fn();
   const uploadBlob = vi.fn();
@@ -175,7 +180,7 @@ describe('createSkeet', () => {
     });
 
     it('downloads the image url', async () => {
-      fetchMock.mockResolvedValue(new Response(new Uint8Array([1, 2, 3])));
+      fetchMock.mockResolvedValue(imageResponse([1, 2, 3]));
 
       await createSkeet(tx, {
         teamId: 'team-1',
@@ -189,7 +194,7 @@ describe('createSkeet', () => {
     });
 
     it('uploads the image bytes as a Uint8Array', async () => {
-      fetchMock.mockResolvedValue(new Response(new Uint8Array([1, 2, 3])));
+      fetchMock.mockResolvedValue(imageResponse([1, 2, 3]));
 
       await createSkeet(tx, {
         teamId: 'team-1',
@@ -203,7 +208,7 @@ describe('createSkeet', () => {
     });
 
     it('uploads the image once with no upload options', async () => {
-      fetchMock.mockResolvedValue(new Response(new Uint8Array([1, 2, 3])));
+      fetchMock.mockResolvedValue(imageResponse([1, 2, 3]));
 
       await createSkeet(tx, {
         teamId: 'team-1',
@@ -216,7 +221,7 @@ describe('createSkeet', () => {
     });
 
     it('embeds the uploaded blob with empty alt text', async () => {
-      fetchMock.mockResolvedValue(new Response(new Uint8Array([1, 2, 3])));
+      fetchMock.mockResolvedValue(imageResponse([1, 2, 3]));
 
       await createSkeet(tx, {
         teamId: 'team-1',
@@ -235,10 +240,85 @@ describe('createSkeet', () => {
       });
     });
 
-    it('uploads the body of a failed image download as the image', async () => {
+    it('throws BAD_REQUEST without uploading or posting when the download is not found', async () => {
       fetchMock.mockResolvedValue(
         new Response('Not Found', { status: 404, statusText: 'Not Found' })
       );
+
+      const error = await createSkeet(tx, {
+        teamId: 'team-1',
+        text: 'hi',
+        imageUrl: IMAGE_URL
+      }).catch((e: unknown) => e);
+
+      expect(error).toBeInstanceOf(ApplicationError);
+      expect(error).toMatchObject({
+        code: 'BAD_REQUEST',
+        message: 'Failed to fetch image from URL'
+      });
+      expect(mocks.uploadBlob).not.toHaveBeenCalled();
+      expect(mocks.post).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      [429, 'Too Many Requests', 'TOO_MANY_REQUESTS'],
+      [500, 'Internal Server Error', 'BAD_GATEWAY'],
+      [503, 'Service Unavailable', 'SERVICE_UNAVAILABLE']
+    ])(
+      'throws a retryable error without uploading or posting when the download answers %i',
+      async (status, statusText, code) => {
+        fetchMock.mockResolvedValue(
+          new Response('<html>error</html>', {
+            status,
+            statusText,
+            headers: { 'content-type': 'text/html', 'retry-after': '30' }
+          })
+        );
+
+        const error = await createSkeet(tx, {
+          teamId: 'team-1',
+          text: 'hi',
+          imageUrl: IMAGE_URL
+        }).catch((e: unknown) => e);
+
+        expect(error).toBeInstanceOf(ApplicationError);
+        expect(error).toMatchObject({
+          code,
+          message: `Failed to fetch image from URL: ${status} ${statusText}`,
+          data: { status, retryAfter: NOW.getTime() + 30_000 }
+        });
+        expect(mocks.uploadBlob).not.toHaveBeenCalled();
+        expect(mocks.post).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each([['text/html'], ['application/json'], [null]])(
+      'throws BAD_REQUEST without uploading or posting when the content type is %s',
+      async (contentType) => {
+        fetchMock.mockResolvedValue(
+          new Response(new TextEncoder().encode('<html>not an image</html>'), {
+            headers: contentType ? { 'content-type': contentType } : {}
+          })
+        );
+
+        const error = await createSkeet(tx, {
+          teamId: 'team-1',
+          text: 'hi',
+          imageUrl: IMAGE_URL
+        }).catch((e: unknown) => e);
+
+        expect(error).toBeInstanceOf(ApplicationError);
+        expect(error).toMatchObject({
+          code: 'BAD_REQUEST',
+          message: 'Image URL did not return an image'
+        });
+        expect(mocks.uploadBlob).not.toHaveBeenCalled();
+        expect(mocks.post).not.toHaveBeenCalled();
+      }
+    );
+
+    it('accepts an image content type in any case', async () => {
+      fetchMock.mockResolvedValue(imageResponse([1, 2, 3], 'IMAGE/JPEG'));
 
       await createSkeet(tx, {
         teamId: 'team-1',
@@ -246,8 +326,7 @@ describe('createSkeet', () => {
         imageUrl: IMAGE_URL
       });
 
-      const [bytes] = mocks.uploadBlob.mock.calls[0];
-      expect(new TextDecoder().decode(bytes as Uint8Array)).toBe('Not Found');
+      expect(mocks.uploadBlob).toHaveBeenCalledTimes(1);
       expect(mocks.post).toHaveBeenCalledTimes(1);
     });
 
@@ -270,7 +349,7 @@ describe('createSkeet', () => {
     });
 
     it('propagates an upload failure without posting', async () => {
-      fetchMock.mockResolvedValue(new Response(new Uint8Array([1])));
+      fetchMock.mockResolvedValue(imageResponse([1]));
       const failure = new Error('blob too large');
       mocks.uploadBlob.mockRejectedValue(failure);
 
