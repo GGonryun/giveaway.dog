@@ -8,7 +8,10 @@ import { XIcon, SaveIcon, EyeIcon, EditIcon } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { FormLayoutProps } from './types';
 import { UnifiedFormFooter } from './unified-form-footer';
-import { useUnifiedFormLayout } from './use-unified-form-layout';
+import {
+  FORM_STEP_PANEL_ID,
+  useUnifiedFormLayout
+} from './use-unified-form-layout';
 import { DemoBanner } from './demo-banner';
 import { NonNavigationalLink } from '../links';
 import { cn } from '@giveaway/ui-utils/utils';
@@ -20,7 +23,12 @@ const MobileTabTrigger: React.FC<{
   errors?: number;
 }> = ({ step, label, errors = 0, onStepChange }) => {
   return (
-    <TabsTrigger asChild value={step} className="text-xs">
+    <TabsTrigger
+      asChild
+      value={step}
+      className="text-xs"
+      aria-controls={FORM_STEP_PANEL_ID}
+    >
       <NonNavigationalLink href={`?step=${step}`} onClick={onStepChange}>
         {label}
         {Boolean(errors) && (
@@ -130,7 +138,7 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
   hideTabs
 }) => {
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
-  const { currentStep } = useUnifiedFormLayout();
+  const { currentStep, stepLabels } = useUnifiedFormLayout();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -145,7 +153,16 @@ export const MobileFormLayout: React.FC<FormLayoutProps> = ({
         <MobileFormHeader hideTabs={hideTabs} />
         <DemoBanner />
 
-        <div className="bg-background flex-1 min-h-0 overflow-hidden relative top-0 z-10 flex flex-col">
+        <div
+          className="bg-background flex-1 min-h-0 overflow-hidden relative top-0 z-10 flex flex-col"
+          {...(hideTabs
+            ? {}
+            : {
+                id: FORM_STEP_PANEL_ID,
+                role: 'tabpanel',
+                'aria-label': stepLabels[currentStep]
+              })}
+        >
           {mobileView === 'form' ? (
             <>
               <div

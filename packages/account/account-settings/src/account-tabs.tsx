@@ -1,6 +1,11 @@
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@giveaway/ui-primitives/tabs';
 import React, { useEffect, useState } from 'react';
 import { widetype } from '@giveaway/util-types/widetype';
 import {
@@ -58,7 +63,9 @@ export const AccountTabs: React.PC = ({ children }) => {
           </TabsTrigger>
         ))}
       </TabsList>
-      <div className="space-y-4">{children}</div>
+      <TabsContent value={tab} className="space-y-4">
+        {children}
+      </TabsContent>
     </Tabs>
   );
 };

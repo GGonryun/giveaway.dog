@@ -1,6 +1,11 @@
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@giveaway/ui-primitives/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@giveaway/ui-primitives/tabs';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
@@ -56,7 +61,9 @@ export const SettingsTabs: React.PC<SettingsTabsProps> = ({
         })}
       </TabsList>
 
-      <div className="space-y-4">{children}</div>
+      <TabsContent value={tab} className="space-y-4">
+        {children}
+      </TabsContent>
     </Tabs>
   );
 };

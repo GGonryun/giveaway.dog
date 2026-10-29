@@ -50,6 +50,13 @@ describe('SweepstakesDetailsTabs', () => {
     expect(screen.getByText('tab body')).toBeInTheDocument();
   });
 
+  it('points the selected tab at the panel that holds the children', () => {
+    render(tabs('/app/acme/sweepstakes/sweep-1/winners'));
+    const panel = screen.getByRole('tabpanel', { name: 'Winners' });
+    expect(panel).toHaveTextContent('tab body');
+    expect(selectedTab()).toHaveAttribute('aria-controls', panel.id);
+  });
+
   it.each([
     ['/app/acme/sweepstakes/sweep-1', 'Preview'],
     ['/app/acme/sweepstakes/sweep-1/winners', 'Winners'],

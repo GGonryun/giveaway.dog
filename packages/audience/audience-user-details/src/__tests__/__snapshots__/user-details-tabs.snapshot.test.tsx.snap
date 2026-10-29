@@ -52,7 +52,15 @@ exports[`UserDetailsTabs > matches the snapshot 1`] = `
     </div>
   </div>
   <div
-    class="space-y-4"
+    aria-labelledby="radix-_r_id_-trigger-overview"
+    class="flex-1 outline-none space-y-4"
+    data-orientation="horizontal"
+    data-slot="tabs-content"
+    data-state="active"
+    id="radix-_r_id_-content-overview"
+    role="tabpanel"
+    style="animation-duration: 0s;"
+    tabindex="0"
   >
     <p>
       User details content
