@@ -1,11 +1,19 @@
 import { getRun } from 'workflow/api';
-import { WorkflowRunNotFoundError } from 'workflow/internal/errors';
+import {
+  WorkflowAPIError,
+  WorkflowRunNotFoundError
+} from 'workflow/internal/errors';
+
+const isUnknownRun = (error: unknown) =>
+  WorkflowRunNotFoundError.is(error) ||
+  (WorkflowAPIError.is(error) &&
+    (error.status === 400 || error.status === 404));
 
 const readStatus = async (run: ReturnType<typeof getRun>) => {
   try {
     return await run.status;
   } catch (error) {
-    if (WorkflowRunNotFoundError.is(error)) return null;
+    if (isUnknownRun(error)) return null;
     throw error;
   }
 };
