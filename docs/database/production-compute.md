@@ -34,6 +34,21 @@ At $0.14 per CU-hour (Launch plan), 357 CU-h cost about $50 for 28 days. The cos
 | 5    | Lower the suspend timeout from 300 s to the minimum that the plan allows, and keep the maximum at 0.5 CU                                         | Each wake runs for less time                       | Neon console, no code |
 | 6    | Delete the `TwitterPickerUser` rows of old pickers, or move them to Redis with a TTL                                                             | Storage, and the cost of each scan that is left    | #688                  |
 
+## Public list pages
+
+`/browse`, `/history` and `/winners` exported `revalidate = 60`, which had no effect: the root layout reads the CSP nonce with `headers()`, so every page renders on each request, and the pages read Postgres through Prisma, not `fetch`. Their lists come from the `.cache()` of their procedures, with their own revalidate times (300 s for `/browse` and its hosts, 3600 s for `/history` and `/winners`) and the tags that the writes expire (#559). The exports are removed. A visitor who is not signed in reaches Postgres on these pages only when a cache entry expires. A signed-in visitor of `/browse` also reads their own participations (`getPublicSweepstakesParticipation`), which is not cached
+
+## Progress (2026-10-29 20:27 UTC)
+
+| Metric                            | Since the measurement above (about 20 h 45 min)                                  |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| Active time                       | 67,932 s of about 74,800 s: the compute ran about 91% of the time (99.5% before) |
+| Compute time                      | 24,175 CU-s, so 0.36 CU on average (0.53 before)                                 |
+| Applied production migrations     | Still up to `20260407073024`: the indexes of #689 are not in production yet      |
+| Month to date (2026-10-01 to now) | 1,309,181 CU-s (364 CU-h), about $51                                             |
+
+The `Production migrations` job of CI fails on every push to `main` since it was added, because the `PRODUCTION_POSTGRES_URL_NON_POOLING` secret of the `production-database` environment is not set. So `Checks` fails on `main`, no commit gets the production domains, and the migrations of rank 1 and 2 wait. Setting the secret and re-running the failed jobs of the last run on `main` applies them (#685)
+
 ## After the changes
 
 Check the Neon project again a week after the migrations reach production: the average CU (compute time divided by active time) should fall toward 0.25, and `pg_stat_user_tables` should show index scans instead of sequential scans on the tables above.
