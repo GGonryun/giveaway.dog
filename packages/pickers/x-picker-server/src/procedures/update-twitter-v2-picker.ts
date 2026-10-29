@@ -62,7 +62,6 @@ export const updateTwitterV2Picker = procedure()
         requireBannerImage: data.filters.hasBanner,
         requireLocation: data.filters.hasLocation,
         requireBio: data.filters.hasDescription,
-        lastPostWithin: data.filters.lastPostWithin,
         runAt: data.timing?.runAt ? new Date(data.timing.runAt) : null
       }
     });

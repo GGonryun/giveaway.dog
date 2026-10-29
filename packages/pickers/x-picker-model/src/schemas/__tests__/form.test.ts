@@ -43,7 +43,6 @@ describe('twitterV2PickerFormSchema', () => {
           minimumAccountAgeDays: null,
           minimumFollowers: null,
           minimumFollowing: null,
-          lastPostWithin: null,
           hasProfileImage: false,
           hasBanner: false,
           hasLocation: false,
@@ -66,7 +65,6 @@ describe('twitterV2PickerFormSchema', () => {
         minimumAccountAgeDays: 7,
         minimumFollowers: 9,
         minimumFollowing: 11,
-        lastPostWithin: 'PAST_DAY',
         hasProfileImage: true,
         hasBanner: true,
         hasLocation: true,
@@ -237,28 +235,12 @@ describe('twitterV2PickerFormSchema', () => {
   });
 
   describe('filters', () => {
-    it.each(['PAST_DAY', 'PAST_WEEK', 'PAST_MONTH'])(
-      'accepts %s for last post within',
-      (lastPostWithin) => {
-        expect(
-          validated.safeParse(minimalForm({ filters: { lastPostWithin } }))
-            .success
-        ).toBe(true);
-      }
-    );
-
-    it('rejects an unknown last post window', () => {
-      const result = validated.safeParse(
-        minimalForm({ filters: { lastPostWithin: 'PAST_YEAR' } })
-      );
-
-      expect(issuesOf(result.error)).toEqual([
-        {
-          path: ['filters', 'lastPostWithin'],
-          message:
-            "Invalid enum value. Expected 'PAST_DAY' | 'PAST_WEEK' | 'PAST_MONTH', received 'PAST_YEAR'"
-        }
-      ]);
+    it('drops a last post window, which no eligibility check applies', () => {
+      expect(
+        validated.parse(
+          minimalForm({ filters: { lastPostWithin: 'PAST_WEEK' } })
+        ).filters
+      ).not.toHaveProperty('lastPostWithin');
     });
 
     it('accepts negative minimums', () => {

@@ -20,17 +20,6 @@ import {
   CardTitle
 } from '@giveaway/ui-primitives/card';
 import { Switch } from '@giveaway/ui-primitives/switch';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@giveaway/ui-primitives/select';
-import {
-  Collapsible,
-  CollapsibleContent
-} from '@giveaway/ui-primitives/collapsible';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { UpgradeModal } from './upgrade-modal';
@@ -58,7 +47,6 @@ const publicPickerFormSchema = z.object({
     minimumAccountAgeDays: z.number().nullable(),
     minimumFollowers: z.number().nullable(),
     minimumFollowing: z.number().nullable(),
-    lastPostWithin: z.enum(['PAST_DAY', 'PAST_WEEK', 'PAST_MONTH']).nullable(),
     hasProfileImage: z.boolean(),
     hasBanner: z.boolean(),
     hasLocation: z.boolean(),
@@ -67,12 +55,6 @@ const publicPickerFormSchema = z.object({
 });
 
 type PublicPickerFormSchema = z.infer<typeof publicPickerFormSchema>;
-
-const LAST_POST_OPTIONS = [
-  { label: 'Past Day', value: 'PAST_DAY' },
-  { label: 'Past Week', value: 'PAST_WEEK' },
-  { label: 'Past Month', value: 'PAST_MONTH' }
-] as const;
 
 interface WinnerData {
   drawId: string;
@@ -142,7 +124,6 @@ export const PublicXPickerForm: React.FC = () => {
         minimumAccountAgeDays: 90,
         minimumFollowers: 100,
         minimumFollowing: 100,
-        lastPostWithin: null,
         hasProfileImage: true,
         hasBanner: false,
         hasLocation: false,
@@ -281,8 +262,6 @@ export const PublicXPickerForm: React.FC = () => {
       setIsReRolling(false);
     }
   };
-
-  const lastPostWithin = form.watch('filters.lastPostWithin');
 
   return (
     <FormProvider {...form}>
@@ -509,64 +488,6 @@ export const PublicXPickerForm: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="filters.lastPostWithin"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between space-y-0">
-                    <div>
-                      <FormLabel>Last Post</FormLabel>
-                      <FormDescription>
-                        Only include users who posted recently
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={lastPostWithin != null}
-                        onClick={() => {
-                          if (lastPostWithin == null) {
-                            field.onChange('PAST_WEEK');
-                          } else {
-                            field.onChange(null);
-                          }
-                        }}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <Collapsible open={lastPostWithin != null}>
-                <CollapsibleContent>
-                  <FormField
-                    control={form.control}
-                    name="filters.lastPostWithin"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Select
-                          value={field.value ?? 'PAST_WEEK'}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {LAST_POST_OPTIONS.map((option) => (
-                              <SelectItem
-                                key={option.value}
-                                value={option.value}
-                              >
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormItem>
-                    )}
-                  />
-                </CollapsibleContent>
-              </Collapsible>
-
               <FormField
                 control={form.control}
                 name="filters.hasProfileImage"

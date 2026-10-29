@@ -67,7 +67,6 @@ describe('createTwitterPicker', () => {
           minAccountAgeDays: 100,
           minFollowersCount: 100,
           minFollowingCount: 100,
-          lastPostWithin: 'PAST_MONTH',
           requireProfileImage: true,
           requireBannerImage: false,
           requireLocation: false,

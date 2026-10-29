@@ -11,10 +11,6 @@ export const twitterUserFiltersSchema = z.object({
   minimumAccountAgeDays: z.number().nullable().default(null),
   minimumFollowers: z.number().nullable().default(null),
   minimumFollowing: z.number().nullable().default(null),
-  lastPostWithin: z
-    .enum(['PAST_DAY', 'PAST_WEEK', 'PAST_MONTH'])
-    .nullable()
-    .default(null),
   hasProfileImage: z.boolean().default(false),
   hasBanner: z.boolean().default(false),
   hasLocation: z.boolean().default(false),

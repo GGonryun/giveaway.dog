@@ -91,7 +91,6 @@ const noFilters = {
   minimumAccountAgeDays: null,
   minimumFollowers: null,
   minimumFollowing: null,
-  lastPostWithin: null,
   hasProfileImage: false,
   hasBanner: false,
   hasLocation: false,
@@ -401,7 +400,6 @@ describe('POST /api/pickers/x/public/pick-winners', () => {
           requireBannerImage: true,
           requireLocation: true,
           requireBio: true,
-          lastPostWithin: 'PAST_DAY',
           status: 'COMPLETE'
         }
       });

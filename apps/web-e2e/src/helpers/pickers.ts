@@ -96,7 +96,6 @@ export const postPickWinners = (request: APIRequestContext, postUrl: string) =>
         minimumAccountAgeDays: null,
         minimumFollowers: null,
         minimumFollowing: null,
-        lastPostWithin: null,
         hasProfileImage: false,
         hasBanner: false,
         hasLocation: false,
