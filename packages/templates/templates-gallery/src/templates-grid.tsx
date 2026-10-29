@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { TemplateListItemSchema } from '@giveaway/templates-model/schemas/template';
 import { TemplateCard } from './template-card';
 import { UseTemplateModal } from './use-template-modal';
+import { DeleteTemplateModal } from './delete-template-modal';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { createSweepstakes } from '@giveaway/sweepstakes-editor-server/create-sweepstakes';
 import { useRouter } from 'next/navigation';
@@ -18,6 +19,9 @@ export const TemplatesGrid: React.FC<{
   const [selectedTemplate, setSelectedTemplate] =
     useState<TemplateListItemSchema | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [staged, setDeleteTemplate] = useState<TemplateListItemSchema | null>(
+    null
+  );
 
   const create = useProcedure({
     action: createSweepstakes,
@@ -45,6 +49,14 @@ export const TemplatesGrid: React.FC<{
     createCustom.run({ sourceTemplateId: item.template.id });
   };
 
+  const handleEditTemplate = (item: TemplateListItemSchema) => {
+    router.push(`/app/${slug}/templates/${item.template.id}/edit`);
+  };
+
+  const handleDeleteTemplate = (item: TemplateListItemSchema) => {
+    setDeleteTemplate(item);
+  };
+
   if (items.length === 0) {
     return null;
   }
@@ -58,6 +70,7 @@ export const TemplatesGrid: React.FC<{
             item={item}
             slug={slug}
             onUse={handleClickTemplate}
+            onDelete={handleDeleteTemplate}
           />
         ))}
       </div>
@@ -69,6 +82,20 @@ export const TemplatesGrid: React.FC<{
         template={selectedTemplate}
         onUse={handleUseTemplate}
         onCustomize={handleCustomizeTemplate}
+        onEdit={handleEditTemplate}
+      />
+
+      <DeleteTemplateModal
+        onClose={() => setDeleteTemplate(null)}
+        template={
+          staged
+            ? {
+                id: staged.template.id,
+                name: staged.template.template.name,
+                slug
+              }
+            : null
+        }
       />
     </>
   );
