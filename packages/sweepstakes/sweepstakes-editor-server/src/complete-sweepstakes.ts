@@ -26,6 +26,7 @@ const completeSweepstakes = procedure()
   .output(z.object({ success: z.boolean() }))
   .invalidate(async ({ input }) => [
     `sweepstakes-${input.sweepstakesId}`,
+    'participant-sweepstake',
     'winners-leaderboard',
     ...BROWSE_LIST_TAGS
   ])

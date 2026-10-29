@@ -253,7 +253,7 @@ describe('getOrCreateSweepstakesParticipant', () => {
       ]);
     });
 
-    it('does not cache the call', async () => {
+    it('caches only the shared giveaway read, and reads the participant from the database', async () => {
       signedInWithSweepstakes();
       prismaMock.sweepstakesParticipant.findUnique.mockResolvedValue(
         participantRow()
@@ -261,7 +261,13 @@ describe('getOrCreateSweepstakesParticipant', () => {
 
       await getOrCreateSweepstakesParticipant({ sweepstakesId: 'sw-1' });
 
-      expect(nextCacheMock.unstable_cache).not.toHaveBeenCalled();
+      expect(nextCacheMock.unstable_cache).toHaveBeenCalledTimes(1);
+      expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
+        expect.any(Function),
+        ['sweepstakes-access-v1-sw-1'],
+        expect.any(Object)
+      );
+      expect(prismaMock.sweepstakesParticipant.findUnique).toHaveBeenCalled();
     });
   });
 

@@ -9,6 +9,7 @@ import {
 } from '@giveaway/testing-server/session';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { SWEEPSTAKES_ACCESS_SELECT_QUERY } from '../access';
 
 type Input = Parameters<typeof getSweepstakesPrivacy>[0];
 
@@ -24,7 +25,7 @@ const sweepstakes = (
 
 describe('getSweepstakesPrivacy', () => {
   describe('query shape', () => {
-    it('looks the sweepstakes up by id or slug and selects only teamId, status and visibility', async () => {
+    it('looks the sweepstakes up by id or slug through the shared access read', async () => {
       prismaMock.sweepstakes.findFirst.mockResolvedValue(sweepstakes('PUBLIC'));
 
       await getSweepstakesPrivacy({ sweepstakesId: 'my-slug' });
@@ -33,42 +34,61 @@ describe('getSweepstakesPrivacy', () => {
         where: {
           OR: [{ id: 'my-slug' }, { visibility: { slug: 'my-slug' } }]
         },
-        select: {
-          teamId: true,
-          status: true,
-          visibility: { select: { visibility: true } }
-        }
+        select: SWEEPSTAKES_ACCESS_SELECT_QUERY
       });
     });
   });
 
   describe('cache configuration', () => {
-    it('caches anonymous checks under an anonymous key with only the sweepstakes privacy tag', async () => {
+    it('caches the giveaway read of an anonymous caller under the shared key of the giveaway', async () => {
       prismaMock.sweepstakes.findFirst.mockResolvedValue(sweepstakes('PUBLIC'));
 
       await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
 
+      expect(nextCacheMock.unstable_cache).toHaveBeenCalledTimes(1);
       expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
         expect.any(Function),
-        ['sweepstakes-privacy-v2-sw-1-anonymous'],
-        { tags: ['sweepstakes-sw-1-privacy'], revalidate: 3600 }
+        ['sweepstakes-access-v1-sw-1'],
+        {
+          tags: [
+            'sweepstakes-sw-1',
+            'sweepstakes-sw-1-privacy',
+            'participant-sweepstake'
+          ],
+          revalidate: 3600
+        }
       );
     });
 
-    it('caches signed in checks per user with an extra user privacy tag', async () => {
+    it('caches no result of a signed in caller under a key of their own', async () => {
       signIn();
       prismaMock.sweepstakes.findFirst.mockResolvedValue(sweepstakes('PUBLIC'));
 
       await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
 
+      expect(nextCacheMock.unstable_cache).toHaveBeenCalledTimes(1);
       expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
         expect.any(Function),
-        [`sweepstakes-privacy-v2-sw-1-user-${TEST_USER.id}`],
-        {
-          tags: ['sweepstakes-sw-1-privacy', `user-${TEST_USER.id}-privacy`],
-          revalidate: 3600
-        }
+        ['sweepstakes-access-v1-sw-1'],
+        expect.objectContaining({
+          tags: expect.not.arrayContaining([`user-${TEST_USER.id}-privacy`])
+        })
       );
+    });
+
+    it('checks the membership of a PRIVATE giveaway on every call', async () => {
+      signIn();
+      prismaMock.sweepstakes.findFirst.mockResolvedValue(
+        sweepstakes('PRIVATE')
+      );
+      prismaMock.membership.findUnique.mockResolvedValue({ id: 'm-1' });
+
+      await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
+      prismaMock.membership.findUnique.mockResolvedValue(null);
+      const result = await getSweepstakesPrivacy({ sweepstakesId: 'sw-1' });
+
+      expectFailure(result, 'FORBIDDEN');
+      expect(prismaMock.membership.findUnique).toHaveBeenCalledTimes(2);
     });
   });
 

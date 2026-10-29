@@ -4,6 +4,7 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { nextCacheMock } from '@giveaway/testing-server/next-cache';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
+import { SWEEPSTAKES_ACCESS_SELECT_QUERY } from '../access';
 
 type Input = Parameters<typeof getUserHostRelationship>[0];
 
@@ -30,13 +31,18 @@ describe('getUserHostRelationship', () => {
   });
 
   describe('when the caller is signed in', () => {
-    it('does not cache the loyalty, so a new entry counts at once', async () => {
+    it('caches only the shared giveaway read, not the loyalty, so a new entry counts at once', async () => {
       signedInWithHost();
       prismaMock.sweepstakesParticipant.count.mockResolvedValue(0);
 
       await getUserHostRelationship({ sweepstakesId: 'sw-1' });
 
-      expect(nextCacheMock.unstable_cache).not.toHaveBeenCalled();
+      expect(nextCacheMock.unstable_cache).toHaveBeenCalledTimes(1);
+      expect(nextCacheMock.unstable_cache).toHaveBeenCalledWith(
+        expect.any(Function),
+        ['sweepstakes-access-v1-sw-1'],
+        expect.any(Object)
+      );
     });
 
     it('looks up the caller profile by id', async () => {
@@ -60,7 +66,7 @@ describe('getUserHostRelationship', () => {
       expect(prismaMock.sweepstakes.findFirst).not.toHaveBeenCalled();
     });
 
-    it('looks the sweepstakes up by id or slug and selects its team', async () => {
+    it('looks the sweepstakes up by id or slug through the shared access read', async () => {
       signedInWithHost();
       prismaMock.sweepstakesParticipant.count.mockResolvedValue(0);
 
@@ -68,7 +74,7 @@ describe('getUserHostRelationship', () => {
 
       expect(prismaMock.sweepstakes.findFirst).toHaveBeenCalledWith({
         where: { OR: [{ id: 'promo' }, { visibility: { slug: 'promo' } }] },
-        select: { teamId: true }
+        select: SWEEPSTAKES_ACCESS_SELECT_QUERY
       });
     });
 

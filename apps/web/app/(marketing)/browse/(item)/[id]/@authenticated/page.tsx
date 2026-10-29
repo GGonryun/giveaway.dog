@@ -4,6 +4,7 @@ import { getOrCreateSweepstakesParticipant } from '@giveaway/participation-serve
 import { getViewer } from '@giveaway/participation-server/get-viewer';
 import { getUserHostRelationship } from '@giveaway/participation-server/get-user-host-relationship';
 import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
+import { getSweepstakesId } from '@giveaway/participation-server/get-sweepstakes-id';
 import { getUserReferral } from '@giveaway/referrals-server/get-user-referral';
 import { AuthenticatedSweepstakesContent } from '@giveaway/browse-item/authenticated-sweepstakes-content';
 import { Suspense } from 'react';
@@ -16,27 +17,34 @@ interface PageProps {
 
 export default async function AuthenticatedPage({ params }: PageProps) {
   const { id } = await params;
-  const options = { sweepstakesId: id };
+  const sweepstakesId = await getSweepstakesId({ sweepstakesId: id });
 
-  const pending = Promise.all([
+  if (!sweepstakesId.ok) {
+    console.warn('Sweepstake not found:', sweepstakesId.data.message);
+    notFound();
+  }
+
+  const options = { sweepstakesId: sweepstakesId.data };
+  const [
+    sweepstakes,
+    participant,
+    relationship,
+    privacy,
+    referral,
+    allocations
+  ] = await Promise.all([
+    getParticipantSweepstake(options),
     getOrCreateSweepstakesParticipant(options),
     getUserHostRelationship(options),
-    getSweepstakesPrivacy(options)
+    getSweepstakesPrivacy(options),
+    getUserReferral(options),
+    getSweepstakesAllocations(options)
   ]);
-  const sweepstakes = await getParticipantSweepstake(options);
 
   if (!sweepstakes.ok) {
     console.warn('Sweepstake not found:', sweepstakes.data.message);
     notFound();
   }
-
-  const resolved = { sweepstakesId: sweepstakes.data.sweepstakes.id };
-  const [[participant, relationship, privacy], referral, allocations] =
-    await Promise.all([
-      pending,
-      getUserReferral(resolved),
-      getSweepstakesAllocations(resolved)
-    ]);
 
   if (!relationship.ok) {
     console.warn('Host relationship fetch error:', relationship.data?.message);
