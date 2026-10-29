@@ -38,10 +38,6 @@ const DISCORD_MESSAGES = 'POST https://discord.com/api/v10/channels/chan-1/';
 const DISCORD_OK_MESSAGES =
   'POST https://discord.com/api/v10/channels/chan-ok/';
 
-const ISSUES = {
-  image: '#305'
-};
-
 const job = (
   id: string,
   type: AutomatedPostJob['type'],
@@ -137,19 +133,7 @@ const CALLS: Call[] = [
     'POST_TO_BLUESKY',
     IMAGE,
     {
-      faults: IMAGE_FAULTS,
-      bugs: {
-        finishes: {
-          'rate-limit': ISSUES.image,
-          'rate-limit-retry-after': ISSUES.image,
-          'server-error': ISSUES.image
-        },
-        retries: {
-          'rate-limit': ISSUES.image,
-          'rate-limit-retry-after': ISSUES.image,
-          'server-error': ISSUES.image
-        }
-      }
+      faults: IMAGE_FAULTS
     }
   ),
   networkCall(
