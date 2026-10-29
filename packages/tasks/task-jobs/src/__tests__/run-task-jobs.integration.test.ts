@@ -254,9 +254,22 @@ describe('runTaskJobs', () => {
       'processes each job once (fails until #299 is fixed)',
       async () => {
         const { task } = await setupImport();
+        const withoutStuckReset = prisma.$extends({
+          query: {
+            taskJob: {
+              updateMany: ({ args, query }) =>
+                args.where?.status === 'IN_PROGRESS'
+                  ? Promise.resolve({ count: 0 })
+                  : query(args)
+            }
+          }
+        }) as unknown as typeof prisma;
 
         await holdTableWrites('TaskJob', { writers: 2 }, () =>
-          Promise.all([runTaskJobs(prisma), runTaskJobs(prisma)])
+          Promise.all([
+            runTaskJobs(withoutStuckReset),
+            runTaskJobs(withoutStuckReset)
+          ])
         );
 
         expect(network.requests(RETWEETERS)).toHaveLength(1);
