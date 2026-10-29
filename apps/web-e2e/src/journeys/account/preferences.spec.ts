@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET } from '../../env';
 import { STUB_BLOB_URL, stubBlobUploads } from '../../helpers/blob';
-import { knownBug } from '../../helpers/known-bug';
 import { expectAfterReloads } from '../../helpers/poll';
 
 const PNG = Buffer.from(
@@ -87,31 +86,31 @@ test.describe('account tabs', () => {
 test.describe('appearance', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
-  test(
-    '[ACCOUNT-021] a theme picked on the appearance tab stays after a reload',
-    knownBug(570),
-    async ({ page, freshPersona }) => {
-      await freshPersona('participant');
-      await page.emulateMedia({ colorScheme: 'light' });
-      await page.goto('/account/appearance');
-      await expect(
-        page.getByRole('tab', { name: 'Appearance' })
-      ).toHaveAttribute('aria-selected', 'true');
-      const html = page.locator('html');
+  test('[ACCOUNT-021] a theme picked on the appearance tab stays after a reload', async ({
+    page,
+    freshPersona
+  }) => {
+    await freshPersona('participant');
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto('/account/appearance');
+    await expect(page.getByRole('tab', { name: 'Appearance' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    const html = page.locator('html');
 
-      await page.getByRole('radio', { name: 'Dark' }).click();
-      await expect(html).toHaveClass(/\bdark\b/);
-      await page.reload();
-      await expect(html).toHaveClass(/\bdark\b/);
-      await expect(page.getByRole('radio', { name: 'Dark' })).toBeChecked();
+    await page.getByRole('radio', { name: 'Dark' }).click();
+    await expect(html).toHaveClass(/\bdark\b/);
+    await page.reload();
+    await expect(html).toHaveClass(/\bdark\b/);
+    await expect(page.getByRole('radio', { name: 'Dark' })).toBeChecked();
 
-      await page.getByRole('radio', { name: 'Light' }).click();
-      await expect(html).not.toHaveClass(/\bdark\b/);
-      await page.reload();
-      await expect(html).not.toHaveClass(/\bdark\b/);
-      await expect(page.getByRole('radio', { name: 'Light' })).toBeChecked();
-    }
-  );
+    await page.getByRole('radio', { name: 'Light' }).click();
+    await expect(html).not.toHaveClass(/\bdark\b/);
+    await page.reload();
+    await expect(html).not.toHaveClass(/\bdark\b/);
+    await expect(page.getByRole('radio', { name: 'Light' })).toBeChecked();
+  });
 });
 
 test.describe('profile image', () => {
