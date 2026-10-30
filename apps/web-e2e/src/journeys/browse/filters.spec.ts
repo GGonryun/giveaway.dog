@@ -147,19 +147,18 @@ test.describe('the filters of /browse', { tag: TAGS.slow }, () => {
     }
   });
 
-  test(
-    'Completed shows the public giveaways completed in the last day',
-    knownBug(560),
-    async ({ page, request }, testInfo) => {
-      const { token, seeded } = await seedGiveaways(request, testInfo, [
-        ['completed', { preset: 'completed', endsIn: -2 * HOUR }]
-      ]);
+  test('Completed shows the public giveaways completed in the last day', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { token, seeded } = await seedGiveaways(request, testInfo, [
+      ['completed', { preset: 'completed', endsIn: -2 * HOUR }]
+    ]);
 
-      await page.goto(`/browse?search=${token}&showStatuses=COMPLETED`);
+    await page.goto(`/browse?search=${token}&showStatuses=COMPLETED`);
 
-      await expect(giveawayCard(page, seeded.completed.name)).toBeVisible();
-    }
-  );
+    await expect(giveawayCard(page, seeded.completed.name)).toBeVisible();
+  });
 
   test('a visitor pages through /browse', async ({
     page,
