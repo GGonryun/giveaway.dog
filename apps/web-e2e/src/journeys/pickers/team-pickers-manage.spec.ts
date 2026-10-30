@@ -181,54 +181,52 @@ test.describe('team X pickers, as their host', () => {
     await expect(page.getByText(/Error loading pickers/)).toHaveCount(0);
   });
 
-  test(
-    'a host deletes pickers that already have winners, from their page and from the list',
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedPickerTeam(request, ns);
-      const seedWithWinner = () =>
-        seedApi(request).picker({
-          team: team.slug,
-          users: [{ username: `win_${ns}` }],
-          draws: [{ user: 0 }]
-        });
-      const fromPage = await seedWithWinner();
-      const fromList = await seedWithWinner();
-      await signInAs(page.request, 'host', ns);
-
-      await page.goto(`/app/${team.slug}/pickers/x/${fromPage.id}`);
-      await expect(page.getByText('Winners (1)')).toBeVisible();
-      await pickerActions(page).click();
-      await page.getByRole('menuitem', { name: 'Delete Picker' }).click();
-      await page
-        .getByRole('dialog', { name: 'Delete Picker' })
-        .getByRole('button', { name: 'Delete Picker' })
-        .click();
-      await expect(page).toHaveURL(new RegExp(`/app/${team.slug}/pickers$`), {
-        timeout: 10_000
+  test('a host deletes pickers that already have winners, from their page and from the list', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedPickerTeam(request, ns);
+    const seedWithWinner = () =>
+      seedApi(request).picker({
+        team: team.slug,
+        users: [{ username: `win_${ns}` }],
+        draws: [{ user: 0 }]
       });
+    const fromPage = await seedWithWinner();
+    const fromList = await seedWithWinner();
+    await signInAs(page.request, 'host', ns);
 
-      await page.goto(`/app/${team.slug}/pickers/x`);
-      const row = pickerRow(page, fromList.id);
-      await row.getByRole('button').click();
-      await page.getByRole('menuitem', { name: 'Delete' }).click();
-      const dialog = page.getByRole('dialog', { name: 'Delete Picker' });
-      await dialog
-        .getByRole('textbox', { name: `Type '${fromList.id}' to confirm` })
-        .fill(fromList.id);
-      await dialog.getByRole('button', { name: 'Delete Picker' }).click();
-      await expect(page.getByText('Picker deleted')).toBeVisible();
+    await page.goto(`/app/${team.slug}/pickers/x/${fromPage.id}`);
+    await expect(page.getByText('Winners (1)')).toBeVisible();
+    await pickerActions(page).click();
+    await page.getByRole('menuitem', { name: 'Delete Picker' }).click();
+    await page
+      .getByRole('dialog', { name: 'Delete Picker' })
+      .getByRole('button', { name: 'Delete Picker' })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/app/${team.slug}/pickers$`), {
+      timeout: 10_000
+    });
 
-      await page.reload();
-      await expect(
-        page.getByRole('heading', { name: 'X Picker' })
-      ).toBeVisible();
-      for (const id of [fromPage.id, fromList.id]) {
-        await expect(pickerRow(page, id)).toHaveCount(0);
-        await expectNotFound(page, `/pickers/x/${id}`);
-      }
+    await page.goto(`/app/${team.slug}/pickers/x`);
+    const row = pickerRow(page, fromList.id);
+    await row.getByRole('button').click();
+    await page.getByRole('menuitem', { name: 'Delete' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Delete Picker' });
+    await dialog
+      .getByRole('textbox', { name: `Type '${fromList.id}' to confirm` })
+      .fill(fromList.id);
+    await dialog.getByRole('button', { name: 'Delete Picker' }).click();
+    await expect(page.getByText('Picker deleted')).toBeVisible();
+
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'X Picker' })).toBeVisible();
+    for (const id of [fromPage.id, fromList.id]) {
+      await expect(pickerRow(page, id)).toHaveCount(0);
+      await expectNotFound(page, `/pickers/x/${id}`);
     }
-  );
+  });
 
   test('a host schedules a picker for later', async ({
     page,
