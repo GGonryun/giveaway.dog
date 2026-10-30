@@ -1,6 +1,5 @@
 import { E2E_X_FIXTURES } from '@giveaway/e2e-model/fakes';
 import { expect, test } from '../../fixtures/test';
-import { knownBug } from '../../helpers/known-bug';
 import {
   LOAD_TWEET_PATH,
   loadFixtureTweet,
@@ -68,18 +67,14 @@ test.describe('free X picker post URLs on the ScrapeBadger fixtures', () => {
     }
   });
 
-  test(
-    'a visitor loads a post from its x.com/i/web URL',
-    knownBug(582),
-    async ({ page }) => {
-      const response = await postLoadTweet(
-        page.request,
-        `https://x.com/i/web/status/${tweet}`
-      );
-      expect(response.status()).toBe(200);
-      expect((await response.json()).data.id).toBe(tweet);
-    }
-  );
+  test('a visitor loads a post from its x.com/i/web URL', async ({ page }) => {
+    const response = await postLoadTweet(
+      page.request,
+      `https://x.com/i/web/status/${tweet}`
+    );
+    expect(response.status()).toBe(200);
+    expect((await response.json()).data.id).toBe(tweet);
+  });
 
   test('an anonymous caller cannot put a link to another site on a verified draw', async ({
     page

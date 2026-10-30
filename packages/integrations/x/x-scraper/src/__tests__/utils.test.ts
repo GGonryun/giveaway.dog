@@ -353,7 +353,10 @@ describe('extractTweetId', () => {
     ['https://x.com/alice_99/status/222', '222'],
     ['https://x.com/alice/status/333?s=20&t=abc', '333'],
     ['https://x.com/alice/status/444/photo/1', '444'],
-    ['twitter.com/alice/status/555', '555']
+    ['twitter.com/alice/status/555', '555'],
+    ['https://x.com/i/status/666', '666'],
+    ['https://x.com/i/web/status/777', '777'],
+    ['https://twitter.com/i/web/status/888?s=20', '888']
   ])('extracts the status id from %s', (url, expected) => {
     expect(extractTweetId(url)).toBe(expected);
   });
@@ -372,7 +375,6 @@ describe('extractTweetId', () => {
     '',
     'https://example.com/alice/status/1',
     'https://x.com/alice',
-    'https://x.com/i/web/status/123',
     'https://bsky.app/profile/alice/post/abc',
     'https://x.com/alice/status/abc',
     'https://twitter.com/alice/status/abc',

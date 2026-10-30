@@ -71,8 +71,8 @@ export const toTwitterPost = ({
 
 export const extractTweetId = (url: string): string | null => {
   const patterns = [
-    /twitter\.com\/\w+\/status\/(\d+)/,
-    /x\.com\/\w+\/status\/(\d+)/,
+    /twitter\.com\/(?:i\/web|\w+)\/status\/(\d+)/,
+    /x\.com\/(?:i\/web|\w+)\/status\/(\d+)/,
     /t\.co\/(\w+)/
   ];
 
