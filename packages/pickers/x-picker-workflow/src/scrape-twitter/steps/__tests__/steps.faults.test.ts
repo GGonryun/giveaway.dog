@@ -6,7 +6,6 @@ import {
   type FakeNetwork,
   fakeNetwork,
   isTransientFault,
-  knownBug,
   retryAfterTime,
   settleWithin
 } from '@giveaway/testing-server/faults';
@@ -17,8 +16,6 @@ import { scrapeBadgerTweetFixture } from '@giveaway/x-scraper/testing/fixtures-s
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 const TWEET = 'GET https://scrapebadger.com/v1/twitter/tweets/tweet/123';
 const RETWEETERS = `${TWEET}/retweeters`;
-
-const ISSUE = '#309';
 
 const STEPS = [
   {
@@ -95,28 +92,22 @@ describe.each(STEPS)(
         return;
       }
 
-      it(
-        ...knownBug(
-          'throws an error that the workflow retries, and stores nothing',
-          ISSUE
-        ),
-        async () => {
-          const retryAt = retryAfterTime();
-          network.fault(match, fault);
+      it('throws an error that the workflow retries, and stores nothing', async () => {
+        const retryAt = retryAfterTime();
+        network.fault(match, fault);
 
-          const error = await failure(run);
+        const error = await failure(run);
 
-          expect(error).toBeInstanceOf(Error);
-          expect(FatalError.is(error)).toBe(false);
-          expect(stored()).not.toHaveBeenCalled();
-          if (fault === 'rate-limit-retry-after') {
-            expect(RetryableError.is(error)).toBe(true);
-            expect(
-              (error as RetryableError).retryAfter.getTime()
-            ).toBeGreaterThanOrEqual(retryAt.getTime());
-          }
+        expect(error).toBeInstanceOf(Error);
+        expect(FatalError.is(error)).toBe(false);
+        expect(stored()).not.toHaveBeenCalled();
+        if (fault === 'rate-limit-retry-after') {
+          expect(RetryableError.is(error)).toBe(true);
+          expect(
+            (error as RetryableError).retryAfter.getTime()
+          ).toBeGreaterThanOrEqual(retryAt.getTime());
         }
-      );
+      });
     });
   }
 );
