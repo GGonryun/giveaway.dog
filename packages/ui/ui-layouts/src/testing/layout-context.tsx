@@ -15,6 +15,7 @@ export const createLayoutContext = (
   type: 'sweepstake',
   disabled: false,
   currentStep: 'details',
+  formId: 'unified-form',
   action: 'create',
   stepOrder: ['details', 'prizes', 'tasks'],
   stepsToFields: {

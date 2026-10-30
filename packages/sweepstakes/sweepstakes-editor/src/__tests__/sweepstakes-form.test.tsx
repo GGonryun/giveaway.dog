@@ -103,7 +103,12 @@ vi.mock('@giveaway/sweepstakes-editor-server/verify-slug', () => ({
 }));
 
 vi.mock('@giveaway/sweepstakes-participation/giveaway-participation', () => ({
-  GiveawayParticipation: () => <div>Giveaway preview</div>
+  GiveawayParticipation: () => (
+    <div>
+      Giveaway preview
+      <button>Continue</button>
+    </div>
+  )
 }));
 
 vi.mock('@giveaway/ui-rich-text/minimal-tiptap-editor', () => ({
@@ -260,6 +265,29 @@ describe('SweepstakesForm', () => {
       expect(screen.getByText('Giveaway preview')).toBeInTheDocument();
       expect(
         screen.getByRole('button', { name: 'Active State' })
+      ).toBeInTheDocument();
+    });
+
+    it('does not submit the editor when a preview button is clicked', async () => {
+      renderForm({ values: withSlug('summer') });
+      await userEvent.click(screen.getByRole('button', { name: 'Continue' }));
+      expect(verifySlug).not.toHaveBeenCalled();
+      expect(
+        screen.queryByRole('dialog', { name: 'Ready to Publish?' })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('dialog', { name: 'There are some problems' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('submits the editor from the footer on the last step', async () => {
+      renderForm({ values: withSlug('summer'), step: 'design' });
+      const footerPublish = screen
+        .getAllByRole('button', { name: 'Publish' })
+        .find((button) => button !== getHeaderButton('Publish'));
+      await userEvent.click(footerPublish!);
+      expect(
+        await screen.findByRole('dialog', { name: 'Ready to Publish?' })
       ).toBeInTheDocument();
     });
   });

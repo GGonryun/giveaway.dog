@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useId, useMemo, useState } from 'react';
 import { useIsTablet } from '@giveaway/ui-hooks/use-tablet';
 import { UnifiedFormLayout } from './unified-form-layout';
 import {
@@ -37,6 +37,7 @@ export type UnifiedFormLayoutState<TSteps extends string> = {
 };
 
 export type UnifiedFormLayoutDerivedState<TSteps extends string> = {
+  formId: string;
   isLoadingLayout: boolean;
   mobile: boolean;
   stepErrors: Record<TSteps, number>;
@@ -60,6 +61,7 @@ export const UnifiedFormLayoutContext = React.createContext<
   disabled: false,
   integrations: [],
   currentStep: '',
+  formId: '',
   isLoadingLayout: false,
   mobile: false,
   setCurrentStep: () => {},
@@ -94,6 +96,7 @@ export type UnifiedFormLayoutContextProps<TSteps extends string> =
     Omit<UnifiedFormLayoutState<TSteps>, 'currentStep'> & {
       defaultStep: TSteps;
       hideTabs?: boolean;
+      onSubmit: React.FormEventHandler<HTMLFormElement>;
     };
 
 export const UnifiedFormLayoutContextProvider = <T extends string>({
@@ -113,8 +116,10 @@ export const UnifiedFormLayoutContextProvider = <T extends string>({
   setShowIssues,
   showIssues,
   banner,
+  onSubmit,
   ...props
 }: UnifiedFormLayoutContextProps<T>) => {
+  const formId = useId();
   const { trigger } = useFormContext();
   const formErrors = useFormErrors();
 
@@ -170,6 +175,7 @@ export const UnifiedFormLayoutContextProvider = <T extends string>({
         type,
         title,
         disabled,
+        formId,
         mobile,
         isLoadingLayout,
         stepLabels,
@@ -190,6 +196,7 @@ export const UnifiedFormLayoutContextProvider = <T extends string>({
         banner
       }}
     >
+      <form id={formId} onSubmit={onSubmit} hidden />
       <UnifiedFormLayout {...props} />
     </UnifiedFormLayoutContext.Provider>
   );
