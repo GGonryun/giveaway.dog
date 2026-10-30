@@ -231,55 +231,54 @@ const FormContent: React.FC<{
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <UnifiedFormLayoutContextProvider
-          id={id}
-          title={name}
-          disabled={
-            deleteDraft.isLoading ||
-            updateSweepstakesProcedure.isLoading ||
-            publishSweepstakesProcedure.isLoading
-          }
-          showIssues={showIssues}
-          defaultStep={step}
-          setShowIssues={setShowIssues}
-          onCancel={handleCancel}
-          onSave={handleSaveChanges}
-          form={<SweepstakeFormContent />}
-          preview={<SweepstakesFormPreview />}
-          integrations={integrations}
-          previewFooter={<SweepstakesPreviewFooter />}
-          type={'sweepstake'}
-          action={action}
-          stepOrder={SWEEPSTAKE_STEP_ORDER}
-          stepsToFields={SWEEPSTAKE_STEP_TO_FIELD_MAP}
-          fieldsToSteps={SWEEPSTAKE_FIELD_TO_STEP_MAP}
-          stepLabels={SWEEPSTAKE_STEP_LABELS}
-        />
+      <UnifiedFormLayoutContextProvider
+        id={id}
+        title={name}
+        disabled={
+          deleteDraft.isLoading ||
+          updateSweepstakesProcedure.isLoading ||
+          publishSweepstakesProcedure.isLoading
+        }
+        showIssues={showIssues}
+        defaultStep={step}
+        setShowIssues={setShowIssues}
+        onCancel={handleCancel}
+        onSave={handleSaveChanges}
+        form={<SweepstakeFormContent />}
+        preview={<SweepstakesFormPreview />}
+        integrations={integrations}
+        previewFooter={<SweepstakesPreviewFooter />}
+        type={'sweepstake'}
+        action={action}
+        stepOrder={SWEEPSTAKE_STEP_ORDER}
+        stepsToFields={SWEEPSTAKE_STEP_TO_FIELD_MAP}
+        fieldsToSteps={SWEEPSTAKE_FIELD_TO_STEP_MAP}
+        stepLabels={SWEEPSTAKE_STEP_LABELS}
+        onSubmit={handleSubmit}
+      />
 
-        <CancelConfirmationModal
-          onClose={() => setShowCancelModal(false)}
-          open={showCancelModal}
-          isLoading={
-            deleteDraft.isLoading || updateSweepstakesProcedure.isLoading
-          }
-          action={action}
-          onDiscard={handleDiscardChanges}
-          onSave={handleSaveChanges}
-        />
+      <CancelConfirmationModal
+        onClose={() => setShowCancelModal(false)}
+        open={showCancelModal}
+        isLoading={
+          deleteDraft.isLoading || updateSweepstakesProcedure.isLoading
+        }
+        action={action}
+        onDiscard={handleDiscardChanges}
+        onSave={handleSaveChanges}
+      />
 
-        <PublishConfirmationModal
-          open={showPublishModal}
-          onClose={handleClosePublishModal}
-          onCancel={handleCancelSubmission}
-          onSave={handleSaveChanges}
-          onPublish={handlePublish}
-          isPublishing={publishSweepstakesProcedure.isLoading}
-          isSaving={updateSweepstakesProcedure.isLoading}
-          action={action}
-          name={name}
-        />
-      </form>
+      <PublishConfirmationModal
+        open={showPublishModal}
+        onClose={handleClosePublishModal}
+        onCancel={handleCancelSubmission}
+        onSave={handleSaveChanges}
+        onPublish={handlePublish}
+        isPublishing={publishSweepstakesProcedure.isLoading}
+        isSaving={updateSweepstakesProcedure.isLoading}
+        action={action}
+        name={name}
+      />
     </>
   );
 };
