@@ -1,13 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NotFoundError } from 'scrapebadger';
+import { ApplicationError } from '@giveaway/util-errors';
 import { FatalError, RetryableError } from 'workflow';
 import { STEP_RETRY_DELAY_MS, toStepError } from '../errors';
 
-const scrapeBadgerError = (name: string, fields: object = {}) =>
-  Object.assign(new Error(name), { name, ...fields });
-
 const NOW = new Date('2026-10-01T12:00:00.000Z');
 const LATER = new Date(NOW.getTime() + STEP_RETRY_DELAY_MS);
+
+const httpError = (status: number, retryAfter?: number) =>
+  new ApplicationError({
+    code: status === 429 ? 'TOO_MANY_REQUESTS' : 'BAD_GATEWAY',
+    message: `ScrapeBadger answered ${status}`,
+    data: { status, ...(retryAfter !== undefined && { retryAfter }) }
+  });
+
+const timeoutError = () =>
+  Object.assign(new Error('Request timed out'), { name: 'TimeoutError' });
 
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] });
@@ -20,10 +28,10 @@ afterEach(() => {
 
 describe('toStepError', () => {
   it.each([
-    ['a server error', scrapeBadgerError('ServerError', { statusCode: 503 })],
-    ['a timeout', scrapeBadgerError('TimeoutError')],
+    ['a server error', httpError(503)],
+    ['a timeout', timeoutError()],
     ['a network error', new TypeError('fetch failed')],
-    ['a rate limit without a reset time', scrapeBadgerError('RateLimitError')]
+    ['a rate limit without a reset time', httpError(429)]
   ])('retries %s a minute later', (_, error) => {
     const result = toStepError(error, 'Failed');
 
@@ -33,43 +41,22 @@ describe('toStepError', () => {
   });
 
   it('retries a rate limit when it resets', () => {
-    const resetAt = NOW.getTime() / 1000 + 600;
+    const resetAt = NOW.getTime() + 600_000;
 
-    const result = toStepError(
-      scrapeBadgerError('RateLimitError', { retryAfter: resetAt }),
-      'Failed'
-    );
+    const result = toStepError(httpError(429, resetAt), 'Failed');
 
-    expect((result as RetryableError).retryAfter).toEqual(
-      new Date(resetAt * 1000)
-    );
+    expect((result as RetryableError).retryAfter).toEqual(new Date(resetAt));
   });
 
   it('waits at least a minute when a rate limit resets sooner', () => {
-    const result = toStepError(
-      scrapeBadgerError('RateLimitError', {
-        retryAfter: NOW.getTime() / 1000 + 5
-      }),
-      'Failed'
-    );
-
-    expect((result as RetryableError).retryAfter).toEqual(LATER);
-  });
-
-  it('reads a reset time only from a rate limit', () => {
-    const result = toStepError(
-      scrapeBadgerError('ServerError', {
-        retryAfter: NOW.getTime() / 1000 + 600
-      }),
-      'Failed'
-    );
+    const result = toStepError(httpError(429, NOW.getTime() + 5_000), 'Failed');
 
     expect((result as RetryableError).retryAfter).toEqual(LATER);
   });
 
   it.each([
     ['a missing tweet', new NotFoundError('gone')],
-    ['a bad API key', scrapeBadgerError('AuthenticationError')],
+    ['a bad API key', Object.assign(new Error('denied'), { status: 401 })],
     ['an unreadable response', new SyntaxError('Unexpected token')]
   ])('fails for good on %s', (_, error) => {
     const result = toStepError(error, 'Failed');
