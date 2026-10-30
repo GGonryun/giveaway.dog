@@ -123,14 +123,11 @@ describe('submitTask', () => {
       expect(progress).toEqual([expect.objectContaining({ count: 2 })]);
     });
 
-    it.fails(
-      '[ENTRY-001] records one completion (fails until #261 is fixed)',
-      async () => {
-        const { completions } = await submitTwice();
+    it('[ENTRY-001] records one completion', async () => {
+      const { completions } = await submitTwice();
 
-        expect(completions).toHaveLength(1);
-      }
-    );
+      expect(completions).toHaveLength(1);
+    });
   });
 
   describe('when the audience of the giveaway does not include the participant', () => {
