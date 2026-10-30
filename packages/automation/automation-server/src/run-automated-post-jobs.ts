@@ -152,6 +152,25 @@ async function processAutomatedPostJob({
 }) {
   const parsed = toAutomatedPostJobSchema(job);
 
+  const timing = await db.sweepstakesTiming.findUnique({
+    where: { sweepstakesId: job.sweepstakesId },
+    select: { startDate: true }
+  });
+
+  if (timing?.startDate && timing.startDate > new Date()) {
+    await db.automatedPostJob.update({
+      where: { id: job.id },
+      data: {
+        status: AutomatedPostJobStatus.PENDING,
+        runAt: timing.startDate
+      }
+    });
+    console.info(
+      `Sweepstakes ${job.sweepstakesId} has not started yet, rescheduling automated post job ${job.id}`
+    );
+    return;
+  }
+
   switch (parsed.type) {
     case 'POST_TO_TWITTER':
       return processPostToTwitter({ db, job: parsed });

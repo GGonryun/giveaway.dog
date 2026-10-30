@@ -7,6 +7,7 @@ import {
 } from '@giveaway/sweepstakes-model/db';
 import { toStorableSweepstakes } from '@giveaway/sweepstakes-model/storable';
 import {
+  AutomatedPostJobStatus,
   Prisma,
   PrismaClient,
   SweepstakesJobStatus,
@@ -304,6 +305,18 @@ export const applySweepstakesChanges = async ({
             request: d.request ?? undefined,
             response: d.response ?? undefined
           }))
+        });
+      }
+
+      if (input.timing?.startDate) {
+        await tx.automatedPostJob.updateMany({
+          where: {
+            sweepstakesId: sweepstakes.id,
+            status: AutomatedPostJobStatus.PENDING
+          },
+          data: {
+            runAt: input.timing.startDate
+          }
         });
       }
 
