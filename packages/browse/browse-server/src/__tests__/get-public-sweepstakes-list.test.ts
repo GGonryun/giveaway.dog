@@ -30,11 +30,11 @@ describe('getPublicSweepstakesList', () => {
   });
 
   describe('query shape', () => {
-    it('queries active public sweepstakes that are running, recently ended, or starting within a day', async () => {
+    it('queries active and completed public sweepstakes that are running, recently ended, or starting within a day', async () => {
       await getPublicSweepstakesList(undefined);
 
       expect(findManyArgs().where).toEqual({
-        status: 'ACTIVE',
+        status: { in: ['ACTIVE', 'COMPLETED'] },
         visibility: { visibility: 'PUBLIC' },
         OR: [
           {
@@ -394,6 +394,24 @@ describe('getPublicSweepstakesList', () => {
       });
 
       expect(expectOk(result)).toEqual([]);
+    });
+
+    it('keeps a completed sweepstakes when COMPLETED is requested', async () => {
+      prismaMock.sweepstakes.findMany.mockResolvedValue([
+        buildPublicSweepstakes({ id: 'running' }),
+        buildPublicSweepstakes({
+          id: 'completed',
+          status: 'COMPLETED',
+          startDate: daysFromFixedNow(-4),
+          endDate: daysFromFixedNow(-0.5)
+        })
+      ]);
+
+      const result = await getPublicSweepstakesList({
+        showStatuses: ['COMPLETED']
+      });
+
+      expect(expectOk(result).map((item) => item.id)).toEqual(['completed']);
     });
   });
 

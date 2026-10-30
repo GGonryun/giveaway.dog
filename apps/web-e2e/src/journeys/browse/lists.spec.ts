@@ -67,7 +67,7 @@ test.describe('the public giveaway lists', { tag: '@slow' }, () => {
 
   test.beforeEach(({ request }) => requirePublicSeeds(request));
 
-  test('[VIS-001] /browse shows exactly the open, upcoming and recently ended public giveaways', async ({
+  test('[VIS-001] /browse shows exactly the open, upcoming and recently ended or completed public giveaways', async ({
     page,
     request
   }, testInfo) => {
@@ -79,8 +79,9 @@ test.describe('the public giveaway lists', { tag: '@slow' }, () => {
 
     await page.goto(`/browse?search=${token}`);
 
-    await expect(page.getByText('Showing 3 giveaways')).toBeVisible();
+    await expect(page.getByText('Showing 4 giveaways')).toBeVisible();
     expect(await kindsOnPage(page, token)).toEqual([
+      'completedRecently',
       'endedRecently',
       'running',
       'startsSoon'
@@ -89,7 +90,8 @@ test.describe('the public giveaway lists', { tag: '@slow' }, () => {
     const badges: [Kind, string][] = [
       ['running', 'New'],
       ['startsSoon', 'Upcoming'],
-      ['endedRecently', 'Finished']
+      ['endedRecently', 'Finished'],
+      ['completedRecently', 'Finished']
     ];
     for (const [kind, badge] of badges) {
       const giveaway = giveaways[kind]!;
