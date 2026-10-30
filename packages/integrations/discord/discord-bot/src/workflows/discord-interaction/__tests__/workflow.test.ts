@@ -236,7 +236,7 @@ describe('discordInteractionWorkflow', () => {
       });
     });
 
-    it('sends the confirmation before committing the entry', async () => {
+    it('sends the confirmation after committing the entry', async () => {
       await discordInteractionWorkflow({
         body: buttonInteraction(),
         taskId: 'task-1'
@@ -244,7 +244,7 @@ describe('discordInteractionWorkflow', () => {
 
       const [patchOrder] = m.patchDiscordWebhook.mock.invocationCallOrder;
       const [commitOrder] = m.commitEntry.mock.invocationCallOrder;
-      expect(patchOrder).toBeLessThan(commitOrder);
+      expect(commitOrder).toBeLessThan(patchOrder);
     });
 
     it('refreshes the embed and schedules rewards for the committed user', async () => {
@@ -274,7 +274,7 @@ describe('discordInteractionWorkflow', () => {
       expect(m.scheduleRewards).not.toHaveBeenCalled();
     });
 
-    it('propagates a commit failure after the confirmation was already sent', async () => {
+    it('propagates a commit failure without confirming the entry', async () => {
       m.commitEntry.mockRejectedValue(new Error('commit failed'));
 
       await expect(
@@ -283,10 +283,7 @@ describe('discordInteractionWorkflow', () => {
           taskId: 'task-1'
         })
       ).rejects.toThrow('commit failed');
-      expect(m.patchDiscordWebhook).toHaveBeenCalledWith({
-        ...webhookTarget,
-        message: { content: 'Your entry is confirmed!', flags: 64 }
-      });
+      expect(m.patchDiscordWebhook).not.toHaveBeenCalled();
       expect(m.updateDiscordEmbed).not.toHaveBeenCalled();
       expect(m.scheduleRewards).not.toHaveBeenCalled();
     });

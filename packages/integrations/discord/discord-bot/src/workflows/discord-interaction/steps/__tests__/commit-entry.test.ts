@@ -36,6 +36,11 @@ describe('commitEntry', () => {
     vi.spyOn(console, 'log').mockImplementation(consoleLog);
     consoleLog.mockReset();
     prismaMock.user.create.mockResolvedValue({ id: 'user-new' });
+    prismaMock.account.findUnique.mockResolvedValue(null);
+    prismaMock.sweepstakesParticipant.upsert.mockResolvedValue({
+      id: 'participant-1'
+    });
+    prismaMock.taskCompletion.findFirst.mockResolvedValue(null);
   });
 
   afterEach(() => {
@@ -48,20 +53,21 @@ describe('commitEntry', () => {
       const result = await commitEntry(args());
 
       expect(result).toEqual({ userId: 'user-existing' });
+      expect(prismaMock.sweepstakesParticipant.upsert).toHaveBeenCalledWith({
+        where: {
+          userId_sweepstakesId: {
+            userId: 'user-existing',
+            sweepstakesId: 'sweep-1'
+          }
+        },
+        create: { userId: 'user-existing', sweepstakesId: 'sweep-1' },
+        update: {},
+        select: { id: true }
+      });
       expect(prismaMock.taskCompletion.create).toHaveBeenCalledWith({
         data: {
-          participant: {
-            connectOrCreate: {
-              where: {
-                userId_sweepstakesId: {
-                  userId: 'user-existing',
-                  sweepstakesId: 'sweep-1'
-                }
-              },
-              create: { userId: 'user-existing', sweepstakesId: 'sweep-1' }
-            }
-          },
-          task: { connect: { id: 'task-1' } },
+          participantId: 'participant-1',
+          taskId: 'task-1',
           status: 'COMPLETED',
           proof: {
             discordGuildId: 'guild-1',
@@ -74,12 +80,32 @@ describe('commitEntry', () => {
       });
     });
 
-    it('does not create a new user or scoring request', async () => {
+    it('does not look up, create or score a user', async () => {
       await commitEntry(args());
 
+      expect(prismaMock.account.findUnique).not.toHaveBeenCalled();
       expect(prismaMock.user.create).not.toHaveBeenCalled();
       expect(prismaMock.userScoringRequest.create).not.toHaveBeenCalled();
       expect(ensureScoringDrain).not.toHaveBeenCalled();
+    });
+
+    it('locks the participant row before it checks for an earlier completion', async () => {
+      await commitEntry(args());
+
+      expect(prismaMock.$executeRaw).toHaveBeenCalledTimes(1);
+      const [strings, participantId] = prismaMock.$executeRaw.mock.calls[0];
+      expect((strings as TemplateStringsArray).join('?')).toBe(
+        'SELECT id FROM "Participant" WHERE id = ? FOR UPDATE'
+      );
+      expect(participantId).toBe('participant-1');
+      const [lockOrder] = prismaMock.$executeRaw.mock.invocationCallOrder;
+      const [findOrder] =
+        prismaMock.taskCompletion.findFirst.mock.invocationCallOrder;
+      expect(lockOrder).toBeLessThan(findOrder);
+      expect(prismaMock.taskCompletion.findFirst).toHaveBeenCalledWith({
+        where: { participantId: 'participant-1', taskId: 'task-1' },
+        select: { id: true }
+      });
     });
 
     it('records an empty role list when the interaction has no member', async () => {
@@ -104,10 +130,35 @@ describe('commitEntry', () => {
     });
   });
 
+  describe('when the participant already completed the task', () => {
+    it('records no second completion and returns the user', async () => {
+      prismaMock.taskCompletion.findFirst.mockResolvedValue({
+        id: 'completion-1'
+      });
+
+      const result = await commitEntry(args());
+
+      expect(result).toEqual({ userId: 'user-existing' });
+      expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+      expect(consoleLog).toHaveBeenCalledWith(
+        'Duplicate entry detected — already recorded, ignoring.'
+      );
+    });
+  });
+
   describe('when the participant has no account yet', () => {
     it('imports a discord user named after the member nickname with an avatar url', async () => {
       await commitEntry(args({ existingUserId: null }));
 
+      expect(prismaMock.account.findUnique).toHaveBeenCalledWith({
+        where: {
+          provider_providerAccountId: {
+            provider: 'discord',
+            providerAccountId: 'discord-user-1'
+          }
+        },
+        select: { userId: true }
+      });
       expect(prismaMock.user.create).toHaveBeenCalledWith({
         data: {
           name: 'Doggo Nick',
@@ -188,12 +239,13 @@ describe('commitEntry', () => {
       });
     });
 
-    it('creates a scoring request for the new user', async () => {
+    it('creates the user and its scoring request in one transaction', async () => {
       await commitEntry(args({ existingUserId: null }));
 
       expect(prismaMock.userScoringRequest.create).toHaveBeenCalledWith({
         data: { userId: 'user-new' }
       });
+      expect(prismaMock.$transaction).toHaveBeenCalledTimes(2);
     });
 
     it('starts the scoring drain after the scoring request is written', async () => {
@@ -210,21 +262,11 @@ describe('commitEntry', () => {
       const result = await commitEntry(args({ existingUserId: null }));
 
       expect(result).toEqual({ userId: 'user-new' });
-      expect(prismaMock.taskCompletion.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({
-          participant: {
-            connectOrCreate: {
-              where: {
-                userId_sweepstakesId: {
-                  userId: 'user-new',
-                  sweepstakesId: 'sweep-1'
-                }
-              },
-              create: { userId: 'user-new', sweepstakesId: 'sweep-1' }
-            }
-          }
+      expect(prismaMock.sweepstakesParticipant.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: { userId: 'user-new', sweepstakesId: 'sweep-1' }
         })
-      });
+      );
     });
 
     it('creates the user, then the scoring request, then the completion', async () => {
@@ -260,53 +302,55 @@ describe('commitEntry', () => {
     });
   });
 
-  describe('when recording the completion fails', () => {
-    it('ignores a duplicate entry error identified by a P2002 code', async () => {
-      prismaMock.taskCompletion.create.mockRejectedValue({ code: 'P2002' });
-
-      const result = await commitEntry(args());
-
-      expect(result).toEqual({ userId: 'user-existing' });
-      expect(consoleLog).toHaveBeenCalledWith(
-        'Duplicate entry detected (P2002) — confirmation already sent, ignoring.'
-      );
-    });
-
-    it('ignores a prisma unique constraint error', async () => {
-      prismaMock.taskCompletion.create.mockRejectedValue(
-        knownRequestError('P2002')
-      );
-
-      await expect(commitEntry(args())).resolves.toEqual({
-        userId: 'user-existing'
+  describe('when the Discord account was already imported', () => {
+    it('uses the imported user, creates no user or scoring request and ensures the scoring drain', async () => {
+      prismaMock.account.findUnique.mockResolvedValue({
+        userId: 'user-imported'
       });
+
+      const result = await commitEntry(args({ existingUserId: null }));
+
+      expect(result).toEqual({ userId: 'user-imported' });
+      expect(prismaMock.user.create).not.toHaveBeenCalled();
+      expect(prismaMock.userScoringRequest.create).not.toHaveBeenCalled();
+      expect(ensureScoringDrain).toHaveBeenCalledTimes(1);
+      expect(prismaMock.sweepstakesParticipant.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: { userId: 'user-imported', sweepstakesId: 'sweep-1' }
+        })
+      );
     });
 
-    it('rethrows a prisma error with another code', async () => {
+    it('uses the user that another request imported at the same time', async () => {
+      prismaMock.account.findUnique
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ userId: 'user-raced' });
+      prismaMock.user.create.mockRejectedValue(knownRequestError('P2002'));
+
+      const result = await commitEntry(args({ existingUserId: null }));
+
+      expect(result).toEqual({ userId: 'user-raced' });
+      expect(ensureScoringDrain).toHaveBeenCalledTimes(1);
+    });
+
+    it('rethrows the unique constraint error when no account is found after it', async () => {
+      const error = knownRequestError('P2002');
+      prismaMock.user.create.mockRejectedValue(error);
+
+      await expect(commitEntry(args({ existingUserId: null }))).rejects.toBe(
+        error
+      );
+      expect(ensureScoringDrain).not.toHaveBeenCalled();
+      expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when a write fails', () => {
+    it('rethrows a failure to record the completion', async () => {
       const error = knownRequestError('P2003');
       prismaMock.taskCompletion.create.mockRejectedValue(error);
 
       await expect(commitEntry(args())).rejects.toBe(error);
-      expect(consoleLog).not.toHaveBeenCalled();
-    });
-
-    it('rethrows an error object without a code', async () => {
-      const error = new Error('connection lost');
-      prismaMock.taskCompletion.create.mockRejectedValue(error);
-
-      await expect(commitEntry(args())).rejects.toBe(error);
-    });
-
-    it('rethrows a null rejection', async () => {
-      prismaMock.taskCompletion.create.mockRejectedValue(null);
-
-      await expect(commitEntry(args())).rejects.toBeNull();
-    });
-
-    it('rethrows a non-object rejection', async () => {
-      prismaMock.taskCompletion.create.mockRejectedValue('P2002');
-
-      await expect(commitEntry(args())).rejects.toBe('P2002');
     });
 
     it('propagates a failure to create the imported user', async () => {
@@ -315,7 +359,53 @@ describe('commitEntry', () => {
       await expect(commitEntry(args({ existingUserId: null }))).rejects.toThrow(
         'user failed'
       );
+      expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+    });
+
+    it('rethrows a null rejection of the user import', async () => {
+      prismaMock.user.create.mockRejectedValue(null);
+
+      await expect(
+        commitEntry(args({ existingUserId: null }))
+      ).rejects.toBeNull();
+    });
+
+    it('rethrows a non-object rejection of the user import', async () => {
+      prismaMock.user.create.mockRejectedValue('P2002');
+
+      await expect(commitEntry(args({ existingUserId: null }))).rejects.toBe(
+        'P2002'
+      );
+    });
+
+    it('rethrows a prisma error with another code from the user import', async () => {
+      const error = knownRequestError('P2003');
+      prismaMock.user.create.mockRejectedValue(error);
+
+      await expect(commitEntry(args({ existingUserId: null }))).rejects.toBe(
+        error
+      );
+      expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(1);
+    });
+
+    it('rethrows a plain object with a P2002 code', async () => {
+      const error = { code: 'P2002' };
+      prismaMock.user.create.mockRejectedValue(error);
+
+      await expect(commitEntry(args({ existingUserId: null }))).rejects.toBe(
+        error
+      );
+      expect(prismaMock.account.findUnique).toHaveBeenCalledTimes(1);
+    });
+
+    it('rethrows an error object without a code', async () => {
+      const error = new Error('connection lost');
+      prismaMock.user.create.mockRejectedValue(error);
+
+      await expect(commitEntry(args({ existingUserId: null }))).rejects.toBe(
+        error
+      );
     });
   });
 });

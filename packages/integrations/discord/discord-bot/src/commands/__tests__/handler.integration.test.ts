@@ -132,56 +132,47 @@ describe('POST /api/discord/interactions', () => {
       });
     });
 
-    it.fails(
-      'records one entry when both presses of a participant are handled at the same time (fails until #307 is fixed)',
-      async () => {
-        const entry = await setup();
-        const user = await createDiscordUser();
-        await db.sweepstakesParticipant.create({
-          data: { userId: user.id, sweepstakesId: entry.sweepstakes.id }
-        });
-        const request = press(entry.task.id);
+    it('records one entry when both presses of a participant are handled at the same time', async () => {
+      const entry = await setup();
+      const user = await createDiscordUser();
+      await db.sweepstakesParticipant.create({
+        data: { userId: user.id, sweepstakesId: entry.sweepstakes.id }
+      });
+      const request = press(entry.task.id);
 
-        await holdTableWrites('TaskCompletion', { writers: 2 }, () =>
-          Promise.all([handle(request), handle(request)])
-        );
+      await holdTableWrites('TaskCompletion', { writers: 2 }, () =>
+        Promise.all([handle(request), handle(request)])
+      );
 
-        expect(
-          await db.taskCompletion.count({ where: { taskId: entry.task.id } })
-        ).toBe(1);
-      }
-    );
+      expect(
+        await db.taskCompletion.count({ where: { taskId: entry.task.id } })
+      ).toBe(1);
+    });
   });
 
   describe('when the workflow runs the commitEntry step again after the function stopped', () => {
-    it.fails(
-      'keeps one entry for a new Discord user after a stop at any write (fails until #307 is fixed)',
-      async () => {
-        const { mismatches } = await crashAtEveryWrite({
-          setup,
-          run: (entry) => commitEntry(commitInput(entry)),
-          state: entryState
-        });
+    it('keeps one entry for a new Discord user after a stop at any write', async () => {
+      const { mismatches } = await crashAtEveryWrite({
+        setup,
+        run: (entry) => commitEntry(commitInput(entry)),
+        state: entryState
+      });
 
-        expect(mismatches).toEqual([]);
-      }
-    );
+      expect(mismatches).toEqual([]);
+    });
 
-    it.fails(
-      'keeps one entry for a known Discord user after a stop at any write (fails until #307 is fixed)',
-      async () => {
-        const { mismatches } = await crashAtEveryWrite({
-          setup: async () => {
-            const entry = await setup();
-            const user = await createDiscordUser();
-            return { ...entry, existingUserId: user.id };
-          },
-          run: (entry) => commitEntry(commitInput(entry)),
-          state: entryState
-        });
+    it('keeps one entry for a known Discord user after a stop at any write', async () => {
+      const { mismatches } = await crashAtEveryWrite({
+        setup: async () => {
+          const entry = await setup();
+          const user = await createDiscordUser();
+          return { ...entry, existingUserId: user.id };
+        },
+        run: (entry) => commitEntry(commitInput(entry)),
+        state: entryState
+      });
 
-        expect(mismatches).toEqual([]);
-      }
-    );
+      expect(mismatches).toEqual([]);
+    });
   });
 });
