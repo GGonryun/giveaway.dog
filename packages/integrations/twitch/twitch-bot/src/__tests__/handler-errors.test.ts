@@ -6,6 +6,10 @@ const verifyMock = vi.hoisted(() => vi.fn());
 
 vi.mock('../verify', () => ({ verifyTwitchRequest: verifyMock }));
 
+vi.mock('@giveaway/cache/redis', () => ({
+  redis: { get: vi.fn(), set: vi.fn(), del: vi.fn() }
+}));
+
 const request = () =>
   new NextRequest('http://localhost:3000/api/twitch/webhooks', {
     method: 'POST',

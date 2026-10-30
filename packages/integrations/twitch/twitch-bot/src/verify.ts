@@ -18,6 +18,7 @@ export type TwitchMessageType =
 
 export interface VerifiedTwitchRequest {
   body: unknown;
+  messageId: string;
   messageType: TwitchMessageType;
 }
 
@@ -105,6 +106,7 @@ export const verifyTwitchRequest = async (
 
   return {
     body: parseJsonBody(body),
+    messageId,
     messageType: messageType as TwitchMessageType
   };
 };

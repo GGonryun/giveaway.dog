@@ -68,6 +68,7 @@ describe('twitch webhook POST handler', () => {
     vi.stubEnv('TWITCH_BOT_USER_ID', 'bot-1');
     redisMock.get.mockReset();
     redisMock.set.mockReset();
+    redisMock.set.mockResolvedValue('OK');
     redisMock.del.mockReset();
     vi.spyOn(console, 'info').mockImplementation(() => undefined);
     vi.spyOn(console, 'log').mockImplementation(() => undefined);
@@ -218,6 +219,94 @@ describe('twitch webhook POST handler', () => {
       );
 
       expect(response.status).toBe(400);
+    });
+  });
+
+  describe('redelivered messages', () => {
+    const notification = () =>
+      webhookRequest({
+        messageType: 'notification',
+        body: {
+          subscription: subscriptionPayload(),
+          event: chatMessageEvent({ chatter_user_id: 'bot-1' })
+        }
+      });
+
+    const revocation = () =>
+      webhookRequest({
+        messageType: 'revocation',
+        body: { subscription: subscriptionPayload({ status: 'revoked' }) }
+      });
+
+    it('records the message ID for 10 minutes before processing it', async () => {
+      await POST(notification());
+
+      expect(redisMock.set).toHaveBeenCalledWith(
+        'twitch:eventsub:message-1',
+        1,
+        { nx: true, ex: 600 }
+      );
+    });
+
+    it('skips a notification that was already received', async () => {
+      redisMock.set.mockResolvedValue(null);
+
+      const response = await POST(notification());
+
+      expect(response.status).toBe(200);
+      await expect(response.json()).resolves.toEqual({ status: 'ok' });
+      expect(console.info).toHaveBeenCalledWith(
+        'Skipping a Twitch message that was already received:',
+        'message-1'
+      );
+      expect(console.info).not.toHaveBeenCalledWith(
+        'Processing Twitch chat message event:',
+        expect.anything()
+      );
+    });
+
+    it('skips a revocation that was already received', async () => {
+      redisMock.set.mockResolvedValue(null);
+
+      const response = await POST(revocation());
+
+      expect(response.status).toBe(200);
+      await expect(response.json()).resolves.toEqual({ status: 'ok' });
+      expect(prismaMock.eventSubSubscription.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('forgets the message ID when processing fails, so the next delivery runs', async () => {
+      prismaMock.eventSubSubscription.findUnique.mockRejectedValue(
+        new Error('db down')
+      );
+
+      const response = await POST(revocation());
+
+      expect(response.status).toBe(500);
+      expect(redisMock.del).toHaveBeenCalledWith('twitch:eventsub:message-1');
+    });
+
+    it('keeps the message ID when processing succeeds', async () => {
+      await POST(notification());
+
+      expect(redisMock.del).not.toHaveBeenCalled();
+    });
+
+    it('answers every subscription verification', async () => {
+      redisMock.set.mockResolvedValue(null);
+
+      const response = await POST(
+        webhookRequest({
+          messageType: 'webhook_callback_verification',
+          body: {
+            challenge: 'challenge-123',
+            subscription: subscriptionPayload()
+          }
+        })
+      );
+
+      await expect(response.text()).resolves.toBe('challenge-123');
+      expect(redisMock.set).not.toHaveBeenCalled();
     });
   });
 

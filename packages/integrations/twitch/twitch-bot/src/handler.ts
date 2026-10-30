@@ -2,11 +2,32 @@ import 'server-only';
 
 import { ApplicationError } from '@giveaway/util-errors';
 import { NextRequest, NextResponse } from 'next/server';
+import { claimDelivery, releaseDelivery } from './deliveries';
 import { verifyTwitchRequest } from './verify';
+
+const processOnce = async (
+  messageId: string,
+  process: () => Promise<NextResponse>
+) => {
+  if (!(await claimDelivery(messageId))) {
+    console.info(
+      'Skipping a Twitch message that was already received:',
+      messageId
+    );
+    return NextResponse.json({ status: 'ok' });
+  }
+
+  try {
+    return await process();
+  } catch (error) {
+    await releaseDelivery(messageId);
+    throw error;
+  }
+};
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { body, messageType } = await verifyTwitchRequest(request);
+    const { body, messageId, messageType } = await verifyTwitchRequest(request);
     console.info(
       'Received Twitch webhook request with message type:',
       messageType
@@ -20,11 +41,11 @@ export const POST = async (request: NextRequest) => {
       }
       case 'notification': {
         const { handleNotification } = await import('./notification');
-        return await handleNotification(body);
+        return await processOnce(messageId, () => handleNotification(body));
       }
       case 'revocation': {
         const { handleRevocation } = await import('./revocation');
-        return await handleRevocation(body);
+        return await processOnce(messageId, () => handleRevocation(body));
       }
       default:
         return NextResponse.json(

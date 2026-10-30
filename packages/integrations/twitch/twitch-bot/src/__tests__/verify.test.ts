@@ -79,6 +79,12 @@ describe('verifyTwitchRequest', () => {
       expect(result.body).toEqual({ challenge: 'abc', nested: { value: 1 } });
     });
 
+    it('returns the message ID', async () => {
+      const result = await verifyTwitchRequest(buildRequest());
+
+      expect(result.messageId).toBe('message-1');
+    });
+
     it.each(['webhook_callback_verification', 'notification', 'revocation'])(
       'returns the %s message type',
       async (messageType) => {
