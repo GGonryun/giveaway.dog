@@ -183,8 +183,6 @@ test.describe('team X pickers, as their host', () => {
 
   test(
     'a host deletes pickers that already have winners, from their page and from the list',
-    knownBug(579),
-
     async ({ page, request }, testInfo) => {
       const ns = freshNamespace(testInfo.workerIndex);
       const { team } = await seedPickerTeam(request, ns);
