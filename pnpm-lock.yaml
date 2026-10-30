@@ -9156,6 +9156,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/picker-model':
+        specifier: workspace:*
+        version: link:../picker-model
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server

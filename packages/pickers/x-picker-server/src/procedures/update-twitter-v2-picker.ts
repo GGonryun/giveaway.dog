@@ -4,6 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { twitterV2PickerFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';
+import { assertPickerEditable } from './assert-picker-editable';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
@@ -48,6 +49,8 @@ export const updateTwitterV2Picker = procedure()
         message: 'You do not have permission to update this picker'
       });
     }
+
+    assertPickerEditable(picker);
 
     await db.twitterPicker.update({
       where: { id: pickerId },
