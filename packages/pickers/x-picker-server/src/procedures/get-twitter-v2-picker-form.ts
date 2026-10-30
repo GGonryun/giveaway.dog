@@ -7,6 +7,7 @@ import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
 import { twitterV2PickerUnvalidatedFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';
+import { assertPickerEditable } from './assert-picker-editable';
 
 export const getTwitterV2PickerForm = procedure()
   .authorization({
@@ -33,6 +34,8 @@ export const getTwitterV2PickerForm = procedure()
         message: 'Picker not found'
       });
     }
+
+    assertPickerEditable(picker);
 
     return {
       setup: {
