@@ -24,8 +24,8 @@ const postUrlInput = (page: Page) =>
   page.getByRole('textbox', { name: 'Post URL' });
 
 const expectNotFound = async (page: Page, path: string) => {
-  const response = await page.goto(path);
-  expect(response?.status()).toBe(404);
+  const response = await page.request.get(path);
+  expect(response.status()).toBe(404);
 };
 
 test.describe('team X pickers, as their host', () => {
