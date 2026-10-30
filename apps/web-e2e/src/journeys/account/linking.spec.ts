@@ -61,19 +61,18 @@ const readAccounts = (page: Page, ns: string) =>
 test.describe('account linking', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to use the mock OAuth provider');
 
-  test(
-    '[ACCOUNT-016] the account page says that an account was merged',
-    knownBug(507),
-    async ({ page, freshPersona }) => {
-      await freshPersona('participant');
+  test('[ACCOUNT-016] the account page says that an account was merged', async ({
+    page,
+    freshPersona
+  }) => {
+    await freshPersona('participant');
 
-      await page.goto('/account?merged=true');
+    await page.goto('/account?merged=true');
 
-      await expect(
-        page.getByRole('alert').filter({ hasText: /merged/i })
-      ).toBeVisible();
-    }
-  );
+    await expect(
+      page.getByRole('alert').filter({ hasText: /merged/i })
+    ).toBeVisible();
+  });
 
   test('[ACCOUNT-024] a user who links the account of an imported user gets its entries', async ({
     browser,
@@ -158,59 +157,114 @@ test.describe('account linking', () => {
 test.describe('expired connections', () => {
   test.skip(!E2E_SECRET, 'Set E2E_LOGIN_SECRET to sign in the personas');
 
-  test(
-    '[ACCOUNT-017] the account page offers to reconnect an expired connection',
-    knownBug(568),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      await seedApi(request).userExtras({
-        ns,
-        users: [
-          {
-            persona: 'participant',
-            accounts: [{ identity: 'DISCORD', status: 'ERROR' }]
-          }
-        ]
-      });
-      await signInAs(page.request, 'participant', ns);
+  test('[ACCOUNT-017] the account page offers to reconnect an expired connection', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    await seedApi(request).userExtras({
+      ns,
+      users: [
+        {
+          persona: 'participant',
+          accounts: [{ identity: 'DISCORD', status: 'ERROR' }]
+        }
+      ]
+    });
+    await signInAs(page.request, 'participant', ns);
 
-      await page.goto('/account');
+    await page.goto('/account');
 
-      const row = accountRow(page, 'Discord');
-      await expect(row).toContainText(
-        'Your Discord connection has expired or been revoked'
-      );
-      await expect(
-        row.getByRole('button', { name: 'Reconnect' })
-      ).toBeVisible();
-    }
-  );
+    const row = accountRow(page, 'Discord');
+    await expect(row).toContainText(
+      'Your Discord connection has expired or been revoked'
+    );
+    await expect(row.getByRole('button', { name: 'Reconnect' })).toBeVisible();
+  });
 
-  test(
-    '[ACCOUNT-017] the account page offers to reconnect a connection that is missing permissions',
-    knownBug(568),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      await seedApi(request).userExtras({
-        ns,
-        users: [
-          {
-            persona: 'participant',
-            accounts: [{ identity: 'DISCORD', scopes: [] }]
-          }
-        ]
-      });
-      await signInAs(page.request, 'participant', ns);
+  test('[ACCOUNT-017] the account page offers to reconnect a connection that is missing permissions', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    await seedApi(request).userExtras({
+      ns,
+      users: [
+        {
+          persona: 'participant',
+          accounts: [{ identity: 'DISCORD', scopes: [] }]
+        }
+      ]
+    });
+    await signInAs(page.request, 'participant', ns);
 
-      await page.goto('/account');
+    await page.goto('/account');
 
-      const row = accountRow(page, 'Discord');
-      await expect(row).toContainText('Missing Permissions');
-      await expect(
-        row.getByRole('button', { name: 'Reconnect' })
-      ).toBeVisible();
-    }
-  );
+    const row = accountRow(page, 'Discord');
+    await expect(row).toContainText('Missing Permissions');
+    await expect(row.getByRole('button', { name: 'Reconnect' })).toBeVisible();
+  });
 
-  test.fixme('[ACCOUNT-018] signing in again with Discord clears an expired connection (#569)', async () => {});
+  test('[ACCOUNT-018] signing in again with Discord clears an expired connection', async ({
+    context,
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const profile: E2eDiscordProfile = {
+      id: newDiscordId(),
+      username: `e2e_${ns}`,
+      email: toPersonaEmail('participant', ns)
+    };
+    await seedApi(request).userExtras({
+      ns,
+      users: [
+        {
+          persona: 'participant',
+          accounts: [
+            {
+              identity: 'DISCORD',
+              status: 'ERROR',
+              providerAccountId: profile.id
+            }
+          ]
+        }
+      ]
+    });
+    await signInAs(page.request, 'participant', ns);
+    await useMockOAuth(context, 'discord', profile);
+
+    await page.goto('/account');
+    await page.waitForLoadState('networkidle');
+    await accountRow(page, 'Discord')
+      .getByRole('button', { name: 'Reconnect' })
+      .click();
+
+    await expect
+      .poll(
+        async () =>
+          (
+            await seedApi(request).rows<AccountRows>({
+              view: 'accounts',
+              persona: 'participant',
+              ns
+            })
+          ).accounts,
+        { timeout: SIGN_IN_TIMEOUT }
+      )
+      .toEqual([
+        expect.objectContaining({
+          provider: 'discord',
+          providerAccountId: profile.id,
+          status: 'ACTIVE'
+        })
+      ]);
+    await expect(page).toHaveURL(/\/account/, { timeout: SIGN_IN_TIMEOUT });
+    await page.goto('/account');
+    const row = accountRow(page, 'Discord');
+    await expect(row.getByRole('button', { name: 'Disconnect' })).toBeVisible();
+    await expect(row).not.toContainText('has expired or been revoked');
+    await expect(row).not.toContainText('Missing Permissions');
+    await expect(row.getByRole('button', { name: 'Reconnect' })).toBeHidden();
+  });
 });

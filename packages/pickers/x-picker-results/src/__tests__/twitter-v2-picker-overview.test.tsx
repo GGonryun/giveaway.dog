@@ -187,4 +187,34 @@ describe('TwitterV2PickerOverview', () => {
     );
     expect(drawTwitterV2Picker).not.toHaveBeenCalled();
   });
+
+  it('hides Edit Picker in the actions menu of a completed picker', async () => {
+    const user = userEvent.setup();
+    render(<TwitterV2PickerOverview picker={picker} slug="team" />);
+
+    await user.click(screen.getByRole('button', { name: 'Picker actions' }));
+
+    expect(
+      await screen.findByRole('menuitem', { name: 'Delete Picker' })
+    ).toBeVisible();
+    expect(
+      screen.queryByRole('menuitem', { name: 'Edit Picker' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('links Edit Picker to the editor of a picker that is still editable', async () => {
+    const user = userEvent.setup();
+    render(
+      <TwitterV2PickerOverview
+        picker={{ ...picker, status: PickerStatus.PROCESSED, draws: [] }}
+        slug="team"
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Picker actions' }));
+
+    expect(
+      await screen.findByRole('menuitem', { name: 'Edit Picker' })
+    ).toHaveAttribute('href', '/app/team/pickers/x/picker-1/edit');
+  });
 });

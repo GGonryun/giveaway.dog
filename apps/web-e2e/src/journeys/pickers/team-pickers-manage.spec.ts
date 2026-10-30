@@ -24,8 +24,8 @@ const postUrlInput = (page: Page) =>
   page.getByRole('textbox', { name: 'Post URL' });
 
 const expectNotFound = async (page: Page, path: string) => {
-  const response = await page.goto(path);
-  expect(response?.status()).toBe(404);
+  const response = await page.request.get(path);
+  expect(response.status()).toBe(404);
 };
 
 test.describe('team X pickers, as their host', () => {
@@ -61,13 +61,9 @@ test.describe('team X pickers, as their host', () => {
     await page
       .getByRole('spinbutton', { name: 'Minimum Followers' })
       .fill('50');
-    const lastPost = page.getByRole('switch', { name: 'Last Post' });
-    if (!(await lastPost.isChecked())) await lastPost.click();
-    await page
-      .getByRole('combobox')
-      .filter({ hasText: /^Past / })
-      .click();
-    await page.getByRole('option', { name: 'Past Day' }).click();
+    await expect(page.getByRole('switch', { name: 'Last Post' })).toHaveCount(
+      0
+    );
     const bio = page.getByRole('switch', { name: 'Bio/Description' });
     if (!(await bio.isChecked())) await bio.click();
 
@@ -91,10 +87,6 @@ test.describe('team X pickers, as their host', () => {
     await expect(
       page.getByRole('spinbutton', { name: 'Minimum Followers' })
     ).toHaveValue('50');
-    await expect(page.getByRole('switch', { name: 'Last Post' })).toBeChecked();
-    await expect(
-      page.getByRole('combobox').filter({ hasText: 'Past Day' })
-    ).toBeVisible();
     await expect(
       page.getByRole('switch', { name: 'Bio/Description' })
     ).toBeChecked();
@@ -181,56 +173,52 @@ test.describe('team X pickers, as their host', () => {
     await expect(page.getByText(/Error loading pickers/)).toHaveCount(0);
   });
 
-  test(
-    'a host deletes pickers that already have winners, from their page and from the list',
-    knownBug(579),
-
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      const { team } = await seedPickerTeam(request, ns);
-      const seedWithWinner = () =>
-        seedApi(request).picker({
-          team: team.slug,
-          users: [{ username: `win_${ns}` }],
-          draws: [{ user: 0 }]
-        });
-      const fromPage = await seedWithWinner();
-      const fromList = await seedWithWinner();
-      await signInAs(page.request, 'host', ns);
-
-      await page.goto(`/app/${team.slug}/pickers/x/${fromPage.id}`);
-      await expect(page.getByText('Winners (1)')).toBeVisible();
-      await pickerActions(page).click();
-      await page.getByRole('menuitem', { name: 'Delete Picker' }).click();
-      await page
-        .getByRole('dialog', { name: 'Delete Picker' })
-        .getByRole('button', { name: 'Delete Picker' })
-        .click();
-      await expect(page).toHaveURL(new RegExp(`/app/${team.slug}/pickers$`), {
-        timeout: 10_000
+  test('a host deletes pickers that already have winners, from their page and from the list', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    const { team } = await seedPickerTeam(request, ns);
+    const seedWithWinner = () =>
+      seedApi(request).picker({
+        team: team.slug,
+        users: [{ username: `win_${ns}` }],
+        draws: [{ user: 0 }]
       });
+    const fromPage = await seedWithWinner();
+    const fromList = await seedWithWinner();
+    await signInAs(page.request, 'host', ns);
 
-      await page.goto(`/app/${team.slug}/pickers/x`);
-      const row = pickerRow(page, fromList.id);
-      await row.getByRole('button').click();
-      await page.getByRole('menuitem', { name: 'Delete' }).click();
-      const dialog = page.getByRole('dialog', { name: 'Delete Picker' });
-      await dialog
-        .getByRole('textbox', { name: `Type '${fromList.id}' to confirm` })
-        .fill(fromList.id);
-      await dialog.getByRole('button', { name: 'Delete Picker' }).click();
-      await expect(page.getByText('Picker deleted')).toBeVisible();
+    await page.goto(`/app/${team.slug}/pickers/x/${fromPage.id}`);
+    await expect(page.getByText('Winners (1)')).toBeVisible();
+    await pickerActions(page).click();
+    await page.getByRole('menuitem', { name: 'Delete Picker' }).click();
+    await page
+      .getByRole('dialog', { name: 'Delete Picker' })
+      .getByRole('button', { name: 'Delete Picker' })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/app/${team.slug}/pickers$`), {
+      timeout: 10_000
+    });
 
-      await page.reload();
-      await expect(
-        page.getByRole('heading', { name: 'X Picker' })
-      ).toBeVisible();
-      for (const id of [fromPage.id, fromList.id]) {
-        await expect(pickerRow(page, id)).toHaveCount(0);
-        await expectNotFound(page, `/pickers/x/${id}`);
-      }
+    await page.goto(`/app/${team.slug}/pickers/x`);
+    const row = pickerRow(page, fromList.id);
+    await row.getByRole('button').click();
+    await page.getByRole('menuitem', { name: 'Delete' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Delete Picker' });
+    await dialog
+      .getByRole('textbox', { name: `Type '${fromList.id}' to confirm` })
+      .fill(fromList.id);
+    await dialog.getByRole('button', { name: 'Delete Picker' }).click();
+    await expect(page.getByText('Picker deleted')).toBeVisible();
+
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'X Picker' })).toBeVisible();
+    for (const id of [fromPage.id, fromList.id]) {
+      await expect(pickerRow(page, id)).toHaveCount(0);
+      await expectNotFound(page, `/pickers/x/${id}`);
     }
-  );
+  });
 
   test('a host schedules a picker for later', async ({
     page,
@@ -326,67 +314,68 @@ test.describe('team X pickers, as their host', () => {
   test.describe('on the ScrapeBadger fixtures', () => {
     skipWithoutScrapeBadgerFixtures();
 
-    test(
-      'a host cannot erase a completed draw by editing and publishing it again',
-      knownBug(581),
+    test('a host cannot erase a completed draw by editing and publishing it again', async ({
+      page,
+      request
+    }, testInfo) => {
+      test.slow();
+      const ns = freshNamespace(testInfo.workerIndex);
+      const { team } = await seedPickerTeam(request, ns);
+      await signInAs(page.request, 'host', ns);
+      const pickerId = await createTeamPicker(page, team.slug);
 
-      async ({ page, request }, testInfo) => {
-        test.slow();
-        const ns = freshNamespace(testInfo.workerIndex);
-        const { team } = await seedPickerTeam(request, ns);
-        await signInAs(page.request, 'host', ns);
-        const pickerId = await createTeamPicker(page, team.slug);
-
-        await postUrlInput(page).fill(teamPickerPostUrl(E2E_X_FIXTURES.tweet));
-        await page
-          .getByRole('spinbutton', { name: 'Number of Winners' })
-          .fill('1');
-        for (const name of [
-          'Minimum Post Count',
-          'Account Age (Days)',
-          'Minimum Followers',
-          'Minimum Following'
-        ]) {
-          await page.getByRole('spinbutton', { name }).clear();
-        }
-        const profileImage = page.getByRole('switch', {
-          name: 'Profile Image'
-        });
-        if (await profileImage.isChecked()) await profileImage.click();
-        await publishFromHeader(page);
-        await publishDialog(page)
-          .getByRole('button', { name: 'Publish', exact: true })
-          .click();
-        await page.waitForURL(`**/app/${team.slug}/pickers/x/${pickerId}`);
-
-        await expect(async () => {
-          await page.reload();
-          await expect(page.getByText('Ready to Draw Winners')).toBeVisible({
-            timeout: 2_000
-          });
-        }).toPass({ timeout: 60_000, intervals: [2_000] });
-        await page.waitForLoadState('networkidle');
-        await page.getByRole('button', { name: 'Draw Winners' }).click();
-        const winners = page.getByText('Winners (1)');
-        await expect(winners).toBeVisible({ timeout: 15_000 });
-
-        await pickerActions(page).click();
-        await page.getByRole('menuitem', { name: 'Edit Picker' }).click();
-        await page.waitForURL(`**/pickers/x/${pickerId}/edit`);
-        const winnersCount = page.getByRole('spinbutton', {
-          name: 'Number of Winners'
-        });
-        await expect(winnersCount).toHaveValue('1');
-        await winnersCount.fill('2');
-        await page.getByRole('button', { name: 'Save Changes' }).click();
-        await publishDialog(page)
-          .getByRole('button', { name: 'Publish', exact: true })
-          .click();
-        await page.waitForURL(`**/app/${team.slug}/pickers/x/${pickerId}`);
-
-        await page.reload();
-        await expect(winners).toBeVisible();
+      await postUrlInput(page).fill(teamPickerPostUrl(E2E_X_FIXTURES.tweet));
+      await page
+        .getByRole('spinbutton', { name: 'Number of Winners' })
+        .fill('1');
+      for (const name of [
+        'Minimum Post Count',
+        'Account Age (Days)',
+        'Minimum Followers',
+        'Minimum Following'
+      ]) {
+        await page.getByRole('spinbutton', { name }).clear();
       }
-    );
+      const profileImage = page.getByRole('switch', {
+        name: 'Profile Image'
+      });
+      if (await profileImage.isChecked()) await profileImage.click();
+      await publishFromHeader(page);
+      await publishDialog(page)
+        .getByRole('button', { name: 'Publish', exact: true })
+        .click();
+      await page.waitForURL(`**/app/${team.slug}/pickers/x/${pickerId}`);
+
+      await expect(async () => {
+        await page.reload();
+        await expect(page.getByText('Ready to Draw Winners')).toBeVisible({
+          timeout: 2_000
+        });
+      }).toPass({ timeout: 60_000, intervals: [2_000] });
+      await page.waitForLoadState('networkidle');
+      await page.getByRole('button', { name: 'Draw Winners' }).click();
+      const winners = page.getByText('Winners (1)');
+      await expect(winners).toBeVisible({ timeout: 15_000 });
+
+      await pickerActions(page).click();
+      await expect(
+        page.getByRole('menuitem', { name: 'Delete Picker' })
+      ).toBeVisible();
+      await expect(
+        page.getByRole('menuitem', { name: 'Edit Picker' })
+      ).toHaveCount(0);
+      await page.keyboard.press('Escape');
+
+      await page.goto(`/app/${team.slug}/pickers/x/${pickerId}/edit`);
+      await expect(
+        page.getByText('This picker can no longer be edited')
+      ).toBeVisible();
+      await expect(
+        page.getByRole('button', { name: 'Save Changes' })
+      ).toHaveCount(0);
+
+      await page.goto(`/app/${team.slug}/pickers/x/${pickerId}`);
+      await expect(winners).toBeVisible();
+    });
   });
 });

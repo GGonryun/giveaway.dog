@@ -3,7 +3,7 @@ import 'server-only';
 import { compact } from 'lodash';
 import { getScrapeBadgerClient } from '../client';
 import type { ScrapeBadgerClient } from '../fixtures';
-import { parseScrapeBadgerResponse } from '../parse';
+import { parseScrapeBadgerResponse, toScrapeBadgerError } from '../parse';
 import { scrapeBadgerRetweetersSchema } from '../schemas';
 import { User } from 'scrapebadger';
 
@@ -15,7 +15,11 @@ const fetchRetweeterPage = async (
   tweetId: string,
   options: { cursor?: string; count?: number }
 ) => {
-  const response = await client.twitter.tweets.getRetweeters(tweetId, options);
+  const response = await client.twitter.tweets
+    .getRetweeters(tweetId, options)
+    .catch((error: unknown) => {
+      throw toScrapeBadgerError(error, 'retweeters');
+    });
 
   parseScrapeBadgerResponse(
     scrapeBadgerRetweetersSchema,

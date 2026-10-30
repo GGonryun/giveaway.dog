@@ -4,6 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { twitterV2PickerFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';
+import { assertPickerEditable } from './assert-picker-editable';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
@@ -42,6 +43,8 @@ export const publishTwitterV2Picker = procedure()
         message: 'Picker not found'
       });
     }
+
+    assertPickerEditable(picker);
 
     await startScrapeTwitter({ picker, data });
 

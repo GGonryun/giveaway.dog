@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/picker-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/team-permissions": "workspace:*",
     "@giveaway/team-server": "workspace:*",

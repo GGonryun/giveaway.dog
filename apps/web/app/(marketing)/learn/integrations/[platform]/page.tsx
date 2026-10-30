@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { IntegrationLandingPage } from '@giveaway/marketing-learn/integration-landing-page';
 import { PlatformId } from '@giveaway/platform-catalog/platform-icons';
+import { pageMetadata } from '@giveaway/marketing-model/page-metadata';
 
 interface IntegrationPageProps {
   params: Promise<{
@@ -36,19 +37,37 @@ const PLATFORM_NAMES: Record<PlatformId, string> = {
 
 const VALID_PLATFORMS = Object.keys(PLATFORM_NAMES);
 
+const isPlatformId = (platform: string): platform is PlatformId =>
+  VALID_PLATFORMS.includes(platform);
+
+export async function generateMetadata({ params }: IntegrationPageProps) {
+  const { platform } = await params;
+
+  if (!isPlatformId(platform)) {
+    return {};
+  }
+
+  const platformName = PLATFORM_NAMES[platform];
+
+  return pageMetadata({
+    title: `${platformName} Giveaways | Giveaway.dog`,
+    description: `Run giveaways with ${platformName} entry methods on Giveaway.dog, and grow your ${platformName} audience with every entry.`
+  });
+}
+
 export default async function IntegrationPage({
   params
 }: IntegrationPageProps) {
   const { platform } = await params;
 
-  if (!VALID_PLATFORMS.includes(platform)) {
+  if (!isPlatformId(platform)) {
     notFound();
   }
 
-  const platformId = platform as PlatformId;
-  const platformName = PLATFORM_NAMES[platformId];
-
   return (
-    <IntegrationLandingPage platform={platformId} platformName={platformName} />
+    <IntegrationLandingPage
+      platform={platform}
+      platformName={PLATFORM_NAMES[platform]}
+    />
   );
 }

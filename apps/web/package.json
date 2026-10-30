@@ -129,6 +129,7 @@
     "@giveaway/marketing-animations": "workspace:*",
     "@giveaway/marketing-home": "workspace:*",
     "@giveaway/marketing-learn": "workspace:*",
+    "@giveaway/marketing-model": "workspace:*",
     "@giveaway/marketing-server": "workspace:*",
     "@giveaway/marketing-ui": "workspace:*",
     "@giveaway/meta-connect-ui": "workspace:*",

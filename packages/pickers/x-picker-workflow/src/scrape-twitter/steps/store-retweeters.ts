@@ -5,8 +5,8 @@ import {
   getRetweeters,
   getRetweetersUntil
 } from '@giveaway/x-scraper/procedures/get-retweeters';
-import { FatalError } from 'workflow';
 import { toTwitterPickerUsers } from '../shared';
+import { toStepError } from '../errors';
 
 export async function storeRetweeters({
   tweetId,
@@ -37,8 +37,9 @@ export async function storeRetweeters({
     return retweeters;
   } catch (error) {
     console.error('Error storing retweeters:', error);
-    throw new FatalError(
-      `Failed to store retweeters for tweetId ${tweetId}: ${error}`
+    throw toStepError(
+      error,
+      `Failed to store retweeters for tweetId ${tweetId}`
     );
   }
 }

@@ -18,7 +18,7 @@ export function AllGiveawaysGrid({
   hideEntered = false
 }: AllGiveawaysGridProps) {
   const filteredSweepstakes = hideEntered
-    ? sweepstakes.filter((s) => !participation[s.id])
+    ? sweepstakes.filter((s) => !participation[s.id]?.completed)
     : sweepstakes;
 
   if (filteredSweepstakes.length === 0) {

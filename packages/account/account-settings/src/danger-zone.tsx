@@ -17,8 +17,6 @@ import { Button } from '@giveaway/ui-primitives/button';
 import { toast } from 'sonner';
 import { useProcedure } from '@giveaway/rpc-client/hook';
 import { SettingsCard } from '@giveaway/ui-layouts/settings-card';
-import { Alert, AlertDescription } from '@giveaway/ui-primitives/alert';
-import { AlertTriangleIcon } from 'lucide-react';
 
 export const DangerZone = () => {
   const deleteUserProcedure = useProcedure({
@@ -53,15 +51,8 @@ export const DangerZone = () => {
               </AlertDialogTitle>
               <AlertDialogDescription className="space-y-2">
                 This action cannot be undone. Your account will be permanently
-                deleted.
+                deleted right away.
               </AlertDialogDescription>
-              <Alert variant="destructive" className="mt-2">
-                <AlertTriangleIcon />
-                <AlertDescription>
-                  Your account deletion will be fully processed after any
-                  giveaways you've entered have completed.
-                </AlertDescription>
-              </Alert>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>

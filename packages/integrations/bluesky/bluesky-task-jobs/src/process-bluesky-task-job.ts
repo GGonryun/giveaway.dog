@@ -8,7 +8,10 @@ import {
 } from '@giveaway/task-model/schemas';
 import { PrismaClient, TaskJobStatus } from '@giveaway/db-model';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
-import { datetime } from '@giveaway/util-time/date';
+import {
+  toImportIdleRuns,
+  toNextImportRunAt
+} from '@giveaway/task-model/import-schedule';
 import { ApplicationError } from '@giveaway/util-errors';
 import { takeUntil } from '@giveaway/util-collections/arrays';
 import { Tx } from '@giveaway/db-client/prisma';
@@ -134,31 +137,49 @@ export const processBlueskyTaskJob = async <
     `[${type}] Created ${created} and updated ${updated} task completions for task job ${job.id}`
   );
 
-  // Schedule prize allocation job if participants were created
-  if (created > 0) {
-    await scheduleRandomlyAssignPrizesJob({
-      db,
-      sweepstakesId
-    });
-  }
+  const idleRuns = toImportIdleRuns({
+    idleRuns: parsed.data.idleRuns,
+    foundNew: blueskyUsers.length > 0
+  });
+  const nextRunAt = toNextImportRunAt({
+    now: new Date(),
+    baseMinutes: parsed.data.runs * 5 + BLUESKY_API_RATE_LIMIT_MINUTES,
+    idleRuns,
+    endDate: job.task.sweepstakes.timing?.endDate
+  });
 
-  const nextRunAt = datetime.minutesFromNow(
-    parsed.data.runs * 5 + BLUESKY_API_RATE_LIMIT_MINUTES
-  );
-
-  await db.taskJob.create({
-    data: {
-      taskId: job.taskId,
-      status: TaskJobStatus.PENDING,
-      runAt: nextRunAt,
-      data: {
-        runs: parsed.data.runs + 1,
-        lastProcessedDid: response.data?.at(0)?.did
+  await db.$transaction(async (tx) => {
+    const participantsWithoutAllocation = await tx.sweepstakesParticipant.count(
+      {
+        where: { sweepstakesId, allocations: null }
       }
+    );
+    if (participantsWithoutAllocation > 0) {
+      await scheduleRandomlyAssignPrizesJob({ db: tx, sweepstakesId });
     }
+    if (nextRunAt) {
+      await tx.taskJob.create({
+        data: {
+          taskId: job.taskId,
+          status: TaskJobStatus.PENDING,
+          runAt: nextRunAt,
+          data: {
+            runs: parsed.data.runs + 1,
+            ...(idleRuns > 0 && { idleRuns }),
+            lastProcessedDid: response.data?.at(0)?.did
+          }
+        }
+      });
+    }
+    await tx.taskJob.update({
+      where: { id: job.id },
+      data: { status: TaskJobStatus.COMPLETED }
+    });
   });
 
   console.info(
-    `[${type}] Task job ${job.id} completed, scheduling next run at ${nextRunAt}`
+    nextRunAt
+      ? `[${type}] Task job ${job.id} completed, scheduling next run at ${nextRunAt} after ${idleRuns} scans with no new users`
+      : `[${type}] Task job ${job.id} completed, sweepstakes has ended - not scheduling next run`
   );
 };

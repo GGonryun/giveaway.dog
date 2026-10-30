@@ -140,6 +140,31 @@ describe('e2eUserExtrasRequestSchema', () => {
     });
   });
 
+  it('accepts a provider account id of digits', () => {
+    expect(
+      parse({
+        users: [
+          user({
+            accounts: [{ identity: 'DISCORD', providerAccountId: '123456789' }]
+          })
+        ]
+      }).success
+    ).toBe(true);
+  });
+
+  it.each(['', 'e2e-participant-abc123w0', '1'.repeat(21), '12 34'])(
+    'rejects the provider account id %j',
+    (providerAccountId) => {
+      expect(
+        pathsOf({
+          users: [
+            user({ accounts: [{ identity: 'DISCORD', providerAccountId }] })
+          ]
+        })
+      ).toEqual(['users.0.accounts.0.providerAccountId']);
+    }
+  );
+
   it('accepts no birthday, to remove it', () => {
     expect(parse({ users: [user({ birthday: null })] }).success).toBe(true);
   });

@@ -3,7 +3,8 @@ import 'server-only';
 import { processTaskJob } from './process-task-job';
 import { taskJobInclude } from '@giveaway/task-jobs-core/types';
 import { PrismaClient, TaskJobStatus } from '@giveaway/db-model';
-import { isRetryableApplicationError } from '@giveaway/util-errors';
+import { ApplicationError } from '@giveaway/util-errors';
+import { toJobRetryAt } from '@giveaway/jobs/retry';
 
 const MAX_JOBS_PER_RUN = 5;
 const STUCK_JOB_TIMEOUT_MS = 10 * 60 * 1000;
@@ -46,14 +47,21 @@ export const runTaskJobs = async (
   });
 
   console.info(`Found ${pending.length} task jobs to process`);
+  let processed = 0;
   for (const job of pending) {
+    const { count } = await db.taskJob.updateMany({
+      where: {
+        id: job.id,
+        status: TaskJobStatus.PENDING,
+        runAt: { lte: now }
+      },
+      data: {
+        status: TaskJobStatus.IN_PROGRESS
+      }
+    });
+    if (count === 0) continue;
+    processed++;
     try {
-      await db.taskJob.update({
-        where: { id: job.id },
-        data: {
-          status: TaskJobStatus.IN_PROGRESS
-        }
-      });
       await processTaskJob(db, job);
       await db.taskJob.updateMany({
         where: { id: job.id },
@@ -62,14 +70,19 @@ export const runTaskJobs = async (
         }
       });
     } catch (error) {
-      if (isRetryableApplicationError(error)) {
-        const retryAfter = new Date(error.data.retryAfter);
-        console.warn('Retrying job', job.id, retryAfter);
+      const retryAt = toJobRetryAt({ error, attempts: job.attempts });
+      if (retryAt) {
+        console.warn(
+          `Retrying task job ${job.id} at ${retryAt.toISOString()}`,
+          error
+        );
         await db.taskJob.updateMany({
           where: { id: job.id },
           data: {
             status: TaskJobStatus.PENDING,
-            runAt: retryAfter
+            runAt: retryAt,
+            attempts: { increment: 1 },
+            error: ApplicationError.toMessage(error)
           }
         });
       } else {
@@ -78,7 +91,8 @@ export const runTaskJobs = async (
           where: { id: job.id },
           data: {
             status: TaskJobStatus.FAILED,
-            data: JSON.stringify(error ?? {})
+            attempts: { increment: 1 },
+            error: ApplicationError.toMessage(error)
           }
         });
       }
@@ -86,6 +100,6 @@ export const runTaskJobs = async (
   }
 
   return {
-    processed: pending.length
+    processed
   };
 };

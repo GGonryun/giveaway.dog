@@ -1,10 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { TeamRole, TeamTier } from '@giveaway/db-model';
+import { PickerStatus, TeamRole, TeamTier } from '@giveaway/db-model';
 import { getTwitterV2PickerForm } from '../get-twitter-v2-picker-form';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 import { buildPicker, buildTeam } from '../../testing/fixtures-pickers';
+
+const editablePicker = (overrides: Parameters<typeof buildPicker>[0] = {}) =>
+  buildPicker({ status: PickerStatus.PROCESSED, ...overrides });
 
 describe('getTwitterV2PickerForm', () => {
   describe('when the caller is not signed in', () => {
@@ -30,7 +33,7 @@ describe('getTwitterV2PickerForm', () => {
 
     describe('team access', () => {
       it('looks the team up by slug among the caller memberships', async () => {
-        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(editablePicker());
 
         await getTwitterV2PickerForm({
           pickerId: 'picker-1',
@@ -48,7 +51,7 @@ describe('getTwitterV2PickerForm', () => {
 
       it('returns NOT_FOUND without reading the picker when the caller is not a member', async () => {
         prismaMock.team.findUnique.mockResolvedValue(null);
-        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(editablePicker());
 
         const result = await getTwitterV2PickerForm({
           pickerId: 'picker-1',
@@ -65,7 +68,7 @@ describe('getTwitterV2PickerForm', () => {
         prismaMock.team.findUnique.mockResolvedValue(
           buildTeam({ role: TeamRole.BLOCKED })
         );
-        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(editablePicker());
 
         const result = await getTwitterV2PickerForm({
           pickerId: 'picker-1',
@@ -82,7 +85,7 @@ describe('getTwitterV2PickerForm', () => {
         prismaMock.team.findUnique.mockResolvedValue(
           buildTeam({ role: TeamRole.GUEST, tier: TeamTier.FREE })
         );
-        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(editablePicker());
 
         const result = await getTwitterV2PickerForm({
           pickerId: 'picker-1',
@@ -97,7 +100,7 @@ describe('getTwitterV2PickerForm', () => {
           ...buildTeam(),
           id: 'team-7'
         });
-        prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(editablePicker());
 
         await getTwitterV2PickerForm({ pickerId: 'picker-42', slug: 'acme' });
 
@@ -117,6 +120,40 @@ describe('getTwitterV2PickerForm', () => {
         expect(expectFailure(result, 'NOT_FOUND').message).toBe(
           'Picker not found'
         );
+      });
+
+      it('returns CONFLICT for a completed picker', async () => {
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(
+          buildPicker({ status: PickerStatus.COMPLETE })
+        );
+
+        const result = await getTwitterV2PickerForm({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectFailure(result, 'CONFLICT').message).toBe(
+          'This picker can no longer be edited'
+        );
+      });
+
+      it.each([
+        PickerStatus.DRAFT,
+        PickerStatus.CREATED,
+        PickerStatus.SCHEDULED,
+        PickerStatus.PROCESSING,
+        PickerStatus.PROCESSED
+      ])('returns the form of a %s picker', async (status) => {
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(
+          buildPicker({ status })
+        );
+
+        const result = await getTwitterV2PickerForm({
+          pickerId: 'picker-1',
+          slug: 'acme'
+        });
+
+        expect(expectOk(result).winners).toEqual({ quota: 1 });
       });
     });
 
@@ -145,7 +182,7 @@ describe('getTwitterV2PickerForm', () => {
 
     it('maps a configured picker to form values', async () => {
       prismaMock.twitterPicker.findUnique.mockResolvedValue(
-        buildPicker({
+        editablePicker({
           tweetUrls: ['https://x.com/a/status/1', 'https://x.com/b/status/2'],
           runAt: new Date('2025-07-01T09:30:00.000Z'),
           winners: 3,
@@ -181,7 +218,6 @@ describe('getTwitterV2PickerForm', () => {
           minimumAccountAgeDays: 30,
           minimumFollowers: 50,
           minimumFollowing: 20,
-          lastPostWithin: 'PAST_WEEK',
           hasProfileImage: true,
           hasBanner: true,
           hasLocation: true,
@@ -192,7 +228,7 @@ describe('getTwitterV2PickerForm', () => {
 
     it('provides one empty post url when the picker has none', async () => {
       prismaMock.twitterPicker.findUnique.mockResolvedValue(
-        buildPicker({ tweetUrls: [] })
+        editablePicker({ tweetUrls: [] })
       );
 
       const result = await getTwitterV2PickerForm({
@@ -205,7 +241,7 @@ describe('getTwitterV2PickerForm', () => {
 
     it('returns null timing when the picker is not scheduled', async () => {
       prismaMock.twitterPicker.findUnique.mockResolvedValue(
-        buildPicker({ runAt: null })
+        editablePicker({ runAt: null })
       );
 
       const result = await getTwitterV2PickerForm({
@@ -217,7 +253,7 @@ describe('getTwitterV2PickerForm', () => {
     });
 
     it('passes null numeric filters through and defaults null flags to false', async () => {
-      prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+      prismaMock.twitterPicker.findUnique.mockResolvedValue(editablePicker());
 
       const result = await getTwitterV2PickerForm({
         pickerId: 'picker-1',
@@ -229,7 +265,6 @@ describe('getTwitterV2PickerForm', () => {
         minimumAccountAgeDays: null,
         minimumFollowers: null,
         minimumFollowing: null,
-        lastPostWithin: null,
         hasProfileImage: false,
         hasBanner: false,
         hasLocation: false,
@@ -246,7 +281,7 @@ describe('getTwitterV2PickerForm', () => {
       'maps only the %s column to the %s flag',
       async (column, flag) => {
         prismaMock.twitterPicker.findUnique.mockResolvedValue(
-          buildPicker({
+          editablePicker({
             requireProfileImage: false,
             requireBannerImage: false,
             requireLocation: false,

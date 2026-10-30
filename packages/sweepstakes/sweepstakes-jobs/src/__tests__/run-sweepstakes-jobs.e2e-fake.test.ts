@@ -61,6 +61,7 @@ beforeEach(() => {
   vi.spyOn(console, 'info').mockImplementation(() => undefined);
   vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   prismaMock.sweepstakesJob.update.mockResolvedValue({} as never);
+  prismaMock.sweepstakesJob.updateMany.mockResolvedValue({ count: 1 });
   givenPublicActivation();
 });
 

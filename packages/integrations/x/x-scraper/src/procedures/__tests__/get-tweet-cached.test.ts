@@ -12,7 +12,8 @@ vi.mock('@giveaway/cache/redis', () => ({
   redis: m.redis
 }));
 
-vi.mock('scrapebadger', () => ({
+vi.mock('scrapebadger', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('scrapebadger')>()),
   ScrapeBadger: m.ScrapeBadger
 }));
 

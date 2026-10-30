@@ -225,7 +225,7 @@ describe('auth config', () => {
       expect(discord.options).toMatchObject({
         clientId: 'e2e',
         authorization:
-          'https://giveaway.dog/api/e2e/oauth/authorize?scope=identify+email',
+          'https://giveaway.dog/api/e2e/oauth/authorize?scope=identify+email+guilds+guilds.members.read',
         token: 'https://e2e-oauth.invalid/token'
       });
       expect((await optionsOf('discord')).clientId).toBe('discord-id');

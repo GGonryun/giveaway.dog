@@ -17,7 +17,6 @@ export const DEFAULT_TWITTER_V2_PICKER_FORM: TwitterV2PickerFormSchema = {
     minimumAccountAgeDays: 90,
     minimumFollowers: 100,
     minimumFollowing: 100,
-    lastPostWithin: null,
     hasProfileImage: true,
     hasBanner: false,
     hasLocation: false,

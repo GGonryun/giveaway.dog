@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { RateLimitError } from 'scrapebadger';
 import { ApplicationError } from '@giveaway/util-errors';
 import { getTweet } from '../get-tweet';
 import { scrapeBadgerTweetFixture } from '../../testing/fixtures-scrapebadger-tweet';
@@ -8,7 +9,8 @@ const m = vi.hoisted(() => ({
   ScrapeBadger: vi.fn()
 }));
 
-vi.mock('scrapebadger', () => ({
+vi.mock('scrapebadger', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('scrapebadger')>()),
   ScrapeBadger: m.ScrapeBadger
 }));
 
@@ -52,6 +54,18 @@ describe('getTweet', () => {
     expect(infoSpy).toHaveBeenCalledWith(
       '[ScrapeBadger] Fetching tweet details for tweet 123'
     );
+  });
+
+  it('turns a ScrapeBadger rate limit into a retryable error at its reset time', async () => {
+    m.getById.mockRejectedValue(
+      new RateLimitError('Too many', { retryAfter: 1_790_000_000 })
+    );
+
+    await expect(getTweet({ tweetId: '123' })).rejects.toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+      message: 'ScrapeBadger rate limited the tweet request',
+      data: { status: 429, retryAfter: 1_790_000_000_000 }
+    });
   });
 
   it('propagates API errors', async () => {

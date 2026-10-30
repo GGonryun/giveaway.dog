@@ -206,7 +206,7 @@ const mockedDiscord = () => {
 };
 
 const AUTHORIZE =
-  'https://preview.giveaway.dog/api/e2e/oauth/authorize?scope=identify+email';
+  'https://preview.giveaway.dog/api/e2e/oauth/authorize?scope=identify+email+guilds+guilds.members.read';
 
 describe('withE2eOAuth', () => {
   it('leaves the providers as they are without a profile', () => {
@@ -314,7 +314,7 @@ describe('withE2eOAuth', () => {
         token_type: 'bearer',
         expires_in: 604800,
         refresh_token: 'e2e-oauth-access-token-refresh',
-        scope: 'identify email'
+        scope: 'identify email guilds guilds.members.read'
       });
       expect(network).not.toHaveBeenCalled();
     });

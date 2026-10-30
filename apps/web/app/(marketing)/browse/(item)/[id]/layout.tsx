@@ -1,6 +1,7 @@
 import { auth } from '@giveaway/auth-server/config';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
+import { getSweepstakesId } from '@giveaway/participation-server/get-sweepstakes-id';
 import { Metadata } from 'next';
 import { date } from '@giveaway/util-time/date';
 import { html } from '@giveaway/util-html/html';
@@ -13,22 +14,30 @@ interface LayoutProps {
   params: Promise<{ id: string }>;
 }
 
+const NOT_FOUND_METADATA: Metadata = {
+  title: 'Giveaway Not Found | Giveaway.dog'
+};
+
 export async function generateMetadata({
   params
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const options = { sweepstakesId: id };
+  const sweepstakesId = await getSweepstakesId({ sweepstakesId: id });
+
+  if (!sweepstakesId.ok) {
+    return NOT_FOUND_METADATA;
+  }
+
+  const options = { sweepstakesId: sweepstakesId.data };
   const [result, privacy] = await Promise.all([
     getParticipantSweepstake(options),
     getSweepstakesPrivacy(options)
   ]);
 
   if (!result.ok || !privacy.ok || !privacy.data) {
-    return {
-      title: 'Giveaway Not Found | Giveaway.dog'
-    };
+    return NOT_FOUND_METADATA;
   }
 
   const { sweepstakes, host } = result.data;

@@ -3,25 +3,8 @@
 import { ApplicationError } from '@giveaway/util-errors';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
-import {
-  isMembersOnly,
-  isTeamMember,
-  VISIBILITY_SELECT_QUERY
-} from './visibility';
-
-const getCacheConfig = ({ user, input }: any) => {
-  // Cache PUBLIC/UNLISTED checks for longer since they don't depend on user
-  // Cache PRIVATE checks per-user since they depend on team membership
-  const userKey = user?.id ? `-user-${user.id}` : '-anonymous';
-  return {
-    keyParts: [`sweepstakes-privacy-v2-${input.sweepstakesId}${userKey}`],
-    tags: [
-      `sweepstakes-${input.sweepstakesId}-privacy`,
-      ...(user?.id ? [`user-${user.id}-privacy`] : [])
-    ],
-    revalidate: 3600 // Cache for 1 hour
-  };
-};
+import { isMembersOnly, isTeamMember } from './visibility';
+import { findSweepstakesAccess } from './access';
 
 export const getSweepstakesPrivacy = procedure()
   .authorization({
@@ -33,18 +16,10 @@ export const getSweepstakesPrivacy = procedure()
     })
   )
   .output(z.boolean())
-  .cache(getCacheConfig)
   .handler(async ({ input, db, user }) => {
-    // Implement the logic to fetch the sweepstakes visibility
-    // For example, you might query the database to get the visibility status
-    const sweepstakes = await db.sweepstakes.findFirst({
-      where: {
-        OR: [
-          { id: input.sweepstakesId },
-          { visibility: { slug: input.sweepstakesId } }
-        ]
-      },
-      select: VISIBILITY_SELECT_QUERY
+    const sweepstakes = await findSweepstakesAccess({
+      db,
+      sweepstakesId: input.sweepstakesId
     });
 
     if (!sweepstakes?.visibility?.visibility) {

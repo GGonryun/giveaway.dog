@@ -43,6 +43,7 @@ import { format } from 'date-fns/format';
 import { formatDistance } from 'date-fns/formatDistance';
 import { isFuture } from 'date-fns/isFuture';
 import {
+  EDITABLE_PICKER_STATUS,
   PICKER_STATUS_LABELS,
   PICKER_STATUS_DESCRIPTIONS
 } from '@giveaway/picker-model/schemas/status';
@@ -278,12 +279,14 @@ export const TwitterV2PickerOverview: React.FC<
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href={`/app/${slug}/pickers/x/${picker.id}/edit`}>
-                    <Pencil className="h-4 w-4 mr-2" />
-                    Edit Picker
-                  </Link>
-                </DropdownMenuItem>
+                {EDITABLE_PICKER_STATUS[picker.status] && (
+                  <DropdownMenuItem asChild>
+                    <Link href={`/app/${slug}/pickers/x/${picker.id}/edit`}>
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Edit Picker
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild>
                   <Link
                     href={`/pickers/x/${picker.id}`}

@@ -118,7 +118,6 @@ export const buildFormInput = () => ({
     minimumAccountAgeDays: 30,
     minimumFollowers: 50,
     minimumFollowing: 20,
-    lastPostWithin: 'PAST_WEEK' as const,
     hasProfileImage: true,
     hasBanner: false,
     hasLocation: true,

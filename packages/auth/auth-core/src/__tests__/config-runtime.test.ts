@@ -391,30 +391,10 @@ describe('authConfig', () => {
         });
       });
 
-      it('does not refresh tokens through the new-account path', async () => {
+      it('[ACCOUNT-018] refreshes the tokens, the scopes and the status on a reconnect by the owner', async () => {
         prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
+        getSession.mockResolvedValue(createSession({ id: 'owner' }));
 
-        await signIn({
-          account: oauthAccount({ access_token: 'new' }),
-          profile: { id: 'p' }
-        });
-
-        expect(prismaMock.account.update).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('when the account does not exist yet', () => {
-      beforeEach(() => {
-        prismaMock.account.findUnique.mockResolvedValue(null);
-      });
-
-      it('loads the current session', async () => {
-        await signIn({ account: oauthAccount(), profile: { id: 'p' } });
-
-        expect(getSession).toHaveBeenCalledTimes(1);
-      });
-
-      it('refreshes the tokens and resets the status to active', async () => {
         const result = await signIn({
           account: oauthAccount({
             scope: 'identify email',
@@ -444,7 +424,24 @@ describe('authConfig', () => {
         });
       });
 
+      it('[ACCOUNT-018] refreshes the account when the owner signs in again without a session', async () => {
+        prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
+
+        await signIn({
+          account: oauthAccount({ access_token: 'new' }),
+          profile: { id: 'p' }
+        });
+
+        expect(prismaMock.account.update).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: { access_token: 'new', status: 'ACTIVE' }
+          })
+        );
+      });
+
       it('only resets the status when the account carries no tokens', async () => {
+        prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
+
         await signIn({ account: oauthAccount(), profile: { id: 'p' } });
 
         expect(prismaMock.account.update).toHaveBeenCalledWith(
@@ -452,7 +449,9 @@ describe('authConfig', () => {
         );
       });
 
-      it('omits a zero expiry from the update', async () => {
+      it('omits a zero expiry from the refresh', async () => {
+        prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
+
         await signIn({
           account: oauthAccount({ expires_at: 0, access_token: 'a' }),
           profile: { id: 'p' }
@@ -465,12 +464,61 @@ describe('authConfig', () => {
         );
       });
 
-      it('allows sign in when the account update fails', async () => {
-        prismaMock.account.update.mockRejectedValue(new Error('not found'));
+      it('does not refresh the account of another signed-in user', async () => {
+        prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
+        getSession.mockResolvedValue(createSession({ id: 'someone-else' }));
 
+        await signIn({
+          account: oauthAccount({ access_token: 'new' }),
+          profile: { id: 'p' }
+        });
+
+        expect(prismaMock.account.update).not.toHaveBeenCalled();
+      });
+
+      it('resets the status after linking an imported account', async () => {
+        prismaMock.account.findUnique.mockResolvedValue(
+          existing('DISCORD_IMPORT', 'imported')
+        );
+        prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
+        getSession.mockResolvedValue(createSession({ id: 'current' }));
+
+        await signIn({ account: oauthAccount(), profile: { id: 'p' } });
+
+        expect(prismaMock.account.update).toHaveBeenLastCalledWith(
+          expect.objectContaining({ data: { status: 'ACTIVE' } })
+        );
+      });
+
+      it('rejects when the refresh fails', async () => {
+        prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
+        prismaMock.account.update.mockRejectedValue(new Error('db down'));
+
+        await expect(
+          signIn({ account: oauthAccount(), profile: { id: 'p' } })
+        ).rejects.toThrow('db down');
+      });
+    });
+
+    describe('when the account does not exist yet', () => {
+      beforeEach(() => {
+        prismaMock.account.findUnique.mockResolvedValue(null);
+      });
+
+      it('loads the current session', async () => {
+        await signIn({ account: oauthAccount(), profile: { id: 'p' } });
+
+        expect(getSession).toHaveBeenCalledTimes(1);
+      });
+
+      it('allows sign in and leaves the account to the adapter', async () => {
         expect(
-          await signIn({ account: oauthAccount(), profile: { id: 'p' } })
+          await signIn({
+            account: oauthAccount({ access_token: 'access' }),
+            profile: { id: 'p' }
+          })
         ).toBe(true);
+        expect(prismaMock.account.update).not.toHaveBeenCalled();
       });
     });
 

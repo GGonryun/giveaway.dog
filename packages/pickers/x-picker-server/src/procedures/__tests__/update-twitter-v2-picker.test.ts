@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { TeamRole, TeamTier } from '@giveaway/db-model';
+import { PickerStatus, TeamRole, TeamTier } from '@giveaway/db-model';
 import { updateTwitterV2Picker } from '../update-twitter-v2-picker';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
@@ -9,6 +9,9 @@ import {
   buildPicker,
   buildTeam
 } from '../../testing/fixtures-pickers';
+
+const editablePicker = (overrides: Parameters<typeof buildPicker>[0] = {}) =>
+  buildPicker({ status: PickerStatus.PROCESSED, ...overrides });
 
 type UpdateInput = Parameters<typeof updateTwitterV2Picker>[0];
 
@@ -38,8 +41,8 @@ describe('updateTwitterV2Picker', () => {
     beforeEach(() => {
       signIn();
       prismaMock.team.findUnique.mockResolvedValue(buildTeam());
-      prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
-      prismaMock.twitterPicker.update.mockResolvedValue(buildPicker());
+      prismaMock.twitterPicker.findUnique.mockResolvedValue(editablePicker());
+      prismaMock.twitterPicker.update.mockResolvedValue(editablePicker());
     });
 
     describe('with invalid input', () => {
@@ -141,7 +144,7 @@ describe('updateTwitterV2Picker', () => {
 
       it('returns FORBIDDEN when the picker belongs to another team', async () => {
         prismaMock.twitterPicker.findUnique.mockResolvedValue(
-          buildPicker({ teamId: 'team-2' })
+          editablePicker({ teamId: 'team-2' })
         );
 
         const result = await updateTwitterV2Picker(input());
@@ -154,7 +157,7 @@ describe('updateTwitterV2Picker', () => {
 
       it('returns FORBIDDEN when the picker has no team', async () => {
         prismaMock.twitterPicker.findUnique.mockResolvedValue(
-          buildPicker({ teamId: null })
+          editablePicker({ teamId: null })
         );
 
         const result = await updateTwitterV2Picker(input());
@@ -162,6 +165,19 @@ describe('updateTwitterV2Picker', () => {
         expect(expectFailure(result, 'FORBIDDEN').message).toBe(
           'You do not have permission to update this picker'
         );
+      });
+
+      it('returns CONFLICT without updating a completed picker', async () => {
+        prismaMock.twitterPicker.findUnique.mockResolvedValue(
+          buildPicker({ status: PickerStatus.COMPLETE })
+        );
+
+        const result = await updateTwitterV2Picker(input());
+
+        expect(expectFailure(result, 'CONFLICT').message).toBe(
+          'This picker can no longer be edited'
+        );
+        expect(prismaMock.twitterPicker.update).not.toHaveBeenCalled();
       });
     });
 
@@ -195,7 +211,6 @@ describe('updateTwitterV2Picker', () => {
             requireBannerImage: false,
             requireLocation: true,
             requireBio: false,
-            lastPostWithin: 'PAST_WEEK',
             runAt: null
           }
         });
@@ -271,8 +286,7 @@ describe('updateTwitterV2Picker', () => {
           requireProfileImage: false,
           requireBannerImage: false,
           requireLocation: false,
-          requireBio: false,
-          lastPostWithin: null
+          requireBio: false
         });
       });
 

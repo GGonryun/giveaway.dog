@@ -2,7 +2,6 @@ import type { APIRequestContext, Browser, Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, personaState } from '../../env';
 import { openAsVisitor, openStep } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import {
   expectNotFoundAfterReloads,
   expectSaved,
@@ -14,8 +13,6 @@ import {
 } from '../../helpers/manage';
 import { expectAfterReloads } from '../../helpers/poll';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
-
-const PRIVACY_CACHE_BUG = 532;
 
 const seedUnlisted = async (
   request: APIRequestContext,
@@ -116,69 +113,69 @@ test.describe('a published giveaway on its public page', () => {
     await visitor.context.close();
   });
 
-  test(
-    '[VIS-005] a giveaway made private from the preview tab is not found at once',
-    knownBug(PRIVACY_CACHE_BUG),
-    async ({ page, request, browser }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedUnlisted(request, team.slug, testInfo);
-      const slug = giveaway.slug!;
-      const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
-      const visitor = await warmPublicPages(browser, paths, giveaway.name);
+  test('[VIS-005] a giveaway made private from the preview tab is not found at once', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedUnlisted(request, team.slug, testInfo);
+    const slug = giveaway.slug!;
+    const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
+    const visitor = await warmPublicPages(browser, paths, giveaway.name);
 
-      await page.goto(previewPage(team.slug, giveaway.id));
-      await page
-        .getByRole('alert')
-        .filter({ hasText: 'Sweepstakes is Unlisted' })
-        .getByRole('combobox')
-        .click();
-      await page.getByRole('option', { name: 'Private' }).click();
-      await expectAfterReloads(page, () =>
-        expect(
-          page.getByRole('alert').filter({ hasText: 'Sweepstakes is Private' })
-        ).toBeVisible({ timeout: 10_000 })
-      );
-      await expect
-        .poll(
-          async () =>
-            (await readSweepstakes(request, giveaway.id)).visibility.visibility
-        )
-        .toBe('PRIVATE');
+    await page.goto(previewPage(team.slug, giveaway.id));
+    await page
+      .getByRole('alert')
+      .filter({ hasText: 'Sweepstakes is Unlisted' })
+      .getByRole('combobox')
+      .click();
+    await page.getByRole('option', { name: 'Private' }).click();
+    await expectAfterReloads(page, () =>
+      expect(
+        page.getByRole('alert').filter({ hasText: 'Sweepstakes is Private' })
+      ).toBeVisible({ timeout: 10_000 })
+    );
+    await expect
+      .poll(
+        async () =>
+          (await readSweepstakes(request, giveaway.id)).visibility.visibility
+      )
+      .toBe('PRIVATE');
 
-      for (const path of paths) {
-        await expectNotFoundAfterReloads(visitor.page, path);
-      }
-      await visitor.context.close();
+    for (const path of paths) {
+      await expectNotFoundAfterReloads(visitor.page, path);
     }
-  );
+    await visitor.context.close();
+  });
 
-  test(
-    '[VIS-005] a giveaway made private in the editor is not found at once',
-    knownBug(PRIVACY_CACHE_BUG),
-    async ({ page, request, browser }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedUnlisted(request, team.slug, testInfo);
-      const slug = giveaway.slug!;
-      const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
-      const visitor = await warmPublicPages(browser, paths, giveaway.name);
+  test('[VIS-005] a giveaway made private in the editor is not found at once', async ({
+    page,
+    request,
+    browser
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const giveaway = await seedUnlisted(request, team.slug, testInfo);
+    const slug = giveaway.slug!;
+    const paths = [`/browse/${giveaway.id}`, `/browse/${slug}`];
+    const visitor = await warmPublicPages(browser, paths, giveaway.name);
 
-      await openEditor(page, team.slug, giveaway.id);
-      await openStep(page, 'Audience');
-      await page.getByRole('combobox', { name: 'Visibility Type' }).click();
-      await page.getByRole('option', { name: 'Private' }).click();
-      await saveChanges(page);
-      await expectSaved(page);
-      await expect
-        .poll(
-          async () =>
-            (await readSweepstakes(request, giveaway.id)).visibility.visibility
-        )
-        .toBe('PRIVATE');
+    await openEditor(page, team.slug, giveaway.id);
+    await openStep(page, 'Audience');
+    await page.getByRole('combobox', { name: 'Visibility Type' }).click();
+    await page.getByRole('option', { name: 'Private' }).click();
+    await saveChanges(page);
+    await expectSaved(page);
+    await expect
+      .poll(
+        async () =>
+          (await readSweepstakes(request, giveaway.id)).visibility.visibility
+      )
+      .toBe('PRIVATE');
 
-      for (const path of paths) {
-        await expectNotFoundAfterReloads(visitor.page, path);
-      }
-      await visitor.context.close();
+    for (const path of paths) {
+      await expectNotFoundAfterReloads(visitor.page, path);
     }
-  );
+    await visitor.context.close();
+  });
 });

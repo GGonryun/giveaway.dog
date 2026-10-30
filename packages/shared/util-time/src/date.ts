@@ -2,6 +2,24 @@ import { format as fnsFormat } from 'date-fns/format';
 import { isBefore } from 'date-fns/isBefore';
 import { assertNever } from '@giveaway/util-errors';
 
+const inTimeZone = (value: Date | number | string, timeZone?: string) => {
+  try {
+    const parts = Object.fromEntries(
+      new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+      })
+        .formatToParts(new Date(value))
+        .map((part) => [part.type, Number(part.value)])
+    );
+    return new Date(parts.year, parts.month - 1, parts.day);
+  } catch {
+    return value;
+  }
+};
+
 export namespace date {
   export const now = () => new Date();
   export const hasExpired = (date?: Date | string | null | undefined) => {
@@ -12,17 +30,19 @@ export namespace date {
 
   export const format = (
     date: Date | number | string,
-    format: 'short' | 'long' | 'dashed' | 'slashed' = 'short'
+    format: 'short' | 'long' | 'dashed' | 'slashed' = 'short',
+    timeZone?: string
   ) => {
+    const value = inTimeZone(date, timeZone);
     switch (format) {
       case 'short':
-        return fnsFormat(date, 'MMM d, yyyy');
+        return fnsFormat(value, 'MMM d, yyyy');
       case 'long':
-        return fnsFormat(date, 'MMMM d, yyyy');
+        return fnsFormat(value, 'MMMM d, yyyy');
       case 'dashed':
-        return fnsFormat(date, 'yyyy-MM-dd');
+        return fnsFormat(value, 'yyyy-MM-dd');
       case 'slashed':
-        return fnsFormat(date, 'yyyy/MM/dd');
+        return fnsFormat(value, 'yyyy/MM/dd');
       default:
         throw assertNever(format);
     }

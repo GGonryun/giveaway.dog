@@ -84,6 +84,8 @@ const copySweepstakes = procedure()
         audience: original.audience
           ? {
               create: {
+                allowedIdentities: original.audience.allowedIdentities,
+                requirePreEntryLogin: original.audience.requirePreEntryLogin,
                 requireEmail: original.audience.requireEmail,
                 regionalRestriction: original.audience.regionalRestriction
                   ? {
@@ -103,7 +105,20 @@ const copySweepstakes = procedure()
                         format: original.audience.minimumAgeRestriction.format
                       }
                     }
-                  : undefined
+                  : undefined,
+                formFields: {
+                  createMany: {
+                    data: original.audience.formFields.map((field) => ({
+                      label: field.label,
+                      type: field.type,
+                      required: field.required,
+                      placeholder: field.placeholder,
+                      minimum: field.minimum,
+                      maximum: field.maximum,
+                      index: field.index
+                    }))
+                  }
+                }
               }
             }
           : undefined,
@@ -162,7 +177,10 @@ const copySweepstakes = procedure()
               create: {
                 minTasksCompleted: original.criteria.minTasksCompleted,
                 minQualityScore: original.criteria.minQualityScore,
-                allowMultipleWins: original.criteria.allowMultipleWins
+                allowMultipleWins: original.criteria.allowMultipleWins,
+                allowUserSelection: original.criteria.allowUserSelection,
+                externalPlatforms:
+                  original.criteria.externalPlatforms ?? Prisma.JsonNull
               }
             }
           : undefined

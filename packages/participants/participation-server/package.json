@@ -20,6 +20,7 @@
     "./get-sweepstake-form-field": "./src/get-sweepstake-form-field.ts",
     "./get-sweepstake-participant": "./src/get-sweepstake-participant.ts",
     "./get-sweepstake-tasks": "./src/get-sweepstake-tasks.ts",
+    "./get-sweepstakes-id": "./src/get-sweepstakes-id.ts",
     "./get-sweepstakes-privacy": "./src/get-sweepstakes-privacy.ts",
     "./get-team-sweepstake": "./src/get-team-sweepstake.ts",
     "./get-user-host-relationship": "./src/get-user-host-relationship.ts",
@@ -43,6 +44,7 @@
     "@giveaway/user-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-types": "workspace:*",
+    "next": "catalog:",
     "server-only": "catalog:",
     "zod": "catalog:"
   },

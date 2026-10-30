@@ -1,5 +1,4 @@
 import { expect, test } from '../../fixtures/test';
-import { knownBug } from '../../helpers/known-bug';
 
 const TEMPLATE_IDS = ['basic-giveaway', 'x-giveaway', 'anonymous-sweepstakes'];
 
@@ -45,20 +44,15 @@ test.describe('official templates', () => {
   });
 
   test.describe('direct links', () => {
-    // Chromium logs the 404 of the document.
-    test.use({ allowedPageErrors: [/status of 404 \(/] });
-
     for (const id of TEMPLATE_IDS) {
-      test(
-        `a visitor opens /learn/templates/${id} by a direct link`,
-        knownBug(362),
-        async ({ page }) => {
-          const response = await page.goto(`/learn/templates/${id}`);
+      test(`a visitor opens /learn/templates/${id} by a direct link`, async ({
+        page
+      }) => {
+        const response = await page.goto(`/learn/templates/${id}`);
 
-          expect(response?.status()).toBe(200);
-          await expect(page.getByRole('dialog')).toBeVisible();
-        }
-      );
+        expect(response?.status()).toBe(200);
+        await expect(page.getByRole('dialog')).toBeVisible();
+      });
     }
   });
 });

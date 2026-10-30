@@ -22,6 +22,7 @@ One file for each domain. Each rule is a list item that starts with its ID in ba
 | [`public-data.md`](public-data.md) | `LEAK`: what a public page may send, `VIS`: giveaway visibility, `TRACK`: visitor tracking      |
 | [`account.md`](account.md)         | `ONBOARD`: onboarding, `ACCOUNT`: account settings                                              |
 | [`giveaways.md`](giveaways.md)     | `EDIT`, `COPY`, `DELETE`, `LIST`: what the host does with a giveaway after publishing it        |
+| [`limits.md`](limits.md)           | `TIER`: how long a giveaway may run, `RETAIN`: how long its data is kept, for each team tier    |
 
 - **IDs**: a prefix of capital letters, a dash and three digits. An ID never changes and is never used again for another rule. To remove a rule, delete its line and its ID with it
 - **A rule**: one sentence about what the product does, written from the product rule and not from the current code. It names no function or file

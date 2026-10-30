@@ -1,7 +1,6 @@
 import { expect, test } from '../fixtures/test';
 import { BASE_URL } from '../env';
 import { noRedirect } from '../helpers/http';
-import { knownBug } from '../helpers/known-bug';
 
 const PATHS = ['/', '/browse', '/api/auth/session'];
 
@@ -9,7 +8,7 @@ test.describe('security headers', { tag: '@security' }, () => {
   for (const path of PATHS) {
     test(
       `GET ${path} sends the basic security headers`,
-      knownBug(349, { tag: '@prod-safe' }),
+      { tag: '@prod-safe' },
       async ({ request }) => {
         const response = await request.get(path, noRedirect);
         const headers = response.headers();

@@ -532,6 +532,7 @@ enum AutomatedPostJobType {
 
 enum AutomatedPostJobStatus {
   PENDING
+  IN_PROGRESS
   COMPLETED
   FAILED
 }
@@ -564,8 +565,10 @@ model TaskJob {
   taskId    String
   task      Task          @relation(fields: [taskId], references: [id], onDelete: Cascade)
   data      Json?
+  error     Json?
   runAt     DateTime?
   status    TaskJobStatus @default(PENDING)
+  attempts  Int           @default(0)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
@@ -949,7 +952,7 @@ model TwitterPost {
 model TwitterPickerDraw {
   id String @id @default(cuid())
 
-  picker       TwitterPicker     @relation(fields: [pickerId], references: [id])
+  picker       TwitterPicker     @relation(fields: [pickerId], references: [id], onDelete: Cascade)
   pickerId     String
   userId       String
   user         TwitterPickerUser @relation(fields: [userId], references: [id], onDelete: Cascade)

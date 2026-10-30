@@ -269,6 +269,8 @@ export const buildTaskJob = ({
   id: 'job-1',
   taskId: 'task-1',
   data,
+  error: null,
+  attempts: 0,
   runAt: new Date('2026-10-01T00:00:00.000Z'),
   status: 'IN_PROGRESS',
   createdAt: new Date('2026-09-30T00:00:00.000Z'),

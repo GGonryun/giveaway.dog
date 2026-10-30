@@ -3,24 +3,28 @@ import { AutomatedPostJobStatus } from '@giveaway/db-model';
 import {
   CheckCircleIcon,
   ClockIcon,
+  LoaderCircleIcon,
   LucideIcon,
   XCircleIcon
 } from 'lucide-react';
 
 const STATUS_ICON: Record<AutomatedPostJobStatus, LucideIcon> = {
   PENDING: ClockIcon,
+  IN_PROGRESS: LoaderCircleIcon,
   COMPLETED: CheckCircleIcon,
   FAILED: XCircleIcon
 };
 
 const STATUS_VARIANT: Record<AutomatedPostJobStatus, BadgeVariants> = {
   PENDING: 'warning',
+  IN_PROGRESS: 'warning',
   COMPLETED: 'success',
   FAILED: 'destructive'
 };
 
 const STATUS_LABEL: Record<AutomatedPostJobStatus, string> = {
   PENDING: 'Scheduled',
+  IN_PROGRESS: 'Posting',
   COMPLETED: 'Posted',
   FAILED: 'Failed'
 };

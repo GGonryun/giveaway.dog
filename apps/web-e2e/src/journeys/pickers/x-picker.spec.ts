@@ -61,6 +61,9 @@ test.describe('free X picker on the ScrapeBadger fixtures', () => {
     await expect(
       page.getByRole('switch', { name: 'Profile Image' })
     ).toBeChecked();
+    await expect(page.getByRole('switch', { name: 'Last Post' })).toHaveCount(
+      0
+    );
 
     await page.getByRole('button', { name: 'Pick Winners' }).click();
 

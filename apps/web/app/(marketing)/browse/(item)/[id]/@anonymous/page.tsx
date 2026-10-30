@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import getParticipantSweepstake from '@giveaway/participation-server/get-participant-sweepstake';
 import { getSweepstakesPrivacy } from '@giveaway/participation-server/get-sweepstakes-privacy';
+import { getSweepstakesId } from '@giveaway/participation-server/get-sweepstakes-id';
 import { PublicSweepstakesContent } from '@giveaway/browse-item/public-sweepstakes-content';
 import { Suspense } from 'react';
 import { ReferralCodeHandler } from '@giveaway/browse-item/referral-code-handler';
@@ -11,7 +12,14 @@ interface PageProps {
 
 export default async function AnonymousPage({ params }: PageProps) {
   const { id } = await params;
-  const options = { sweepstakesId: id };
+  const sweepstakesId = await getSweepstakesId({ sweepstakesId: id });
+
+  if (!sweepstakesId.ok) {
+    console.warn('Sweepstake not found:', sweepstakesId.data.message);
+    notFound();
+  }
+
+  const options = { sweepstakesId: sweepstakesId.data };
 
   // Only fetch public data
   const [sweepstakes, privacy] = await Promise.all([

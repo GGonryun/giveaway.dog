@@ -7,6 +7,7 @@ import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
 import { twitterV2PickerUnvalidatedFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';
+import { assertPickerEditable } from './assert-picker-editable';
 
 export const getTwitterV2PickerForm = procedure()
   .authorization({
@@ -34,6 +35,8 @@ export const getTwitterV2PickerForm = procedure()
       });
     }
 
+    assertPickerEditable(picker);
+
     return {
       setup: {
         postUrls:
@@ -59,7 +62,6 @@ export const getTwitterV2PickerForm = procedure()
         minimumAccountAgeDays: picker.minAccountAgeDays,
         minimumFollowers: picker.minFollowersCount,
         minimumFollowing: picker.minFollowingCount,
-        lastPostWithin: picker.lastPostWithin,
         hasProfileImage: picker.requireProfileImage ?? false,
         hasBanner: picker.requireBannerImage ?? false,
         hasLocation: picker.requireLocation ?? false,

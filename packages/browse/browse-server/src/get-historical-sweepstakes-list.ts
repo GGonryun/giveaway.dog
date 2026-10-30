@@ -38,8 +38,6 @@ const getHistoricalSweepstakesList = procedure()
   }))
   .handler(async ({ db, input }) => {
     const daysAgo = datetime.daysAgo(1);
-    const page = input?.page ?? 1;
-    const skip = (page - 1) * HISTORY_PAGE_SIZE;
 
     let orderBy: any = {
       timing: {
@@ -68,6 +66,7 @@ const getHistoricalSweepstakesList = procedure()
     const sweepstakes = await db.sweepstakes.findMany({
       where: {
         visibility: { visibility: 'PUBLIC' },
+        status: { not: 'DRAFT' },
         timing: {
           endDate: {
             lt: daysAgo
@@ -82,9 +81,7 @@ const getHistoricalSweepstakesList = procedure()
           }
         }
       },
-      orderBy,
-      skip,
-      take: HISTORY_PAGE_SIZE
+      orderBy
     });
 
     let results = compact(sweepstakes.map(tryToPublicSweepstakes));
@@ -106,7 +103,10 @@ const getHistoricalSweepstakesList = procedure()
       );
     }
 
-    return results;
+    const page = input?.page ?? 1;
+    const start = (page - 1) * HISTORY_PAGE_SIZE;
+
+    return results.slice(start, start + HISTORY_PAGE_SIZE);
   });
 
 export default getHistoricalSweepstakesList;

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { runTaskJobs } from '../run-task-jobs';
 import { taskJobInclude } from '@giveaway/task-jobs-core/types';
 import { ApplicationError } from '@giveaway/util-errors';
+import { JOB_RETRY_BASE_MS, MAX_JOB_ATTEMPTS } from '@giveaway/jobs/retry';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
@@ -33,6 +34,11 @@ const retweetJob = (id: string) =>
     job: { id }
   });
 
+const claim = (id: string) => ({
+  where: { id, status: 'PENDING', runAt: { lte: NOW } },
+  data: { status: 'IN_PROGRESS' }
+});
+
 const updateCalls = () =>
   [prismaMock.taskJob.update.mock, prismaMock.taskJob.updateMany.mock]
     .flatMap(({ calls, invocationCallOrder }) =>
@@ -48,6 +54,7 @@ describe('runTaskJobs', () => {
     vi.setSystemTime(NOW);
     m.getRetweetersUntilUser.mockReset();
     prismaMock.taskJob.findMany.mockResolvedValue([]);
+    prismaMock.taskJob.updateMany.mockResolvedValue({ count: 1 });
   });
 
   afterEach(() => {
@@ -150,12 +157,10 @@ describe('runTaskJobs', () => {
 
       expect(result).toEqual({ processed: 1 });
       expect(updateCalls()).toEqual([
-        { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
+        claim('job-1'),
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } }
       ]);
-      const [inProgressOrder] =
-        prismaMock.taskJob.update.mock.invocationCallOrder;
-      const [, completedOrder] =
+      const [, inProgressOrder, completedOrder] =
         prismaMock.taskJob.updateMany.mock.invocationCallOrder;
       const [deleteOrder] = prismaMock.taskJob.delete.mock.invocationCallOrder;
       expect(inProgressOrder).toBeLessThan(deleteOrder);
@@ -172,7 +177,7 @@ describe('runTaskJobs', () => {
 
       expect(result).toEqual({ processed: 1 });
       expect(updateCalls()).toEqual([
-        { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
+        claim('job-1'),
         {
           where: { id: 'job-1' },
           data: { runAt: startDate, status: 'PENDING' }
@@ -191,16 +196,16 @@ describe('runTaskJobs', () => {
 
       expect(result).toEqual({ processed: 2 });
       expect(updateCalls()).toEqual([
-        { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
+        claim('job-1'),
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } },
-        { where: { id: 'job-2' }, data: { status: 'IN_PROGRESS' } },
+        claim('job-2'),
         { where: { id: 'job-2' }, data: { status: 'COMPLETED' } }
       ]);
     });
   });
 
   describe('when processing throws a non-retryable error', () => {
-    it('marks the job failed with the serialized application error', async () => {
+    it('marks the job failed with the error message and keeps its data', async () => {
       prismaMock.taskJob.findMany.mockResolvedValue([
         buildTaskJob({ type: 'BONUS_TASK' })
       ]);
@@ -209,42 +214,34 @@ describe('runTaskJobs', () => {
 
       expect(result).toEqual({ processed: 1 });
       expect(updateCalls()).toEqual([
-        { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
+        claim('job-1'),
         {
           where: { id: 'job-1' },
           data: {
             status: 'FAILED',
-            data: JSON.stringify({
-              code: 'NOT_IMPLEMENTED',
-              message:
-                'Job processing not implemented for task type: BONUS_TASK'
-            })
+            attempts: { increment: 1 },
+            error: 'Job processing not implemented for task type: BONUS_TASK'
           }
         }
       ]);
     });
 
-    it('stores an empty object when a plain error is thrown', async () => {
+    it.each([
+      ['a plain error', new Error('boom')],
+      ['undefined', undefined]
+    ])('records a generic message when %s is thrown', async (_, error) => {
       prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
-      m.getRetweetersUntilUser.mockRejectedValue(new Error('boom'));
+      m.getRetweetersUntilUser.mockRejectedValue(error);
 
       await runTaskJobs(db);
 
       expect(updateCalls()[1]).toEqual({
         where: { id: 'job-1' },
-        data: { status: 'FAILED', data: '{}' }
-      });
-    });
-
-    it('stores an empty object when undefined is thrown', async () => {
-      prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
-      m.getRetweetersUntilUser.mockRejectedValue(undefined);
-
-      await runTaskJobs(db);
-
-      expect(updateCalls()[1]).toEqual({
-        where: { id: 'job-1' },
-        data: { status: 'FAILED', data: '{}' }
+        data: {
+          status: 'FAILED',
+          attempts: { increment: 1 },
+          error: 'An unknown error occurred...'
+        }
       });
     });
 
@@ -252,8 +249,8 @@ describe('runTaskJobs', () => {
       prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
       m.getRetweetersUntilUser.mockRejectedValue(
         new ApplicationError({
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Slow down',
+          code: 'NOT_FOUND',
+          message: 'Gone',
           data: { retryAfter: 'soon' }
         })
       );
@@ -264,27 +261,24 @@ describe('runTaskJobs', () => {
         where: { id: 'job-1' },
         data: {
           status: 'FAILED',
-          data: JSON.stringify({
-            code: 'TOO_MANY_REQUESTS',
-            message: 'Slow down',
-            data: { retryAfter: 'soon' }
-          })
+          attempts: { increment: 1 },
+          error: 'Gone'
         }
       });
     });
 
-    it('marks the job failed when the in-progress update fails', async () => {
-      prismaMock.taskJob.findMany.mockResolvedValue([inactiveJob('job-1')]);
-      prismaMock.taskJob.update.mockRejectedValueOnce(new Error('locked'));
+    it('stops the run without processing the job when its claim fails', async () => {
+      prismaMock.taskJob.findMany.mockResolvedValue([
+        inactiveJob('job-1'),
+        inactiveJob('job-2')
+      ]);
+      prismaMock.taskJob.updateMany
+        .mockResolvedValueOnce({ count: 0 })
+        .mockRejectedValueOnce(new Error('locked'));
 
-      const result = await runTaskJobs(db);
-
-      expect(result).toEqual({ processed: 1 });
+      await expect(runTaskJobs(db)).rejects.toThrow('locked');
       expect(prismaMock.taskJob.delete).not.toHaveBeenCalled();
-      expect(updateCalls()[1]).toEqual({
-        where: { id: 'job-1' },
-        data: { status: 'FAILED', data: '{}' }
-      });
+      expect(updateCalls()).toEqual([claim('job-1')]);
     });
 
     it('keeps processing the remaining jobs after a failure', async () => {
@@ -307,28 +301,89 @@ describe('runTaskJobs', () => {
     });
   });
 
+  describe('when another run claimed the job first', () => {
+    it('skips the job without processing it', async () => {
+      prismaMock.taskJob.findMany.mockResolvedValue([inactiveJob('job-1')]);
+      prismaMock.taskJob.updateMany
+        .mockResolvedValueOnce({ count: 0 })
+        .mockResolvedValueOnce({ count: 0 });
+
+      const result = await runTaskJobs(db);
+
+      expect(result).toEqual({ processed: 0 });
+      expect(updateCalls()).toEqual([claim('job-1')]);
+      expect(prismaMock.taskJob.delete).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when processing throws a retryable error', () => {
-    it('reschedules the job as pending at the retry time', async () => {
-      const retryAfter = NOW.getTime() + 90_000;
+    const slowDown = (data: object) =>
+      new ApplicationError({
+        code: 'TOO_MANY_REQUESTS',
+        message: 'Slow down',
+        data
+      });
+
+    it('reschedules the job as pending at the retry time and keeps its data', async () => {
+      const retryAfter = NOW.getTime() + JOB_RETRY_BASE_MS + 90_000;
       prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
-      m.getRetweetersUntilUser.mockRejectedValue(
-        new ApplicationError({
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Slow down',
-          data: { retryAfter }
-        })
-      );
+      m.getRetweetersUntilUser.mockRejectedValue(slowDown({ retryAfter }));
 
       const result = await runTaskJobs(db);
 
       expect(result).toEqual({ processed: 1 });
       expect(updateCalls()).toEqual([
-        { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
+        claim('job-1'),
         {
           where: { id: 'job-1' },
-          data: { status: 'PENDING', runAt: new Date(retryAfter) }
+          data: {
+            status: 'PENDING',
+            runAt: new Date(retryAfter),
+            attempts: { increment: 1 },
+            error: 'Slow down'
+          }
         }
       ]);
+    });
+
+    it('backs off longer after each attempt when no retry time is sent', async () => {
+      prismaMock.taskJob.findMany.mockResolvedValue([
+        buildTaskJob({
+          type: 'TWITTER_RETWEET_IMPORT_V2',
+          data: { runs: 1 },
+          job: { id: 'job-1', attempts: 2 }
+        })
+      ]);
+      m.getRetweetersUntilUser.mockRejectedValue(slowDown({ status: 429 }));
+
+      await runTaskJobs(db);
+
+      expect(updateCalls()[1]?.data).toMatchObject({
+        status: 'PENDING',
+        runAt: new Date(NOW.getTime() + JOB_RETRY_BASE_MS * 4)
+      });
+    });
+
+    it('fails the job after its last attempt', async () => {
+      prismaMock.taskJob.findMany.mockResolvedValue([
+        buildTaskJob({
+          type: 'TWITTER_RETWEET_IMPORT_V2',
+          data: { runs: 1 },
+          job: { id: 'job-1', attempts: MAX_JOB_ATTEMPTS - 1 }
+        })
+      ]);
+      m.getRetweetersUntilUser.mockRejectedValue(slowDown({ status: 429 }));
+
+      await runTaskJobs(db);
+
+      expect(updateCalls()[1]).toEqual({
+        where: { id: 'job-1' },
+        data: {
+          status: 'FAILED',
+          attempts: { increment: 1 },
+          error: 'Slow down'
+        }
+      });
     });
   });
 
@@ -338,13 +393,19 @@ describe('runTaskJobs', () => {
         inactiveJob('job-1'),
         inactiveJob('job-2')
       ]);
-      prismaMock.taskJob.updateMany.mockResolvedValue({ count: 0 });
+      prismaMock.taskJob.updateMany.mockImplementation((async ({
+        data
+      }: {
+        data: { status?: string };
+      }) => ({
+        count: data.status === 'IN_PROGRESS' ? 1 : 0
+      })) as never);
 
       await expect(runTaskJobs(db)).resolves.toEqual({ processed: 2 });
       expect(updateCalls()).toEqual([
-        { where: { id: 'job-1' }, data: { status: 'IN_PROGRESS' } },
+        claim('job-1'),
         { where: { id: 'job-1' }, data: { status: 'COMPLETED' } },
-        { where: { id: 'job-2' }, data: { status: 'IN_PROGRESS' } },
+        claim('job-2'),
         { where: { id: 'job-2' }, data: { status: 'COMPLETED' } }
       ]);
     });

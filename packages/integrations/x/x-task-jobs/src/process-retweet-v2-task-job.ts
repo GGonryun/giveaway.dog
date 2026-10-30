@@ -8,9 +8,12 @@ import {
   toTwitterProofSchema,
   TwitterRetweetV2TaskSchema
 } from '@giveaway/task-model/schemas';
-import { PrismaClient } from '@giveaway/db-model';
+import { PrismaClient, TaskJobStatus } from '@giveaway/db-model';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
-import { datetime } from '@giveaway/util-time/date';
+import {
+  toImportIdleRuns,
+  toNextImportRunAt
+} from '@giveaway/task-model/import-schedule';
 import { ApplicationError } from '@giveaway/util-errors';
 import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';
 
@@ -139,13 +142,6 @@ export const processRetweetV2TaskJob = async (
     `Created ${created} and updated ${updated} task completions for task job ${job.id}`
   );
 
-  if (created > 0) {
-    await scheduleRandomlyAssignPrizesJob({
-      db,
-      sweepstakesId
-    });
-  }
-
   const endDate = job.task.sweepstakes.timing?.endDate;
   const now = new Date();
 
@@ -155,13 +151,12 @@ export const processRetweetV2TaskJob = async (
 
   const scanComplete = !response.hasMore || !response.nextCursor;
 
-  if (!scanComplete) {
-    console.info(
-      `Scan incomplete for task job ${job.id}, scheduling continuation with cursor`
-    );
-    await db.taskJob.create({
-      data: {
-        taskId: job.taskId,
+  const toNextRun = () => {
+    if (!scanComplete) {
+      console.info(
+        `Scan incomplete for task job ${job.id}, scheduling continuation with cursor`
+      );
+      return {
         runAt: new Date(),
         data: {
           runs: parsed.data.runs,
@@ -169,38 +164,62 @@ export const processRetweetV2TaskJob = async (
           lastProcessedId: parsed.data.lastProcessedId,
           firstSeenId
         }
-      }
+      };
+    }
+
+    const idleRuns = toImportIdleRuns({
+      idleRuns: parsed.data.idleRuns,
+      foundNew: isContinuation || twitterUsers.length > 0
     });
-    return;
-  }
+    const nextRunAt = toNextImportRunAt({
+      now,
+      baseMinutes: Math.min(
+        parsed.data.runs * SCRAPEBADGER_RUN_OFFSET,
+        MAX_RUN_OFFSET
+      ),
+      idleRuns,
+      endDate
+    });
 
-  if (endDate && now >= endDate) {
+    if (!nextRunAt) {
+      console.info(
+        `Task job ${job.id} completed, sweepstakes has ended - not scheduling next run`
+      );
+      return null;
+    }
+
     console.info(
-      `Task job ${job.id} completed, sweepstakes has ended - not scheduling next run`
+      `Task job ${job.id} scan complete, scheduling next run at ${nextRunAt} after ${idleRuns} scans with no new users`
     );
-    return;
-  }
-
-  let nextRunAt = datetime.minutesFromNow(
-    Math.min(parsed.data.runs * SCRAPEBADGER_RUN_OFFSET, MAX_RUN_OFFSET)
-  );
-
-  if (endDate && nextRunAt > endDate) {
-    nextRunAt = endDate;
-    console.info(`Approaching end date, scheduling final run at ${nextRunAt}`);
-  }
-
-  await db.taskJob.create({
-    data: {
-      taskId: job.taskId,
+    return {
       runAt: nextRunAt,
       data: {
         runs: parsed.data.runs + 1,
+        ...(idleRuns > 0 && { idleRuns }),
         lastProcessedId: firstSeenId ?? parsed.data.lastProcessedId
       }
+    };
+  };
+
+  const nextRun = toNextRun();
+
+  await db.$transaction(async (tx) => {
+    const participantsWithoutAllocation = await tx.sweepstakesParticipant.count(
+      {
+        where: { sweepstakesId, allocations: null }
+      }
+    );
+    if (participantsWithoutAllocation > 0) {
+      await scheduleRandomlyAssignPrizesJob({ db: tx, sweepstakesId });
     }
+    if (nextRun) {
+      await tx.taskJob.create({
+        data: { taskId: job.taskId, ...nextRun }
+      });
+    }
+    await tx.taskJob.update({
+      where: { id: job.id },
+      data: { status: TaskJobStatus.COMPLETED }
+    });
   });
-  console.info(
-    `Task job ${job.id} scan complete, scheduling next run at ${nextRunAt}`
-  );
 };

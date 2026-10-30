@@ -31,7 +31,6 @@ const formData = (
     minimumAccountAgeDays: 30,
     minimumFollowers: 10,
     minimumFollowing: 2,
-    lastPostWithin: 'PAST_WEEK',
     hasProfileImage: true,
     hasBanner: false,
     hasLocation: true,
@@ -100,7 +99,6 @@ describe('startScrapeTwitter', () => {
           requireBannerImage: false,
           requireLocation: true,
           requireBio: false,
-          lastPostWithin: 'PAST_WEEK',
           runAt: null
         }
       });

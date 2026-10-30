@@ -8,6 +8,13 @@ import {
 import { Button } from '@giveaway/ui-primitives/button';
 import { ShieldCheck, Users, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
+import { pageMetadata } from '@giveaway/marketing-model/page-metadata';
+
+export const metadata = pageMetadata({
+  title: 'User Verification & Global Ban List | Giveaway.dog',
+  description:
+    'Learn about our verification process and how the global ban list keeps giveaways fair.'
+});
 
 export default function UserVerifyPage() {
   return (

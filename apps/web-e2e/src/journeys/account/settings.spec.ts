@@ -2,7 +2,6 @@ import type { Locator, Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, RUN_ID, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { signInAs, toPersonaEmail } from '../../helpers/personas';
 import { seedApi } from '../../helpers/seed';
 
@@ -212,7 +211,7 @@ test.describe('host access', () => {
     await expect(
       page.getByText('Host access enabled successfully!')
     ).toBeVisible();
-    await expect(card.getByRole('button', { name: 'Enabled' })).toBeVisible();
+    await expect(card.getByRole('button', { name: 'Disable' })).toBeVisible();
     expect(await readSession(page)).toMatchObject({ accountType: 'HOST' });
 
     await page.goto('/app');
@@ -229,7 +228,13 @@ test.describe('host access', () => {
     await page.waitForLoadState('networkidle');
 
     const card = hostSweepstakesCard(page);
-    await card.getByRole('button', { name: 'Enabled' }).click();
+    await card.getByRole('button', { name: 'Disable' }).click();
+    await page.getByRole('button', { name: 'Cancel' }).click();
+    await expect(page.getByRole('alertdialog')).toBeHidden();
+    expect(await readSession(page)).toMatchObject({ accountType: 'HOST' });
+
+    await card.getByRole('button', { name: 'Disable' }).click();
+    await page.getByRole('button', { name: 'Disable Host Access' }).click();
 
     await expect(
       page.getByText('Host access disabled successfully!')
@@ -294,78 +299,76 @@ test.describe('connected accounts', () => {
     await expectAccountRow(page, 'Facebook', `e2e.${ns}`);
   });
 
-  test(
-    '[ACCOUNT-008] a user cannot disconnect their last account that signs in',
-    knownBug(505),
-    async ({ page, request }, testInfo) => {
-      const ns = freshNamespace(testInfo.workerIndex);
-      await seedApi(request).userExtras({
-        ns,
-        users: [{ persona: 'participant', accounts: [{ identity: 'TWITTER' }] }]
-      });
-      await signInAs(page.request, 'participant', ns);
-      await page.goto('/account');
-      await linkProfile(page, 'Instagram', `https://instagram.com/e2e_${ns}`);
-      await expectAccountRow(page, 'Instagram', `@e2e_${ns}`);
+  test('[ACCOUNT-008] a user cannot disconnect their last account that signs in', async ({
+    page,
+    request
+  }, testInfo) => {
+    const ns = freshNamespace(testInfo.workerIndex);
+    await seedApi(request).userExtras({
+      ns,
+      users: [{ persona: 'participant', accounts: [{ identity: 'TWITTER' }] }]
+    });
+    await signInAs(page.request, 'participant', ns);
+    await page.goto('/account');
+    await linkProfile(page, 'Instagram', `https://instagram.com/e2e_${ns}`);
+    await expectAccountRow(page, 'Instagram', `@e2e_${ns}`);
 
-      await page.waitForLoadState('networkidle');
-      await accountRow(page, 'X (Twitter)')
-        .getByRole('button', { name: 'Disconnect' })
-        .click();
+    await page.waitForLoadState('networkidle');
+    await accountRow(page, 'X (Twitter)')
+      .getByRole('button', { name: 'Disconnect' })
+      .click();
+    await expect(
+      page.getByRole('region', { name: /Notifications/ }).getByRole('listitem')
+    ).toBeVisible();
+
+    await page.reload();
+    await expect(accountRow(page, 'X (Twitter)')).not.toContainText(
+      'Not connected'
+    );
+  });
+
+  test('[ACCOUNT-009] a user cannot claim a profile that another user linked', async ({
+    page,
+    freshPersona
+  }) => {
+    const first = await freshPersona('participant');
+    const url = `https://instagram.com/e2e_${first.ns}`;
+    await page.goto('/account');
+    await linkProfile(page, 'Instagram', url);
+    await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
+
+    await freshPersona('participant2');
+    await page.goto('/account');
+    await linkProfile(page, 'Instagram', url);
+
+    await expect(
+      page.getByText(
+        'This Instagram profile is already linked to another account.'
+      )
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/account$/);
+    await expect(accountRow(page, 'Instagram')).toContainText('Not connected');
+    await signInAs(page.request, 'participant', first.ns);
+    await page.goto('/account');
+    await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
+  });
+
+  test('[ACCOUNT-010] the account page says why linking an account failed', async ({
+    page,
+    freshPersona
+  }) => {
+    await freshPersona('participant');
+
+    for (const error of [
+      'OAuthAccountAlreadyLinked',
+      'instagram_link_failed'
+    ]) {
+      await page.goto(`/account?error=${error}`);
       await expect(
-        page
-          .getByRole('region', { name: /Notifications/ })
-          .getByRole('listitem')
+        page.getByRole('alert').filter({ hasText: /link/i })
       ).toBeVisible();
-
-      await page.reload();
-      await expect(accountRow(page, 'X (Twitter)')).not.toContainText(
-        'Not connected'
-      );
     }
-  );
-
-  test(
-    '[ACCOUNT-009] a user cannot claim a profile that another user linked',
-    knownBug(506),
-    async ({ page, freshPersona }) => {
-      const first = await freshPersona('participant');
-      const url = `https://instagram.com/e2e_${first.ns}`;
-      await page.goto('/account');
-      await linkProfile(page, 'Instagram', url);
-      await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
-
-      await freshPersona('participant2');
-      await page.goto('/account');
-      await linkProfile(page, 'Instagram', url);
-
-      await expect(page).toHaveURL(/\/account\?error=/);
-      await expect(accountRow(page, 'Instagram')).toContainText(
-        'Not connected'
-      );
-      await signInAs(page.request, 'participant', first.ns);
-      await page.goto('/account');
-      await expectAccountRow(page, 'Instagram', `@e2e_${first.ns}`);
-    }
-  );
-
-  test(
-    '[ACCOUNT-010] the account page says why linking an account failed',
-    knownBug(507),
-    async ({ page, freshPersona }) => {
-      await freshPersona('participant');
-
-      for (const error of [
-        'OAuthAccountAlreadyLinked',
-        'instagram_link_failed'
-      ]) {
-        await page.goto(`/account?error=${error}`);
-        await expect(
-          page.getByRole('alert').filter({ hasText: /link/i })
-        ).toBeVisible();
-      }
-    }
-  );
+  });
 });
 
 test.describe('account deletion', () => {

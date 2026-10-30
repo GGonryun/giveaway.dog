@@ -70,6 +70,7 @@ beforeEach(() => {
   vi.spyOn(console, 'info').mockImplementation(() => undefined);
   vi.spyOn(console, 'error').mockImplementation(() => undefined);
   prismaMock.sweepstakesJob.update.mockResolvedValue({});
+  prismaMock.sweepstakesJob.updateMany.mockResolvedValue({ count: 1 });
 });
 
 afterEach(() => {
@@ -80,6 +81,81 @@ afterEach(() => {
 });
 
 describe('runSweepstakesJobs', () => {
+  describe('claiming jobs', () => {
+    it('sets jobs in progress for more than 10 minutes back to pending before it loads the due jobs', async () => {
+      givenJobs();
+
+      await runSweepstakesJobs(db, { sweepstakesId: 'sw-1' });
+
+      expect(prismaMock.sweepstakesJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * 60 * 1000) },
+          sweepstakesId: 'sw-1'
+        },
+        data: { status: 'PENDING' }
+      });
+      const [releaseOrder] =
+        prismaMock.sweepstakesJob.updateMany.mock.invocationCallOrder;
+      const [findOrder] =
+        prismaMock.sweepstakesJob.findMany.mock.invocationCallOrder;
+      expect(releaseOrder).toBeLessThan(findOrder);
+    });
+
+    it('releases stuck jobs of every sweepstakes when none is given', async () => {
+      givenJobs();
+
+      await runSweepstakesJobs(db);
+
+      expect(prismaMock.sweepstakesJob.updateMany).toHaveBeenCalledWith({
+        where: {
+          status: 'IN_PROGRESS',
+          updatedAt: { lt: new Date(NOW.getTime() - 10 * 60 * 1000) }
+        },
+        data: { status: 'PENDING' }
+      });
+    });
+
+    it('claims a due pending job before it processes it', async () => {
+      givenJobs(job('PROCESS_MODIFICATION'));
+
+      await runSweepstakesJobs(db);
+
+      expect(prismaMock.sweepstakesJob.updateMany).toHaveBeenLastCalledWith({
+        where: {
+          id: 'job-PROCESS_MODIFICATION',
+          status: 'PENDING',
+          runAt: { lte: NOW }
+        },
+        data: { status: 'IN_PROGRESS' }
+      });
+      expect(updateCalls()).toEqual([completed('job-PROCESS_MODIFICATION')]);
+    });
+
+    it('skips a job that another run claimed first', async () => {
+      givenJobs(job('PROCESS_MODIFICATION'), job('PROCESS_COMPLETION'));
+      prismaMock.sweepstakesJob.updateMany
+        .mockResolvedValueOnce({ count: 0 })
+        .mockResolvedValueOnce({ count: 0 })
+        .mockResolvedValueOnce({ count: 0 });
+
+      await expect(runSweepstakesJobs(db)).resolves.toEqual({
+        processed: 0
+      });
+      expect(prismaMock.sweepstakesJob.update).not.toHaveBeenCalled();
+    });
+
+    it('stops the run without processing the job when its claim fails', async () => {
+      givenJobs(job('PROCESS_COMPLETION'), job('PROCESS_MODIFICATION'));
+      prismaMock.sweepstakesJob.updateMany
+        .mockResolvedValueOnce({ count: 0 })
+        .mockRejectedValueOnce(new Error('locked'));
+
+      await expect(runSweepstakesJobs(db)).rejects.toThrow('locked');
+      expect(prismaMock.sweepstakesJob.update).not.toHaveBeenCalled();
+    });
+  });
+
   describe('job selection', () => {
     it('queries up to five due pending jobs ordered by creation time', async () => {
       givenJobs();
@@ -1046,18 +1122,17 @@ describe('runSweepstakesJobs', () => {
       givenDiscordUpdateSucceeds();
     });
 
-    it('marks the job completed before loading the sweepstakes', async () => {
+    it('marks the job completed only after updating discord', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
-        discordSweepstakes({ status: 'COMPLETED' })
+        discordSweepstakes({ status: 'COMPLETED', posts: [discordPost()] })
       );
 
       await runSweepstakesJobs(db);
 
       const updateOrder =
         prismaMock.sweepstakesJob.update.mock.invocationCallOrder[0];
-      const findOrder =
-        prismaMock.sweepstakes.findUnique.mock.invocationCallOrder[0];
-      expect(updateOrder).toBeLessThan(findOrder);
+      const fetchOrder = fetchMock.mock.invocationCallOrder[0];
+      expect(fetchOrder).toBeLessThan(updateOrder);
       expect(console.info).toHaveBeenCalledWith(
         'Sweepstakes sw-1 marked as completed in job job-PROCESS_COMPLETION'
       );
@@ -1074,18 +1149,17 @@ describe('runSweepstakesJobs', () => {
       });
     });
 
-    it('completes then fails the job when the sweepstakes does not exist', async () => {
+    it('fails the job when the sweepstakes does not exist', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(null);
 
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(JOB_ID, 'Sweepstakes with id sw-1 not found')
       ]);
     });
 
-    it('completes then fails the job when the sweepstakes is not completed', async () => {
+    it('fails the job when the sweepstakes is not completed', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         discordSweepstakes({ status: 'ACTIVE' })
       );
@@ -1093,19 +1167,18 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(JOB_ID, 'Sweepstakes sw-1 is not completed yet')
       ]);
     });
 
-    it('marks the job completed twice when there is no discord post', async () => {
+    it('marks the job completed once when there is no discord post', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         discordSweepstakes({ status: 'COMPLETED' })
       );
 
       await runSweepstakesJobs(db);
 
-      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
@@ -1120,7 +1193,7 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(fetchMock).not.toHaveBeenCalled();
-      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
     });
 
     it('updates the discord post even when it is not the first post', async () => {
@@ -1153,7 +1226,7 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(fetchMock).not.toHaveBeenCalled();
-      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
     });
 
     it('fails the job when the discord response has no channel id', async () => {
@@ -1167,7 +1240,6 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(
           JOB_ID,
           'Post to Discord job for sweepstakes sw-1 is missing channelId in response'
@@ -1186,7 +1258,6 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(
           JOB_ID,
           'Post to Discord job for sweepstakes sw-1 is missing messageId in response'
@@ -1215,14 +1286,14 @@ describe('runSweepstakesJobs', () => {
       ).toEqual(['View Details', 'Browse Giveaways']);
     });
 
-    it('marks the job completed again after updating discord', async () => {
+    it('marks the job completed once after updating discord', async () => {
       prismaMock.sweepstakes.findUnique.mockResolvedValue(
         discordSweepstakes({ status: 'COMPLETED', posts: [discordPost()] })
       );
 
       await runSweepstakesJobs(db);
 
-      expect(updateCalls()).toEqual([completed(JOB_ID), completed(JOB_ID)]);
+      expect(updateCalls()).toEqual([completed(JOB_ID)]);
     });
 
     it('fails the job when discord rejects the bot token', async () => {
@@ -1234,7 +1305,6 @@ describe('runSweepstakesJobs', () => {
       await runSweepstakesJobs(db);
 
       expect(updateCalls()).toEqual([
-        completed(JOB_ID),
         failed(JOB_ID, 'Discord bot token is invalid')
       ]);
     });

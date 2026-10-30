@@ -2,8 +2,8 @@ import 'server-only';
 
 import prisma from '@giveaway/db-client/prisma';
 import { getTweet } from '@giveaway/x-scraper/procedures/get-tweet';
-import { FatalError } from 'workflow';
 import { toTwitterPost } from '../shared';
+import { toStepError } from '../errors';
 
 export async function storeTweetData({
   tweetId,
@@ -25,8 +25,9 @@ export async function storeTweetData({
     });
   } catch (error) {
     console.error('Error storing tweet data:', error);
-    throw new FatalError(
-      `Failed to store tweet data for tweetId ${tweetId}: ${error}`
+    throw toStepError(
+      error,
+      `Failed to store tweet data for tweetId ${tweetId}`
     );
   }
 }

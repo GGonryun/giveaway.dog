@@ -37,11 +37,12 @@ describe('getHistoricalSweepstakesList', () => {
   });
 
   describe('query shape', () => {
-    it('queries public sweepstakes that ended more than a day ago, regardless of status', async () => {
+    it('[VIS-001] queries public sweepstakes that ended more than a day ago and are not drafts', async () => {
       await getHistoricalSweepstakesList(undefined);
 
       expect(findManyArgs().where).toEqual({
         visibility: { visibility: 'PUBLIC' },
+        status: { not: 'DRAFT' },
         timing: { endDate: { lt: daysFromFixedNow(-1) } }
       });
     });
@@ -55,16 +56,11 @@ describe('getHistoricalSweepstakesList', () => {
       });
     });
 
-    it('fetches the first page of 20 when no page is given', async () => {
-      await getHistoricalSweepstakesList(undefined);
-
-      expect(findManyArgs()).toMatchObject({ skip: 0, take: 20 });
-    });
-
-    it('skips previous pages at the database level', async () => {
+    it('loads every match, so the filters apply before the page is cut', async () => {
       await getHistoricalSweepstakesList({ page: 3 });
 
-      expect(findManyArgs()).toMatchObject({ skip: 40, take: 20 });
+      expect(findManyArgs()).not.toHaveProperty('skip');
+      expect(findManyArgs()).not.toHaveProperty('take');
     });
   });
 
@@ -268,9 +264,9 @@ describe('getHistoricalSweepstakesList', () => {
       expect(expectOk(result)).toHaveLength(3);
     });
 
-    it('filters only within the fetched page, so a page can hold fewer than 20 results', async () => {
+    it('fills each page with 20 matches before the page is cut', async () => {
       prismaMock.sweepstakes.findMany.mockResolvedValue(
-        Array.from({ length: 20 }, (_, index) =>
+        Array.from({ length: 50 }, (_, index) =>
           ended({
             id: `sw-${index}`,
             participantIds: index % 2 === 0 ? participants(1) : []
@@ -278,9 +274,18 @@ describe('getHistoricalSweepstakesList', () => {
         )
       );
 
-      const result = await getHistoricalSweepstakesList({ minEntrants: 1 });
+      const first = await getHistoricalSweepstakesList({ minEntrants: 1 });
+      const second = await getHistoricalSweepstakesList({
+        minEntrants: 1,
+        page: 2
+      });
 
-      expect(expectOk(result)).toHaveLength(10);
+      expect(expectOk(first).map((item) => item.id)).toEqual(
+        Array.from({ length: 20 }, (_, index) => `sw-${index * 2}`)
+      );
+      expect(expectOk(second).map((item) => item.id)).toEqual(
+        Array.from({ length: 5 }, (_, index) => `sw-${(index + 20) * 2}`)
+      );
     });
   });
 
@@ -304,6 +309,31 @@ describe('getHistoricalSweepstakesList', () => {
         'by-name',
         'by-description'
       ]);
+    });
+
+    it('finds a match that comes after the first 20 giveaways', async () => {
+      prismaMock.sweepstakes.findMany.mockResolvedValue([
+        ...Array.from({ length: 20 }, (_, index) =>
+          ended({ id: `newer-${index}`, name: 'Cat Club', description: 'Meow' })
+        ),
+        ended({ id: 'older', name: 'Puppy Party', description: 'Fun' })
+      ]);
+
+      const result = await getHistoricalSweepstakesList({ search: 'puppy' });
+
+      expect(expectOk(result).map((item) => item.id)).toEqual(['older']);
+    });
+
+    it('returns the page of the filtered list', async () => {
+      prismaMock.sweepstakes.findMany.mockResolvedValue(
+        Array.from({ length: 30 }, (_, index) => ended({ id: `sw-${index}` }))
+      );
+
+      const result = await getHistoricalSweepstakesList({ page: 2 });
+
+      expect(expectOk(result).map((item) => item.id)).toEqual(
+        Array.from({ length: 10 }, (_, index) => `sw-${index + 20}`)
+      );
     });
 
     it('ignores an empty search string', async () => {

@@ -32,10 +32,6 @@ const LIKES = `GET ${PDS}/xrpc/app.bsky.feed.getLikes`;
 const REPOSTS = `GET ${PDS}/xrpc/app.bsky.feed.getRepostedBy`;
 const POST_URI = 'at://did:plc:giveawaydog/app.bsky.feed.post/3kabc123';
 
-const ISSUES = {
-  retry: '#302'
-};
-
 type Expectation = 'finishes' | 'retries' | 'staysConnected';
 
 type Bugs = Partial<Record<Expectation, Partial<Record<Fault, string>>>>;
@@ -47,14 +43,6 @@ type Call = {
   reached: (network: FakeNetwork) => boolean;
   bugs: Bugs;
   refreshesSession?: boolean;
-};
-
-const RETRIES_LATER: Partial<Record<Fault, string>> = {
-  timeout: ISSUES.retry,
-  'rate-limit': ISSUES.retry,
-  'rate-limit-retry-after': ISSUES.retry,
-  'server-error': ISSUES.retry,
-  'network-error': ISSUES.retry
 };
 
 const requested = (matcher: string) => (network: FakeNetwork) =>
@@ -78,7 +66,7 @@ const CALLS: Call[] = [
     'the ScrapeBadger retweeters request of an X repost import',
     'TWITTER_RETWEET_IMPORT_V2',
     RETWEETERS,
-    { retries: RETRIES_LATER }
+    {}
   ),
   {
     call: 'the Bluesky session refresh of a like import',
@@ -86,25 +74,25 @@ const CALLS: Call[] = [
     inject: (_, fault) => m.restore.mockRejectedValue(faultError(fault)),
     reached: () => m.restore.mock.calls.length > 0,
     refreshesSession: true,
-    bugs: { retries: RETRIES_LATER }
+    bugs: {}
   },
   networkCall(
     'the Bluesky profile lookup of a like import',
     'BLUESKY_LIKE_IMPORT',
     PROFILE,
-    { retries: RETRIES_LATER }
+    {}
   ),
   networkCall(
     'the Bluesky likes request of a like import',
     'BLUESKY_LIKE_IMPORT',
     LIKES,
-    { retries: RETRIES_LATER }
+    {}
   ),
   networkCall(
     'the Bluesky reposts request of a repost import',
     'BLUESKY_REPOST_IMPORT',
     REPOSTS,
-    { retries: RETRIES_LATER }
+    {}
   )
 ];
 

@@ -3,7 +3,6 @@ import type { E2eSweepstakesRequestInput } from '@giveaway/e2e-model/requests';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../../env';
 import { seedSweepstakes } from '../../helpers/jobs';
-import { knownBug } from '../../helpers/known-bug';
 import {
   cardLabels,
   DAY,
@@ -123,19 +122,18 @@ test.describe('the public giveaway lists', { tag: '@slow' }, () => {
     ]);
   });
 
-  test(
-    '[VIS-001] /history does not show a draft giveaway',
-    knownBug(473),
-    async ({ page, request }, testInfo) => {
-      const { token } = await seedGiveaways(request, testInfo, [
-        'endedLongAgo',
-        'draftEnded'
-      ]);
+  test('[VIS-001] /history does not show a draft giveaway', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { token } = await seedGiveaways(request, testInfo, [
+      'endedLongAgo',
+      'draftEnded'
+    ]);
 
-      await page.goto(`/history?search=${token}`);
+    await page.goto(`/history?search=${token}`);
 
-      await expect(page.getByText('Showing 1 giveaway')).toBeVisible();
-      expect(await kindsOnPage(page, token)).toEqual(['endedLongAgo']);
-    }
-  );
+    await expect(page.getByText('Showing 1 giveaway')).toBeVisible();
+    expect(await kindsOnPage(page, token)).toEqual(['endedLongAgo']);
+  });
 });

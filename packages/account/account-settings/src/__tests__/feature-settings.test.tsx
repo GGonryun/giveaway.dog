@@ -208,37 +208,78 @@ describe('FeatureSettings', () => {
       });
     });
 
-    it('shows host access as enabled', () => {
+    const disableHostAccess = async (
+      user: ReturnType<typeof userEvent.setup>
+    ) => {
+      await user.click(
+        within(hostCard()).getByRole('button', { name: 'Disable' })
+      );
+      await user.click(
+        screen.getByRole('button', { name: 'Disable Host Access' })
+      );
+    };
+
+    it('shows host access as enabled with an action to disable it', () => {
       render(<FeatureSettings />);
 
+      expect(hostCard()).toHaveTextContent('Enabled');
       expect(
-        within(hostCard()).getByRole('button', { name: 'Enabled' })
+        within(hostCard()).queryByRole('button', { name: 'Enabled' })
+      ).not.toBeInTheDocument();
+      expect(
+        within(hostCard()).getByRole('button', { name: 'Disable' })
       ).toBeEnabled();
     });
 
-    it('switches back to a participant without asking for confirmation', async () => {
+    it('asks for confirmation before disabling host access', async () => {
       const user = userEvent.setup();
       render(<FeatureSettings />);
 
       await user.click(
-        within(hostCard()).getByRole('button', { name: 'Enabled' })
+        within(hostCard()).getByRole('button', { name: 'Disable' })
       );
+
+      const dialog = screen.getByRole('alertdialog', {
+        name: 'Disable Host Access'
+      });
+      expect(dialog).toHaveTextContent('Creating and managing giveaways');
+      expect(updateAccountType).not.toHaveBeenCalled();
+    });
+
+    it('does not change anything when disabling is cancelled', async () => {
+      const user = userEvent.setup();
+      render(<FeatureSettings />);
+
+      await user.click(
+        within(hostCard()).getByRole('button', { name: 'Disable' })
+      );
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+      expect(updateAccountType).not.toHaveBeenCalled();
+    });
+
+    it('switches back to a participant once confirmed', async () => {
+      const user = userEvent.setup();
+      render(<FeatureSettings />);
+
+      await disableHostAccess(user);
 
       await waitFor(() =>
         expect(updateAccountType).toHaveBeenCalledWith({
           accountType: UserAccountType.PARTICIPANT
         })
       );
-      expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('alertdialog', { name: 'Disable Host Access' })
+      ).not.toBeInTheDocument();
     });
 
     it('confirms that host access was disabled', async () => {
       const user = userEvent.setup();
       render(<FeatureSettings />);
 
-      await user.click(
-        within(hostCard()).getByRole('button', { name: 'Enabled' })
-      );
+      await disableHostAccess(user);
 
       await waitFor(() =>
         expect(toast.success).toHaveBeenCalledWith(
@@ -256,9 +297,7 @@ describe('FeatureSettings', () => {
       vi.mocked(updateAccountType).mockReturnValue(request.promise);
       render(<FeatureSettings />);
 
-      await user.click(
-        within(hostCard()).getByRole('button', { name: 'Enabled' })
-      );
+      await disableHostAccess(user);
 
       expect(
         within(hostCard()).getByRole('button', { name: 'Updating...' })

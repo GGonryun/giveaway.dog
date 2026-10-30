@@ -7,6 +7,7 @@ import type { BlueskyUserSchema } from '@giveaway/bluesky-api/get-bluesky-likes'
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
+  buildTiming,
   taskOf
 } from '@giveaway/task-model/testing/fixtures-task-procedures-verification';
 
@@ -269,12 +270,16 @@ describe('processBlueskyTaskJob', () => {
       });
     });
 
-    it('schedules the prize allocation job when a completion is created', async () => {
+    it('schedules the prize allocation job when a participant of the giveaway has no prize allocation', async () => {
       importResult([], [imported('b')]);
       prismaMock.taskCompletion.findFirst.mockResolvedValue(null);
+      prismaMock.sweepstakesParticipant.count.mockResolvedValue(1);
 
       await processBlueskyTaskJob(db, likeTask, jobWith({ runs: 0 }), action());
 
+      expect(prismaMock.sweepstakesParticipant.count).toHaveBeenCalledWith({
+        where: { sweepstakesId: 'sweep-1', allocations: null }
+      });
       expect(prismaMock.sweepstakesJob.upsert).toHaveBeenCalledWith({
         where: {
           sweepstakesId_type: {
@@ -290,6 +295,59 @@ describe('processBlueskyTaskJob', () => {
         },
         update: { status: 'PENDING', runAt: NOW }
       });
+    });
+
+    it('schedules the prize allocation job when an earlier run created the completions', async () => {
+      importResult([], [imported('b')]);
+      prismaMock.taskCompletion.findFirst.mockResolvedValue({
+        id: 'completion-1',
+        status: 'COMPLETED'
+      });
+      prismaMock.sweepstakesParticipant.count.mockResolvedValue(1);
+
+      await processBlueskyTaskJob(db, likeTask, jobWith({ runs: 0 }), action());
+
+      expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+      expect(prismaMock.sweepstakesJob.upsert).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not schedule prize allocation when every participant has a prize allocation', async () => {
+      importResult([], [imported('b')]);
+      prismaMock.taskCompletion.findFirst.mockResolvedValue(null);
+      prismaMock.sweepstakesParticipant.count.mockResolvedValue(0);
+
+      await processBlueskyTaskJob(db, likeTask, jobWith({ runs: 0 }), action());
+
+      expect(prismaMock.taskCompletion.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.sweepstakesJob.upsert).not.toHaveBeenCalled();
+    });
+
+    it('schedules the next run and completes the job in one transaction', async () => {
+      importResult([], [imported('b')]);
+      prismaMock.taskCompletion.findFirst.mockResolvedValue(null);
+      prismaMock.sweepstakesParticipant.count.mockResolvedValue(1);
+      const outside = [
+        prismaMock.sweepstakesJob.upsert,
+        prismaMock.taskJob.create,
+        prismaMock.taskJob.update
+      ];
+      prismaMock.$transaction.mockImplementation(async (run: unknown) => {
+        expect(outside.every((fn) => fn.mock.calls.length === 0)).toBe(true);
+        return (run as (tx: typeof prismaMock) => Promise<unknown>)(prismaMock);
+      });
+
+      await processBlueskyTaskJob(db, likeTask, jobWith({ runs: 0 }), action());
+
+      expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+      expect(prismaMock.sweepstakesJob.upsert).toHaveBeenCalledTimes(1);
+      expect(prismaMock.taskJob.create).toHaveBeenCalledTimes(1);
+      expect(prismaMock.taskJob.update).toHaveBeenCalledWith({
+        where: { id: 'job-1' },
+        data: { status: 'COMPLETED' }
+      });
+      expect(
+        prismaMock.taskJob.update.mock.invocationCallOrder[0]
+      ).toBeGreaterThan(prismaMock.taskJob.create.mock.invocationCallOrder[0]);
     });
 
     it('marks a pending completion as completed without attaching a proof', async () => {
@@ -367,8 +425,8 @@ describe('processBlueskyTaskJob', () => {
         data: {
           taskId: 'task-1',
           status: 'PENDING',
-          runAt: new Date(NOW.getTime() + 20 * MINUTE),
-          data: { runs: 2, lastProcessedDid: 'did:plc:a' }
+          runAt: new Date(NOW.getTime() + 40 * MINUTE),
+          data: { runs: 2, idleRuns: 1, lastProcessedDid: 'did:plc:a' }
         }
       });
     });
@@ -385,11 +443,126 @@ describe('processBlueskyTaskJob', () => {
         data: {
           taskId: 'task-1',
           status: 'PENDING',
-          runAt: new Date(NOW.getTime() + 20 * MINUTE),
-          data: { runs: 2, lastProcessedDid: undefined }
+          runAt: new Date(NOW.getTime() + 40 * MINUTE),
+          data: { runs: 2, idleRuns: 1, lastProcessedDid: undefined }
         }
       });
     });
+
+    it.each([
+      [undefined, 1, 40],
+      [1, 2, 80],
+      [5, 6, 1280],
+      [6, 7, 1440],
+      [40, 41, 1440]
+    ])(
+      'backs off from %s to %i idle scans and waits %i minutes when the scan finds no new users',
+      async (idleRuns, expectedIdleRuns, expectedMinutes) => {
+        await processBlueskyTaskJob(
+          db,
+          likeTask,
+          jobWith({ runs: 1, idleRuns, lastProcessedDid: 'did:plc:a' }),
+          actionReturning([blueskyUser('did:plc:a')])
+        );
+
+        expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+          data: {
+            taskId: 'task-1',
+            status: 'PENDING',
+            runAt: new Date(NOW.getTime() + expectedMinutes * MINUTE),
+            data: {
+              runs: 2,
+              idleRuns: expectedIdleRuns,
+              lastProcessedDid: 'did:plc:a'
+            }
+          }
+        });
+      }
+    );
+
+    it('resets the back-off when a scan finds a new user', async () => {
+      await processBlueskyTaskJob(
+        db,
+        likeTask,
+        jobWith({ runs: 1, idleRuns: 4, lastProcessedDid: 'did:plc:a' }),
+        actionReturning([blueskyUser('did:plc:b'), blueskyUser('did:plc:a')])
+      );
+
+      expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+        data: {
+          taskId: 'task-1',
+          status: 'PENDING',
+          runAt: new Date(NOW.getTime() + 20 * MINUTE),
+          data: { runs: 2, lastProcessedDid: 'did:plc:b' }
+        }
+      });
+    });
+
+    it('clamps the next run to the sweepstakes end date so the final scan still runs', async () => {
+      const endDate = new Date(NOW.getTime() + 90 * MINUTE);
+
+      await processBlueskyTaskJob(
+        db,
+        likeTask,
+        jobWith(
+          { runs: 1, idleRuns: 4, lastProcessedDid: 'did:plc:a' },
+          { timing: buildTiming({ endDate }) }
+        ),
+        actionReturning([blueskyUser('did:plc:a')])
+      );
+
+      expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+        data: {
+          taskId: 'task-1',
+          status: 'PENDING',
+          runAt: endDate,
+          data: { runs: 2, idleRuns: 5, lastProcessedDid: 'did:plc:a' }
+        }
+      });
+    });
+
+    it('schedules the next run without an end date', async () => {
+      await processBlueskyTaskJob(
+        db,
+        likeTask,
+        jobWith({ runs: 1 }, { timing: null }),
+        actionReturning([blueskyUser('did:plc:a')])
+      );
+
+      expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          runAt: new Date(NOW.getTime() + 20 * MINUTE)
+        })
+      });
+    });
+
+    it.each([
+      ['at', 0],
+      ['after', MINUTE]
+    ])(
+      'completes the job without another run when it runs %s the end date',
+      async (_label, elapsed) => {
+        await processBlueskyTaskJob(
+          db,
+          likeTask,
+          jobWith(
+            { runs: 1 },
+            {
+              timing: buildTiming({
+                endDate: new Date(NOW.getTime() - elapsed)
+              })
+            }
+          ),
+          actionReturning([blueskyUser('did:plc:a')])
+        );
+
+        expect(prismaMock.taskJob.create).not.toHaveBeenCalled();
+        expect(prismaMock.taskJob.update).toHaveBeenCalledWith({
+          where: { id: 'job-1' },
+          data: { status: 'COMPLETED' }
+        });
+      }
+    );
 
     it('resolves to undefined', async () => {
       await expect(

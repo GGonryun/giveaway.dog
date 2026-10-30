@@ -144,6 +144,70 @@ describe('disconnectAccount', () => {
     });
   });
 
+  describe('when the last account that signs in would be disconnected', () => {
+    beforeEach(() => {
+      signIn();
+    });
+
+    it('[ACCOUNT-008] refuses when only Instagram and Facebook links would remain', async () => {
+      prismaMock.user.findFirst.mockResolvedValue(
+        userWithAccounts(
+          account('twitter'),
+          account('instagram'),
+          account('facebook')
+        )
+      );
+
+      const result = await disconnectAccount({
+        type: IdentityProvider.TWITTER
+      });
+
+      expect(expectFailure(result, 'BAD_REQUEST').message).toBe(
+        'Cannot disconnect the last account you can sign in with'
+      );
+      expect(prismaMock.account.delete).not.toHaveBeenCalled();
+    });
+
+    it('disconnects a sign-in account when another one remains', async () => {
+      prismaMock.user.findFirst.mockResolvedValue(
+        userWithAccounts(
+          account('twitter'),
+          account('instagram'),
+          account('google')
+        )
+      );
+      prismaMock.account.delete.mockResolvedValue(account('twitter'));
+
+      const result = await disconnectAccount({
+        type: IdentityProvider.TWITTER
+      });
+
+      expectOk(result);
+      expect(prismaMock.account.delete).toHaveBeenCalledWith({
+        where: {
+          provider_providerAccountId: {
+            provider: 'twitter',
+            providerAccountId: 'twitter-id'
+          }
+        }
+      });
+    });
+
+    it('disconnects a link that cannot sign in when no sign-in account remains', async () => {
+      prismaMock.user.findFirst.mockResolvedValue(
+        userWithAccounts(account('instagram'), account('facebook'))
+      );
+      prismaMock.account.delete.mockResolvedValue(account('instagram'));
+
+      const result = await disconnectAccount({
+        type: IdentityProvider.INSTAGRAM
+      });
+
+      expectOk(result);
+      expect(prismaMock.account.delete).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('when the requested provider is not connected', () => {
     it('returns BAD_REQUEST naming the provider type', async () => {
       signIn();

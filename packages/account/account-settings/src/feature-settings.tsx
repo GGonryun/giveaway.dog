@@ -14,10 +14,10 @@ import {
   AlertDialogFooter
 } from '@giveaway/ui-primitives/alert-dialog';
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
-import Link from 'next/link';
+import { Badge } from '@giveaway/ui-primitives/badge';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Label } from '@giveaway/ui-primitives/label';
-import { CheckCircle2, PlusCircle } from 'lucide-react';
+import { CheckCircle2, MinusCircle, PlusCircle } from 'lucide-react';
 import {
   DEFAULT_USER_FEATURE_FLAGS,
   USER_FEATURE_FLAG_DESCRIPTIONS,
@@ -39,9 +39,8 @@ export const FeatureSettings = () => {
   const updateSession = useUpdateSession();
   const router = useRouter();
 
-  const [showContact, setShowContact] = useState(false);
-  const [showCannotDisableDialog, setShowCannotDisableDialog] = useState(false);
   const [showEnableHostDialog, setShowEnableHostDialog] = useState(false);
+  const [showDisableHostDialog, setShowDisableHostDialog] = useState(false);
 
   const isHost = session?.user?.accountType === UserAccountType.HOST;
 
@@ -73,18 +72,15 @@ export const FeatureSettings = () => {
     setShowEnableHostDialog(false);
   };
 
+  const handleDisableHostClick = () => {
+    setShowDisableHostDialog(true);
+  };
+
   const handleDisableHost = () => {
     updateAccountTypeProcedure.run({
       accountType: UserAccountType.PARTICIPANT
     });
-  };
-
-  const handleDisableAction = () => {
-    setShowCannotDisableDialog(true);
-  };
-
-  const handleRequestAction = () => {
-    setShowContact(true);
+    setShowDisableHostDialog(false);
   };
 
   return (
@@ -103,12 +99,8 @@ export const FeatureSettings = () => {
               label={USER_FEATURE_FLAG_LABELS[key]}
               description={USER_FEATURE_FLAG_DESCRIPTIONS[key]}
               enabled={enabled}
-              onDisable={
-                isHostFeature ? handleDisableHost : handleDisableAction
-              }
-              onRequest={
-                isHostFeature ? handleEnableHostClick : handleRequestAction
-              }
+              onDisable={isHostFeature ? handleDisableHostClick : undefined}
+              onRequest={isHostFeature ? handleEnableHostClick : undefined}
               isLoading={isHostFeature && updateAccountTypeProcedure.isLoading}
               disableToggle={isParticipateFeature}
             />
@@ -116,15 +108,16 @@ export const FeatureSettings = () => {
         })}
       </div>
 
-      <ContactSupportDialog open={showContact} onOpenChange={setShowContact} />
-      <CannotDisableDialog
-        open={showCannotDisableDialog}
-        onOpenChange={setShowCannotDisableDialog}
-      />
       <EnableHostDialog
         open={showEnableHostDialog}
         onOpenChange={setShowEnableHostDialog}
         onConfirm={handleEnableHost}
+        isLoading={updateAccountTypeProcedure.isLoading}
+      />
+      <DisableHostDialog
+        open={showDisableHostDialog}
+        onOpenChange={setShowDisableHostDialog}
+        onConfirm={handleDisableHost}
         isLoading={updateAccountTypeProcedure.isLoading}
       />
     </>
@@ -135,8 +128,8 @@ const FeatureFlagCard: React.FC<{
   label: string;
   description: string;
   enabled: boolean;
-  onRequest: () => void;
-  onDisable: () => void;
+  onRequest?: () => void;
+  onDisable?: () => void;
   isLoading?: boolean;
   disableToggle?: boolean;
 }> = ({
@@ -157,7 +150,23 @@ const FeatureFlagCard: React.FC<{
             <p className="text-sm text-muted-foreground">{description}</p>
           </div>
           <div className="flex items-center sm:items-start">
-            {enabled ? (
+            {enabled && !disableToggle ? (
+              <div className="flex items-center gap-2">
+                <Badge variant="success">
+                  <CheckCircle2 />
+                  Enabled
+                </Badge>
+                <Button
+                  size="sm"
+                  onClick={onDisable}
+                  disabled={isLoading}
+                  variant="outline"
+                >
+                  <MinusCircle className="h-4 w-4 mr-2" />
+                  {isLoading ? 'Updating...' : 'Disable'}
+                </Button>
+              </div>
+            ) : enabled ? (
               <Button
                 size="sm"
                 onClick={disableToggle ? undefined : onDisable}
@@ -181,66 +190,6 @@ const FeatureFlagCard: React.FC<{
         </div>
       </CardContent>
     </Card>
-  );
-};
-
-const ContactSupportDialog: React.FC<{
-  open: boolean;
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ open, onOpenChange }) => {
-  return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Contact Support</AlertDialogTitle>
-          <AlertDialogDescription>
-            In order to enable this feature, please contact our support team.
-            We&apos;d be happy to discuss your needs and see how we can assist
-            you.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onOpenChange(false)}>
-            Okay
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Link href="/contact" className="inline-flex">
-              Contact Support
-            </Link>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
-
-const CannotDisableDialog: React.FC<{
-  open: boolean;
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ open, onOpenChange }) => {
-  return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Contact Support</AlertDialogTitle>
-          <AlertDialogDescription>
-            In order to disable this feature, please contact our support team.
-            We&apos;d be happy to discuss your needs and see how we can assist
-            you.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onOpenChange(false)}>
-            Okay
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Link href="/contact" className="inline-flex">
-              Contact Support
-            </Link>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   );
 };
 
@@ -283,6 +232,54 @@ const EnableHostDialog: React.FC<{
           <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} disabled={isLoading}>
             {isLoading ? 'Enabling...' : 'Enable Host Access'}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+const DisableHostDialog: React.FC<{
+  open: boolean;
+  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  onConfirm: () => void;
+  isLoading: boolean;
+}> = ({ open, onOpenChange, onConfirm, isLoading }) => {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Disable Host Access</AlertDialogTitle>
+          <AlertDialogDescription>
+            Switching to a Participant account will remove your access to the
+            host dashboard.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <h4 className="font-semibold text-sm">What you&apos;ll lose:</h4>
+            <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-2">
+              <li>Creating and managing giveaways</li>
+              <li>Managing teams and collaborators</li>
+              <li>Analytics and giveaway designs</li>
+            </ul>
+          </div>
+
+          <div className="text-sm text-muted-foreground">
+            Your teams and giveaways are kept. You can enable host access again
+            at any time.
+          </div>
+        </div>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={onConfirm}
+            disabled={isLoading}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            {isLoading ? 'Disabling...' : 'Disable Host Access'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

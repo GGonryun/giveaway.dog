@@ -16,6 +16,7 @@
     }
   },
   "exports": {
+    "./link-result-alert": "./src/link-result-alert.tsx",
     "./social-providers": "./src/social-providers.tsx",
     "./update-display-name": "./src/update-display-name.tsx",
     "./update-preferred-contact": "./src/update-preferred-contact.tsx",
@@ -34,6 +35,7 @@
     "@giveaway/account-server": "workspace:*",
     "@giveaway/auth-actions": "workspace:*",
     "@giveaway/auth-login-ui": "workspace:*",
+    "@giveaway/auth-model": "workspace:*",
     "@giveaway/bluesky-connect-ui": "workspace:*",
     "@giveaway/integration-icons": "workspace:*",
     "@giveaway/integration-model": "workspace:*",

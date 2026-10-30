@@ -37,7 +37,6 @@
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-collections": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
-    "@giveaway/util-time": "workspace:*",
     "server-only": "catalog:"
   },
   "devDependencies": {
