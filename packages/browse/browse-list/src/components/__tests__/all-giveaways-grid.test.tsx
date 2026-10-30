@@ -88,12 +88,28 @@ describe('AllGiveawaysGrid', () => {
           hideEntered
           sweepstakes={[summer]}
           participation={{
-            'sweep-1': { sweepstakesId: 'sweep-1', completed: 0, maximum: 3 }
+            'sweep-1': { sweepstakesId: 'sweep-1', completed: 1, maximum: 3 }
           }}
         />
       );
       expect(
         screen.getByRole('heading', { name: 'No giveaways found' })
+      ).toBeInTheDocument();
+    });
+
+    it('keeps the giveaways that the user opened without completing a task', () => {
+      render(
+        <AllGiveawaysGrid
+          hideEntered
+          sweepstakes={[summer, winter]}
+          participation={{
+            'sweep-1': { sweepstakesId: 'sweep-1', completed: 0, maximum: 3 }
+          }}
+        />
+      );
+      expect(screen.getByText('Showing 2 giveaways')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Summer Giveaway' })
       ).toBeInTheDocument();
     });
   });
