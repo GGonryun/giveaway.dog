@@ -19,6 +19,7 @@
     "./completions": "./src/completions.ts",
     "./defaults": "./src/defaults.ts",
     "./entries": "./src/entries.ts",
+    "./import-schedule": "./src/import-schedule.ts",
     "./queries": "./src/queries.ts",
     "./schemas": "./src/schemas.ts",
     "./status": "./src/status.ts",

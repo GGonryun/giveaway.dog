@@ -10,7 +10,10 @@ import {
 } from '@giveaway/task-model/schemas';
 import { PrismaClient, TaskJobStatus } from '@giveaway/db-model';
 import { TaskJobWithRelations } from '@giveaway/task-jobs-core/types';
-import { datetime } from '@giveaway/util-time/date';
+import {
+  toImportIdleRuns,
+  toNextImportRunAt
+} from '@giveaway/task-model/import-schedule';
 import { ApplicationError } from '@giveaway/util-errors';
 import { scheduleRandomlyAssignPrizesJob } from '@giveaway/jobs/util';
 
@@ -164,31 +167,35 @@ export const processRetweetV2TaskJob = async (
       };
     }
 
-    if (endDate && now >= endDate) {
+    const idleRuns = toImportIdleRuns({
+      idleRuns: parsed.data.idleRuns,
+      foundNew: isContinuation || twitterUsers.length > 0
+    });
+    const nextRunAt = toNextImportRunAt({
+      now,
+      baseMinutes: Math.min(
+        parsed.data.runs * SCRAPEBADGER_RUN_OFFSET,
+        MAX_RUN_OFFSET
+      ),
+      idleRuns,
+      endDate
+    });
+
+    if (!nextRunAt) {
       console.info(
         `Task job ${job.id} completed, sweepstakes has ended - not scheduling next run`
       );
       return null;
     }
 
-    const nextRunAt = new Date(
-      Math.min(
-        datetime
-          .minutesFromNow(
-            Math.min(parsed.data.runs * SCRAPEBADGER_RUN_OFFSET, MAX_RUN_OFFSET)
-          )
-          .getTime(),
-        endDate?.getTime() ?? Infinity
-      )
-    );
-
     console.info(
-      `Task job ${job.id} scan complete, scheduling next run at ${nextRunAt}`
+      `Task job ${job.id} scan complete, scheduling next run at ${nextRunAt} after ${idleRuns} scans with no new users`
     );
     return {
       runAt: nextRunAt,
       data: {
         runs: parsed.data.runs + 1,
+        ...(idleRuns > 0 && { idleRuns }),
         lastProcessedId: firstSeenId ?? parsed.data.lastProcessedId
       }
     };
