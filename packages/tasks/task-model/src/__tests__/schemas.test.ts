@@ -1975,11 +1975,11 @@ describe('TASK_JOB_DATA_SCHEMA', () => {
     ['TWITTER_RETWEET_IMPORT', ['runs', 'lastProcessedId']],
     [
       'TWITTER_RETWEET_IMPORT_V2',
-      ['runs', 'nextCursor', 'lastProcessedId', 'firstSeenId']
+      ['runs', 'idleRuns', 'nextCursor', 'lastProcessedId', 'firstSeenId']
     ],
     ['TWITTER_LIKE_IMPORT', ['runs', 'lastProcessedId']],
-    ['BLUESKY_LIKE_IMPORT', ['runs', 'lastProcessedDid']],
-    ['BLUESKY_REPOST_IMPORT', ['runs', 'lastProcessedDid']]
+    ['BLUESKY_LIKE_IMPORT', ['runs', 'idleRuns', 'lastProcessedDid']],
+    ['BLUESKY_REPOST_IMPORT', ['runs', 'idleRuns', 'lastProcessedDid']]
   ] as const)('tracks %s job progress with %j', (type, keys) => {
     expect(Object.keys(TASK_JOB_DATA_SCHEMA[type].shape)).toEqual(keys);
   });

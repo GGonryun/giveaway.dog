@@ -898,6 +898,7 @@ export const TASK_JOB_DATA_SCHEMA = {
   }),
   TWITTER_RETWEET_IMPORT_V2: z.object({
     runs: z.number().min(0),
+    idleRuns: z.number().min(0).optional(),
     nextCursor: z.string().optional(),
     lastProcessedId: z.string().optional(),
     firstSeenId: z.string().optional()
@@ -933,10 +934,12 @@ export const TASK_JOB_DATA_SCHEMA = {
   BLUESKY_REPOST: z.object({}),
   BLUESKY_LIKE_IMPORT: z.object({
     runs: z.number().min(0),
+    idleRuns: z.number().min(0).optional(),
     lastProcessedDid: z.string().optional()
   }),
   BLUESKY_REPOST_IMPORT: z.object({
     runs: z.number().min(0),
+    idleRuns: z.number().min(0).optional(),
     lastProcessedDid: z.string().optional()
   }),
   VELORA_CONNECT: z.object({}),
