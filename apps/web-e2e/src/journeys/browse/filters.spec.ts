@@ -223,25 +223,25 @@ test.describe('hide participation on /browse', { tag: TAGS.slow }, () => {
     await expectLabels(page, token, ['other']);
   });
 
-  test(
-    'keeps the giveaways that the participant only opened',
-    knownBug(561),
-    async ({ freshPersona, page, request }, testInfo) => {
-      await freshPersona('participant');
-      const { token, seeded } = await seedGiveaways(request, testInfo, [
-        ['opened', {}],
-        ['other', {}]
-      ]);
-      await page.goto(`/browse/${seeded.opened.id}`);
-      await expect(
-        page.getByRole('heading', { name: seeded.opened.name })
-      ).toBeVisible();
+  test('keeps the giveaways that the participant only opened', async ({
+    freshPersona,
+    page,
+    request
+  }, testInfo) => {
+    await freshPersona('participant');
+    const { token, seeded } = await seedGiveaways(request, testInfo, [
+      ['opened', {}],
+      ['other', {}]
+    ]);
+    await page.goto(`/browse/${seeded.opened.id}`);
+    await expect(
+      page.getByRole('heading', { name: seeded.opened.name })
+    ).toBeVisible();
 
-      await page.goto(`/browse?search=${token}&hideEntered=true`);
+    await page.goto(`/browse?search=${token}&hideEntered=true`);
 
-      await expect(page.getByText('Showing 2 giveaways')).toBeVisible();
-    }
-  );
+    await expect(page.getByText('Showing 2 giveaways')).toBeVisible();
+  });
 });
 
 test.describe('the query string of /browse', () => {
