@@ -264,6 +264,46 @@ describe('submitTask', () => {
       });
     });
 
+    it('reads the participant that a concurrent request created when the upsert hits the unique key', async () => {
+      prismaMock.sweepstakesParticipant.upsert.mockRejectedValue(
+        knownRequestError('P2002')
+      );
+      prismaMock.sweepstakesParticipant.findUniqueOrThrow.mockResolvedValue(
+        participant
+      );
+
+      const result = await submitTask(input());
+
+      expect(expectOk(result)).toBe(true);
+      expect(
+        prismaMock.sweepstakesParticipant.findUniqueOrThrow
+      ).toHaveBeenCalledWith({
+        where: {
+          userId_sweepstakesId: {
+            userId: TEST_USER.id,
+            sweepstakesId: 'sweep-1'
+          }
+        }
+      });
+      expect(prismaMock.taskCompletion.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ participantId: 'participant-1' })
+        })
+      );
+    });
+
+    it('fails when the upsert fails for another reason', async () => {
+      prismaMock.sweepstakesParticipant.upsert.mockRejectedValue(
+        knownRequestError('P2003')
+      );
+
+      expectFailure(await submitTask(input()), 'INTERNAL_SERVER_ERROR');
+      expect(
+        prismaMock.sweepstakesParticipant.findUniqueOrThrow
+      ).not.toHaveBeenCalled();
+      expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+    });
+
     it('loads the participant completions within the sweepstakes', async () => {
       await submitTask(input());
 
@@ -286,6 +326,40 @@ describe('submitTask', () => {
         'You have already completed this task. Refresh the page.'
       );
       expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+    });
+
+    it('returns the same silent VALIDATION_ERROR when a concurrent request recorded the completion first', async () => {
+      prismaMock.taskCompletion.findFirst.mockResolvedValue({
+        id: 'completion-concurrent'
+      });
+
+      const result = await submitTask(input());
+
+      expect(expectFailure(result, 'VALIDATION_ERROR').message).toBe(
+        'You have already completed this task. Refresh the page.'
+      );
+      expect(prismaMock.taskCompletion.findFirst).toHaveBeenCalledWith({
+        where: { participantId: 'participant-1', taskId: 'task-1' },
+        select: { id: true }
+      });
+      expect(prismaMock.taskCompletion.create).not.toHaveBeenCalled();
+    });
+
+    it('locks the participant before it checks and records the completion', async () => {
+      await submitTask(input());
+
+      expect(prismaMock.$transaction).toHaveBeenCalledWith(
+        expect.any(Function),
+        { timeout: 15_000 }
+      );
+      const [sql, participantId] = prismaMock.$executeRaw.mock.calls[0];
+      expect(sql.join('?')).toBe(
+        'SELECT id FROM "Participant" WHERE id = ? FOR UPDATE'
+      );
+      expect(participantId).toBe('participant-1');
+      expect(prismaMock.$executeRaw.mock.invocationCallOrder[0]).toBeLessThan(
+        prismaMock.taskCompletion.create.mock.invocationCallOrder[0]
+      );
     });
   });
 

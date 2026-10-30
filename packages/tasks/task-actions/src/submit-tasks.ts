@@ -1,6 +1,8 @@
 'use server';
 
 import { ApplicationError } from '@giveaway/util-errors';
+import { Prisma } from '@giveaway/db-model';
+import type { PrismaClient } from '@giveaway/db-model';
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { validateTask } from '@giveaway/task-validation/integrations';
 import { validateMandatoryTasks } from '@giveaway/task-validation-core/mandatory';
@@ -12,6 +14,37 @@ import { saveTaskProof } from '@giveaway/task-validation-core/proof';
 import { validateReferral } from '@giveaway/task-validation-core/referral';
 import { validateSweepstakesState } from '@giveaway/task-validation-core/task-state';
 import { validateAudience } from '@giveaway/task-validation-core/audience';
+
+const COMPLETION_LOCK_TIMEOUT_MS = 15_000;
+
+const isUniqueConstraintError = (error: unknown) =>
+  error instanceof Prisma.PrismaClientKnownRequestError &&
+  error.code === 'P2002';
+
+const alreadyCompleted = () =>
+  new ApplicationError({
+    code: 'VALIDATION_ERROR',
+    silent: true,
+    message: 'You have already completed this task. Refresh the page.'
+  });
+
+const registerParticipant = async (
+  db: PrismaClient,
+  userId: string,
+  sweepstakesId: string
+) => {
+  const where = { userId_sweepstakesId: { userId, sweepstakesId } };
+  try {
+    return await db.sweepstakesParticipant.upsert({
+      where,
+      update: {},
+      create: { userId, sweepstakesId }
+    });
+  } catch (error) {
+    if (!isUniqueConstraintError(error)) throw error;
+    return db.sweepstakesParticipant.findUniqueOrThrow({ where });
+  }
+};
 
 const submitTask = procedure()
   .authorization({ required: true })
@@ -54,19 +87,7 @@ const submitTask = procedure()
 
     await validateAudience(db, { sweepstakesId, userId: user.id });
 
-    const participant = await db.sweepstakesParticipant.upsert({
-      where: {
-        userId_sweepstakesId: {
-          userId: user.id,
-          sweepstakesId: sweepstakesId
-        }
-      },
-      update: {},
-      create: {
-        userId: user.id,
-        sweepstakesId: sweepstakesId
-      }
-    });
+    const participant = await registerParticipant(db, user.id, sweepstakesId);
 
     // Check if task has already been completed
     const completions = await db.taskCompletion.findMany({
@@ -78,11 +99,7 @@ const submitTask = procedure()
 
     const existingCompletion = completions.find((c) => c.taskId === taskId);
     if (existingCompletion) {
-      throw new ApplicationError({
-        code: 'VALIDATION_ERROR',
-        silent: true,
-        message: 'You have already completed this task. Refresh the page.'
-      });
+      throw alreadyCompleted();
     }
 
     const taskConfig = toTaskSchema(task);
@@ -117,14 +134,27 @@ const submitTask = procedure()
     console.info(
       `Recording completion of task ${taskId} for user ${participant.userId}`
     );
-    await db.taskCompletion.create({
-      data: {
-        participantId: participant.id,
-        taskId,
-        status: computeTaskStatus(taskConfig),
-        proof: saveTaskProof(taskConfig, data)
-      }
-    });
+    await db.$transaction(
+      async (tx) => {
+        await tx.$executeRaw`SELECT id FROM "Participant" WHERE id = ${participant.id} FOR UPDATE`;
+        const recorded = await tx.taskCompletion.findFirst({
+          where: { participantId: participant.id, taskId },
+          select: { id: true }
+        });
+        if (recorded) {
+          throw alreadyCompleted();
+        }
+        await tx.taskCompletion.create({
+          data: {
+            participantId: participant.id,
+            taskId,
+            status: computeTaskStatus(taskConfig),
+            proof: saveTaskProof(taskConfig, data)
+          }
+        });
+      },
+      { timeout: COMPLETION_LOCK_TIMEOUT_MS }
+    );
 
     await validateReferral(db, {
       taskId,
