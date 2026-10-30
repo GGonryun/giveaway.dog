@@ -4,6 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import z from 'zod';
 import { twitterV2PickerFormSchema } from '@giveaway/x-picker-model/schemas/form';
 import { ApplicationError } from '@giveaway/util-errors';
+import { assertPickerEditable } from './assert-picker-editable';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { TeamPermission } from '@giveaway/team-permissions';
 import { TeamTier } from '@giveaway/db-model';
@@ -49,6 +50,8 @@ export const updateTwitterV2Picker = procedure()
       });
     }
 
+    assertPickerEditable(picker);
+
     await db.twitterPicker.update({
       where: { id: pickerId },
       data: {
@@ -62,7 +65,6 @@ export const updateTwitterV2Picker = procedure()
         requireBannerImage: data.filters.hasBanner,
         requireLocation: data.filters.hasLocation,
         requireBio: data.filters.hasDescription,
-        lastPostWithin: data.filters.lastPostWithin,
         runAt: data.timing?.runAt ? new Date(data.timing.runAt) : null
       }
     });

@@ -5,7 +5,7 @@ import z from 'zod';
 import { findUserTeam } from '@giveaway/team-server/find-user-team';
 import { nanoid } from 'nanoid';
 import { TeamPermission } from '@giveaway/team-permissions';
-import { LastPostedType, PickerStatus, TeamTier } from '@giveaway/db-model';
+import { PickerStatus, TeamTier } from '@giveaway/db-model';
 
 export const createTwitterPicker = procedure()
   .authorization({
@@ -41,7 +41,6 @@ export const createTwitterPicker = procedure()
         minAccountAgeDays: 100,
         minFollowersCount: 100,
         minFollowingCount: 100,
-        lastPostWithin: LastPostedType.PAST_MONTH,
         requireProfileImage: true,
         requireBannerImage: false,
         requireLocation: false,

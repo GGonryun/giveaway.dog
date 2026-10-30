@@ -595,19 +595,22 @@ describe('processRetweetV2TaskJob', () => {
       [72, 360],
       [73, 360],
       [500, 360]
-    ])('schedules run %i after %i minutes', async (runs, expectedMinutes) => {
-      respond({ users: [], hasMore: false });
+    ])(
+      'schedules run %i after %i minutes when the scan found new users',
+      async (runs, expectedMinutes) => {
+        respond({ users: [scrapeUser('u1')], hasMore: false });
 
-      await processRetweetV2TaskJob(db, task, jobWith({ runs }));
+        await processRetweetV2TaskJob(db, task, jobWith({ runs }));
 
-      expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
-        data: {
-          taskId: 'task-1',
-          runAt: new Date(NOW.getTime() + expectedMinutes * MINUTE),
-          data: { runs: runs + 1, lastProcessedId: undefined }
-        }
-      });
-    });
+        expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+          data: {
+            taskId: 'task-1',
+            runAt: new Date(NOW.getTime() + expectedMinutes * MINUTE),
+            data: { runs: runs + 1, lastProcessedId: 'u1' }
+          }
+        });
+      }
+    );
 
     it('clamps the next run to the sweepstakes end date', async () => {
       respond({ users: [], hasMore: false });
@@ -623,7 +626,7 @@ describe('processRetweetV2TaskJob', () => {
         data: {
           taskId: 'task-1',
           runAt: endDate,
-          data: { runs: 3, lastProcessedId: undefined }
+          data: { runs: 3, idleRuns: 1, lastProcessedId: undefined }
         }
       });
     });
@@ -643,8 +646,8 @@ describe('processRetweetV2TaskJob', () => {
       expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
         data: {
           taskId: 'task-1',
-          runAt: new Date(NOW.getTime() + 10 * MINUTE),
-          data: { runs: 3, lastProcessedId: undefined }
+          runAt: new Date(NOW.getTime() + 20 * MINUTE),
+          data: { runs: 3, idleRuns: 1, lastProcessedId: undefined }
         }
       });
     });
@@ -684,8 +687,8 @@ describe('processRetweetV2TaskJob', () => {
       expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
         data: {
           taskId: 'task-1',
-          runAt: new Date(NOW.getTime() + 10 * MINUTE),
-          data: { runs: 3, lastProcessedId: 'old' }
+          runAt: new Date(NOW.getTime() + 20 * MINUTE),
+          data: { runs: 3, idleRuns: 1, lastProcessedId: 'old' }
         }
       });
     });
@@ -696,6 +699,121 @@ describe('processRetweetV2TaskJob', () => {
       await expect(
         processRetweetV2TaskJob(db, task, jobWith({ runs: 1 }))
       ).resolves.toBeUndefined();
+    });
+  });
+
+  describe('when scans find no new users', () => {
+    it.each([
+      [undefined, 1, 720],
+      [1, 2, 1440],
+      [2, 3, 1440],
+      [40, 41, 1440]
+    ])(
+      'backs off from %s to %i idle scans and waits %i minutes',
+      async (idleRuns, expectedIdleRuns, expectedMinutes) => {
+        respond({ users: [], hasMore: false });
+
+        await processRetweetV2TaskJob(
+          db,
+          task,
+          jobWith({ runs: 72, idleRuns, lastProcessedId: 'old' })
+        );
+
+        expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+          data: {
+            taskId: 'task-1',
+            runAt: new Date(NOW.getTime() + expectedMinutes * MINUTE),
+            data: {
+              runs: 73,
+              idleRuns: expectedIdleRuns,
+              lastProcessedId: 'old'
+            }
+          }
+        });
+      }
+    );
+
+    it('resets the back-off when a scan finds a new user', async () => {
+      respond({ users: [scrapeUser('u1')], hasMore: false });
+
+      await processRetweetV2TaskJob(
+        db,
+        task,
+        jobWith({ runs: 72, idleRuns: 3, lastProcessedId: 'old' })
+      );
+
+      expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+        data: {
+          taskId: 'task-1',
+          runAt: new Date(NOW.getTime() + 360 * MINUTE),
+          data: { runs: 73, lastProcessedId: 'u1' }
+        }
+      });
+    });
+
+    it('counts a scan that needed a continuation as one that found new users', async () => {
+      respond({ users: [], hasMore: false });
+
+      await processRetweetV2TaskJob(
+        db,
+        task,
+        jobWith({
+          runs: 2,
+          idleRuns: 3,
+          nextCursor: 'cursor-2',
+          lastProcessedId: 'old',
+          firstSeenId: 'u1'
+        })
+      );
+
+      expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+        data: {
+          taskId: 'task-1',
+          runAt: new Date(NOW.getTime() + 10 * MINUTE),
+          data: { runs: 3, lastProcessedId: 'u1' }
+        }
+      });
+    });
+
+    it('still runs the final scan at the end date during a long back-off', async () => {
+      respond({ users: [], hasMore: false });
+      const endDate = new Date(NOW.getTime() + 90 * MINUTE);
+
+      await processRetweetV2TaskJob(
+        db,
+        task,
+        jobWith(
+          { runs: 72, idleRuns: 4, lastProcessedId: 'old' },
+          buildTiming({ endDate })
+        )
+      );
+
+      expect(prismaMock.taskJob.create).toHaveBeenCalledWith({
+        data: {
+          taskId: 'task-1',
+          runAt: endDate,
+          data: { runs: 73, idleRuns: 5, lastProcessedId: 'old' }
+        }
+      });
+    });
+
+    it('does not schedule another run after the final scan at the end date', async () => {
+      respond({ users: [], hasMore: false });
+
+      await processRetweetV2TaskJob(
+        db,
+        task,
+        jobWith(
+          { runs: 72, idleRuns: 5, lastProcessedId: 'old' },
+          buildTiming({ endDate: NOW })
+        )
+      );
+
+      expect(prismaMock.taskJob.create).not.toHaveBeenCalled();
+      expect(prismaMock.taskJob.update).toHaveBeenCalledWith({
+        where: { id: 'job-1' },
+        data: { status: 'COMPLETED' }
+      });
     });
   });
 });

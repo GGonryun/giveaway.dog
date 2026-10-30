@@ -316,7 +316,7 @@ describe('runAutomatedPostJobs', () => {
       });
     });
 
-    it('appends repost and like import tasks after the existing tasks', async () => {
+    it('appends a maintained repost import task after the existing tasks and adds no like task', async () => {
       await runAutomatedPostJobs(db);
 
       expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith({
@@ -328,27 +328,12 @@ describe('runAutomatedPostJobs', () => {
                 id: 'nano-1',
                 index: 2,
                 config: {
-                  type: 'TWITTER_RETWEET_IMPORT',
+                  type: 'TWITTER_RETWEET_IMPORT_V2',
                   title: 'Repost our sweepstakes',
                   tweetId: 'https://x.com/acme/status/987',
                   value: 1,
                   mandatory: false,
-                  tasksRequired: 0,
-                  importingAccount: 'int-1'
-                },
-                jobs: importJobs
-              },
-              {
-                id: 'nano-2',
-                index: 3,
-                config: {
-                  type: 'TWITTER_LIKE_IMPORT',
-                  title: 'Like our post',
-                  tweetId: 'https://x.com/acme/status/987',
-                  value: 1,
-                  mandatory: false,
-                  tasksRequired: 0,
-                  importingAccount: 'int-1'
+                  tasksRequired: 0
                 },
                 jobs: importJobs
               }
@@ -391,7 +376,7 @@ describe('runAutomatedPostJobs', () => {
         error: 'Sweepstakes update failed'
       };
       prismaMock.automatedPostJob.findMany.mockResolvedValue([
-        { ...twitterJob(['LIKE']), response }
+        { ...twitterJob(['REPOST']), response }
       ]);
 
       await runAutomatedPostJobs(db);
@@ -443,7 +428,7 @@ describe('runAutomatedPostJobs', () => {
       );
     });
 
-    it('adds only a like import task when only LIKE is requested', async () => {
+    it('adds no task when only LIKE is requested', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([
         twitterJob(['LIKE'])
       ]);
@@ -451,13 +436,8 @@ describe('runAutomatedPostJobs', () => {
       await runAutomatedPostJobs(db);
 
       const call = prismaMock.sweepstakes.update.mock.calls[0][0];
-      expect(call.data.tasks.create).toEqual([
-        expect.objectContaining({
-          id: 'nano-1',
-          index: 2,
-          config: expect.objectContaining({ type: 'TWITTER_LIKE_IMPORT' })
-        })
-      ]);
+      expect(call.data.tasks.create).toEqual([]);
+      expect(mocks.nanoid).not.toHaveBeenCalled();
     });
 
     it('adds only a repost import task when only REPOST is requested', async () => {
@@ -471,7 +451,7 @@ describe('runAutomatedPostJobs', () => {
       expect(call.data.tasks.create).toEqual([
         expect.objectContaining({
           index: 2,
-          config: expect.objectContaining({ type: 'TWITTER_RETWEET_IMPORT' })
+          config: expect.objectContaining({ type: 'TWITTER_RETWEET_IMPORT_V2' })
         })
       ]);
     });

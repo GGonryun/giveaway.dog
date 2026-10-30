@@ -20,6 +20,7 @@ const toggleVisibility = procedure()
   .invalidate(async ({ input }) => [
     `sweepstakes-${input.sweepstakesId}`,
     `sweepstakes-${input.sweepstakesId}-privacy`, // Invalidate privacy cache when visibility changes
+    'participant-sweepstake',
     ...BROWSE_LIST_TAGS
   ])
   .handler(async ({ db, user, input }) => {

@@ -275,11 +275,12 @@ describe('completeSweepstakes', () => {
       });
     });
 
-    it('expires the giveaway and winners leaderboard cache tags', async () => {
+    it('expires the giveaway, the giveaway pages and winners leaderboard cache tags', async () => {
       await completeSweepstakes(input);
 
       expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
         [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
+        ['participant-sweepstake', 'max'],
         ['winners-leaderboard', 'max'],
         ['public-sweepstakes-list', 'max'],
         ['historical-sweepstakes-list', 'max'],

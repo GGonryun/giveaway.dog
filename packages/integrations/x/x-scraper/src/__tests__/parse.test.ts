@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
-import { parseScrapeBadgerResponse } from '../parse';
+import { NotFoundError, RateLimitError, ServerError } from 'scrapebadger';
+import { parseScrapeBadgerResponse, toScrapeBadgerError } from '../parse';
 import { scrapeBadgerTweetSchema } from '../schemas';
 import { scrapeBadgerTweetFixture } from '../testing/fixtures-scrapebadger-tweet';
 
@@ -76,5 +77,44 @@ describe('parseScrapeBadgerResponse', () => {
         [expect.objectContaining({ path: ['view_count'] })]
       );
     });
+  });
+});
+
+describe('toScrapeBadgerError', () => {
+  it('turns a rate limit with a reset time into a retryable error at that time', () => {
+    const cause = new RateLimitError('Too many', { retryAfter: 1_790_000_000 });
+
+    const error = toScrapeBadgerError(cause, 'retweeters');
+
+    expect(error).toBeInstanceOf(ApplicationError);
+    expect(error).toMatchObject({
+      code: 'TOO_MANY_REQUESTS',
+      message: 'ScrapeBadger rate limited the retweeters request',
+      cause,
+      data: { status: 429, retryAfter: 1_790_000_000_000 }
+    });
+  });
+
+  it('turns a rate limit without a reset time into an error with no retry time', () => {
+    const error = toScrapeBadgerError(new RateLimitError(), 'retweeters');
+
+    expect((error as ApplicationError).data).toEqual({ status: 429 });
+  });
+
+  it('turns a server error into a bad gateway error with its status', () => {
+    const cause = new ServerError('Down', 503);
+
+    expect(toScrapeBadgerError(cause, 'tweet')).toMatchObject({
+      code: 'BAD_GATEWAY',
+      message: 'ScrapeBadger failed the tweet request: 503',
+      cause,
+      data: { status: 503 }
+    });
+  });
+
+  it('returns any other error unchanged', () => {
+    const error = new NotFoundError();
+
+    expect(toScrapeBadgerError(error, 'tweet')).toBe(error);
   });
 });

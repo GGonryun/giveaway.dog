@@ -290,27 +290,14 @@ const processPostToTwitter = async ({
     teamId: sweepstakes.teamId
   });
 
-  let index = sweepstakes.tasks.length;
   const newTasks: StorableTaskSchema[] = [];
 
   if (job.request.tasks.includes('REPOST')) {
     newTasks.push({
-      ...toDefaultValues('TWITTER_RETWEET_IMPORT'),
+      ...toDefaultValues('TWITTER_RETWEET_IMPORT_V2'),
       id: nanoid(),
-      index,
-      tweetId: tweetUrl,
-      importingAccount: job.request.integrationId
-    });
-    index++;
-  }
-
-  if (job.request.tasks.includes('LIKE')) {
-    newTasks.push({
-      ...toDefaultValues('TWITTER_LIKE_IMPORT'),
-      id: nanoid(),
-      index,
-      tweetId: tweetUrl,
-      importingAccount: job.request.integrationId
+      index: sweepstakes.tasks.length,
+      tweetId: tweetUrl
     });
   }
 

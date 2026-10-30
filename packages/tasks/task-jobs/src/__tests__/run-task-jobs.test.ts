@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { runTaskJobs } from '../run-task-jobs';
 import { taskJobInclude } from '@giveaway/task-jobs-core/types';
 import { ApplicationError } from '@giveaway/util-errors';
+import { JOB_RETRY_BASE_MS, MAX_JOB_ATTEMPTS } from '@giveaway/jobs/retry';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 import {
   buildTaskJob,
@@ -204,7 +205,7 @@ describe('runTaskJobs', () => {
   });
 
   describe('when processing throws a non-retryable error', () => {
-    it('marks the job failed with the serialized application error', async () => {
+    it('marks the job failed with the error message and keeps its data', async () => {
       prismaMock.taskJob.findMany.mockResolvedValue([
         buildTaskJob({ type: 'BONUS_TASK' })
       ]);
@@ -218,37 +219,29 @@ describe('runTaskJobs', () => {
           where: { id: 'job-1' },
           data: {
             status: 'FAILED',
-            data: JSON.stringify({
-              code: 'NOT_IMPLEMENTED',
-              message:
-                'Job processing not implemented for task type: BONUS_TASK'
-            })
+            attempts: { increment: 1 },
+            error: 'Job processing not implemented for task type: BONUS_TASK'
           }
         }
       ]);
     });
 
-    it('stores an empty object when a plain error is thrown', async () => {
+    it.each([
+      ['a plain error', new Error('boom')],
+      ['undefined', undefined]
+    ])('records a generic message when %s is thrown', async (_, error) => {
       prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
-      m.getRetweetersUntilUser.mockRejectedValue(new Error('boom'));
+      m.getRetweetersUntilUser.mockRejectedValue(error);
 
       await runTaskJobs(db);
 
       expect(updateCalls()[1]).toEqual({
         where: { id: 'job-1' },
-        data: { status: 'FAILED', data: '{}' }
-      });
-    });
-
-    it('stores an empty object when undefined is thrown', async () => {
-      prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
-      m.getRetweetersUntilUser.mockRejectedValue(undefined);
-
-      await runTaskJobs(db);
-
-      expect(updateCalls()[1]).toEqual({
-        where: { id: 'job-1' },
-        data: { status: 'FAILED', data: '{}' }
+        data: {
+          status: 'FAILED',
+          attempts: { increment: 1 },
+          error: 'An unknown error occurred...'
+        }
       });
     });
 
@@ -256,8 +249,8 @@ describe('runTaskJobs', () => {
       prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
       m.getRetweetersUntilUser.mockRejectedValue(
         new ApplicationError({
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Slow down',
+          code: 'NOT_FOUND',
+          message: 'Gone',
           data: { retryAfter: 'soon' }
         })
       );
@@ -268,11 +261,8 @@ describe('runTaskJobs', () => {
         where: { id: 'job-1' },
         data: {
           status: 'FAILED',
-          data: JSON.stringify({
-            code: 'TOO_MANY_REQUESTS',
-            message: 'Slow down',
-            data: { retryAfter: 'soon' }
-          })
+          attempts: { increment: 1 },
+          error: 'Gone'
         }
       });
     });
@@ -327,16 +317,17 @@ describe('runTaskJobs', () => {
   });
 
   describe('when processing throws a retryable error', () => {
-    it('reschedules the job as pending at the retry time', async () => {
-      const retryAfter = NOW.getTime() + 90_000;
+    const slowDown = (data: object) =>
+      new ApplicationError({
+        code: 'TOO_MANY_REQUESTS',
+        message: 'Slow down',
+        data
+      });
+
+    it('reschedules the job as pending at the retry time and keeps its data', async () => {
+      const retryAfter = NOW.getTime() + JOB_RETRY_BASE_MS + 90_000;
       prismaMock.taskJob.findMany.mockResolvedValue([retweetJob('job-1')]);
-      m.getRetweetersUntilUser.mockRejectedValue(
-        new ApplicationError({
-          code: 'TOO_MANY_REQUESTS',
-          message: 'Slow down',
-          data: { retryAfter }
-        })
-      );
+      m.getRetweetersUntilUser.mockRejectedValue(slowDown({ retryAfter }));
 
       const result = await runTaskJobs(db);
 
@@ -345,9 +336,54 @@ describe('runTaskJobs', () => {
         claim('job-1'),
         {
           where: { id: 'job-1' },
-          data: { status: 'PENDING', runAt: new Date(retryAfter) }
+          data: {
+            status: 'PENDING',
+            runAt: new Date(retryAfter),
+            attempts: { increment: 1 },
+            error: 'Slow down'
+          }
         }
       ]);
+    });
+
+    it('backs off longer after each attempt when no retry time is sent', async () => {
+      prismaMock.taskJob.findMany.mockResolvedValue([
+        buildTaskJob({
+          type: 'TWITTER_RETWEET_IMPORT_V2',
+          data: { runs: 1 },
+          job: { id: 'job-1', attempts: 2 }
+        })
+      ]);
+      m.getRetweetersUntilUser.mockRejectedValue(slowDown({ status: 429 }));
+
+      await runTaskJobs(db);
+
+      expect(updateCalls()[1]?.data).toMatchObject({
+        status: 'PENDING',
+        runAt: new Date(NOW.getTime() + JOB_RETRY_BASE_MS * 4)
+      });
+    });
+
+    it('fails the job after its last attempt', async () => {
+      prismaMock.taskJob.findMany.mockResolvedValue([
+        buildTaskJob({
+          type: 'TWITTER_RETWEET_IMPORT_V2',
+          data: { runs: 1 },
+          job: { id: 'job-1', attempts: MAX_JOB_ATTEMPTS - 1 }
+        })
+      ]);
+      m.getRetweetersUntilUser.mockRejectedValue(slowDown({ status: 429 }));
+
+      await runTaskJobs(db);
+
+      expect(updateCalls()[1]).toEqual({
+        where: { id: 'job-1' },
+        data: {
+          status: 'FAILED',
+          attempts: { increment: 1 },
+          error: 'Slow down'
+        }
+      });
     });
   });
 

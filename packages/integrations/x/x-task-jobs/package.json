@@ -30,7 +30,6 @@
     "@giveaway/task-jobs-core": "workspace:*",
     "@giveaway/task-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
-    "@giveaway/util-time": "workspace:*",
     "@giveaway/x-import": "workspace:*",
     "@giveaway/x-scraper": "workspace:*",
     "server-only": "catalog:"

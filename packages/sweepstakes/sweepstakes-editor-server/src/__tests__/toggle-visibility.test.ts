@@ -192,12 +192,13 @@ describe('toggleVisibility', () => {
       expect(expectOk(result)).toEqual({ visibility: VisibilityType.PUBLIC });
     });
 
-    it('invalidates the sweepstakes and privacy cache tags', async () => {
+    it('invalidates the sweepstakes, privacy and giveaway page cache tags', async () => {
       await toggleVisibility(input(VisibilityType.PUBLIC));
 
       expect(nextCacheMock.revalidateTag.mock.calls).toEqual([
         [`sweepstakes-${SWEEPSTAKES_ID}`, 'max'],
         [`sweepstakes-${SWEEPSTAKES_ID}-privacy`, 'max'],
+        ['participant-sweepstake', 'max'],
         ['public-sweepstakes-list', 'max'],
         ['historical-sweepstakes-list', 'max'],
         ['browse-hosts', 'max']

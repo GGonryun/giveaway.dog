@@ -84,7 +84,6 @@ export async function POST(request: NextRequest) {
       requireBannerImage: filters.hasBanner,
       requireLocation: filters.hasLocation,
       requireBio: filters.hasDescription,
-      lastPostWithin: filters.lastPostWithin,
       status: 'COMPLETE' as const
     };
 

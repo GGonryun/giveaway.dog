@@ -2,7 +2,11 @@
 
 import { Tx } from '@giveaway/db-client/prisma';
 import { requestTimeout } from '@giveaway/util-time/request-timeout';
-import { ApplicationError } from '@giveaway/util-errors';
+import {
+  ApplicationError,
+  isTransientHttpStatus,
+  toTransientHttpError
+} from '@giveaway/util-errors';
 import { getLatestTeamBlueskyCredentials } from './bluesky/get-latest-team-bluesky-agent';
 import { RichText } from '@atproto/api';
 import { isE2eFakeOn } from '@giveaway/e2e-fakes/switch';
@@ -59,6 +63,25 @@ export const createSkeet = async (
     const imageResponse = await fetch(input.imageUrl, {
       signal: requestTimeout()
     });
+    if (isTransientHttpStatus(imageResponse.status)) {
+      throw toTransientHttpError(
+        imageResponse,
+        'Failed to fetch image from URL'
+      );
+    }
+    if (!imageResponse.ok) {
+      throw new ApplicationError({
+        code: 'BAD_REQUEST',
+        message: 'Failed to fetch image from URL'
+      });
+    }
+    const contentType = imageResponse.headers.get('content-type');
+    if (!contentType?.toLowerCase().startsWith('image/')) {
+      throw new ApplicationError({
+        code: 'BAD_REQUEST',
+        message: 'Image URL did not return an image'
+      });
+    }
     const imageBuffer = await imageResponse.arrayBuffer();
     const imageUint8 = new Uint8Array(imageBuffer);
 

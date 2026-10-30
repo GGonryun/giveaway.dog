@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { TeamRole, TeamTier } from '@giveaway/db-model';
+import { PickerStatus, TeamRole, TeamTier } from '@giveaway/db-model';
 import { publishTwitterV2Picker } from '../publish-twitter-v2-picker';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
@@ -10,6 +10,9 @@ import {
   buildPicker,
   buildTeam
 } from '../../testing/fixtures-pickers';
+
+const editablePicker = (overrides: Parameters<typeof buildPicker>[0] = {}) =>
+  buildPicker({ status: PickerStatus.PROCESSED, ...overrides });
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -58,7 +61,7 @@ describe('publishTwitterV2Picker', () => {
       prismaMock.team.findUnique.mockResolvedValue(
         buildTeam({ tier: TeamTier.FREE })
       );
-      prismaMock.twitterPicker.findUnique.mockResolvedValue(buildPicker());
+      prismaMock.twitterPicker.findUnique.mockResolvedValue(editablePicker());
       m.startScrapeTwitter.mockResolvedValue({ runId: 'run-1' });
     });
 
@@ -187,11 +190,32 @@ describe('publishTwitterV2Picker', () => {
         );
         expect(m.startScrapeTwitter).not.toHaveBeenCalled();
       });
+
+      it.each([
+        PickerStatus.COMPLETE,
+        PickerStatus.CANCELLED,
+        PickerStatus.FAILED,
+        PickerStatus.SUSPENDED
+      ])(
+        'returns CONFLICT without starting a workflow for a %s picker',
+        async (status) => {
+          prismaMock.twitterPicker.findUnique.mockResolvedValue(
+            buildPicker({ status })
+          );
+
+          const result = await publishTwitterV2Picker(input());
+
+          expect(expectFailure(result, 'CONFLICT').message).toBe(
+            'This picker can no longer be edited'
+          );
+          expect(m.startScrapeTwitter).not.toHaveBeenCalled();
+        }
+      );
     });
 
     describe('starting the scrape workflow', () => {
       it('starts the workflow in process with the picker and the parsed form', async () => {
-        const picker = buildPicker();
+        const picker = editablePicker();
         prismaMock.twitterPicker.findUnique.mockResolvedValue(picker);
 
         await publishTwitterV2Picker(input());
@@ -224,7 +248,6 @@ describe('publishTwitterV2Picker', () => {
             minimumAccountAgeDays: null,
             minimumFollowers: null,
             minimumFollowing: null,
-            lastPostWithin: null,
             hasProfileImage: false,
             hasBanner: false,
             hasLocation: false,
