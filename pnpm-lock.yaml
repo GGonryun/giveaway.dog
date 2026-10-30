@@ -9223,6 +9223,9 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/util-errors':
+        specifier: workspace:*
+        version: link:../../shared/util-errors
       '@giveaway/x-model':
         specifier: workspace:*
         version: link:../../integrations/x/x-model
