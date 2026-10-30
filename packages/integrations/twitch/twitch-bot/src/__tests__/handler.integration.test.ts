@@ -155,55 +155,46 @@ describe('POST /api/twitch/webhooks', () => {
       expect(await entries(task.id)).toBe(1);
     });
 
-    it.fails(
-      'replies in the chat once (fails until #306 is fixed)',
-      async () => {
-        await setup();
-        const request = delivery('message-1');
+    it('replies in the chat once', async () => {
+      await setup();
+      const request = delivery('message-1');
 
-        await POST(request());
-        await POST(request());
+      await POST(request());
+      await POST(request());
 
-        expect(m.sendChatMessage).toHaveBeenCalledTimes(1);
-        expect(m.sendChatMessage).toHaveBeenCalledWith(
-          BROADCASTER_ID,
-          '@viewer You have been added to the giveaway!'
-        );
-      }
-    );
+      expect(m.sendChatMessage).toHaveBeenCalledTimes(1);
+      expect(m.sendChatMessage).toHaveBeenCalledWith(
+        BROADCASTER_ID,
+        '@viewer You have been added to the giveaway!'
+      );
+    });
 
-    it.fails(
-      'records one entry for a task that allows an entry per message (fails until #306 is fixed)',
-      async () => {
-        const { task } = await setup({
-          rateLimit: { max: 5, window: { value: 1, unit: 'h' } }
-        });
-        const request = delivery('message-1');
+    it('records one entry for a task that allows an entry per message', async () => {
+      const { task } = await setup({
+        rateLimit: { max: 5, window: { value: 1, unit: 'h' } }
+      });
+      const request = delivery('message-1');
 
-        await POST(request());
-        await POST(request());
+      await POST(request());
+      await POST(request());
 
-        expect(await entries(task.id)).toBe(1);
-      }
-    );
+      expect(await entries(task.id)).toBe(1);
+    });
 
-    it.fails(
-      'records one entry when both deliveries for a chatter who already entered another task arrive at the same time (fails until #306 is fixed)',
-      async () => {
-        const { sweepstakes, task } = await setup();
-        const chatter = await createChatter();
-        await db.sweepstakesParticipant.create({
-          data: { userId: chatter.id, sweepstakesId: sweepstakes.id }
-        });
-        const request = delivery('message-1');
+    it('records one entry when both deliveries for a chatter who already entered another task arrive at the same time', async () => {
+      const { sweepstakes, task } = await setup();
+      const chatter = await createChatter();
+      await db.sweepstakesParticipant.create({
+        data: { userId: chatter.id, sweepstakesId: sweepstakes.id }
+      });
+      const request = delivery('message-1');
 
-        await holdTableWrites('TaskCompletion', { writers: 2 }, () =>
-          Promise.all([POST(request()), POST(request())])
-        );
+      await holdTableWrites('TaskCompletion', { writers: 2 }, () =>
+        Promise.all([POST(request()), POST(request())])
+      );
 
-        expect(await entries(task.id)).toBe(1);
-      }
-    );
+      expect(await entries(task.id)).toBe(1);
+    });
   });
 
   describe('when the same chatter sends two different messages', () => {

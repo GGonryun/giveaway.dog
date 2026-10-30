@@ -8,11 +8,12 @@ import { prismaMock } from '@giveaway/testing-server/prisma';
 const m = vi.hoisted(() => ({
   redisGet: vi.fn(),
   redisSet: vi.fn(),
+  redisDel: vi.fn(),
   newVersionedRateLimiter: vi.fn()
 }));
 
 vi.mock('@giveaway/cache/redis', () => ({
-  redis: { get: m.redisGet, set: m.redisSet }
+  redis: { get: m.redisGet, set: m.redisSet, del: m.redisDel }
 }));
 
 vi.mock('@giveaway/ratelimit/ratelimit', () => ({
@@ -91,6 +92,8 @@ describe('POST /api/twitch/webhooks', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     m.redisGet.mockReset();
     m.redisSet.mockReset();
+    m.redisSet.mockResolvedValue('OK');
+    m.redisDel.mockReset();
     m.newVersionedRateLimiter.mockReset();
   });
 

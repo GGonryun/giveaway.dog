@@ -120,6 +120,7 @@ describe('verifyTwitchRequest properties', () => {
 
         expect(result).toEqual({
           body: JSON.parse(message.body),
+          messageId: message.messageId,
           messageType: message.messageType
         });
       })

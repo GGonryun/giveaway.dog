@@ -6,7 +6,7 @@ import { assertAsyncProperty } from '@giveaway/testing-server/property';
 import { POST } from '../handler';
 
 vi.mock('@giveaway/cache/redis', () => ({
-  redis: { get: vi.fn(), set: vi.fn(), del: vi.fn() }
+  redis: { get: vi.fn(), set: vi.fn(async () => 'OK'), del: vi.fn() }
 }));
 
 const SECRET = 'eventsub-secret';
