@@ -68,15 +68,6 @@ export async function discordInteractionWorkflow({
     return;
   }
 
-  await patchDiscordWebhook({
-    applicationId: body.application_id,
-    token: body.token,
-    message: {
-      content: 'Your entry is confirmed!',
-      flags: DISCORD_RESPONSE_FLAG.EPHEMERAL
-    }
-  });
-
   const { userId } = await commitEntry({
     body,
     taskId,
@@ -84,6 +75,15 @@ export async function discordInteractionWorkflow({
     existingUserId: validation.existingUserId,
     member: validation.member,
     discordUserId: validation.discordUserId
+  });
+
+  await patchDiscordWebhook({
+    applicationId: body.application_id,
+    token: body.token,
+    message: {
+      content: 'Your entry is confirmed!',
+      flags: DISCORD_RESPONSE_FLAG.EPHEMERAL
+    }
   });
 
   if (body.member) {
