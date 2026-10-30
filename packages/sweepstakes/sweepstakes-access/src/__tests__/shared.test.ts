@@ -799,6 +799,33 @@ describe('applySweepstakesChanges', () => {
       expect(prismaMock.automatedPostJob.createMany).not.toHaveBeenCalled();
     });
 
+    it('moves the pending automated posts to the new start date after restoring them', async () => {
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([
+        { id: 'p-1', request: null, response: null }
+      ]);
+
+      await apply({
+        id: SWEEPSTAKES_ID,
+        timing: { startDate: START, endDate: END }
+      });
+
+      expect(prismaMock.automatedPostJob.updateMany).toHaveBeenCalledWith({
+        where: { sweepstakesId: SWEEPSTAKES_ID, status: 'PENDING' },
+        data: { runAt: START }
+      });
+      expect(
+        prismaMock.automatedPostJob.createMany.mock.invocationCallOrder[0]
+      ).toBeLessThan(
+        prismaMock.automatedPostJob.updateMany.mock.invocationCallOrder[0]
+      );
+    });
+
+    it('does not move the automated posts when the input has no start date', async () => {
+      await apply();
+
+      expect(prismaMock.automatedPostJob.updateMany).not.toHaveBeenCalled();
+    });
+
     it('restores referrals only for tasks that still exist', async () => {
       stubSweepstakesRewrite(prismaMock, { tasks: [{ id: 'task-keep' }] });
       prismaMock.referral.findMany.mockResolvedValue([

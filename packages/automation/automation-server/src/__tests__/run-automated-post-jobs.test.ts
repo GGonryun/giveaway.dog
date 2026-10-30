@@ -932,6 +932,73 @@ describe('runAutomatedPostJobs', () => {
     });
   });
 
+  describe('when the sweepstakes has not started yet', () => {
+    const START = new Date('2026-06-08T12:00:00.000Z');
+
+    beforeEach(() => {
+      prismaMock.sweepstakesTiming.findUnique.mockResolvedValue({
+        startDate: START
+      } as never);
+    });
+
+    it.each([
+      ['twitter', twitterJob],
+      ['bluesky', blueskyJob],
+      ['discord', discordJob]
+    ])(
+      'reschedules the %s post to the start date without posting',
+      async (_, build) => {
+        const job = build();
+        prismaMock.automatedPostJob.findMany.mockResolvedValue([job]);
+
+        const result = await runAutomatedPostJobs(db);
+
+        expect(result).toEqual({ processed: 1 });
+        expect(prismaMock.sweepstakesTiming.findUnique).toHaveBeenCalledWith({
+          where: { sweepstakesId: 'sweep-1' },
+          select: { startDate: true }
+        });
+        expect(prismaMock.automatedPostJob.update).toHaveBeenCalledTimes(1);
+        expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith({
+          where: { id: job.id },
+          data: { status: 'PENDING', runAt: START }
+        });
+        expect(mocks.createTweet).not.toHaveBeenCalled();
+        expect(mocks.createSkeet).not.toHaveBeenCalled();
+        expect(mocks.processPostToDiscord).not.toHaveBeenCalled();
+        expect(prismaMock.sweepstakes.update).not.toHaveBeenCalled();
+        expect(console.info).toHaveBeenCalledWith(
+          `Sweepstakes sweep-1 has not started yet, rescheduling automated post job ${job.id}`
+        );
+      }
+    );
+
+    it('posts when the start date is now', async () => {
+      prismaMock.sweepstakesTiming.findUnique.mockResolvedValue({
+        startDate: NOW
+      } as never);
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([discordJob()]);
+      mocks.processPostToDiscord.mockResolvedValue(undefined);
+
+      await runAutomatedPostJobs(db);
+
+      expect(mocks.processPostToDiscord).toHaveBeenCalledTimes(1);
+      expect(prismaMock.automatedPostJob.update).not.toHaveBeenCalled();
+    });
+
+    it('posts when the sweepstakes has no start date', async () => {
+      prismaMock.sweepstakesTiming.findUnique.mockResolvedValue({
+        startDate: null
+      } as never);
+      prismaMock.automatedPostJob.findMany.mockResolvedValue([discordJob()]);
+      mocks.processPostToDiscord.mockResolvedValue(undefined);
+
+      await runAutomatedPostJobs(db);
+
+      expect(mocks.processPostToDiscord).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('when a stored job is malformed', () => {
     it('marks the job failed with the validation message', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([
