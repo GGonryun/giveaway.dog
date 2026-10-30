@@ -18,28 +18,13 @@ import {
   X_PICKER_QUOTES_KEY
 } from '@giveaway/x-picker-model/constants';
 import { isXPostUrl } from '@giveaway/x-picker-model/post-url';
+import { extractTweetId } from '@giveaway/x-scraper/utils';
 
 const loadTweetSchema = z.object({
   postUrl: z.string().url('Please enter a valid URL').refine(isXPostUrl, {
     message: 'Please enter a valid X (Twitter) post URL'
   })
 });
-
-function extractTweetId(url: string): string | null {
-  const patterns = [
-    /(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/,
-    /t\.co\/(\w+)/
-  ];
-
-  for (const pattern of patterns) {
-    const match = url.match(pattern);
-    if (match) {
-      return match[1];
-    }
-  }
-
-  return null;
-}
 
 export async function POST(request: NextRequest) {
   try {
