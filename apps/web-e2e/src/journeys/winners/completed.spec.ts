@@ -3,6 +3,7 @@ import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, personaState } from '../../env';
 import { expectAfterReloads } from '../../helpers/poll';
+import { TAGS } from '../../helpers/tags';
 import {
   captureServerAction,
   readActionResult,
