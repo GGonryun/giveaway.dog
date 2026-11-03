@@ -16,7 +16,7 @@ import {
   participantTaskSchema
 } from '@giveaway/task-model/schemas';
 import { allowedUserSourcesSchema } from '@giveaway/user-source-model/schemas';
-import { refineSweepstakeTasks } from './form';
+import { refineSweepstakeTasks, refineSweepstakesFormFields } from './form';
 import { identityProviderSchema } from '@giveaway/integration-model/providers';
 import { aspectRatioSchema } from '@giveaway/util-media/aspect-ratio/data';
 import { sweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
@@ -192,7 +192,7 @@ export type SweepstakesVisibilitySchema = z.infer<
 
 export const sweepstakesWinnerCriteriaSchema = z.object({
   minTasksCompleted: z
-    .number()
+    .number({ invalid_type_error: 'Minimum tasks must be at least 1' })
     .int()
     .min(1, 'Minimum tasks must be at least 1')
     .default(1),
@@ -324,6 +324,7 @@ export const giveawayFormSchema = ({
       form,
       ctx
     });
+    refineSweepstakesFormFields({ form, ctx });
   });
 };
 

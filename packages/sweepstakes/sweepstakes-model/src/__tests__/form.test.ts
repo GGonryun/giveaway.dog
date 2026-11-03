@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import z from 'zod';
-import { refineSweepstakeTasks } from '../form';
+import { refineSweepstakeTasks, refineSweepstakesFormFields } from '../form';
 import { TaskSchema, TaskType } from '@giveaway/task-model/schemas';
 import type { BaseGiveawayFormSchema } from '../schemas';
 import { BASE_TASK } from '@giveaway/testing-server/fixtures-task-validation';
@@ -346,5 +346,63 @@ describe('refineSweepstakeTasks', () => {
     await expect(refine([task('UNKNOWN_TYPE')])).rejects.toThrow(
       'Unexpected value: [object Object]'
     );
+  });
+});
+
+describe('refineSweepstakesFormFields', () => {
+  const refineFields = (formFields: unknown[]) => {
+    const issues: z.IssueData[] = [];
+    const ctx = {
+      addIssue: (issue: z.IssueData) => {
+        issues.push(issue);
+      },
+      path: []
+    } as unknown as z.RefinementCtx;
+    const form = {
+      audience: { formFields }
+    } as unknown as BaseGiveawayFormSchema;
+
+    refineSweepstakesFormFields({ ctx, form });
+
+    return issues;
+  };
+
+  const ageField = (minimum: number | null | undefined) => ({
+    id: 'age',
+    type: 'AGE',
+    label: 'I am at least 16 years of age (required)',
+    required: true,
+    minimum,
+    maximum: null
+  });
+
+  it('accepts an age field with a minimum', () => {
+    expect(refineFields([ageField(16)])).toEqual([]);
+  });
+
+  it('accepts a minimum of zero', () => {
+    expect(refineFields([ageField(0)])).toEqual([]);
+  });
+
+  it.each([
+    ['null', null],
+    ['undefined', undefined]
+  ])('reports an age field whose minimum is %s', (_label, minimum) => {
+    expect(
+      refineFields([
+        { id: 'email', type: 'EMAIL', label: 'Email', placeholder: null },
+        ageField(minimum)
+      ])
+    ).toEqual([
+      {
+        path: ['audience', 'formFields', 1, 'minimum'],
+        code: z.ZodIssueCode.custom,
+        message: 'Minimum age is required'
+      }
+    ]);
+  });
+
+  it('adds no issues when there are no form fields', () => {
+    expect(refineFields([])).toEqual([]);
   });
 });

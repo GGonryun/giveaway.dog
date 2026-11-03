@@ -33,7 +33,7 @@ const MinTasksCompletedField = () => {
             <Input
               type="number"
               min={1}
-              value={field.value}
+              value={Number.isNaN(field.value) ? '' : field.value}
               onChange={(e) => field.onChange(parseInt(e.target.value))}
             />
           </FormControl>

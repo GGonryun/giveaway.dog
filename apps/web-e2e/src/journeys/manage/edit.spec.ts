@@ -51,7 +51,7 @@ const seedEnteredGiveaway = async (
     audience: {
       formFields: [
         { type: 'USERNAME', label: 'Your username' },
-        { type: 'AGE', label: 'Your age' }
+        { type: 'AGE', label: 'Your age', minimum: 18 }
       ]
     },
     entries: [

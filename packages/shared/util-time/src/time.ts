@@ -76,19 +76,75 @@ export namespace timezone {
       );
   }
 
-  export const options = getTimeZones().map((tz) => {
+  const UTC_ZONE = 'UTC';
+
+  const UTC_ALIASES = new Set([
+    'UCT',
+    'GMT',
+    'GMT0',
+    'GMT+0',
+    'GMT-0',
+    'Greenwich',
+    'Universal',
+    'Zulu',
+    'Etc/UTC',
+    'Etc/UCT',
+    'Etc/GMT',
+    'Etc/GMT0',
+    'Etc/GMT+0',
+    'Etc/GMT-0',
+    'Etc/Greenwich',
+    'Etc/Universal',
+    'Etc/Zulu'
+  ]);
+
+  const zoneOptions = getTimeZones().map((tz) => {
     const city =
       tz.mainCities?.[0] ?? tz.name.split('/').pop()?.replace(/_/g, ' ');
-    const offset = formatOffset(tz.currentTimeOffsetInMinutes);
-    const flag = getFlagEmoji(tz.countryCode);
 
     return {
       zone: tz.name,
-      label: `(${offset}) ${tz.alternativeName} (${city})`,
-      flag,
+      minutes: tz.currentTimeOffsetInMinutes,
+      alternativeName: tz.alternativeName,
       city,
-      offset,
-      alternativeName: tz.alternativeName
+      flag: getFlagEmoji(tz.countryCode)
     };
   });
+
+  const utcOption = {
+    zone: UTC_ZONE,
+    minutes: 0,
+    alternativeName: 'Coordinated Universal Time',
+    city: 'UTC',
+    flag: '\u{1F310}'
+  };
+
+  export const options = [...zoneOptions, utcOption]
+    .sort((a, b) => a.minutes - b.minutes)
+    .map(({ zone, minutes, alternativeName, city, flag }) => {
+      const offset = formatOffset(minutes);
+
+      return {
+        zone,
+        label: `(${offset}) ${alternativeName} (${city})`,
+        flag,
+        city,
+        offset,
+        alternativeName
+      };
+    });
+
+  const zoneNames = new Set(options.map((option) => option.zone));
+
+  const aliases = new Map(
+    getTimeZones()
+      .flatMap((tz) => tz.group.map((alias) => [alias, tz.name] as const))
+      .reverse()
+  );
+
+  export const resolve = (zone: string) => {
+    if (zoneNames.has(zone)) return zone;
+    if (UTC_ALIASES.has(zone)) return UTC_ZONE;
+    return aliases.get(zone) ?? zone;
+  };
 }

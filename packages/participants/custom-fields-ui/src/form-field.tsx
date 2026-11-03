@@ -27,13 +27,22 @@ import {
   FormLabel,
   FormMessage
 } from '@giveaway/ui-primitives/form';
-import { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form';
+import {
+  FieldPath,
+  FieldValues,
+  PathValue,
+  UseFormReturn
+} from 'react-hook-form';
 import { SweepstakesFormFieldType } from '@giveaway/db-model';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import { Input } from '@giveaway/ui-primitives/input';
 import { assertNever } from '@giveaway/util-errors';
 import { strings } from '@giveaway/util-strings/strings';
 import { FIELD_TYPE_LABELS } from '@giveaway/custom-fields-model/schemas';
+import {
+  DEFAULT_MINIMUM_AGE,
+  toMinimumAgeLabel
+} from '@giveaway/custom-fields-model/defaults';
 import { FIELD_TYPE_ICON } from './field-icons';
 
 export const FormFieldComponent = <
@@ -259,42 +268,62 @@ const FieldMinimumInput = <
   fieldPath: TName;
 }) => {
   const index = useArrayContext();
+  const minimumPath =
+    `${fieldPath}.${index}.minimum` as FieldPath<TFieldValues>;
+  const labelPath = `${fieldPath}.${index}.label` as FieldPath<TFieldValues>;
+  const lastAge = React.useRef<number | null>(
+    form.getValues(minimumPath) ?? null
+  );
+
   return (
     <RHFFormField
       control={form.control}
-      name={`${fieldPath}.${index}.minimum` as FieldPath<TFieldValues>}
+      name={minimumPath}
       render={({ field }) => (
         <FormItem>
           <FormLabel>Minimum Age</FormLabel>
           <FormControl>
             <Input
               type="number"
-              value={field.value ?? 13}
+              min={0}
+              value={field.value ?? ''}
               onChange={(e) => {
-                const n = Number(e.target.value);
-                if (n < 0) {
+                if (!e.target.value) {
+                  field.onChange(null);
                   return;
                 }
 
-                const label = form.getValues(
-                  `${fieldPath}.${index}.label` as FieldPath<TFieldValues>
-                );
-                const oldAge = form.getValues(
-                  `${fieldPath}.${index}.minimum` as FieldPath<TFieldValues>
-                );
+                const n = parseInt(e.target.value);
+                if (Number.isNaN(n) || n < 0) {
+                  return;
+                }
 
-                if (oldAge != null && label) {
+                const label = form.getValues(labelPath);
+                const previousAge =
+                  form.getValues(minimumPath) ?? lastAge.current;
+
+                if (previousAge != null && label) {
                   form.setValue(
-                    `${fieldPath}.${index}.label` as FieldPath<TFieldValues>,
-                    strings.replace(label, oldAge, n) as any
+                    labelPath,
+                    strings.replace(label, previousAge, n) as PathValue<
+                      TFieldValues,
+                      FieldPath<TFieldValues>
+                    >
+                  );
+                } else if (!label) {
+                  form.setValue(
+                    labelPath,
+                    toMinimumAgeLabel(n) as PathValue<
+                      TFieldValues,
+                      FieldPath<TFieldValues>
+                    >
                   );
                 }
 
-                field.onChange(
-                  e.target.value ? parseInt(e.target.value) : undefined
-                );
+                lastAge.current = n;
+                field.onChange(n);
               }}
-              placeholder="13"
+              placeholder={`${DEFAULT_MINIMUM_AGE}`}
             />
           </FormControl>
           <FormMessage />

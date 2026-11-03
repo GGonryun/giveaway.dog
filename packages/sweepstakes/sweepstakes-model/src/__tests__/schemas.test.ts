@@ -563,6 +563,14 @@ describe('sweepstakesWinnerCriteriaSchema', () => {
     expect(messagesOf(result)).toEqual(['Minimum tasks must be at least 1']);
   });
 
+  it('rejects a task count that is not a number with a readable message', () => {
+    const result = sweepstakesWinnerCriteriaSchema.safeParse({
+      minTasksCompleted: NaN
+    });
+
+    expect(messagesOf(result)).toEqual(['Minimum tasks must be at least 1']);
+  });
+
   it('rejects a fractional task count', () => {
     const result = sweepstakesWinnerCriteriaSchema.safeParse({
       minTasksCompleted: 1.5
@@ -1134,6 +1142,36 @@ describe('giveawayFormSchema', () => {
       'Only one referral link task is allowed per giveaway',
       'Only one referral link task is allowed per giveaway'
     ]);
+  });
+
+  it('rejects an age field without a minimum when validation is on', () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+
+    const result = giveawayFormSchema({
+      validate: true,
+      maxLoyalty: 0
+    }).safeParse(
+      validForm({
+        audience: {
+          allowedIdentities: ['EMAIL'],
+          regionalRestriction: null,
+          formFields: [
+            {
+              id: 'age',
+              type: 'AGE',
+              label: 'I am at least 16 years of age (required)',
+              required: true,
+              minimum: null,
+              maximum: null
+            }
+          ]
+        }
+      })
+    );
+
+    expect(pathsOf(result)).toEqual([['audience', 'formFields', 0, 'minimum']]);
+    expect(messagesOf(result)).toEqual(['Minimum age is required']);
   });
 
   it('passes maxLoyalty through to the task refinement', () => {

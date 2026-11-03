@@ -15,6 +15,7 @@ import {
   seedWorkerTeam,
   type SeededSweepstakes
 } from '../../helpers/seed';
+import { TAGS } from '../../helpers/tags';
 import {
   eligibleEntries,
   endedGiveaway,
@@ -222,103 +223,104 @@ test.describe('the winners of a completed giveaway', () => {
     allowedPageErrors: [/ClientFetchError|net::ERR_FAILED/]
   });
 
-  test('the host cannot change the entries, the winners or the criteria of a completed giveaway', async ({
-    page,
-    request
-  }, testInfo) => {
-    const { team } = await seedWorkerTeam(request, testInfo);
-    const ns = freshNamespace(testInfo.workerIndex);
-    const open = await seedApi(request).sweepstakes(
-      withWinner(ns, team.slug, 'ended')
-    );
-    const completed = await seedApi(request).sweepstakes(
-      withWinner(ns, team.slug, 'completed')
-    );
-    const actions = await captureWinnerChanges(page, team.slug, open);
-    const replacements = {
-      [open.id]: completed.id,
-      [open.entries[0].participantId]: completed.entries[0].participantId,
-      [open.entries[0].completions[0].id]:
-        completed.entries[0].completions[0].id,
-      [open.draws[0].id]: completed.draws[0].id
-    };
-    const before = {
-      completions: await readCompletions(request, completed.id),
-      draws: await readDraws(request, completed.id)
-    };
+  test(
+    'the host cannot change the entries, the winners or the criteria of a completed giveaway',
+    { tag: TAGS.slow },
+    async ({ page, request }, testInfo) => {
+      const { team } = await seedWorkerTeam(request, testInfo);
+      const ns = freshNamespace(testInfo.workerIndex);
+      const open = await seedApi(request).sweepstakes(
+        withWinner(ns, team.slug, 'ended')
+      );
+      const completed = await seedApi(request).sweepstakes(
+        withWinner(ns, team.slug, 'completed')
+      );
+      const actions = await captureWinnerChanges(page, team.slug, open);
+      const replacements = {
+        [open.id]: completed.id,
+        [open.entries[0].participantId]: completed.entries[0].participantId,
+        [open.entries[0].completions[0].id]:
+          completed.entries[0].completions[0].id,
+        [open.draws[0].id]: completed.draws[0].id
+      };
+      const before = {
+        completions: await readCompletions(request, completed.id),
+        draws: await readDraws(request, completed.id)
+      };
 
-    for (const [name, action] of Object.entries(actions)) {
-      const [input] = replaceInArgs(
-        action.args,
-        Object.fromEntries(
-          Object.entries(replacements).filter(([from]) =>
-            JSON.stringify(action.args).includes(JSON.stringify(from))
+      for (const [name, action] of Object.entries(actions)) {
+        const [input] = replaceInArgs(
+          action.args,
+          Object.fromEntries(
+            Object.entries(replacements).filter(([from]) =>
+              JSON.stringify(action.args).includes(JSON.stringify(from))
+            )
           )
-        )
-      ) as [Record<string, unknown>];
-      const args =
-        name === 'updateCriteria'
-          ? [{ ...input, minTasksCompleted: 5 }]
-          : [input];
-      expect(
-        readActionResult(await replayServerAction(page, action, args)),
-        name
-      ).toMatchObject({
-        ok: false,
-        data: {
-          code: 'FORBIDDEN',
-          message: 'Completed sweepstakes cannot be modified.'
-        }
-      });
-    }
+        ) as [Record<string, unknown>];
+        const args =
+          name === 'updateCriteria'
+            ? [{ ...input, minTasksCompleted: 5 }]
+            : [input];
+        expect(
+          readActionResult(await replayServerAction(page, action, args)),
+          name
+        ).toMatchObject({
+          ok: false,
+          data: {
+            code: 'FORBIDDEN',
+            message: 'Completed sweepstakes cannot be modified.'
+          }
+        });
+      }
 
-    expect(await readCompletions(request, completed.id)).toEqual(
-      before.completions
-    );
-    expect(await readDraws(request, completed.id)).toEqual(before.draws);
-    await page.goto(winnersPage(team.slug, completed.id));
-    await expect(
-      page.getByText('Min Tasks:').locator('..').filter({ visible: true })
-    ).toHaveText('Min Tasks:1');
-    await expect(
-      page.getByRole('button', { name: 'Edit', exact: true })
-    ).toBeDisabled();
-    await expect(
-      page.getByRole('button', { name: 'Pick Remaining Winners' })
-    ).toBeDisabled();
-    await expectAfterReloads(page, async () => {
+      expect(await readCompletions(request, completed.id)).toEqual(
+        before.completions
+      );
+      expect(await readDraws(request, completed.id)).toEqual(before.draws);
+      await page.goto(winnersPage(team.slug, completed.id));
       await expect(
-        page.getByRole('button', { name: 'Winner actions', exact: true })
+        page.getByText('Min Tasks:').locator('..').filter({ visible: true })
+      ).toHaveText('Min Tasks:1');
+      await expect(
+        page.getByRole('button', { name: 'Edit', exact: true })
       ).toBeDisabled();
-    });
-
-    await page.goto(entriesPage(team.slug, completed.id));
-    await expect(entryRow(page, 'participant')).toContainText('Completed');
-    await expect(
-      page.getByRole('button', { name: 'Entry actions' })
-    ).toHaveCount(0);
-
-    await page.goto(presentationPage(team.slug, completed.id));
-    const draw = page.getByRole('button', { name: 'Draw All Winners' });
-    if (await draw.isEnabled()) {
-      await draw.click();
       await expect(
-        page.getByRole('button', {
-          name: /Draw All Winners|Return to Sweepstakes/
-        })
-      ).toBeVisible({ timeout: 15_000 });
-    }
-    expect(await readDraws(request, completed.id)).toEqual(before.draws);
+        page.getByRole('button', { name: 'Pick Remaining Winners' })
+      ).toBeDisabled();
+      await expectAfterReloads(page, async () => {
+        await expect(
+          page.getByRole('button', { name: 'Winner actions', exact: true })
+        ).toBeDisabled();
+      });
 
-    await page.goto(participantsPage(team.slug, completed.id));
-    await participantRow(page, 'participant')
-      .getByRole('button', { name: 'Participant actions' })
-      .click();
-    await expect(
-      page.getByRole('menuitem', { name: 'Quick View' })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('menuitem', { name: 'Disqualify Participant' })
-    ).toHaveCount(0);
-  });
+      await page.goto(entriesPage(team.slug, completed.id));
+      await expect(entryRow(page, 'participant')).toContainText('Completed');
+      await expect(
+        page.getByRole('button', { name: 'Entry actions' })
+      ).toHaveCount(0);
+
+      await page.goto(presentationPage(team.slug, completed.id));
+      const draw = page.getByRole('button', { name: 'Draw All Winners' });
+      if (await draw.isEnabled()) {
+        await draw.click();
+        await expect(
+          page.getByRole('button', {
+            name: /Draw All Winners|Return to Sweepstakes/
+          })
+        ).toBeVisible({ timeout: 15_000 });
+      }
+      expect(await readDraws(request, completed.id)).toEqual(before.draws);
+
+      await page.goto(participantsPage(team.slug, completed.id));
+      await participantRow(page, 'participant')
+        .getByRole('button', { name: 'Participant actions' })
+        .click();
+      await expect(
+        page.getByRole('menuitem', { name: 'Quick View' })
+      ).toBeVisible();
+      await expect(
+        page.getByRole('menuitem', { name: 'Disqualify Participant' })
+      ).toHaveCount(0);
+    }
+  );
 });
