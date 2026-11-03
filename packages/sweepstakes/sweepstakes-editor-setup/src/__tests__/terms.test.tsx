@@ -97,6 +97,49 @@ describe('TermsAndConditions', () => {
       );
     });
 
+    it('previews the regional restriction and the minimum age of the audience', async () => {
+      renderWithForm(<TermsAndConditions />, {
+        values: buildFormValues({
+          terms: buildTemplateTerms({ sponsorName: 'Acme Inc' }),
+          audience: {
+            ...buildFormValues().audience,
+            regionalRestriction: { regions: ['country:US'], filter: 'INCLUDE' },
+            formFields: [
+              {
+                id: 'age',
+                label: 'Age',
+                type: 'AGE',
+                minimum: 18,
+                required: true
+              }
+            ]
+          }
+        }),
+        layout: { id: 'sweepstakes-1' }
+      });
+
+      const sentence =
+        'The Promotion is open to residents of: country:US to individuals 18+ years of age';
+      expect(getPreviewText()).toContain(sentence);
+      expect(getLivePreview(await openSheet())).toHaveTextContent(sentence);
+    });
+
+    it('refreshes the preview when the audience changes', async () => {
+      const { form } = renderTerms();
+      act(() => {
+        form.setValue('audience.regionalRestriction', {
+          regions: ['country:US'],
+          filter: 'EXCLUDE'
+        });
+      });
+
+      await waitFor(() =>
+        expect(getPreviewText()).toContain(
+          'The Promotion is open globally (excluding: country:US) to all individuals'
+        )
+      );
+    });
+
     it('switches to custom terms', async () => {
       const { form } = renderTerms();
       await userEvent.click(getTypeButton('Custom'));
