@@ -43,14 +43,17 @@ describe('WinnerCriteria', () => {
       ).toBeInTheDocument();
     });
 
-    it('stores NaN when the input is cleared', async () => {
-      const { form } = renderCriteria({}, true);
+    it('shows a readable message and an empty input when the input is cleared', async () => {
+      renderCriteria({}, true);
       fireEvent.change(getInput(), { target: { value: '' } });
 
-      expect(form.getValues('criteria.minTasksCompleted')).toBeNaN();
       expect(
-        await screen.findByText('Expected number, received nan')
+        await screen.findByText('Minimum tasks must be at least 1')
       ).toBeInTheDocument();
+      expect(
+        screen.queryByText('Expected number, received nan')
+      ).not.toBeInTheDocument();
+      expect(getInput()).toHaveValue(null);
     });
   });
 
