@@ -206,7 +206,7 @@ export const TimingField = () => {
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value && timezone.resolve(field.value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a timezone" />
