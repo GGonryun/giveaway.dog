@@ -22,6 +22,7 @@ export const UnifiedFormFooter: React.FC = () => {
     mobile,
     action,
     disabled,
+    formId,
     onJumpToField,
     showIssues,
     onSave,
@@ -99,6 +100,7 @@ export const UnifiedFormFooter: React.FC = () => {
           <Button
             key={hasNextStep ? 'next' : 'submit'}
             type={hasNextStep ? 'button' : 'submit'}
+            form={hasNextStep ? undefined : formId}
             variant={isValid ? 'default' : 'outline'}
             size="sm"
             onClick={hasNextStep ? handleNext : undefined}
