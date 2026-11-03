@@ -199,8 +199,19 @@ describe('timezone.options', () => {
     vi.useRealTimers();
   });
 
-  it('has one option per known time zone', () => {
-    expect(options).toHaveLength(getTimeZones().length);
+  it('has one option per known time zone and one for UTC', () => {
+    expect(options).toHaveLength(getTimeZones().length + 1);
+  });
+
+  it('lists UTC', () => {
+    expect(options.find((o) => o.zone === 'UTC')).toEqual({
+      zone: 'UTC',
+      label: '(GMT+00:00) Coordinated Universal Time (UTC)',
+      flag: '\u{1F310}',
+      city: 'UTC',
+      offset: 'GMT+00:00',
+      alternativeName: 'Coordinated Universal Time'
+    });
   });
 
   it('has unique zones', () => {
@@ -232,9 +243,11 @@ describe('timezone.options', () => {
     ).toBe(true);
   });
 
-  it('uses two regional indicator symbols for every flag', () => {
+  it('uses two regional indicator symbols for every country flag', () => {
     expect(
-      options.every((o) => /^[\u{1F1E6}-\u{1F1FF}]{2}$/u.test(o.flag))
+      options
+        .filter((o) => o.zone !== 'UTC')
+        .every((o) => /^[\u{1F1E6}-\u{1F1FF}]{2}$/u.test(o.flag))
     ).toBe(true);
   });
 
@@ -255,6 +268,7 @@ describe('timezone.options with entries lacking main cities', () => {
       getTimeZones: () => [
         {
           name: 'America/Port_of_Spain',
+          group: ['America/Port_of_Spain'],
           mainCities: undefined,
           currentTimeOffsetInMinutes: -240,
           countryCode: 'tt',
@@ -262,6 +276,7 @@ describe('timezone.options with entries lacking main cities', () => {
         },
         {
           name: 'Etc/Zero',
+          group: ['Etc/Zero'],
           mainCities: [],
           currentTimeOffsetInMinutes: 0,
           countryCode: '',
@@ -300,5 +315,57 @@ describe('timezone.options with entries lacking main cities', () => {
       offset: 'GMT+00:00',
       alternativeName: 'Zero Time'
     });
+  });
+});
+
+describe('timezone.resolve', () => {
+  it.each([
+    'UTC',
+    'UCT',
+    'GMT',
+    'GMT0',
+    'GMT+0',
+    'GMT-0',
+    'Greenwich',
+    'Universal',
+    'Zulu',
+    'Etc/UTC',
+    'Etc/UCT',
+    'Etc/GMT',
+    'Etc/GMT0',
+    'Etc/GMT+0',
+    'Etc/GMT-0',
+    'Etc/Greenwich',
+    'Etc/Universal',
+    'Etc/Zulu'
+  ])('resolves the UTC name %j to UTC', (zone) => {
+    expect(timezone.resolve(zone)).toBe('UTC');
+  });
+
+  it.each([
+    ['America/Los_Angeles', 'America/Los_Angeles'],
+    ['Pacific/Midway', 'Pacific/Midway'],
+    ['America/Anguilla', 'America/Anguilla'],
+    ['America/Creston', 'America/Phoenix'],
+    ['Asia/Calcutta', 'Asia/Kolkata'],
+    ['Europe/Kiev', 'Europe/Kyiv'],
+    ['US/Pacific', 'America/Los_Angeles']
+  ])('resolves %j to the option %j', (zone, expected) => {
+    expect(timezone.resolve(zone)).toBe(expected);
+    expect(timezone.options.some((o) => o.zone === expected)).toBe(true);
+  });
+
+  it('returns an unknown zone unchanged', () => {
+    expect(timezone.resolve('Mars/Olympus_Mons')).toBe('Mars/Olympus_Mons');
+  });
+
+  it('resolves every zone of a group to an option of that group', () => {
+    const zones = getTimeZones();
+
+    for (const alias of zones.flatMap((tz) => tz.group)) {
+      const resolved = zones.find((tz) => tz.name === timezone.resolve(alias));
+
+      expect(resolved?.group).toContain(alias);
+    }
   });
 });
