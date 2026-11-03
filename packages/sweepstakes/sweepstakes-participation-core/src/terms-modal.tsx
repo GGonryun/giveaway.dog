@@ -12,12 +12,11 @@ import { Button } from '@giveaway/ui-primitives/button';
 import React from 'react';
 import {
   stringifyTerms,
-  SweepstakesTermOptions
+  SweepstakesTermOptions,
+  toEligibilityTermOptions
 } from '@giveaway/sweepstakes-model/terms';
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { date } from '@giveaway/util-time/date';
-import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
-import { toRegionName } from '@giveaway/sweepstakes-model/schemas';
 import { MinimalTipTapPreview } from '@giveaway/ui-rich-text/minimal-tiptap-preview';
 
 interface TermsModalProps {
@@ -38,26 +37,10 @@ export const TermsModal: React.FC<TermsModalProps> = ({ children }) => {
       );
     }
 
-    // Generate eligibility regions text based on restrictions
-    const getEligibilityRegions = () => {
-      if (!sweepstakes.audience.regionalRestriction) return 'Global';
-
-      const regions =
-        sweepstakes.audience.regionalRestriction.regions.map(toRegionName);
-      const filter = sweepstakes.audience.regionalRestriction.filter;
-
-      if (filter === 'INCLUDE') {
-        return `to residents of: ${regions.join(', ')}`;
-      } else {
-        return `globally (excluding: ${regions.join(', ')})`;
-      }
-    };
-
     // Generate full terms using the existing stringifyTerms function
     const termOptions: SweepstakesTermOptions = {
       sweepstakesName: sweepstakes.setup.name,
-      eligibilityRegions: getEligibilityRegions(),
-      eligibilityAge: getEligibilityAge(sweepstakes.audience.formFields),
+      ...toEligibilityTermOptions(sweepstakes.audience),
       startDate: date.format(sweepstakes.timing.startDate, 'long'),
       endDate: date.format(sweepstakes.timing.endDate, 'long'),
       entryUrl: typeof window !== 'undefined' ? window.location.href : '',
@@ -98,16 +81,4 @@ export const TermsModal: React.FC<TermsModalProps> = ({ children }) => {
       </DialogContent>
     </Dialog>
   );
-};
-
-const getEligibilityAge = (
-  formFields: SweepstakesFormFieldSchema[]
-): string | undefined => {
-  const field = formFields.find((field) => field.type === 'AGE');
-
-  if (!field || field.minimum === null || field.minimum === undefined) {
-    return undefined;
-  }
-
-  return `${field.minimum}`;
 };

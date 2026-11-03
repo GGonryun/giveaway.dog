@@ -176,31 +176,28 @@ const FormContent: React.FC<FormContentProps> = ({ pickerId, action }) => {
 
   return (
     <>
-      <form
+      <UnifiedFormLayoutContextProvider
+        id={pickerId}
+        integrations={[]}
+        title={DEFAULT_TWITTER_V2_PICKER_NAME}
+        type="picker"
+        disabled={isLoading}
+        action={action}
+        defaultStep="setup"
+        stepOrder={TWITTER_V2_PICKER_STEP_ORDER}
+        stepsToFields={TWITTER_V2_PICKER_STEP_TO_FIELD_MAP}
+        fieldsToSteps={TWITTER_V2_PICKER_FIELD_TO_STEP_MAP}
+        stepLabels={TWITTER_V2_PICKER_STEP_LABELS}
+        onCancel={handleCancel}
+        onSave={handleSaveChanges}
+        showIssues={showIssues}
+        setShowIssues={setShowIssues}
+        hideTabs={true}
+        form={<TwitterV2PickerFormContent />}
+        preview={<TwitterV2PickerPreviewWrapper />}
+        previewFooter={undefined}
         onSubmit={form.handleSubmit(handleSubmitValid, handleSubmitInvalid)}
-      >
-        <UnifiedFormLayoutContextProvider
-          id={pickerId}
-          integrations={[]}
-          title={DEFAULT_TWITTER_V2_PICKER_NAME}
-          type="picker"
-          disabled={isLoading}
-          action={action}
-          defaultStep="setup"
-          stepOrder={TWITTER_V2_PICKER_STEP_ORDER}
-          stepsToFields={TWITTER_V2_PICKER_STEP_TO_FIELD_MAP}
-          fieldsToSteps={TWITTER_V2_PICKER_FIELD_TO_STEP_MAP}
-          stepLabels={TWITTER_V2_PICKER_STEP_LABELS}
-          onCancel={handleCancel}
-          onSave={handleSaveChanges}
-          showIssues={showIssues}
-          setShowIssues={setShowIssues}
-          hideTabs={true}
-          form={<TwitterV2PickerFormContent />}
-          preview={<TwitterV2PickerPreviewWrapper />}
-          previewFooter={undefined}
-        />
-      </form>
+      />
 
       <TwitterV2CancelConfirmationModal
         onClose={() => setShowCancelModal(false)}

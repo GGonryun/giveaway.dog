@@ -22,6 +22,7 @@ const mocks = vi.hoisted(() => ({
   toastError: vi.fn(),
   onCancel: vi.fn(),
   onSave: vi.fn(),
+  onSubmit: vi.fn((event: React.FormEvent) => event.preventDefault()),
   setShowIssues: vi.fn()
 }));
 
@@ -88,13 +89,19 @@ const Harness = ({ values, initialErrors, ...props }: HarnessProps) => {
         fieldsToSteps={{ title: 'details', prizes: 'prizes', tasks: 'tasks' }}
         onCancel={mocks.onCancel}
         onSave={mocks.onSave}
+        onSubmit={mocks.onSubmit}
         showIssues={showIssues}
         setShowIssues={(show) => {
           mocks.setShowIssues(show);
           setShowIssues(show);
         }}
         form={<div>Form body</div>}
-        preview={<div>Preview body</div>}
+        preview={
+          <div>
+            Preview body
+            <button>Enter giveaway</button>
+          </div>
+        }
         previewFooter={null}
         {...props}
       />
@@ -129,7 +136,9 @@ describe('useUnifiedFormLayout', () => {
 });
 
 describe('UnifiedFormLayoutContextProvider', () => {
-  const cancelNavigation = (event: MouseEvent) => event.preventDefault();
+  const cancelNavigation = (event: MouseEvent) => {
+    if ((event.target as Element).closest('a')) event.preventDefault();
+  };
 
   beforeEach(() => {
     mocks.viewport.isTablet = false;
@@ -137,6 +146,7 @@ describe('UnifiedFormLayoutContextProvider', () => {
     mocks.toastError.mockReset();
     mocks.onCancel.mockReset();
     mocks.onSave.mockReset();
+    mocks.onSubmit.mockClear();
     mocks.setShowIssues.mockReset();
     document.addEventListener('click', cancelNavigation);
   });
@@ -183,6 +193,51 @@ describe('UnifiedFormLayoutContextProvider', () => {
       await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
       expect(mocks.onCancel).toHaveBeenCalledTimes(1);
     });
+
+    it('submits through the provided handler from the header', async () => {
+      render(<Harness />);
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Save Changes' })
+      );
+      expect(mocks.onSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    it('submits through the provided handler from the footer on the last step', async () => {
+      render(<Harness defaultStep="tasks" />);
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      expect(mocks.onSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    it('submits from the mobile header while the preview is shown', async () => {
+      mocks.viewport.isTablet = true;
+      render(<Harness />);
+      await userEvent.click(screen.getByRole('button', { name: 'Preview' }));
+      const [, save] = within(screen.getByRole('banner')).getAllByRole(
+        'button'
+      );
+      await userEvent.click(save);
+      expect(mocks.onSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    it.each([
+      ['desktop', false],
+      ['mobile', true]
+    ])(
+      'does not submit when a button in the %s preview is clicked',
+      async (_, isTablet) => {
+        mocks.viewport.isTablet = isTablet;
+        render(<Harness />);
+        if (isTablet) {
+          await userEvent.click(
+            screen.getByRole('button', { name: 'Preview' })
+          );
+        }
+        await userEvent.click(
+          screen.getByRole('button', { name: 'Enter giveaway' })
+        );
+        expect(mocks.onSubmit).not.toHaveBeenCalled();
+      }
+    );
   });
 
   describe('step navigation', () => {

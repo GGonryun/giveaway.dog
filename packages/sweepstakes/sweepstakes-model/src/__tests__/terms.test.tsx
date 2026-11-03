@@ -4,7 +4,10 @@ import {
   defaultTermOptions,
   giveawayTerms,
   stringifyTerms,
-  SweepstakesTermOptions
+  SweepstakesTermOptions,
+  toEligibilityAge,
+  toEligibilityRegions,
+  toEligibilityTermOptions
 } from '../terms';
 
 const buildOptions = (
@@ -222,5 +225,75 @@ describe('defaultTermInputOptions', () => {
       privacyPolicyUrl: '',
       additionalTerms: ''
     });
+  });
+});
+
+describe('toEligibilityRegions', () => {
+  it('is Global without a regional restriction', () => {
+    expect(toEligibilityRegions(null)).toBe('Global');
+    expect(toEligibilityRegions(undefined)).toBe('Global');
+  });
+
+  it('names the included regions', () => {
+    expect(
+      toEligibilityRegions({
+        regions: ['country:US', 'country:CA'],
+        filter: 'INCLUDE'
+      })
+    ).toBe('to residents of: United States of America, Canada');
+  });
+
+  it('names the excluded regions', () => {
+    expect(
+      toEligibilityRegions({ regions: ['country:US'], filter: 'EXCLUDE' })
+    ).toBe('globally (excluding: United States of America)');
+  });
+});
+
+describe('toEligibilityAge', () => {
+  it('is undefined without an Age field', () => {
+    expect(toEligibilityAge([])).toBeUndefined();
+    expect(
+      toEligibilityAge([{ id: 'f1', label: 'Email', type: 'EMAIL' }])
+    ).toBeUndefined();
+  });
+
+  it('is the minimum of the Age field', () => {
+    expect(
+      toEligibilityAge([
+        { id: 'f1', label: 'Email', type: 'EMAIL' },
+        { id: 'f2', label: 'Age', type: 'AGE', minimum: 18, required: true }
+      ])
+    ).toBe('18');
+  });
+
+  it.each([null, undefined])(
+    'is undefined when the Age field has a minimum of %s',
+    (minimum) => {
+      expect(
+        toEligibilityAge([
+          { id: 'f1', label: 'Age', type: 'AGE', minimum, required: true }
+        ])
+      ).toBeUndefined();
+    }
+  );
+});
+
+describe('toEligibilityTermOptions', () => {
+  it('builds the eligibility sentence from the audience', () => {
+    const terms = giveawayTerms(
+      buildOptions(
+        toEligibilityTermOptions({
+          regionalRestriction: { regions: ['country:US'], filter: 'INCLUDE' },
+          formFields: [
+            { id: 'f1', label: 'Age', type: 'AGE', minimum: 21, required: true }
+          ]
+        })
+      )
+    );
+
+    expect(terms.eligibility).toContain(
+      'The Promotion is open to residents of: United States of America to individuals 21+ years of age'
+    );
   });
 });
