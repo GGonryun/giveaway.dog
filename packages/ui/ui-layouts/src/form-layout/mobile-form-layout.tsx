@@ -48,6 +48,7 @@ const MobileFormHeader: React.FC<{ hideTabs?: boolean }> = ({ hideTabs }) => {
   const {
     title,
     disabled,
+    formId,
     currentStep,
     setCurrentStep,
     onCancel,
@@ -72,7 +73,7 @@ const MobileFormHeader: React.FC<{ hideTabs?: boolean }> = ({ hideTabs }) => {
             >
               <XIcon />
             </Button>
-            <Button type="submit" size="icon" disabled={disabled}>
+            <Button type="submit" form={formId} size="icon" disabled={disabled}>
               <SaveIcon />
             </Button>
           </div>

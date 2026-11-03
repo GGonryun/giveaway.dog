@@ -96,9 +96,9 @@ export const SweepstakesSharedFormPreview: React.FC<{
         terms:
           formValues?.terms?.type === SweepstakesTermsType.TEMPLATE
             ? {
-                type: SweepstakesTermsType.TEMPLATE,
+                ...defaultTermInputOptions,
                 ...formValues?.terms,
-                ...defaultTermInputOptions
+                type: SweepstakesTermsType.TEMPLATE
               }
             : formValues?.terms?.type === SweepstakesTermsType.CUSTOM
               ? {

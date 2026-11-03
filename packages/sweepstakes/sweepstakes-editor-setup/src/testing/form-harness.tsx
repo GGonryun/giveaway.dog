@@ -97,6 +97,7 @@ export const buildLayout = (
   integrations: [],
   currentStep: 'setup',
   isLoadingLayout: false,
+  formId: '',
   mobile: false,
   setCurrentStep: () => {},
   setShowIssues: () => {},
