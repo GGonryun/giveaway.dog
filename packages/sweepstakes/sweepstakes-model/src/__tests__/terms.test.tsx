@@ -240,13 +240,13 @@ describe('toEligibilityRegions', () => {
         regions: ['country:US', 'country:CA'],
         filter: 'INCLUDE'
       })
-    ).toBe('to residents of: country:US, country:CA');
+    ).toBe('to residents of: United States of America, Canada');
   });
 
   it('names the excluded regions', () => {
     expect(
       toEligibilityRegions({ regions: ['country:US'], filter: 'EXCLUDE' })
-    ).toBe('globally (excluding: country:US)');
+    ).toBe('globally (excluding: United States of America)');
   });
 });
 
@@ -266,6 +266,17 @@ describe('toEligibilityAge', () => {
       ])
     ).toBe('18');
   });
+
+  it.each([null, undefined])(
+    'is undefined when the Age field has a minimum of %s',
+    (minimum) => {
+      expect(
+        toEligibilityAge([
+          { id: 'f1', label: 'Age', type: 'AGE', minimum, required: true }
+        ])
+      ).toBeUndefined();
+    }
+  );
 });
 
 describe('toEligibilityTermOptions', () => {
@@ -282,7 +293,7 @@ describe('toEligibilityTermOptions', () => {
     );
 
     expect(terms.eligibility).toContain(
-      'The Promotion is open to residents of: country:US to individuals 21+ years of age'
+      'The Promotion is open to residents of: United States of America to individuals 21+ years of age'
     );
   });
 });

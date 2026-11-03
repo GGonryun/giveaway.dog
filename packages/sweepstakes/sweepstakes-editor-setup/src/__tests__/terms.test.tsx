@@ -119,7 +119,7 @@ describe('TermsAndConditions', () => {
       });
 
       const sentence =
-        'The Promotion is open to residents of: country:US to individuals 18+ years of age';
+        'The Promotion is open to residents of: United States of America to individuals 18+ years of age';
       expect(getPreviewText()).toContain(sentence);
       expect(getLivePreview(await openSheet())).toHaveTextContent(sentence);
     });
@@ -135,7 +135,7 @@ describe('TermsAndConditions', () => {
 
       await waitFor(() =>
         expect(getPreviewText()).toContain(
-          'The Promotion is open globally (excluding: country:US) to all individuals'
+          'The Promotion is open globally (excluding: United States of America) to all individuals'
         )
       );
     });

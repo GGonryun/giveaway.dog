@@ -3,7 +3,8 @@ import { widetype } from '@giveaway/util-types/widetype';
 import {
   GiveawayFormAudience,
   RegionalRestrictionSchema,
-  TermsTemplateSchema
+  TermsTemplateSchema,
+  toRegionName
 } from './schemas';
 import {
   AgeSweepstakesFormFieldSchema,
@@ -125,7 +126,7 @@ export const toEligibilityRegions = (
 ): string => {
   if (!restriction) return 'Global';
 
-  const regions = restriction.regions.join(', ');
+  const regions = restriction.regions.map(toRegionName).join(', ');
 
   return restriction.filter === 'INCLUDE'
     ? `to residents of: ${regions}`
@@ -139,7 +140,11 @@ export const toEligibilityAge = (
     (field): field is AgeSweepstakesFormFieldSchema => field.type === 'AGE'
   );
 
-  return field ? `${field.minimum}` : undefined;
+  if (!field || field.minimum === null || field.minimum === undefined) {
+    return undefined;
+  }
+
+  return `${field.minimum}`;
 };
 
 export const toEligibilityTermOptions = (
