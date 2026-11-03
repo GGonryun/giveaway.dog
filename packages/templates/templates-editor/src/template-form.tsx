@@ -168,7 +168,7 @@ const FormContent: React.FC<{
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleSubmitValid, handleSubmitInvalid)}>
+    <>
       <UnifiedFormLayoutContextProvider
         id={templateId}
         title={name}
@@ -193,6 +193,7 @@ const FormContent: React.FC<{
           fullMessage: '- Reuse sweepstakes for future campaigns.',
           shortMessage: '- Reuse a sweepstake.'
         }}
+        onSubmit={form.handleSubmit(handleSubmitValid, handleSubmitInvalid)}
       />
 
       <TemplateCancelConfirmationModal
@@ -213,6 +214,6 @@ const FormContent: React.FC<{
         action={action}
         name={name || 'New Template'}
       />
-    </form>
+    </>
   );
 };
