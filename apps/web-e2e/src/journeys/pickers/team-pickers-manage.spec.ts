@@ -223,7 +223,7 @@ test.describe('team X pickers, as their host', () => {
 
   test(
     'a host schedules a picker for later',
-    { tag: TAGS.slow },
+    { tag: [TAGS.slow, TAGS.isolated] },
     async ({ page, request }, testInfo) => {
       test.setTimeout(300_000);
       const ns = freshNamespace(testInfo.workerIndex);

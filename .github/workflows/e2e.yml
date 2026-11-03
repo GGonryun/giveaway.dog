@@ -28,15 +28,32 @@ permissions:
 
 jobs:
   e2e:
-    name: Playwright ${{ matrix.shard }}/3
+    name: Playwright ${{ matrix.name }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 50
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        include:
+          - shard: 1
+            name: 1/3
+            args: --shard=1/3
+            isolated: exclude
+          - shard: 2
+            name: 2/3
+            args: --shard=2/3
+            isolated: exclude
+          - shard: 3
+            name: 3/3
+            args: --shard=3/3
+            isolated: exclude
+          - shard: 4
+            name: isolated
+            args: --project=isolated
+            isolated: only
     env:
-      SHARD: ${{ matrix.shard }}/3
+      SHARD: ${{ matrix.name }}
+      E2E_ISOLATED: ${{ matrix.isolated }}
       SHA: ${{ inputs.sha || github.sha }}
       DEPLOYMENT_URL: ${{ inputs.url }}
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -150,8 +167,12 @@ jobs:
             http://* | https://*) E2E_BASE_URL="$DEPLOYMENT_URL" ;;
             *) E2E_BASE_URL="https://$DEPLOYMENT_URL" ;;
           esac
+          if [ "$E2E_ISOLATED" = only ] && ! pnpm --filter web-e2e exec playwright test --list ${{ matrix.args }} > /dev/null 2>&1; then
+            echo "The tested commit has no isolated project: its isolated tests run in the other shards." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           echo "Testing $E2E_BASE_URL at $SHA, shard $SHARD, with the run id $E2E_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
-          E2E_BASE_URL="$E2E_BASE_URL" pnpm --filter web-e2e exec playwright test --shard="$SHARD" --workers=8
+          E2E_BASE_URL="$E2E_BASE_URL" pnpm --filter web-e2e exec playwright test ${{ matrix.args }} --workers=8
 
       - name: Upload the JSON report
         if: ${{ !cancelled() && hashFiles('apps/web-e2e/.playwright-results/results.json') != '' }}
@@ -197,7 +218,7 @@ jobs:
 
       - name: Summarize the results
         shell: bash
-        run: node .github/scripts/e2e-summary.mjs results/e2e-results-{1,2,3}/results.json | tee -a "$GITHUB_STEP_SUMMARY"
+        run: node .github/scripts/e2e-summary.mjs results/e2e-results-{1,2,3,4}/results.json | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Report the result on the commit
         if: ${{ env.SHA != '' && needs.e2e.result != 'cancelled' }}

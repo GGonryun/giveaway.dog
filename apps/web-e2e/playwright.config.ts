@@ -6,9 +6,11 @@ import {
   BYPASS_STATE,
   JSON_REPORT,
   PRODUCTION_CHECKS,
-  RUN_ID
+  RUN_ID,
+  SKIP_ISOLATED
 } from './src/env';
 import {
+  ISOLATED_PROJECT,
   PRODUCTION_PROJECT,
   PROD_SMOKE_PROJECT,
   TAGS
@@ -21,6 +23,30 @@ const specsIn = (...folders: string[]) =>
 const BROWSER_SPECS = specsIn('smoke', 'security', 'journeys', 'a11y');
 
 const signedOut = { storageState: BYPASS_STATE };
+
+const notQuarantinedOrIsolated = new RegExp(
+  `${TAGS.quarantine}|${TAGS.isolated}`
+);
+
+const desktopChrome = {
+  ...devices['Desktop Chrome'],
+  ...signedOut,
+  viewport: { width: 1280, height: 800 },
+  timezoneId: 'UTC'
+};
+
+const isolated: Project[] = SKIP_ISOLATED
+  ? []
+  : [
+      {
+        name: ISOLATED_PROJECT,
+        testMatch: BROWSER_SPECS,
+        grep: new RegExp(TAGS.isolated),
+        grepInvert: new RegExp(TAGS.quarantine),
+        use: desktopChrome,
+        dependencies: ['personas']
+      }
+    ];
 
 const prodSmoke: Project = BYPASS_SECRET
   ? { use: signedOut, dependencies: ['setup'] }
@@ -93,18 +119,16 @@ export default defineConfig({
     {
       name: 'chromium',
       testMatch: BROWSER_SPECS,
-      use: {
-        ...devices['Desktop Chrome'],
-        ...signedOut,
-        viewport: { width: 1280, height: 800 },
-        timezoneId: 'UTC'
-      },
+      grepInvert: notQuarantinedOrIsolated,
+      use: desktopChrome,
       dependencies: ['personas']
     },
+    ...isolated,
     {
       name: 'mobile',
       testMatch: BROWSER_SPECS,
       grep: new RegExp(TAGS.mobile),
+      grepInvert: notQuarantinedOrIsolated,
       use: {
         ...devices['Pixel 7'],
         ...signedOut,

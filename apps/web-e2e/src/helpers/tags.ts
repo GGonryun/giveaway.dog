@@ -8,8 +8,11 @@ export const TAGS = {
   security: '@security',
   prodSafe: '@prod-safe',
   knownBug: '@known-bug',
-  quarantine: '@quarantine'
+  quarantine: '@quarantine',
+  isolated: '@isolated'
 } as const;
+
+export const ISOLATED_PROJECT = 'isolated';
 
 export const PROD_SMOKE_PROJECT = 'prod-smoke';
 
