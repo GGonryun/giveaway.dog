@@ -16,7 +16,10 @@ import { Textarea } from '@giveaway/ui-primitives/textarea';
 import { Typography } from '@giveaway/ui-primitives/typography';
 import { widetype } from '@giveaway/util-types/widetype';
 
-import { stringifyTerms } from '@giveaway/sweepstakes-model/terms';
+import {
+  stringifyTerms,
+  toEligibilityTermOptions
+} from '@giveaway/sweepstakes-model/terms';
 import {
   Sheet,
   SheetContent,
@@ -88,8 +91,22 @@ export const TermsAndConditions = () => {
   const canSave = useMemo(() => !termsErrors, [termsErrors]);
   const hasUnsavedChanges = useMemo(() => termsDirtyFields, [termsDirtyFields]);
 
-  const [sweepstakesName, prizes, startDate, endDate] = useWatch({
-    name: ['setup.name', 'prizes', 'timing.startDate', 'timing.endDate'],
+  const [
+    sweepstakesName,
+    prizes,
+    startDate,
+    endDate,
+    regionalRestriction,
+    formFields
+  ] = useWatch({
+    name: [
+      'setup.name',
+      'prizes',
+      'timing.startDate',
+      'timing.endDate',
+      'audience.regionalRestriction',
+      'audience.formFields'
+    ],
     control: form.control
   });
 
@@ -98,7 +115,7 @@ export const TermsAndConditions = () => {
       return stringifyTerms({
         prizes,
         sweepstakesName,
-        eligibilityRegions: 'Global',
+        ...toEligibilityTermOptions({ regionalRestriction, formFields }),
         startDate: date.format(startDate, 'long'),
         endDate: date.format(endDate, 'long'),
         entryUrl: toBrowsePageUrl(id),
@@ -107,7 +124,16 @@ export const TermsAndConditions = () => {
     } else {
       return stringifyTerms();
     }
-  }, [terms, prizes, sweepstakesName, startDate, endDate, id]);
+  }, [
+    terms,
+    prizes,
+    sweepstakesName,
+    startDate,
+    endDate,
+    regionalRestriction,
+    formFields,
+    id
+  ]);
 
   const handleSave = useCallback(async () => {
     // Trigger validation for terms fields to get current errors
