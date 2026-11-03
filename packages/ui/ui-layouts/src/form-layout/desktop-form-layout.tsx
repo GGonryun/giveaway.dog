@@ -78,7 +78,7 @@ const DesktopTitle: React.FC = () => {
 };
 
 const DesktopActions: React.FC = () => {
-  const { action, hasErrors, onCancel } = useUnifiedFormLayout();
+  const { action, formId, hasErrors, onCancel } = useUnifiedFormLayout();
   const { disabled } = useUnifiedFormLayout();
   return (
     <div className="flex-1 flex justify-end gap-2">
@@ -94,6 +94,7 @@ const DesktopActions: React.FC = () => {
       </Button>
       <Button
         type="submit"
+        form={formId}
         variant={
           action === 'create'
             ? 'default'

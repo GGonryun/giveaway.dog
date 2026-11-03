@@ -12,6 +12,7 @@ import {
   GiveawayState,
   PREVIEW_GIVEAWAY_STATES
 } from '@giveaway/sweepstakes-model/schemas';
+import { defaultTermInputOptions } from '@giveaway/sweepstakes-model/terms';
 import { PreviewStateContext } from '@giveaway/sweepstakes-editor-core/contexts/preview-state-context';
 import {
   mockParticipant,
@@ -339,12 +340,24 @@ describe('SweepstakesSharedFormPreview', () => {
       expect(lastProps().sweepstakes.terms).toMatchObject({ type: 'TEMPLATE' });
     });
 
-    it.fails('keeps the sponsor name of the host in template terms', () => {
+    it('keeps the sponsor name of the host in template terms', () => {
       renderShared({
         setup: { name: 'Summer Giveaway' },
         terms: { type: 'TEMPLATE', sponsorName: 'Acme Inc' }
       });
       expect(lastProps().sweepstakes.terms).toMatchObject({
+        sponsorName: 'Acme Inc'
+      });
+    });
+
+    it('fills the template fields that the host left out with the defaults', () => {
+      renderShared({
+        setup: { name: 'Summer Giveaway' },
+        terms: { type: 'TEMPLATE', sponsorName: 'Acme Inc' }
+      });
+      expect(lastProps().sweepstakes.terms).toEqual({
+        ...defaultTermInputOptions,
+        type: 'TEMPLATE',
         sponsorName: 'Acme Inc'
       });
     });

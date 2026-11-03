@@ -1,6 +1,14 @@
 import { toBrowsePageUrl } from './browse-url';
 import { widetype } from '@giveaway/util-types/widetype';
-import { TermsTemplateSchema } from './schemas';
+import {
+  GiveawayFormAudience,
+  RegionalRestrictionSchema,
+  TermsTemplateSchema
+} from './schemas';
+import {
+  AgeSweepstakesFormFieldSchema,
+  SweepstakesFormFieldSchema
+} from '@giveaway/custom-fields-model/schemas';
 import pluralize from 'pluralize';
 
 type GiveawaySection =
@@ -110,6 +118,35 @@ By entering, participants release and hold harmless the Sponsor and its affiliat
   agreementToRules: `By entering, you accept these Official Rules and agree to be bound by them, including all eligibility requirements and Sponsor decisions, which are final.`,
 
   termsAndConditions: `Sponsor reserves the right to cancel, modify, or suspend the Promotion in the event of fraud, technical failure, or any other factor beyond its reasonable control. Sponsor may disqualify any participant found violating these terms.`
+});
+
+export const toEligibilityRegions = (
+  restriction: RegionalRestrictionSchema
+): string => {
+  if (!restriction) return 'Global';
+
+  const regions = restriction.regions.join(', ');
+
+  return restriction.filter === 'INCLUDE'
+    ? `to residents of: ${regions}`
+    : `globally (excluding: ${regions})`;
+};
+
+export const toEligibilityAge = (
+  formFields: SweepstakesFormFieldSchema[]
+): string | undefined => {
+  const field = formFields.find(
+    (field): field is AgeSweepstakesFormFieldSchema => field.type === 'AGE'
+  );
+
+  return field ? `${field.minimum}` : undefined;
+};
+
+export const toEligibilityTermOptions = (
+  audience: Pick<GiveawayFormAudience, 'regionalRestriction' | 'formFields'>
+): Pick<SweepstakesTermOptions, 'eligibilityRegions' | 'eligibilityAge'> => ({
+  eligibilityRegions: toEligibilityRegions(audience.regionalRestriction),
+  eligibilityAge: toEligibilityAge(audience.formFields)
 });
 
 export const defaultTermInputOptions: TermsTemplateSchema = {
