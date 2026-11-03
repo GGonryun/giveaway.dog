@@ -22,8 +22,9 @@
   },
   "scripts": {
     "test": "vitest run",
-    "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:unit": "vitest run --project server --project frontend",
+    "test:server": "vitest run --project server",
+    "test:frontend": "vitest run --project frontend"
   },
   "dependencies": {
     "@dnd-kit/core": "catalog:",
@@ -49,9 +50,12 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-dom": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
+    "@testing-library/react": "catalog:",
+    "@testing-library/user-event": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "typescript": "catalog:",

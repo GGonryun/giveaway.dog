@@ -38,6 +38,21 @@ export const refineSweepstakeTasks = async (
   });
 };
 
+export const refineSweepstakesFormFields = ({
+  form,
+  ctx
+}: Pick<RefineSweepstakesTaskArgs, 'form' | 'ctx'>) => {
+  form.audience.formFields.forEach((field, index) => {
+    if (field.type === 'AGE' && field.minimum == null) {
+      ctx.addIssue({
+        path: ['audience', 'formFields', index, 'minimum'],
+        code: z.ZodIssueCode.custom,
+        message: 'Minimum age is required'
+      });
+    }
+  });
+};
+
 const globalValidator = (args: ValidateSweepstakeTaskOptions) => {
   const { task, form, index, ctx } = args;
 
