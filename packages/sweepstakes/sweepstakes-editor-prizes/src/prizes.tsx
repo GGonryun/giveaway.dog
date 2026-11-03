@@ -70,7 +70,7 @@ export const Prizes = () => {
       if (open) {
         setOpen((prev) => [...prev, id]);
       } else {
-        setOpen((prev) => prev.filter((id) => id !== id));
+        setOpen((prev) => prev.filter((openId) => openId !== id));
       }
     };
   };

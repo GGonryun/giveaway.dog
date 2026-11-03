@@ -216,16 +216,13 @@ describe('Prizes', () => {
       expect(screen.queryByLabelText('Prize name')).not.toBeInTheDocument();
     });
 
-    it.fails(
-      'keeps the other prizes expanded when one prize is collapsed',
-      async () => {
-        renderPrizes([giftCard, stickers]);
-        await clickIcon('Prize 1', 'chevron-down');
-        await clickIcon('Prize 2', 'chevron-down');
-        await clickIcon('Prize 1', 'chevron-up');
+    it('keeps the other prizes expanded when one prize is collapsed', async () => {
+      renderPrizes([giftCard, stickers]);
+      await clickIcon('Prize 1', 'chevron-down');
+      await clickIcon('Prize 2', 'chevron-down');
+      await clickIcon('Prize 1', 'chevron-up');
 
-        expect(screen.getByLabelText('Prize name')).toHaveValue('Sticker Pack');
-      }
-    );
+      expect(screen.getByLabelText('Prize name')).toHaveValue('Sticker Pack');
+    });
   });
 });
