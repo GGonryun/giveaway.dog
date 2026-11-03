@@ -28,12 +28,6 @@ export const BotEnforcementField: React.FC<BotEnforcementFieldProps> = ({
   const normalizedValue = clampToNearestEnforcementLevel(value);
   const enforcementLevel = getEnforcementLevel(normalizedValue);
 
-  React.useEffect(() => {
-    if (value !== normalizedValue) {
-      onChange(normalizedValue);
-    }
-  }, [value, normalizedValue, onChange]);
-
   return (
     <div className="space-y-4">
       <ToggleGroup
@@ -42,8 +36,6 @@ export const BotEnforcementField: React.FC<BotEnforcementFieldProps> = ({
         onValueChange={(newValue) => {
           if (newValue) {
             onChange(parseInt(newValue));
-          } else {
-            onChange(normalizedValue);
           }
         }}
         className="grid grid-cols-4 gap-2 w-full"

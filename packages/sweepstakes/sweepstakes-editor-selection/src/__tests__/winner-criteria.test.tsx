@@ -69,10 +69,17 @@ describe('WinnerCriteria', () => {
       expect(screen.getByRole('radio', { name: 'Maximum' })).toBeChecked();
     });
 
-    it('rounds a stored quality score to the nearest level', () => {
+    it('selects the nearest level without changing a stored quality score between levels', () => {
       const { form } = renderCriteria({ minQualityScore: 60 });
-      expect(form.getValues('criteria.minQualityScore')).toBe(50);
+      expect(form.getValues('criteria.minQualityScore')).toBe(60);
+      expect(form.formState.isDirty).toBe(false);
       expect(screen.getByRole('radio', { name: 'Moderate' })).toBeChecked();
+    });
+
+    it('keeps a stored quality score between levels when the selected level is clicked again', async () => {
+      const { form } = renderCriteria({ minQualityScore: 60 });
+      await userEvent.click(screen.getByRole('radio', { name: 'Moderate' }));
+      expect(form.getValues('criteria.minQualityScore')).toBe(60);
     });
 
     it('explains the quality signals in the help dialog', async () => {

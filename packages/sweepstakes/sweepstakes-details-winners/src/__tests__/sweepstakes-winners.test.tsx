@@ -315,7 +315,7 @@ describe('SweepstakesWinners', () => {
       expect(minTasks).toHaveValue(12);
     });
 
-    it('snaps a quality score between enforcement levels to the nearest level', async () => {
+    it('keeps a quality score between enforcement levels unless a level is picked', async () => {
       let finishSaving = () => {};
       vi.mocked(updateWinnerCriteria).mockReturnValue(
         new Promise((resolve) => {
@@ -324,8 +324,8 @@ describe('SweepstakesWinners', () => {
               ok: true,
               data: {
                 minTasksCompleted: 1,
-                minQualityScore: 75,
-                allowMultipleWins: false,
+                minQualityScore: 70,
+                allowMultipleWins: true,
                 allowUserSelection: false,
                 externalPlatforms: null
               }
@@ -335,12 +335,21 @@ describe('SweepstakesWinners', () => {
       renderWinners({ criteria: buildCriteria({ minQualityScore: 70 }) });
       const { user, dialog } = await openEditor();
 
+      expect(
+        within(dialog).getByRole('radio', { name: 'Maximum' })
+      ).toBeChecked();
+      await user.click(
+        within(dialog).getByRole('switch', {
+          name: 'Allow users to win multiple prizes'
+        })
+      );
       await user.click(
         within(dialog).getByRole('button', { name: 'Save Changes' })
       );
 
       expect(vi.mocked(updateWinnerCriteria).mock.lastCall?.[0]).toMatchObject({
-        minQualityScore: 75
+        minQualityScore: 70,
+        allowMultipleWins: true
       });
 
       await act(async () => finishSaving());
