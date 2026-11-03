@@ -1,7 +1,6 @@
 import type { APIRequestContext, Page, TestInfo } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
 const BONUS = 'Claim a free entry';
@@ -117,18 +116,17 @@ test.describe('regional restrictions', () => {
     await expect(page.getByText('Your entries: 1')).toBeVisible();
   });
 
-  test(
-    'the terms name the countries of the restriction',
-    knownBug(29),
-    async ({ page, request }, testInfo) => {
-      const giveaway = await seedRegionGiveaway(request, testInfo, 'INCLUDE');
+  test('the terms name the countries of the restriction', async ({
+    page,
+    request
+  }, testInfo) => {
+    const giveaway = await seedRegionGiveaway(request, testInfo, 'INCLUDE');
 
-      await page.goto(`/browse/${giveaway.id}`);
-      await page.getByRole('button', { name: 'Terms & Conditions' }).click();
+    await page.goto(`/browse/${giveaway.id}`);
+    await page.getByRole('button', { name: 'Terms & Conditions' }).click();
 
-      const terms = page.getByRole('dialog', { name: 'Terms & Conditions' });
-      await expect(terms).toContainText('United States');
-      await expect(terms).not.toContainText('country:US');
-    }
-  );
+    const terms = page.getByRole('dialog', { name: 'Terms & Conditions' });
+    await expect(terms).toContainText('United States');
+    await expect(terms).not.toContainText('country:US');
+  });
 });
