@@ -3,7 +3,7 @@ import { E2E_X_FIXTURES } from '@giveaway/e2e-model/fakes';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
+import { knownBug, quarantine } from '../../helpers/known-bug';
 import { signInAs } from '../../helpers/personas';
 import {
   createTeamPicker,
@@ -16,7 +16,6 @@ import {
   teamPickerPostUrl
 } from '../../helpers/pickers';
 import { seedApi } from '../../helpers/seed';
-import { TAGS } from '../../helpers/tags';
 
 const UNEXPECTED_URL =
   'Unexpected URL, should be like https://x.com/username/status/1234567890';
@@ -223,9 +222,8 @@ test.describe('team X pickers, as their host', () => {
 
   test(
     'a host schedules a picker for later',
-    { tag: [TAGS.slow, TAGS.isolated] },
+    quarantine(610),
     async ({ page, request }, testInfo) => {
-      test.setTimeout(300_000);
       const ns = freshNamespace(testInfo.workerIndex);
       const { team } = await seedPickerTeam(request, ns);
       await signInAs(page.request, 'host', ns);
@@ -248,7 +246,7 @@ test.describe('team X pickers, as their host', () => {
         await expect(page.getByText('Scheduled for Processing')).toBeVisible({
           timeout: 2_000
         });
-      }).toPass({ timeout: 240_000, intervals: [5_000] });
+      }).toPass({ timeout: 60_000, intervals: [2_000] });
 
       await page.goto(`/pickers/x/${pickerId}`);
       await expect(

@@ -8,8 +8,6 @@ export const APP_URL = process.env.E2E_APP_URL || BASE_URL;
 
 export const PRODUCTION_CHECKS = process.env.E2E_PRODUCTION_CHECKS === '1';
 
-export const SKIP_ISOLATED = process.env.E2E_ISOLATED === 'exclude';
-
 export const E2E_SECRET = process.env.E2E_LOGIN_SECRET ?? '';
 
 export const BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET ?? '';
