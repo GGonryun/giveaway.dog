@@ -11833,9 +11833,6 @@ importers:
       '@giveaway/auth-session-ui':
         specifier: workspace:*
         version: link:../../auth/auth-session-ui
-      '@giveaway/custom-fields-model':
-        specifier: workspace:*
-        version: link:../../participants/custom-fields-model
       '@giveaway/integration-icons':
         specifier: workspace:*
         version: link:../../integrations/core/integration-icons
