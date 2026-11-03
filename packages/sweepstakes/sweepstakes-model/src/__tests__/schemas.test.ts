@@ -563,6 +563,14 @@ describe('sweepstakesWinnerCriteriaSchema', () => {
     expect(messagesOf(result)).toEqual(['Minimum tasks must be at least 1']);
   });
 
+  it('rejects a task count that is not a number with a readable message', () => {
+    const result = sweepstakesWinnerCriteriaSchema.safeParse({
+      minTasksCompleted: NaN
+    });
+
+    expect(messagesOf(result)).toEqual(['Minimum tasks must be at least 1']);
+  });
+
   it('rejects a fractional task count', () => {
     const result = sweepstakesWinnerCriteriaSchema.safeParse({
       minTasksCompleted: 1.5

@@ -192,7 +192,7 @@ export type SweepstakesVisibilitySchema = z.infer<
 
 export const sweepstakesWinnerCriteriaSchema = z.object({
   minTasksCompleted: z
-    .number()
+    .number({ invalid_type_error: 'Minimum tasks must be at least 1' })
     .int()
     .min(1, 'Minimum tasks must be at least 1')
     .default(1),
