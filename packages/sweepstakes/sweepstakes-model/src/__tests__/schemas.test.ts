@@ -1144,6 +1144,36 @@ describe('giveawayFormSchema', () => {
     ]);
   });
 
+  it('rejects an age field without a minimum when validation is on', () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+
+    const result = giveawayFormSchema({
+      validate: true,
+      maxLoyalty: 0
+    }).safeParse(
+      validForm({
+        audience: {
+          allowedIdentities: ['EMAIL'],
+          regionalRestriction: null,
+          formFields: [
+            {
+              id: 'age',
+              type: 'AGE',
+              label: 'I am at least 16 years of age (required)',
+              required: true,
+              minimum: null,
+              maximum: null
+            }
+          ]
+        }
+      })
+    );
+
+    expect(pathsOf(result)).toEqual([['audience', 'formFields', 0, 'minimum']]);
+    expect(messagesOf(result)).toEqual(['Minimum age is required']);
+  });
+
   it('passes maxLoyalty through to the task refinement', () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);

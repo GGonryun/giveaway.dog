@@ -3,10 +3,5 @@
     "@typescript-eslint/no-explicit-any": {
       "count": 5
     }
-  },
-  "packages/participants/custom-fields-ui/src/form-field.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
   }
 }
