@@ -80,7 +80,7 @@ describe('TermsModal', () => {
       );
     });
 
-    it('lists included regions by their raw codes', async () => {
+    it('lists included regions by their names', async () => {
       renderTerms({
         audience: {
           regionalRestriction: {
@@ -91,11 +91,11 @@ describe('TermsModal', () => {
       });
       const { dialog } = await openTerms();
       expect(dialog).toHaveTextContent(
-        'The Promotion is open to residents of: country:US, country:CA'
+        'The Promotion is open to residents of: United States of America, Canada'
       );
     });
 
-    it('lists excluded regions by their raw codes', async () => {
+    it('lists excluded regions by their names', async () => {
       renderTerms({
         audience: {
           regionalRestriction: { filter: 'EXCLUDE', regions: ['continent:EU'] }
@@ -103,7 +103,7 @@ describe('TermsModal', () => {
       });
       const { dialog } = await openTerms();
       expect(dialog).toHaveTextContent(
-        'The Promotion is open globally (excluding: continent:EU)'
+        'The Promotion is open globally (excluding: Europe)'
       );
     });
 
@@ -115,12 +115,13 @@ describe('TermsModal', () => {
       expect(dialog).toHaveTextContent('to individuals 21+ years of age');
     });
 
-    it('prints null when the age field has no minimum', async () => {
+    it('leaves out the age clause when the age field has no minimum', async () => {
       renderTerms({
         audience: { formFields: [buildAgeField({ minimum: null })] }
       });
       const { dialog } = await openTerms();
-      expect(dialog).toHaveTextContent('to individuals null+ years of age');
+      expect(dialog).toHaveTextContent('to all individuals');
+      expect(dialog).not.toHaveTextContent('null');
     });
   });
 

@@ -17,6 +17,7 @@ import {
 import { useGiveawayParticipation } from './giveaway-participation-context';
 import { date } from '@giveaway/util-time/date';
 import { SweepstakesFormFieldSchema } from '@giveaway/custom-fields-model/schemas';
+import { toRegionName } from '@giveaway/sweepstakes-model/schemas';
 import { MinimalTipTapPreview } from '@giveaway/ui-rich-text/minimal-tiptap-preview';
 
 interface TermsModalProps {
@@ -41,7 +42,8 @@ export const TermsModal: React.FC<TermsModalProps> = ({ children }) => {
     const getEligibilityRegions = () => {
       if (!sweepstakes.audience.regionalRestriction) return 'Global';
 
-      const regions = sweepstakes.audience.regionalRestriction.regions;
+      const regions =
+        sweepstakes.audience.regionalRestriction.regions.map(toRegionName);
       const filter = sweepstakes.audience.regionalRestriction.filter;
 
       if (filter === 'INCLUDE') {
@@ -103,5 +105,9 @@ const getEligibilityAge = (
 ): string | undefined => {
   const field = formFields.find((field) => field.type === 'AGE');
 
-  return field ? `${field.minimum}` : undefined;
+  if (!field || field.minimum === null || field.minimum === undefined) {
+    return undefined;
+  }
+
+  return `${field.minimum}`;
 };
