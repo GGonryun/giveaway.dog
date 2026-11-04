@@ -147,6 +147,7 @@ test.describe('editing a published giveaway', () => {
       endedGiveaway({
         ns: freshNamespace(testInfo.workerIndex),
         team: team.slug,
+        startsIn: -2 * 24 * 60 * 60,
         prizes: [{ name: 'Golden Bone', quota: 2 }],
         entries: eligibleEntries(['participant', 'participant2', 'newbie']),
         draws: [

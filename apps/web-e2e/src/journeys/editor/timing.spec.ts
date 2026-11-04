@@ -16,8 +16,13 @@ const END_DATE_ISSUE = 'timing.endDate';
 const endDateField = (page: Page) =>
   page.getByRole('button', { name: 'End Date', exact: true });
 
+const escapeRegExp = (text: string) =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const expectEndDateIssue = async (page: Page, message: string) => {
-  await expect(endDateField(page)).toHaveAccessibleDescription(message);
+  await expect(endDateField(page)).toHaveAccessibleDescription(
+    new RegExp(`${escapeRegExp(message)}$`)
+  );
   await headerButton(page, 'Publish').click();
   const dialog = issuesDialog(page);
   await expect(
