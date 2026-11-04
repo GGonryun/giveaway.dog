@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { UNKNOWN_EMAIL } from '@giveaway/app-config/settings';
 import { DisqualificationDialog } from '../disqualification-dialog';
 
 const renderDialog = (
@@ -55,9 +56,21 @@ describe('DisqualificationDialog', () => {
     expect(screen.queryByText('Draw Date')).not.toBeInTheDocument();
   });
 
-  it('does not show the participant email even when given', () => {
+  it('shows the obfuscated participant email when given', () => {
     renderDialog({ participantEmail: 'chad@example.com' });
-    expect(screen.queryByText(/chad@example.com/)).not.toBeInTheDocument();
+    expect(screen.getByText('c***d@example.com')).toBeInTheDocument();
+    expect(screen.queryByText('chad@example.com')).not.toBeInTheDocument();
+  });
+
+  it('shows the unknown email placeholder when the email is null', () => {
+    renderDialog({ participantEmail: null });
+    expect(screen.getByText(UNKNOWN_EMAIL)).toBeInTheDocument();
+  });
+
+  it('shows no email line without the prop', () => {
+    renderDialog();
+    expect(screen.queryByText(UNKNOWN_EMAIL)).not.toBeInTheDocument();
+    expect(screen.queryByText(/@/)).not.toBeInTheDocument();
   });
 
   it('closes from the footer button', async () => {
