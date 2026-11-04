@@ -74,13 +74,6 @@ exports[`SweepstakesStatusComponent > snapshots > matches the snapshot of a runn
             >
               <span>
                 Your sweepstakes will appear on the browse page and can be discovered and accessed by anyone.
-                <br />
-                <br />
-                <span
-                  class="text-xs font-semibold"
-                >
-                  Note: Visibility changes can take up to an hour to fully propagate.
-                </span>
               </span>
             </div>
           </div>
@@ -556,13 +549,6 @@ exports[`SweepstakesStatusComponent > snapshots > matches the snapshot of an exp
             >
               <span>
                 Your sweepstakes is only accessible to other people within your organization. It will not appear on the public browse page.
-                <br />
-                <br />
-                <span
-                  class="text-xs font-semibold"
-                >
-                  Note: Visibility changes can take up to an hour to fully propagate.
-                </span>
               </span>
             </div>
           </div>

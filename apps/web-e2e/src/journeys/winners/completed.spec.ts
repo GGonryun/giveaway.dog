@@ -16,7 +16,6 @@ import {
   seedWorkerTeam,
   type SeededSweepstakes
 } from '../../helpers/seed';
-import { TAGS } from '../../helpers/tags';
 import {
   eligibleEntries,
   endedGiveaway,

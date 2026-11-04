@@ -181,12 +181,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                     Your sweepstakes is only accessible to other people within
                     your organization. It will not appear on the public browse
                     page.
-                    <br />
-                    <br />
-                    <span className="text-xs font-semibold">
-                      Note: Visibility changes can take up to an hour to fully
-                      propagate.
-                    </span>
                   </span>
                 </AlertDescription>
               </div>
@@ -222,12 +216,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   <span>
                     Your sweepstakes can be accessed by anyone with the direct
                     link, but will not appear on the public browse page.
-                    <br />
-                    <br />
-                    <span className="text-xs font-semibold">
-                      Note: Visibility changes can take up to an hour to fully
-                      propagate.
-                    </span>
                   </span>
                 </AlertDescription>
               </div>
@@ -263,12 +251,6 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   <span>
                     Your sweepstakes will appear on the browse page and can be
                     discovered and accessed by anyone.
-                    <br />
-                    <br />
-                    <span className="text-xs font-semibold">
-                      Note: Visibility changes can take up to an hour to fully
-                      propagate.
-                    </span>
                   </span>
                 </AlertDescription>
               </div>
