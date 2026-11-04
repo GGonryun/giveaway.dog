@@ -7,6 +7,8 @@ import { SweepstakesDetailsTabs } from '@giveaway/sweepstakes-details-shell/swee
 import getSweepstakesStatus from '@giveaway/sweepstakes-editor-server/get-sweepstakes-status';
 import { EDITABLE_DERIVED_STATUS } from '@giveaway/sweepstakes-model/sweepstakes';
 import { SweepstakesPageProps } from '@giveaway/sweepstakes-model/pages';
+import getDataRetention from '@giveaway/sweepstakes-editor-server/get-data-retention';
+import { DataRetentionNotice } from '@giveaway/sweepstakes-details-shell/data-retention-notice';
 
 interface SweepstakesDetailPageProps {
   params: Promise<SweepstakesPageProps>;
@@ -19,7 +21,10 @@ export default async function Layout({
 }: SweepstakesDetailPageProps) {
   const { id } = await params;
 
-  const status = await getSweepstakesStatus({ id });
+  const [status, retention] = await Promise.all([
+    getSweepstakesStatus({ id }),
+    getDataRetention({ id })
+  ]);
   if (!status.ok) {
     return <div>Failed to load sweepstakes status: {status.data.code}</div>;
   }
@@ -31,6 +36,7 @@ export default async function Layout({
       title="Sweepstakes"
       action={isEditable && <EditGiveawayButton id={id} />}
     >
+      {retention.ok && <DataRetentionNotice {...retention.data} />}
       <SweepstakesDetailsTabs id={id}>{children}</SweepstakesDetailsTabs>
     </Outline>
   );

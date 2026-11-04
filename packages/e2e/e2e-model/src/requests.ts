@@ -136,11 +136,11 @@ export type E2eSweepstakesPreset = (typeof E2E_SWEEPSTAKES_PRESETS)[number];
 type E2eOffsets = { startsIn: number; endsIn: number };
 
 const DEFAULT_OFFSETS: Record<E2eSweepstakesPreset, E2eOffsets> = {
-  draft: { startsIn: DAY, endsIn: 8 * DAY },
-  scheduled: { startsIn: DAY, endsIn: 8 * DAY },
-  running: { startsIn: -HOUR, endsIn: 7 * DAY },
-  ended: { startsIn: -8 * DAY, endsIn: -HOUR },
-  completed: { startsIn: -8 * DAY, endsIn: -HOUR }
+  draft: { startsIn: DAY, endsIn: 6 * DAY },
+  scheduled: { startsIn: DAY, endsIn: 6 * DAY },
+  running: { startsIn: -HOUR, endsIn: 6 * DAY },
+  ended: { startsIn: -6 * DAY, endsIn: -HOUR },
+  completed: { startsIn: -6 * DAY, endsIn: -HOUR }
 };
 
 const PRESET_RULES: Record<

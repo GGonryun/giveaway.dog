@@ -32,7 +32,7 @@ vi.mock('@giveaway/jobs/schedule', () => ({ requestJobRun }));
 
 const NOW = new Date('2025-06-15T12:00:00.000Z');
 const START = new Date('2025-06-20T00:00:00.000Z');
-const END = new Date('2025-06-30T00:00:00.000Z');
+const END = new Date('2025-06-26T00:00:00.000Z');
 
 const db = asPrismaClient();
 
@@ -319,6 +319,23 @@ describe('applySweepstakesChanges', () => {
       });
       expect(prismaMock.$transaction).not.toHaveBeenCalled();
       expect(prismaMock.sweepstakes.delete).not.toHaveBeenCalled();
+    });
+
+    it('refuses a giveaway longer than the limit of the team tier', async () => {
+      await expect(
+        apply({
+          id: SWEEPSTAKES_ID,
+          timing: {
+            startDate: START,
+            endDate: new Date(START.getTime() + 8 * 24 * 60 * 60 * 1000)
+          }
+        })
+      ).rejects.toMatchObject({
+        code: 'FORBIDDEN',
+        message:
+          'A giveaway of a Free team runs for at most 7 days. Upgrade the team to run a longer giveaway.'
+      });
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
     });
   });
 

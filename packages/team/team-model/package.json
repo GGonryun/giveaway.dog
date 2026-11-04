@@ -19,6 +19,7 @@
     "./social-links": "./src/social-links.ts",
     "./team/cookies": "./src/team/cookies.ts",
     "./team/data": "./src/team/data.ts",
+    "./team/limits": "./src/team/limits.ts",
     "./team/util": "./src/team/util.ts",
     "./teams": "./src/teams.ts"
   },

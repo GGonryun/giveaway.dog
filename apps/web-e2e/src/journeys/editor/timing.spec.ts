@@ -16,8 +16,13 @@ const END_DATE_ISSUE = 'timing.endDate';
 const endDateField = (page: Page) =>
   page.getByRole('button', { name: 'End Date', exact: true });
 
+const escapeRegExp = (text: string) =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const expectEndDateIssue = async (page: Page, message: string) => {
-  await expect(endDateField(page)).toHaveAccessibleDescription(message);
+  await expect(endDateField(page)).toHaveAccessibleDescription(
+    new RegExp(`${escapeRegExp(message)}$`)
+  );
   await headerButton(page, 'Publish').click();
   const dialog = issuesDialog(page);
   await expect(
@@ -43,15 +48,15 @@ test.describe('the timing of a giveaway in the editor', () => {
     await expectEndDateIssue(page, 'End date must be after start date');
   });
 
-  test('a host cannot save a giveaway that runs over 90 days', async ({
+  test('[TIER-001] a host of a Free team cannot save a giveaway that runs over 7 days', async ({
     page,
     request
   }, testInfo) => {
     const { team } = await seedWorkerTeam(request, testInfo);
     await createDraft(page, team.slug);
 
-    await setTiming(page, { startsIn: 0, endsIn: 95 });
-    await expectEndDateIssue(page, 'Duration cannot exceed 90 days');
+    await setTiming(page, { startsIn: 0, endsIn: 9 });
+    await expectEndDateIssue(page, 'Duration cannot exceed 7 days');
   });
 
   test('a host cannot save an end date in the past', async ({

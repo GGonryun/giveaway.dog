@@ -20,6 +20,7 @@ const buildTask = ({
   ...storedTask('task-1', { type: 'BONUS_TASK' }),
   sweepstakes: {
     id: 'sweep-1',
+    dataDeletedAt: null,
     status,
     teamId: 'team-1',
     createdAt: START,

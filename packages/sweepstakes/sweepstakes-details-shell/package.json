@@ -16,6 +16,7 @@
     }
   },
   "exports": {
+    "./data-retention-notice": "./src/data-retention-notice.tsx",
     "./sweepstakes-loading-skeleton": "./src/sweepstakes-loading-skeleton.tsx",
     "./sweepstakes-tabs": "./src/sweepstakes-tabs.tsx"
   },
@@ -26,10 +27,13 @@
     "test:snapshot": "vitest run --project snapshot"
   },
   "dependencies": {
+    "@giveaway/db-model": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/sweepstakes-routes": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
     "@giveaway/ui-primitives": "workspace:*",
     "@giveaway/util-types": "workspace:*",
+    "date-fns": "catalog:",
     "sonner": "catalog:"
   },
   "peerDependencies": {

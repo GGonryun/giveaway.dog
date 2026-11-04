@@ -1,8 +1,10 @@
 'use client';
 
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
+import Link from 'next/link';
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,8 +30,47 @@ import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { MinimalTiptap } from '@giveaway/ui-rich-text/minimal-tiptap-editor';
 import { useUnifiedFormLayout } from '@giveaway/ui-layouts/form-layout/use-unified-form-layout';
 import { UnifiedSectionHeader } from '@giveaway/ui-layouts/form-layout/section-header';
+import { TeamTier } from '@giveaway/db-model';
+import {
+  exceedsSweepstakesDuration,
+  sweepstakesDurationMessage
+} from '@giveaway/team-model/team/limits';
 
-export const Setup = () => {
+const toDate = (value: unknown): Date | null => {
+  if (!(value instanceof Date) && typeof value !== 'string') return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+export const DurationLimit: React.FC<{ tier: TeamTier }> = ({ tier }) => {
+  const form = useFormContext<GiveawayFormSchema>();
+  const [startDate, endDate] = useWatch({
+    control: form.control,
+    name: ['timing.startDate', 'timing.endDate']
+  });
+  const start = toDate(startDate);
+  const end = toDate(endDate);
+  const exceeds =
+    start !== null &&
+    end !== null &&
+    exceedsSweepstakesDuration({ tier, startDate: start, endDate: end });
+
+  return (
+    <FormDescription data-slot="duration-limit">
+      {sweepstakesDurationMessage(tier)}.
+      {exceeds && tier !== TeamTier.ELITE && tier !== TeamTier.ALPHA && (
+        <>
+          {' '}
+          <Link href="/pricing" className="text-primary underline">
+            Upgrade to run a longer giveaway
+          </Link>
+        </>
+      )}
+    </FormDescription>
+  );
+};
+
+export const Setup: React.FC<{ tier?: TeamTier }> = ({ tier }) => {
   const form = useFormContext<GiveawayFormSchema>();
   const { action } = useUnifiedFormLayout();
 
@@ -111,6 +152,7 @@ export const Setup = () => {
             <FormControl>
               <DateTimePicker hourCycle={12} {...field} />
             </FormControl>
+            {tier && <DurationLimit tier={tier} />}
             <FormMessage />
           </FormItem>
         )}

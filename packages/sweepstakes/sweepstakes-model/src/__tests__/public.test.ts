@@ -58,6 +58,7 @@ const task = (id: string, participantIds: string[]): Task => ({
 
 const sweepstakes = (overrides: Partial<Payload> = {}): Payload => ({
   id: 'sweep-1',
+  dataDeletedAt: null,
   status: 'ACTIVE',
   teamId: 'team-1',
   createdAt: CREATED_AT,

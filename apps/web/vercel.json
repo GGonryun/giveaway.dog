@@ -4,10 +4,17 @@
     {
       "path": "/api/jobs/process",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/jobs/retention",
+      "schedule": "23 10 * * *"
     }
   ],
   "functions": {
     "app/api/jobs/process/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/jobs/retention/route.ts": {
       "maxDuration": 300
     }
   }

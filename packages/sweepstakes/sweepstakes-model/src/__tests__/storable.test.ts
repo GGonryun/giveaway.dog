@@ -712,6 +712,7 @@ describe('toStorableSweepstakes', () => {
     overrides: Partial<TeamSweepstakesGetPayload> = {}
   ): TeamSweepstakesGetPayload => ({
     id: 'sweep-1',
+    dataDeletedAt: null,
     status: 'ACTIVE',
     teamId: 'team-1',
     createdAt: NOW,

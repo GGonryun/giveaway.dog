@@ -283,14 +283,15 @@ export const giveawayDesignSchema = z.object({
 export type GiveawayDesignSchema = z.infer<typeof giveawayDesignSchema>;
 
 export const baseGiveawayFormSchema = ({
-  validate
-}: Pick<GiveawayFormSchemaOptions, 'validate'>) =>
+  validate,
+  maxDurationDays = MAX_SWEEPSTAKE_DURATION_DAYS
+}: Pick<GiveawayFormSchemaOptions, 'validate' | 'maxDurationDays'>) =>
   z.object({
     setup: giveawayFormSetupSchema({ validate }),
     terms: giveawayFormTermsSchema,
     timing: timingSchema({
       validate: validate,
-      maxDurationDays: MAX_SWEEPSTAKE_DURATION_DAYS
+      maxDurationDays
     }),
     audience: giveawayAudienceSchema,
     tasks: giveawayFormTaskSchema,
@@ -307,25 +308,29 @@ export type BaseGiveawayFormSchema = z.infer<
 export type GiveawayFormSchemaOptions = {
   validate: boolean;
   maxLoyalty: number;
+  maxDurationDays?: number;
 };
 
 export const giveawayFormSchema = ({
   validate,
-  maxLoyalty
+  maxLoyalty,
+  maxDurationDays
 }: GiveawayFormSchemaOptions) => {
   if (!validate) {
     return baseGiveawayFormSchema({ validate });
   }
 
-  return baseGiveawayFormSchema({ validate }).superRefine((form, ctx) => {
-    refineSweepstakeTasks({
-      validate,
-      maxLoyalty,
-      form,
-      ctx
-    });
-    refineSweepstakesFormFields({ form, ctx });
-  });
+  return baseGiveawayFormSchema({ validate, maxDurationDays }).superRefine(
+    (form, ctx) => {
+      refineSweepstakeTasks({
+        validate,
+        maxLoyalty,
+        form,
+        ctx
+      });
+      refineSweepstakesFormFields({ form, ctx });
+    }
+  );
 };
 
 export type GiveawayFormSchema = z.infer<ReturnType<typeof giveawayFormSchema>>;

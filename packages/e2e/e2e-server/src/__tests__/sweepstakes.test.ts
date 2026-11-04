@@ -204,11 +204,11 @@ describe('seedE2eSweepstakes', () => {
   });
 
   it.each([
-    ['draft', 'DRAFT', DAY, 8 * DAY],
-    ['scheduled', 'ACTIVE', DAY, 8 * DAY],
-    ['running', 'ACTIVE', -HOUR, 7 * DAY],
-    ['ended', 'ACTIVE', -8 * DAY, -HOUR],
-    ['completed', 'ACTIVE', -8 * DAY, -HOUR]
+    ['draft', 'DRAFT', DAY, 6 * DAY],
+    ['scheduled', 'ACTIVE', DAY, 6 * DAY],
+    ['running', 'ACTIVE', -HOUR, 6 * DAY],
+    ['ended', 'ACTIVE', -6 * DAY, -HOUR],
+    ['completed', 'ACTIVE', -6 * DAY, -HOUR]
   ])(
     'publishes the %s preset with status %s and its dates',
     async (preset, status, start, end) => {
@@ -399,7 +399,7 @@ describe('seedE2eSweepstakes', () => {
       visibility: 'UNLISTED',
       slug: 'e2e-abc123-x',
       startDate: new Date(NOW.getTime() - HOUR),
-      endDate: new Date(NOW.getTime() + 7 * DAY),
+      endDate: new Date(NOW.getTime() + 6 * DAY),
       tasks: appliedInput().tasks,
       prizes: appliedInput().prizes,
       formFields: [],

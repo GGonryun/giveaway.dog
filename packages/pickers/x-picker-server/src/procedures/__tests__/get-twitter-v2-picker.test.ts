@@ -246,7 +246,7 @@ describe('getTwitterV2Picker', () => {
       });
 
       expect(expectOk(result)).toEqual({
-        ...withoutKeys(row, 'lastPostWithin'),
+        ...withoutKeys(row, 'lastPostWithin', 'dataDeletedAt'),
         users: [
           {
             ...withoutKeys(buildPickerUser(), 'pickerId'),

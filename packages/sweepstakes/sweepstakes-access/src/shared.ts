@@ -25,6 +25,7 @@ import {
 import { assertMinimumTeamTier } from '@giveaway/team-model/team/util';
 import { assertNotCompleted } from './completed';
 import { requestJobRun } from '@giveaway/jobs/schedule';
+import { assertSweepstakesDuration } from './duration';
 
 export const findUserSweepstakesQuery = ({
   userId,
@@ -149,6 +150,13 @@ export const applySweepstakesChanges = async ({
   }
 
   assertNotCompleted(sweepstakes);
+
+  await assertSweepstakesDuration({
+    db,
+    sweepstakes,
+    tier: team.tier,
+    timing: input.timing
+  });
 
   const status = input.status ?? sweepstakes.status;
 

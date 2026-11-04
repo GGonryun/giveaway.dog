@@ -16,7 +16,8 @@
     }
   },
   "exports": {
-    "./run-sweepstakes-jobs": "./src/run-sweepstakes-jobs.ts"
+    "./run-sweepstakes-jobs": "./src/run-sweepstakes-jobs.ts",
+    "./run-data-retention": "./src/run-data-retention.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -47,6 +48,7 @@
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",
     "@types/node": "catalog:",
+    "@vercel/blob": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
