@@ -4,6 +4,7 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { ApplicationError } from '@giveaway/util-errors';
 import { requirePermission, TeamPermission } from '@giveaway/team-permissions';
+import { cancelAutomatedPostRun } from './automated-post-workflow/start';
 
 export const deleteAutomatedPostJob = procedure()
   .authorization({ required: true })
@@ -56,6 +57,10 @@ export const deleteAutomatedPostJob = procedure()
         code: 'PRECONDITION_FAILED',
         message: 'Can only delete pending or failed jobs'
       });
+    }
+
+    if (job.runId) {
+      await cancelAutomatedPostRun(job.runId);
     }
 
     // Delete the job

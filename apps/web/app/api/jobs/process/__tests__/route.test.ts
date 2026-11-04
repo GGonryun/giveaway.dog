@@ -114,11 +114,18 @@ describe('GET /api/jobs/process', () => {
       });
     });
 
-    it('looks up at most five pending automated post jobs that are due, oldest first', async () => {
+    it('looks up at most five pending automated post jobs that are due, oldest first, and leaves the ones that a workflow runs for 15 minutes', async () => {
       await GET(authorizedRequest());
 
       expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalledWith({
-        where: { runAt: { lte: NOW }, status: { in: ['PENDING'] } },
+        where: {
+          runAt: { lte: NOW },
+          status: { in: ['PENDING'] },
+          OR: [
+            { runId: null },
+            { runAt: { lte: new Date(NOW.getTime() - 15 * 60 * 1000) } }
+          ]
+        },
         orderBy: { createdAt: 'asc' },
         take: 5
       });

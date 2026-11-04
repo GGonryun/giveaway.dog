@@ -16,6 +16,9 @@
     }
   },
   "exports": {
+    "./automated-post-workflow/start": "./src/automated-post-workflow/start.ts",
+    "./automated-post-workflow/steps": "./src/automated-post-workflow/steps.ts",
+    "./automated-post-workflow/workflow": "./src/automated-post-workflow/workflow.ts",
     "./delete-automated-post-job": "./src/delete-automated-post-job.ts",
     "./get-automated-post-jobs": "./src/get-automated-post-jobs.ts",
     "./run-automated-post-jobs": "./src/run-automated-post-jobs.ts",
@@ -30,6 +33,7 @@
   "dependencies": {
     "@giveaway/automation-model": "workspace:*",
     "@giveaway/bluesky-api": "workspace:*",
+    "@giveaway/db-client": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/discord-connect": "workspace:*",
     "@giveaway/jobs": "workspace:*",
@@ -42,10 +46,10 @@
     "@giveaway/x-api": "workspace:*",
     "nanoid": "catalog:",
     "server-only": "catalog:",
+    "workflow": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@giveaway/db-client": "workspace:*",
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/testing-integration": "workspace:*",
     "@giveaway/testing-postgres": "workspace:*",

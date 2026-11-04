@@ -7,9 +7,16 @@ import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
 type ScheduleInput = Parameters<typeof scheduleAutomatedPostJob>[0];
 
-const { requestJobRun } = vi.hoisted(() => ({ requestJobRun: vi.fn() }));
+const { requestJobRun, startAutomatedPostWorkflow } = vi.hoisted(() => ({
+  requestJobRun: vi.fn(),
+  startAutomatedPostWorkflow: vi.fn()
+}));
 
 vi.mock('@giveaway/jobs/schedule', () => ({ requestJobRun }));
+
+vi.mock('../automated-post-workflow/start', () => ({
+  startAutomatedPostWorkflow
+}));
 
 const NOW = new Date('2026-06-01T12:00:00.000Z');
 const START = new Date('2026-06-02T12:00:00.000Z');
@@ -55,6 +62,7 @@ describe('scheduleAutomatedPostJob', () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
     requestJobRun.mockReset();
+    startAutomatedPostWorkflow.mockReset();
   });
 
   afterEach(() => {
@@ -319,6 +327,25 @@ describe('scheduleAutomatedPostJob', () => {
       );
       expect(prismaMock.automatedPostJob.create).not.toHaveBeenCalled();
       expect(requestJobRun).not.toHaveBeenCalled();
+      expect(startAutomatedPostWorkflow).not.toHaveBeenCalled();
+    });
+
+    it('starts the workflow of the job after the job is created', async () => {
+      prismaMock.sweepstakes.findUnique.mockResolvedValue(sweepstakesRow());
+      prismaMock.integration.findFirst.mockResolvedValue({ id: 'bsky-int' });
+      prismaMock.automatedPostJob.create.mockResolvedValue({ id: 'job-1' });
+
+      await scheduleAutomatedPostJob(blueskyInput);
+
+      expect(startAutomatedPostWorkflow).toHaveBeenCalledExactlyOnceWith(
+        prismaMock,
+        'job-1'
+      );
+      expect(
+        startAutomatedPostWorkflow.mock.invocationCallOrder[0]
+      ).toBeGreaterThan(
+        prismaMock.automatedPostJob.create.mock.invocationCallOrder[0]
+      );
     });
 
     it('requests a job run after the job is created', async () => {

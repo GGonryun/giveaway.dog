@@ -23,6 +23,7 @@ import {
 
 import { processPostToDiscord } from '@giveaway/discord-connect/process-post-to-discord';
 import { toJobRetryAt } from '@giveaway/jobs/retry';
+import { WORKFLOW_JOB_GRACE_MS } from '@giveaway/jobs/schedule';
 
 const MAX_JOBS_PER_RUN = 5;
 const STUCK_JOB_TIMEOUT_MS = 10 * 60 * 1000;
@@ -54,7 +55,18 @@ export const runAutomatedPostJobs = async (
       status: {
         in: ['PENDING']
       },
-      ...(sweepstakesId ? { sweepstakesId } : {})
+      ...(sweepstakesId
+        ? { sweepstakesId }
+        : {
+            OR: [
+              { runId: null },
+              {
+                runAt: {
+                  lte: new Date(now.getTime() - WORKFLOW_JOB_GRACE_MS)
+                }
+              }
+            ]
+          })
     },
     orderBy: {
       createdAt: 'asc'
@@ -65,35 +77,58 @@ export const runAutomatedPostJobs = async (
   console.info(`Found ${pending.length} automated post jobs to process`);
   let processed = 0;
   for (const job of pending) {
-    const { count } = await db.automatedPostJob.updateMany({
-      where: {
-        id: job.id,
-        status: AutomatedPostJobStatus.PENDING,
-        runAt: { lte: now }
-      },
-      data: {
-        status: AutomatedPostJobStatus.IN_PROGRESS
-      }
-    });
-    if (count === 0) continue;
-    processed++;
-    try {
-      await processAutomatedPostJob({ db, job });
-    } catch (error) {
-      try {
-        await recordAutomatedPostJobFailure({ db, job, error });
-      } catch (recordError) {
-        console.error(
-          `Failed to record the failure of automated post job ${job.id}`,
-          recordError
-        );
-      }
+    if (await claimAndProcessAutomatedPostJob({ db, job, now })) {
+      processed++;
     }
   }
 
   return {
     processed
   };
+};
+
+export const runAutomatedPostJob = async (
+  db: PrismaClient,
+  { jobId }: { jobId: string }
+) => {
+  const job = await db.automatedPostJob.findUnique({ where: { id: jobId } });
+  if (!job) return false;
+  return claimAndProcessAutomatedPostJob({ db, job, now: new Date() });
+};
+
+const claimAndProcessAutomatedPostJob = async ({
+  db,
+  job,
+  now
+}: {
+  db: PrismaClient;
+  job: Prisma.AutomatedPostJobGetPayload<{}>;
+  now: Date;
+}) => {
+  const { count } = await db.automatedPostJob.updateMany({
+    where: {
+      id: job.id,
+      status: AutomatedPostJobStatus.PENDING,
+      runAt: { lte: now }
+    },
+    data: {
+      status: AutomatedPostJobStatus.IN_PROGRESS
+    }
+  });
+  if (count === 0) return false;
+  try {
+    await processAutomatedPostJob({ db, job });
+  } catch (error) {
+    try {
+      await recordAutomatedPostJobFailure({ db, job, error });
+    } catch (recordError) {
+      console.error(
+        `Failed to record the failure of automated post job ${job.id}`,
+        recordError
+      );
+    }
+  }
+  return true;
 };
 
 const recordAutomatedPostJobFailure = async ({

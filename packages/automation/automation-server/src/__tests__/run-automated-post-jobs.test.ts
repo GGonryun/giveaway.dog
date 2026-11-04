@@ -1,7 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { AutomatedPostJob } from '@giveaway/db-model';
 import { ApplicationError } from '@giveaway/util-errors';
-import { runAutomatedPostJobs } from '../run-automated-post-jobs';
+import {
+  runAutomatedPostJob,
+  runAutomatedPostJobs
+} from '../run-automated-post-jobs';
 import { prismaMock, asPrismaClient } from '@giveaway/testing-server/prisma';
 
 const db = asPrismaClient();
@@ -39,6 +42,7 @@ const jobRow = (
   status: 'PENDING',
   runAt: RUN_AT,
   attempts: 0,
+  runId: null,
   createdAt: RUN_AT,
   updatedAt: RUN_AT,
   request: {
@@ -223,13 +227,20 @@ describe('runAutomatedPostJobs', () => {
       expect(result).toEqual({ processed: 0 });
     });
 
-    it('fetches at most five due pending jobs, oldest first', async () => {
+    it('fetches at most five due pending jobs, oldest first, and leaves a job that a workflow runs for 15 minutes', async () => {
       prismaMock.automatedPostJob.findMany.mockResolvedValue([]);
 
       await runAutomatedPostJobs(db);
 
       expect(prismaMock.automatedPostJob.findMany).toHaveBeenCalledWith({
-        where: { runAt: { lte: NOW }, status: { in: ['PENDING'] } },
+        where: {
+          runAt: { lte: NOW },
+          status: { in: ['PENDING'] },
+          OR: [
+            { runId: null },
+            { runAt: { lte: new Date(NOW.getTime() - 15 * 60 * 1000) } }
+          ]
+        },
         orderBy: { createdAt: 'asc' },
         take: 5
       });
@@ -1058,5 +1069,81 @@ describe('runAutomatedPostJobs', () => {
         new Error('db down')
       );
     });
+  });
+});
+
+describe('runAutomatedPostJob', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+    vi.spyOn(console, 'info').mockImplementation(() => undefined);
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    prismaMock.automatedPostJob.updateMany.mockResolvedValue({ count: 1 });
+    mocks.processPostToDiscord.mockReset();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('returns false and posts nothing when the job no longer exists', async () => {
+    prismaMock.automatedPostJob.findUnique.mockResolvedValue(null);
+
+    await expect(runAutomatedPostJob(db, { jobId: 'job-3' })).resolves.toBe(
+      false
+    );
+
+    expect(prismaMock.automatedPostJob.findUnique).toHaveBeenCalledWith({
+      where: { id: 'job-3' }
+    });
+    expect(prismaMock.automatedPostJob.updateMany).not.toHaveBeenCalled();
+    expect(mocks.processPostToDiscord).not.toHaveBeenCalled();
+  });
+
+  it('claims the due job and posts it', async () => {
+    const job = discordJob();
+    prismaMock.automatedPostJob.findUnique.mockResolvedValue(job);
+    prismaMock.sweepstakesTiming.findUnique.mockResolvedValue(null);
+
+    await expect(runAutomatedPostJob(db, { jobId: 'job-3' })).resolves.toBe(
+      true
+    );
+
+    expect(prismaMock.automatedPostJob.updateMany).toHaveBeenCalledWith({
+      where: { id: 'job-3', status: 'PENDING', runAt: { lte: NOW } },
+      data: { status: 'IN_PROGRESS' }
+    });
+    expect(mocks.processPostToDiscord).toHaveBeenCalledWith({
+      db,
+      job: expect.objectContaining({ id: 'job-3', type: 'POST_TO_DISCORD' })
+    });
+  });
+
+  it('returns false and posts nothing when the claim fails', async () => {
+    prismaMock.automatedPostJob.findUnique.mockResolvedValue(discordJob());
+    prismaMock.automatedPostJob.updateMany.mockResolvedValue({ count: 0 });
+
+    await expect(runAutomatedPostJob(db, { jobId: 'job-3' })).resolves.toBe(
+      false
+    );
+    expect(mocks.processPostToDiscord).not.toHaveBeenCalled();
+  });
+
+  it('records a failed post and still returns true', async () => {
+    prismaMock.automatedPostJob.findUnique
+      .mockResolvedValueOnce(discordJob())
+      .mockResolvedValueOnce({ response: null } as never);
+    prismaMock.sweepstakesTiming.findUnique.mockResolvedValue(null);
+    mocks.processPostToDiscord.mockRejectedValue(
+      new ApplicationError({ code: 'NOT_FOUND', message: 'gone' })
+    );
+
+    await expect(runAutomatedPostJob(db, { jobId: 'job-3' })).resolves.toBe(
+      true
+    );
+    expect(prismaMock.automatedPostJob.update).toHaveBeenCalledWith(
+      failedUpdate('job-3', 'gone')
+    );
   });
 });
