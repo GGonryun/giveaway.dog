@@ -34,7 +34,10 @@ export const UnifiedFormFooter: React.FC = () => {
 
   const totalErrors = useMemo(() => formErrors.length, [formErrors]);
   const isValid = useMemo(() => totalErrors === 0, [totalErrors]);
-  const isCreating = useMemo(() => action === 'create', [action]);
+  const isCreating = useMemo(
+    () => action === 'create' || action === 'demo',
+    [action]
+  );
 
   return (
     <div className="bg-background border-t p-3">

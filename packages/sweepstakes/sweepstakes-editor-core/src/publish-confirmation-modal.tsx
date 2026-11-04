@@ -78,15 +78,17 @@ export const PublishConfirmationModal: React.FC<
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center gap-2">
-              {isDraft ? 'Ready to Publish?' : 'Save Changes?'}
+              {isDraft || isDemo ? 'Ready to Publish?' : 'Save Changes?'}
             </div>
           </DialogTitle>
           <DialogDescription className="text-left">
-            Your sweepstakes "{name}" will be{' '}
-            {isDraft
-              ? `published and go live ${formattedStartDate}`
-              : 'updated and changes will go live immediately'}
-            !
+            {isDemo
+              ? `Your sweepstakes "${name}" is ready to publish.`
+              : `Your sweepstakes "${name}" will be ${
+                  isDraft
+                    ? `published and go live ${formattedStartDate}`
+                    : 'updated and changes will go live immediately'
+                }!`}
           </DialogDescription>
         </DialogHeader>
 

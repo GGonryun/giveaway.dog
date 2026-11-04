@@ -80,6 +80,7 @@ const DesktopTitle: React.FC = () => {
 const DesktopActions: React.FC = () => {
   const { action, formId, hasErrors, onCancel } = useUnifiedFormLayout();
   const { disabled } = useUnifiedFormLayout();
+  const isCreating = action === 'create' || action === 'demo';
   return (
     <div className="flex-1 flex justify-end gap-2">
       <Button
@@ -95,24 +96,12 @@ const DesktopActions: React.FC = () => {
       <Button
         type="submit"
         form={formId}
-        variant={
-          action === 'create'
-            ? 'default'
-            : hasErrors
-              ? 'destructive'
-              : 'default'
-        }
+        variant={!isCreating && hasErrors ? 'destructive' : 'default'}
         size="default"
         disabled={disabled}
       >
-        {action === 'create' ? (
-          <SaveIcon />
-        ) : hasErrors ? (
-          <AlertCircleIcon />
-        ) : (
-          <SaveIcon />
-        )}
-        {action === 'create' ? 'Publish' : 'Save Changes'}
+        {!isCreating && hasErrors ? <AlertCircleIcon /> : <SaveIcon />}
+        {isCreating ? 'Publish' : 'Save Changes'}
       </Button>
     </div>
   );

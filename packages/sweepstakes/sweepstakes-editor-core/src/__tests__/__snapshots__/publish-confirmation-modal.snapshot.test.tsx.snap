@@ -24,7 +24,7 @@ exports[`PublishConfirmationModal > in the demo > matches the snapshot 1`] = `
       <div
         class="flex items-center gap-2"
       >
-        Save Changes?
+        Ready to Publish?
       </div>
     </h2>
     <p
@@ -32,12 +32,7 @@ exports[`PublishConfirmationModal > in the demo > matches the snapshot 1`] = `
       data-slot="dialog-description"
       id="radix-:id2:"
     >
-      Your sweepstakes "
-      Summer Giveaway
-      " will be
-       
-      updated and changes will go live immediately
-      !
+      Your sweepstakes "Summer Giveaway" is ready to publish.
     </p>
   </div>
   <div
@@ -181,12 +176,7 @@ exports[`PublishConfirmationModal > when publishing a draft > matches the snapsh
       data-slot="dialog-description"
       id="radix-:id2:"
     >
-      Your sweepstakes "
-      Summer Giveaway
-      " will be
-       
-      published and go live in 16 days
-      !
+      Your sweepstakes "Summer Giveaway" will be published and go live in 16 days!
     </p>
   </div>
   <div
@@ -312,12 +302,7 @@ exports[`PublishConfirmationModal > when saving changes to a published sweepstak
       data-slot="dialog-description"
       id="radix-:id2:"
     >
-      Your sweepstakes "
-      Summer Giveaway
-      " will be
-       
-      updated and changes will go live immediately
-      !
+      Your sweepstakes "Summer Giveaway" will be updated and changes will go live immediately!
     </p>
   </div>
   <div

@@ -126,6 +126,16 @@ describe('DesktopFormLayout', () => {
       expect(publish).not.toHaveClass('bg-destructive');
     });
 
+    it('submits with Publish in the demo', () => {
+      renderDesktop({ action: 'demo', hasErrors: true });
+      const publish = header().getByRole('button', { name: 'Publish' });
+      expect(publish).toHaveAttribute('type', 'submit');
+      expect(publish).not.toHaveClass('bg-destructive');
+      expect(
+        header().queryByRole('button', { name: 'Save Changes' })
+      ).not.toBeInTheDocument();
+    });
+
     it('submits with Save Changes while editing', () => {
       renderDesktop({ action: 'edit' });
       const save = header().getByRole('button', { name: 'Save Changes' });

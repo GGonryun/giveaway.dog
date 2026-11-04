@@ -523,23 +523,24 @@ describe('SweepstakesForm', () => {
       expect(screen.getByText('Demo Mode')).toBeInTheDocument();
     });
 
-    it('labels the submit button as saving changes', () => {
+    it('labels the submit button as publishing', () => {
       renderForm({ isDemo: true });
-      expect(getHeaderButton('Save Changes')).toBeInTheDocument();
+      expect(getHeaderButton('Publish')).toBeInTheDocument();
       expect(
         within(screen.getByRole('banner')).queryByRole('button', {
-          name: 'Publish'
+          name: 'Save Changes'
         })
       ).not.toBeInTheDocument();
     });
 
     it('does not save from the confirmation', async () => {
       renderForm({ isDemo: true });
-      await userEvent.click(getHeaderButton('Save Changes'));
+      await userEvent.click(getHeaderButton('Publish'));
 
       const dialog = await screen.findByRole('dialog', {
-        name: 'Save Changes?'
+        name: 'Ready to Publish?'
       });
+      expect(dialog).not.toHaveTextContent('will go live');
       expect(within(dialog).getByRole('alert')).toHaveTextContent(
         'Publishing and saving are not available in the demo.'
       );
@@ -552,9 +553,9 @@ describe('SweepstakesForm', () => {
 
     it('does not check the custom slug', async () => {
       renderForm({ isDemo: true, values: withSlug('summer') });
-      await userEvent.click(getHeaderButton('Save Changes'));
+      await userEvent.click(getHeaderButton('Publish'));
 
-      await screen.findByRole('dialog', { name: 'Save Changes?' });
+      await screen.findByRole('dialog', { name: 'Ready to Publish?' });
       expect(verifySlug).not.toHaveBeenCalled();
     });
 

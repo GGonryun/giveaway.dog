@@ -45,7 +45,7 @@ export const FormIssuesDialog: React.FC<FormIssuesDialogProps> = ({
             </div>
           </DialogTitle>
           <DialogDescription className="text-left">
-            {`${errors.length} ${pluralize('issue', errors.length)} need to be fixed before you can ${action === 'create' ? 'publish' : 'save changes'}`}
+            {`${errors.length} ${pluralize('issue', errors.length)} need to be fixed before you can ${action === 'create' || action === 'demo' ? 'publish' : 'save changes'}`}
           </DialogDescription>
         </DialogHeader>
         <div className={'space-y-4'}>

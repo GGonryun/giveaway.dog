@@ -174,6 +174,15 @@ describe('PublishConfirmationModal', () => {
   });
 
   describe('in the demo', () => {
+    it('uses the publish wording and never says the changes go live', () => {
+      renderModal({ action: 'demo' });
+      expect(getDialog()).toHaveAccessibleName('Ready to Publish?');
+      expect(getDialog()).toHaveAccessibleDescription(
+        'Your sweepstakes "Summer Giveaway" is ready to publish.'
+      );
+      expect(getDialog()).not.toHaveTextContent('go live');
+    });
+
     it('explains that publishing is not available', () => {
       renderModal({ action: 'demo' });
       expect(within(getDialog()).getByRole('alert')).toHaveTextContent(
