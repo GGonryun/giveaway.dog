@@ -44,6 +44,7 @@
     "@testing-library/user-event": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
+    "react-hook-form": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
