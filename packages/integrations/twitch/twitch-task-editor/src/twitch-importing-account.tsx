@@ -96,38 +96,38 @@ export const TwitchImportingAccountField: React.FC = () => {
               </AlertDescription>
             </Alert>
           ) : (
-            <FormControl>
-              <Select
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  // Also set the channelUrl based on the selected integration
-                  const selectedIntegration = twitchIntegrations.find(
-                    (i) => i.id === value
+            <Select
+              onValueChange={(value) => {
+                field.onChange(value);
+                // Also set the channelUrl based on the selected integration
+                const selectedIntegration = twitchIntegrations.find(
+                  (i) => i.id === value
+                );
+                if (selectedIntegration) {
+                  form.setValue(
+                    `tasks.${index}.channelUrl`,
+                    `https://twitch.tv/${selectedIntegration.label}`
                   );
-                  if (selectedIntegration) {
-                    form.setValue(
-                      `tasks.${index}.channelUrl`,
-                      `https://twitch.tv/${selectedIntegration.label}`
-                    );
-                  }
-                }}
-                value={field.value ?? undefined}
-              >
+                }
+              }}
+              value={field.value ?? undefined}
+            >
+              <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your account" />
                 </SelectTrigger>
-                <SelectContent>
-                  {twitchIntegrations.map((integration) => (
-                    <SelectItem key={integration.id} value={integration.id}>
-                      <div className="flex items-center gap-2">
-                        <SocialTwitchIcon className="h-4 w-4" />
-                        {integration.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormControl>
+              </FormControl>
+              <SelectContent>
+                {twitchIntegrations.map((integration) => (
+                  <SelectItem key={integration.id} value={integration.id}>
+                    <div className="flex items-center gap-2">
+                      <SocialTwitchIcon className="h-4 w-4" />
+                      {integration.label}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           )}
         </FormItem>
       )}

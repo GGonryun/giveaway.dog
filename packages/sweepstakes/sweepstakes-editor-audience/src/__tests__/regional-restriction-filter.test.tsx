@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RegionalRestrictionFilter } from '@giveaway/db-model';
 import { describe, expect, it } from 'vitest';
@@ -56,5 +56,21 @@ describe('RegionalRestrictionFilterField', () => {
       'EXCLUDE'
     );
     expect(screen.getByRole('combobox')).toHaveTextContent('Exclude');
+  });
+
+  it('marks the combobox invalid and describes it with the error', async () => {
+    const { form } = renderFilter('INCLUDE');
+    const combobox = screen.getByRole('combobox', { name: 'Region filter' });
+    expect(combobox).toHaveAttribute('id');
+    expect(combobox).toHaveAttribute('aria-invalid', 'false');
+
+    await act(async () => {
+      form.setError('audience.regionalRestriction.filter', {
+        message: 'Pick a filter'
+      });
+    });
+
+    expect(combobox).toHaveAttribute('aria-invalid', 'true');
+    expect(combobox).toHaveAccessibleDescription('Pick a filter');
   });
 });
