@@ -18,12 +18,12 @@ const PLATFORM_BADGES: Partial<
 > = {
   discord: {
     label: 'Popular',
-    badgeClassName: 'bg-discord-1 text-white',
+    badgeClassName: 'bg-discord-contrast text-white',
     borderClassName: 'border-discord-1'
   },
   reddit: {
     label: 'New',
-    badgeClassName: 'bg-reddit-1 text-white',
+    badgeClassName: 'bg-reddit-contrast text-white',
     borderClassName: 'border-reddit-1'
   },
   twitch: {

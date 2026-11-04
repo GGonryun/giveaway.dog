@@ -17,22 +17,5 @@ export const KNOWN_VIOLATIONS: KnownViolation[] = [
   },
   { rule: 'button-name', selector: 'button:has(> svg:only-child)', issue: 100 },
   { rule: 'button-name', selector: 'button[role="combobox"]', issue: 542 },
-  { rule: 'label', selector: 'textarea', issue: 542 },
-  {
-    rule: 'color-contrast',
-    selector: '[data-slot="tooltip-trigger"]',
-    issue: 541
-  },
-  { rule: 'color-contrast', selector: 'span.wiggle-timer', issue: 541 },
-  { rule: 'color-contrast', selector: '[data-slot="badge"]', issue: 541 },
-  {
-    rule: 'color-contrast',
-    selector: '[data-slot="alert-description"]',
-    issue: 541
-  },
-  {
-    rule: 'color-contrast',
-    selector: '[data-slot="button"].bg-destructive',
-    issue: 541
-  }
+  { rule: 'label', selector: 'textarea', issue: 542 }
 ];

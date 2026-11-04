@@ -20,7 +20,7 @@ describe('AccountStatusAlert', () => {
   it('uses the destructive alert style', () => {
     render(<AccountStatusAlert status="ERROR" providerLabel="X (Twitter)" />);
     expect(screen.getByRole('alert')).toHaveClass(
-      'text-destructive',
+      'text-destructive-contrast',
       'text-left'
     );
   });

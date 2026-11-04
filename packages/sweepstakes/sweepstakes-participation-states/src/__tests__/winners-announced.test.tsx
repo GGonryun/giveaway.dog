@@ -127,7 +127,7 @@ describe('WinnersAnnounced', () => {
         'You were disqualified from Gaming Headset'
       );
       expect(alert).toHaveTextContent('Reason: Bot activity');
-      expect(alert).toHaveClass('text-destructive');
+      expect(alert).toHaveClass('text-destructive-contrast');
     });
 
     it('omits the reason line when a disqualification has no reason', () => {

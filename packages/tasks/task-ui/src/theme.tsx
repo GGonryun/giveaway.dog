@@ -39,58 +39,58 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'BONUS_TASK':
       return {
         action:
-          'bg-red-500 text-red-100 group-hover:bg-red-500 hover:bg-red-500 dark:bg-red-500 dark:hover:bg-red-500',
-        symbol: 'bg-red-500 text-red-100',
-        arrow: 'bg-red-500 text-red-100 fill-red-500',
+          'bg-red-600 text-white group-hover:bg-red-600 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600',
+        symbol: 'bg-red-600 text-white',
+        arrow: 'bg-red-600 text-white fill-red-600',
         icon: StarIcon
       };
     case 'BONUS_TIMED':
       return {
         action:
-          'bg-yellow-500 text-yellow-100 group-hover:bg-yellow-500 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-500',
-        symbol: 'bg-yellow-500 text-yellow-100',
-        arrow: 'bg-yellow-500 text-yellow-100 fill-yellow-500',
+          'bg-yellow-700 text-white group-hover:bg-yellow-700 hover:bg-yellow-700 dark:bg-yellow-700 dark:hover:bg-yellow-700',
+        symbol: 'bg-yellow-700 text-white',
+        arrow: 'bg-yellow-700 text-white fill-yellow-700',
         icon: ClockIcon
       };
     case 'BONUS_LIMITED':
       return {
         action:
-          'bg-purple-500 text-purple-100 group-hover:bg-purple-500 hover:bg-purple-500 dark:bg-purple-500 dark:hover:bg-purple-500',
-        symbol: 'bg-purple-500 text-purple-100',
-        arrow: 'bg-purple-500 text-purple-100 fill-purple-500',
+          'bg-purple-600 text-white group-hover:bg-purple-600 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-600',
+        symbol: 'bg-purple-600 text-white',
+        arrow: 'bg-purple-600 text-white fill-purple-600',
         icon: UsersIcon
       };
     case 'BONUS_LOYALTY':
       return {
         action:
-          'bg-indigo-500 text-indigo-100 group-hover:bg-indigo-500 hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-500',
-        symbol: 'bg-indigo-500 text-indigo-100',
-        arrow: 'bg-indigo-500 text-indigo-100 fill-indigo-500',
+          'bg-indigo-600 text-white group-hover:bg-indigo-600 hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-600',
+        symbol: 'bg-indigo-600 text-white',
+        arrow: 'bg-indigo-600 text-white fill-indigo-600',
         icon: HeartIcon
       };
     case 'BONUS_COMPLETE_PROFILE':
       return {
         action:
-          'bg-emerald-500 text-emerald-100 group-hover:bg-emerald-500 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-500',
-        symbol: 'bg-emerald-500 text-emerald-100',
-        arrow: 'bg-emerald-500 text-emerald-100 fill-emerald-500',
+          'bg-emerald-700 text-white group-hover:bg-emerald-700 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-700',
+        symbol: 'bg-emerald-700 text-white',
+        arrow: 'bg-emerald-700 text-white fill-emerald-700',
         icon: UserCheck
       };
     case 'VISIT_URL':
       return {
         action:
-          'bg-blue-500 text-blue-100 group-hover:bg-blue-500 hover:bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-500',
-        symbol: 'bg-blue-500 text-blue-100',
-        arrow: 'bg-blue-500 text-blue-100 fill-blue-500',
+          'bg-blue-600 text-white group-hover:bg-blue-600 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-600',
+        symbol: 'bg-blue-600 text-white',
+        arrow: 'bg-blue-600 text-white fill-blue-600',
         icon: EarthIcon
       };
     case 'SECRET_CODE':
     case 'SECRET_CODE_V2':
       return {
         action:
-          'bg-green-600 text-green-100 group-hover:bg-green-600 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-600',
-        symbol: 'bg-green-600 text-green-100',
-        arrow: 'bg-green-600 text-green-100 fill-green-600',
+          'bg-green-700 text-white group-hover:bg-green-700 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-700',
+        symbol: 'bg-green-700 text-white',
+        arrow: 'bg-green-700 text-white fill-green-700',
         icon: KeyRound
       };
     case 'TWITTER_CONNECT':
@@ -120,9 +120,9 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'DISCORD_INTERACTION_IMPORT':
       return {
         action:
-          'bg-discord-1 text-white group-hover:bg-discord-1 hover:bg-discord-1 dark:bg-discord-1 dark:hover:bg-discord-1',
+          'bg-discord-contrast text-white group-hover:bg-discord-contrast hover:bg-discord-contrast dark:bg-discord-contrast dark:hover:bg-discord-contrast',
         symbol: 'bg-discord-1 text-white',
-        arrow: 'bg-discord-1 text-white fill-discord-1',
+        arrow: 'bg-discord-contrast text-white fill-discord-contrast',
         icon: SocialDiscordIcon
       };
     case 'TWITCH_FOLLOW':
@@ -145,9 +145,9 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'YOUTUBE_VISIT':
       return {
         action:
-          'text-white bg-youtube-1 group-hover:bg-youtube-1/80 hover:bg-youtube-1/80 dark:bg-youtube-1 dark:hover:bg-youtube-1',
+          'text-white bg-youtube-contrast group-hover:bg-youtube-contrast/80 hover:bg-youtube-contrast/80 dark:bg-youtube-contrast dark:hover:bg-youtube-contrast',
         symbol: 'bg-youtube-1 text-white',
-        arrow: 'bg-youtube-1 text-white fill-youtube-1',
+        arrow: 'bg-youtube-contrast text-white fill-youtube-contrast',
         icon: SocialYouTubeIcon
       };
     case 'INSTAGRAM_VISIT':
@@ -155,9 +155,9 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'INSTAGRAM_COMMENT':
       return {
         action:
-          'text-white bg-instagram-1 group-hover:bg-instagram-1/80 hover:bg-instagram-1/80 dark:bg-instagram-1/80 dark:hover:bg-instagram-1/80',
+          'text-white bg-instagram-contrast group-hover:bg-instagram-contrast/80 hover:bg-instagram-contrast/80 dark:bg-instagram-contrast/80 dark:hover:bg-instagram-contrast/80',
         symbol: 'bg-instagram-1 text-white',
-        arrow: 'bg-instagram-1 text-white fill-instagram-1',
+        arrow: 'bg-instagram-contrast text-white fill-instagram-contrast',
         icon: SocialInstagramIcon
       };
     case 'FACEBOOK_VISIT_PAGE':
@@ -185,18 +185,18 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'BLUESKY_REPOST_IMPORT':
       return {
         action:
-          'bg-bluesky-1 text-white group-hover:bg-bluesky-1 group-hover:text-white hover:bg-bluesky-1  hover:text-white dark:bg-bluesky-1 dark:hover:text-white dark:hover:bg-bluesky-1',
+          'bg-bluesky-contrast text-white group-hover:bg-bluesky-contrast group-hover:text-white hover:bg-bluesky-contrast  hover:text-white dark:bg-bluesky-contrast dark:hover:text-white dark:hover:bg-bluesky-contrast',
         symbol: 'bg-white text-bluesky-1',
-        arrow: 'bg-bluesky-1 text-white fill-bluesky-1',
+        arrow: 'bg-bluesky-contrast text-white fill-bluesky-contrast',
         icon: SocialBlueskyIcon
       };
     case 'VELORA_CONNECT':
     case 'VELORA_FOLLOW':
       return {
         action:
-          'bg-velora-1 text-white group-hover:bg-velora-1 group-hover:text-white hover:bg-velora-1 hover:text-white dark:bg-velora-1 dark:hover:text-white dark:hover:bg-velora-1',
+          'bg-velora-contrast text-white group-hover:bg-velora-contrast group-hover:text-white hover:bg-velora-contrast hover:text-white dark:bg-velora-contrast dark:hover:text-white dark:hover:bg-velora-contrast',
         symbol: 'bg-white text-velora-1',
-        arrow: 'bg-velora-1 text-white fill-velora-1',
+        arrow: 'bg-velora-contrast text-white fill-velora-contrast',
         icon: SocialVeloraIcon
       };
     case 'LINKEDIN_CONNECT':
@@ -213,25 +213,25 @@ export const toTaskTheme = (type: TaskType): TaskTheme => {
     case 'MULTIPLE_CHOICE':
       return {
         action:
-          'text-white bg-primary group-hover:bg-primary/80 hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80',
+          'text-primary-foreground bg-primary group-hover:bg-primary/80 hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80',
         symbol: 'bg-primary text-white',
-        arrow: 'bg-primary text-white fill-primary',
+        arrow: 'bg-primary text-primary-foreground fill-primary',
         icon: MessageSquareIcon
       };
     case 'SUBMIT_MEDIA':
       return {
         action:
-          'text-white bg-primary group-hover:bg-primary/80 hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80',
+          'text-primary-foreground bg-primary group-hover:bg-primary/80 hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80',
         symbol: 'bg-primary text-white',
-        arrow: 'bg-primary text-white fill-primary',
+        arrow: 'bg-primary text-primary-foreground fill-primary',
         icon: UploadCloud
       };
     case 'REFERRAL_LINK':
       return {
         action:
-          'bg-amber-500 text-amber-100 group-hover:bg-amber-500 hover:bg-amber-500 dark:bg-amber-500 dark:hover:bg-amber-500',
-        symbol: 'bg-amber-500 text-amber-100',
-        arrow: 'bg-amber-500 text-amber-100 fill-amber-500',
+          'bg-amber-700 text-white group-hover:bg-amber-700 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-700',
+        symbol: 'bg-amber-700 text-white',
+        arrow: 'bg-amber-700 text-white fill-amber-700',
         icon: UsersIcon
       };
     default:

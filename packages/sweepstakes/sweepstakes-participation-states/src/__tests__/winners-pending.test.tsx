@@ -10,6 +10,6 @@ describe('WinnersPending', () => {
     expect(alert).toHaveTextContent(
       'This giveaway has ended and winners are being selected.'
     );
-    expect(alert).toHaveClass('text-warning');
+    expect(alert).toHaveClass('text-warning-contrast');
   });
 });
