@@ -55,7 +55,7 @@ export const SpecialInput = React.forwardRef<
         <input
           type={type}
           data-slot="input"
-          className={inputClasses}
+          className={cn(inputClasses, className)}
           ref={ref}
           {...props}
         />
