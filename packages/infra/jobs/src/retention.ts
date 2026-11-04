@@ -5,7 +5,7 @@ import { del } from '@vercel/blob';
 export type DataRetentionMode = 'report' | 'delete';
 
 export const dataRetentionMode = (): DataRetentionMode =>
-  process.env.DATA_RETENTION_MODE === 'delete' ? 'delete' : 'report';
+  process.env.DATA_RETENTION_MODE === 'report' ? 'report' : 'delete';
 
 const BLOB_HOST_SUFFIX = '.public.blob.vercel-storage.com';
 
@@ -38,4 +38,19 @@ export const deleteUploadedFiles = async (
     await del(files.slice(start, start + DELETE_BATCH_SIZE));
   }
   return files.length;
+};
+
+export const RETENTION_BATCH_SIZE = 5;
+
+export const RETENTION_CHUNK_SIZE = 500;
+
+export const deleteInChunks = async (
+  deleteChunk: () => Promise<number>
+): Promise<number> => {
+  let total = 0;
+  for (;;) {
+    const deleted = await deleteChunk();
+    if (deleted === 0) return total;
+    total += deleted;
+  }
 };

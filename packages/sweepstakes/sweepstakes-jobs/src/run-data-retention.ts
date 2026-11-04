@@ -9,12 +9,11 @@ import {
 import { toRetentionCutoffs } from '@giveaway/team-model/team/limits';
 import {
   DataRetentionMode,
-  deleteUploadedFiles,
-  toUploadedFiles
+  RETENTION_BATCH_SIZE,
+  RETENTION_CHUNK_SIZE,
+  deleteInChunks,
+  deleteUploadedFiles
 } from '@giveaway/jobs/retention';
-
-const DEFAULT_LIMIT = 20;
-const COMPLETION_PAGE_SIZE = 1000;
 
 export type SweepstakesRetentionResult = {
   id: string;
@@ -39,36 +38,67 @@ const deletableParticipants = (
 const toMediaUrl = (proof: Prisma.JsonValue): unknown =>
   (proof as { mediaUrl?: unknown } | null)?.mediaUrl;
 
-const findMediaUrls = async (
-  db: PrismaClient,
-  sweepstakesId: string,
-  cursor?: string
-): Promise<unknown[]> => {
-  const page = await db.taskCompletion.findMany({
-    where: {
-      participant: deletableParticipants(sweepstakesId),
-      task: { config: { path: ['type'], equals: 'SUBMIT_MEDIA' } }
-    },
-    select: { id: true, proof: true },
-    orderBy: { id: 'asc' },
-    take: COMPLETION_PAGE_SIZE,
-    ...(cursor && { cursor: { id: cursor }, skip: 1 })
-  });
-  const urls = page.map(({ proof }) => toMediaUrl(proof));
-  if (page.length < COMPLETION_PAGE_SIZE) return urls;
-  return [
-    ...urls,
-    ...(await findMediaUrls(db, sweepstakesId, page[page.length - 1].id))
-  ];
+const MEDIA_TASK: Prisma.TaskWhereInput = {
+  config: { path: ['type'], equals: 'SUBMIT_MEDIA' }
 };
 
+const sweepstakesJobs = (sweepstakesId: string) => ({
+  sweepstakes: { sweepstakesId },
+  tasks: { task: { sweepstakesId } },
+  posts: { sweepstakesId }
+});
+
 const countJobs = async (db: PrismaClient, sweepstakesId: string) => {
+  const where = sweepstakesJobs(sweepstakesId);
   const [sweepstakes, tasks, posts] = await Promise.all([
-    db.sweepstakesJob.count({ where: { sweepstakesId } }),
-    db.taskJob.count({ where: { task: { sweepstakesId } } }),
-    db.automatedPostJob.count({ where: { sweepstakesId } })
+    db.sweepstakesJob.count({ where: where.sweepstakes }),
+    db.taskJob.count({ where: where.tasks }),
+    db.automatedPostJob.count({ where: where.posts })
   ]);
   return sweepstakes + tasks + posts;
+};
+
+const reportSweepstakesData = async (
+  db: PrismaClient,
+  sweepstakesId: string
+) => {
+  const [participants, files, jobs] = await Promise.all([
+    db.sweepstakesParticipant.count({
+      where: deletableParticipants(sweepstakesId)
+    }),
+    db.taskCompletion.count({
+      where: {
+        participant: deletableParticipants(sweepstakesId),
+        task: MEDIA_TASK
+      }
+    }),
+    countJobs(db, sweepstakesId)
+  ]);
+  return { participants, files, jobs };
+};
+
+const deleteParticipantChunk = async (
+  db: PrismaClient,
+  sweepstakesId: string,
+  counts: { files: number }
+) => {
+  const chunk = await db.sweepstakesParticipant.findMany({
+    where: deletableParticipants(sweepstakesId),
+    select: { id: true },
+    take: RETENTION_CHUNK_SIZE
+  });
+  const ids = chunk.map(({ id }) => id);
+  const media = await db.taskCompletion.findMany({
+    where: { participantId: { in: ids }, task: MEDIA_TASK },
+    select: { proof: true }
+  });
+  counts.files += await deleteUploadedFiles(
+    media.map(({ proof }) => toMediaUrl(proof))
+  );
+  const { count } = await db.sweepstakesParticipant.deleteMany({
+    where: { id: { in: ids } }
+  });
+  return count;
 };
 
 const deleteSweepstakesData = async ({
@@ -84,40 +114,37 @@ const deleteSweepstakesData = async ({
   mode: DataRetentionMode;
   now: Date;
 }): Promise<SweepstakesRetentionResult> => {
-  const [participants, urls, jobs] = await Promise.all([
-    db.sweepstakesParticipant.count({
-      where: deletableParticipants(sweepstakesId)
-    }),
-    findMediaUrls(db, sweepstakesId),
-    countJobs(db, sweepstakesId)
-  ]);
-
   if (mode === 'report') {
     return {
       id: sweepstakesId,
       tier,
-      participants,
-      files: toUploadedFiles(urls).length,
-      jobs
+      ...(await reportSweepstakesData(db, sweepstakesId))
     };
   }
 
-  const files = await deleteUploadedFiles(urls);
+  const counts = { files: 0 };
+  const participants = await deleteInChunks(() =>
+    deleteParticipantChunk(db, sweepstakesId, counts)
+  );
 
-  await db.$transaction([
-    db.sweepstakesParticipant.deleteMany({
-      where: deletableParticipants(sweepstakesId)
-    }),
-    db.sweepstakesJob.deleteMany({ where: { sweepstakesId } }),
-    db.taskJob.deleteMany({ where: { task: { sweepstakesId } } }),
-    db.automatedPostJob.deleteMany({ where: { sweepstakesId } }),
+  const where = sweepstakesJobs(sweepstakesId);
+  const [sweepstakesJobCount, taskJobs, posts] = await db.$transaction([
+    db.sweepstakesJob.deleteMany({ where: where.sweepstakes }),
+    db.taskJob.deleteMany({ where: where.tasks }),
+    db.automatedPostJob.deleteMany({ where: where.posts }),
     db.sweepstakes.update({
       where: { id: sweepstakesId },
       data: { dataDeletedAt: now }
     })
   ]);
 
-  return { id: sweepstakesId, tier, participants, files, jobs };
+  return {
+    id: sweepstakesId,
+    tier,
+    participants,
+    files: counts.files,
+    jobs: sweepstakesJobCount.count + taskJobs.count + posts.count
+  };
 };
 
 export const findExpiredSweepstakes = async ({
@@ -155,7 +182,7 @@ export const runSweepstakesDataRetention = async (
   {
     mode,
     now = new Date(),
-    limit = DEFAULT_LIMIT
+    limit = RETENTION_BATCH_SIZE
   }: { mode: DataRetentionMode; now?: Date; limit?: number }
 ) => {
   const expired = await findExpiredSweepstakes({ db, now, limit });

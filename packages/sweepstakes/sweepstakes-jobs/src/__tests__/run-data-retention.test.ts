@@ -13,6 +13,7 @@ const db = prismaMock as unknown as PrismaClient;
 const FREE_CUTOFF = new Date(NOW.getTime() - 90 * DAY);
 const PRO_CUTOFF = new Date(NOW.getTime() - 365 * DAY);
 const MEDIA = 'https://abc.public.blob.vercel-storage.com/media.png';
+const MEDIA_TASK = { config: { path: ['type'], equals: 'SUBMIT_MEDIA' } };
 
 const deletable = (sweepstakesId: string) => ({
   sweepstakesId,
@@ -26,14 +27,24 @@ const ended = (cutoff: Date, team: object) => ({
   ...team
 });
 
+const ids = (...values: string[]) => values.map((id) => ({ id }));
+
 describe('runSweepstakesDataRetention', () => {
   beforeEach(() => {
     vi.stubEnv('BLOB_READ_WRITE_TOKEN', 'token');
     blob.del.mockReset();
     blob.del.mockResolvedValue(undefined);
     prismaMock.sweepstakes.findMany.mockResolvedValue([]);
-    prismaMock.sweepstakesParticipant.count.mockResolvedValue(5);
+    prismaMock.sweepstakesParticipant.findMany.mockResolvedValue([]);
+    prismaMock.sweepstakesParticipant.deleteMany.mockResolvedValue({
+      count: 0
+    });
     prismaMock.taskCompletion.findMany.mockResolvedValue([]);
+    prismaMock.sweepstakesJob.deleteMany.mockResolvedValue({ count: 1 });
+    prismaMock.taskJob.deleteMany.mockResolvedValue({ count: 2 });
+    prismaMock.automatedPostJob.deleteMany.mockResolvedValue({ count: 3 });
+    prismaMock.sweepstakesParticipant.count.mockResolvedValue(5);
+    prismaMock.taskCompletion.count.mockResolvedValue(4);
     prismaMock.sweepstakesJob.count.mockResolvedValue(1);
     prismaMock.taskJob.count.mockResolvedValue(2);
     prismaMock.automatedPostJob.count.mockResolvedValue(3);
@@ -43,7 +54,7 @@ describe('runSweepstakesDataRetention', () => {
     vi.unstubAllEnvs();
   });
 
-  it('finds the ended giveaways of each retained tier past its cutoff, oldest first', async () => {
+  it('finds 5 ended giveaways of each retained tier past its cutoff, oldest first', async () => {
     await runSweepstakesDataRetention(db, { mode: 'delete', now: NOW });
 
     expect(prismaMock.sweepstakes.findMany.mock.calls).toEqual([
@@ -54,7 +65,7 @@ describe('runSweepstakesDataRetention', () => {
           }),
           select: { id: true },
           orderBy: { createdAt: 'asc' },
-          take: 20
+          take: 5
         }
       ],
       [
@@ -62,22 +73,32 @@ describe('runSweepstakesDataRetention', () => {
           where: ended(PRO_CUTOFF, { team: { tier: 'PRO' } }),
           select: { id: true },
           orderBy: { createdAt: 'asc' },
-          take: 20
+          take: 5
         }
       ]
     ]);
   });
 
-  it('deletes the uploads, the participants without a draw and the jobs, then marks the giveaway', async () => {
+  it('deletes the participants without a draw and their uploads 500 at a time, then the jobs, then marks the giveaway', async () => {
     prismaMock.sweepstakes.findMany
-      .mockResolvedValueOnce([{ id: 'sweep-free' }])
+      .mockResolvedValueOnce(ids('sweep-free'))
       .mockResolvedValueOnce([]);
-    prismaMock.taskCompletion.findMany.mockResolvedValue([
-      { id: 'c1', proof: { mediaUrl: MEDIA } },
-      { id: 'c2', proof: { mediaUrl: 42 } },
-      { id: 'c3', proof: ['x'] },
-      { id: 'c4', proof: null }
-    ] as never);
+    prismaMock.sweepstakesParticipant.findMany
+      .mockResolvedValueOnce(ids('p1', 'p2'))
+      .mockResolvedValueOnce(ids('p3'))
+      .mockResolvedValueOnce([]);
+    prismaMock.sweepstakesParticipant.deleteMany
+      .mockResolvedValueOnce({ count: 2 })
+      .mockResolvedValueOnce({ count: 1 })
+      .mockResolvedValueOnce({ count: 0 });
+    prismaMock.taskCompletion.findMany
+      .mockResolvedValueOnce([
+        { proof: { mediaUrl: MEDIA } },
+        { proof: { mediaUrl: 42 } },
+        { proof: ['x'] },
+        { proof: null }
+      ] as never)
+      .mockResolvedValue([]);
 
     const result = await runSweepstakesDataRetention(db, {
       mode: 'delete',
@@ -87,34 +108,29 @@ describe('runSweepstakesDataRetention', () => {
     expect(result).toEqual({
       mode: 'delete',
       sweepstakes: [
-        { id: 'sweep-free', tier: 'FREE', participants: 5, files: 1, jobs: 6 }
+        { id: 'sweep-free', tier: 'FREE', participants: 3, files: 1, jobs: 6 }
       ]
     });
-    expect(prismaMock.sweepstakesParticipant.count).toHaveBeenCalledWith({
-      where: deletable('sweep-free')
+    expect(prismaMock.sweepstakesParticipant.findMany).toHaveBeenCalledWith({
+      where: deletable('sweep-free'),
+      select: { id: true },
+      take: 500
     });
-    expect(prismaMock.taskCompletion.findMany).toHaveBeenCalledWith({
-      where: {
-        participant: deletable('sweep-free'),
-        task: { config: { path: ['type'], equals: 'SUBMIT_MEDIA' } }
-      },
-      select: { id: true, proof: true },
-      orderBy: { id: 'asc' },
-      take: 1000
+    expect(prismaMock.taskCompletion.findMany.mock.calls[0][0]).toEqual({
+      where: { participantId: { in: ['p1', 'p2'] }, task: MEDIA_TASK },
+      select: { proof: true }
     });
-    expect(prismaMock.sweepstakesJob.count).toHaveBeenCalledWith({
-      where: { sweepstakesId: 'sweep-free' }
-    });
-    expect(prismaMock.taskJob.count).toHaveBeenCalledWith({
-      where: { task: { sweepstakesId: 'sweep-free' } }
-    });
-    expect(prismaMock.automatedPostJob.count).toHaveBeenCalledWith({
-      where: { sweepstakesId: 'sweep-free' }
-    });
+    expect(blob.del).toHaveBeenCalledTimes(1);
     expect(blob.del).toHaveBeenCalledWith([MEDIA]);
-    expect(prismaMock.sweepstakesParticipant.deleteMany).toHaveBeenCalledWith({
-      where: deletable('sweep-free')
-    });
+    expect(
+      prismaMock.sweepstakesParticipant.deleteMany.mock.calls.map(
+        ([args]) => args
+      )
+    ).toEqual([
+      { where: { id: { in: ['p1', 'p2'] } } },
+      { where: { id: { in: ['p3'] } } },
+      { where: { id: { in: [] } } }
+    ]);
     expect(prismaMock.sweepstakesJob.deleteMany).toHaveBeenCalledWith({
       where: { sweepstakesId: 'sweep-free' }
     });
@@ -131,42 +147,10 @@ describe('runSweepstakesDataRetention', () => {
     expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
   });
 
-  it('pages through the media completions', async () => {
-    prismaMock.sweepstakes.findMany.mockResolvedValueOnce([{ id: 's' }]);
-    const page = (from: number, size: number) =>
-      Array.from({ length: size }, (_, index) => ({
-        id: `c${from + index}`,
-        proof: {
-          mediaUrl: `https://abc.public.blob.vercel-storage.com/${from + index}.png`
-        }
-      }));
-    prismaMock.taskCompletion.findMany
-      .mockResolvedValueOnce(page(0, 1000) as never)
-      .mockResolvedValueOnce(page(1000, 1) as never);
-
-    const result = await runSweepstakesDataRetention(db, {
-      mode: 'report',
-      now: NOW
-    });
-
-    expect(result.sweepstakes[0].files).toBe(1001);
-    expect(prismaMock.taskCompletion.findMany).toHaveBeenCalledTimes(2);
-    expect(prismaMock.taskCompletion.findMany.mock.calls[1][0]).toMatchObject({
-      cursor: { id: 'c999' },
-      skip: 1
-    });
-  });
-
-  it('counts each uploaded file once in report mode and changes nothing', async () => {
+  it('counts the rows in report mode and changes nothing', async () => {
     prismaMock.sweepstakes.findMany
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([{ id: 'sweep-pro' }]);
-    prismaMock.taskCompletion.findMany.mockResolvedValue([
-      { id: 'c1', proof: { mediaUrl: MEDIA } },
-      { id: 'c2', proof: { mediaUrl: MEDIA } },
-      { id: 'c3', proof: { mediaUrl: 'https://example.com/x.png' } },
-      { id: 'c4', proof: { mediaUrl: 42 } }
-    ] as never);
+      .mockResolvedValueOnce(ids('sweep-pro'));
 
     const result = await runSweepstakesDataRetention(db, {
       mode: 'report',
@@ -176,8 +160,23 @@ describe('runSweepstakesDataRetention', () => {
     expect(result).toEqual({
       mode: 'report',
       sweepstakes: [
-        { id: 'sweep-pro', tier: 'PRO', participants: 5, files: 1, jobs: 6 }
+        { id: 'sweep-pro', tier: 'PRO', participants: 5, files: 4, jobs: 6 }
       ]
+    });
+    expect(prismaMock.sweepstakesParticipant.count).toHaveBeenCalledWith({
+      where: deletable('sweep-pro')
+    });
+    expect(prismaMock.taskCompletion.count).toHaveBeenCalledWith({
+      where: { participant: deletable('sweep-pro'), task: MEDIA_TASK }
+    });
+    expect(prismaMock.sweepstakesJob.count).toHaveBeenCalledWith({
+      where: { sweepstakesId: 'sweep-pro' }
+    });
+    expect(prismaMock.taskJob.count).toHaveBeenCalledWith({
+      where: { task: { sweepstakesId: 'sweep-pro' } }
+    });
+    expect(prismaMock.automatedPostJob.count).toHaveBeenCalledWith({
+      where: { sweepstakesId: 'sweep-pro' }
     });
     expect(blob.del).not.toHaveBeenCalled();
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
@@ -186,7 +185,7 @@ describe('runSweepstakesDataRetention', () => {
   });
 
   it('stops at the limit and asks the next tier only for what is left', async () => {
-    prismaMock.sweepstakes.findMany.mockResolvedValueOnce([{ id: 'a' }]);
+    prismaMock.sweepstakes.findMany.mockResolvedValueOnce(ids('a'));
 
     await runSweepstakesDataRetention(db, {
       mode: 'report',
@@ -198,10 +197,7 @@ describe('runSweepstakesDataRetention', () => {
   });
 
   it('does not look at the next tier once the limit is reached', async () => {
-    prismaMock.sweepstakes.findMany.mockResolvedValueOnce([
-      { id: 'a' },
-      { id: 'b' }
-    ]);
+    prismaMock.sweepstakes.findMany.mockResolvedValueOnce(ids('a', 'b'));
 
     const result = await runSweepstakesDataRetention(db, {
       mode: 'report',
@@ -213,7 +209,7 @@ describe('runSweepstakesDataRetention', () => {
     expect(prismaMock.sweepstakes.findMany).toHaveBeenCalledTimes(1);
   });
 
-  it('uses the current time and a limit of 20 by default', async () => {
+  it('uses the current time by default', async () => {
     const before = Date.now();
 
     await runSweepstakesDataRetention(db, { mode: 'report' });
@@ -226,6 +222,5 @@ describe('runSweepstakesDataRetention', () => {
     expect(timing.endDate.lt.getTime()).toBeLessThanOrEqual(
       Date.now() - 90 * DAY
     );
-    expect(call?.take).toBe(20);
   });
 });

@@ -16,16 +16,20 @@ const where = (extra: object) => ({
   ...extra
 });
 
+const ids = (...values: string[]) => values.map((id) => ({ id }));
+
 describe('runXPickerDataRetention', () => {
   beforeEach(() => {
     prismaMock.twitterPicker.findMany.mockResolvedValue([]);
-    prismaMock.twitterPickerUser.deleteMany.mockResolvedValue({ count: 4 });
-    prismaMock.twitterPost.deleteMany.mockResolvedValue({ count: 2 });
+    prismaMock.twitterPickerUser.findMany.mockResolvedValue([]);
+    prismaMock.twitterPost.findMany.mockResolvedValue([]);
+    prismaMock.twitterPickerUser.deleteMany.mockResolvedValue({ count: 0 });
+    prismaMock.twitterPost.deleteMany.mockResolvedValue({ count: 0 });
     prismaMock.twitterPickerUser.count.mockResolvedValue(7);
     prismaMock.twitterPost.count.mockResolvedValue(3);
   });
 
-  it('finds the completed X pickers of each retained tier past its cutoff, oldest first', async () => {
+  it('finds 5 completed X pickers of each retained tier past its cutoff, oldest first', async () => {
     await runXPickerDataRetention(db, { mode: 'delete', now: NOW });
 
     expect(prismaMock.twitterPicker.findMany.mock.calls).toEqual([
@@ -37,7 +41,7 @@ describe('runXPickerDataRetention', () => {
           }),
           select: { id: true },
           orderBy: { updatedAt: 'asc' },
-          take: 50
+          take: 5
         }
       ],
       [
@@ -48,16 +52,30 @@ describe('runXPickerDataRetention', () => {
           }),
           select: { id: true },
           orderBy: { updatedAt: 'asc' },
-          take: 50
+          take: 5
         }
       ]
     ]);
   });
 
-  it('deletes the undrawn users and the posts, then marks the X picker', async () => {
+  it('deletes the undrawn users and the posts 500 at a time, then marks the X picker', async () => {
     prismaMock.twitterPicker.findMany
-      .mockResolvedValueOnce([{ id: 'picker-free' }])
-      .mockResolvedValueOnce([{ id: 'picker-pro' }]);
+      .mockResolvedValueOnce(ids('picker-free'))
+      .mockResolvedValueOnce([]);
+    prismaMock.twitterPickerUser.findMany
+      .mockResolvedValueOnce(ids('u1', 'u2'))
+      .mockResolvedValueOnce(ids('u3'))
+      .mockResolvedValueOnce([]);
+    prismaMock.twitterPickerUser.deleteMany
+      .mockResolvedValueOnce({ count: 2 })
+      .mockResolvedValueOnce({ count: 1 })
+      .mockResolvedValueOnce({ count: 0 });
+    prismaMock.twitterPost.findMany
+      .mockResolvedValueOnce(ids('p1'))
+      .mockResolvedValueOnce([]);
+    prismaMock.twitterPost.deleteMany
+      .mockResolvedValueOnce({ count: 1 })
+      .mockResolvedValueOnce({ count: 0 });
 
     const result = await runXPickerDataRetention(db, {
       mode: 'delete',
@@ -66,29 +84,35 @@ describe('runXPickerDataRetention', () => {
 
     expect(result).toEqual({
       mode: 'delete',
-      pickers: [
-        { id: 'picker-free', tier: 'FREE', users: 4, posts: 2 },
-        { id: 'picker-pro', tier: 'PRO', users: 4, posts: 2 }
-      ]
+      pickers: [{ id: 'picker-free', tier: 'FREE', users: 3, posts: 1 }]
     });
-    expect(prismaMock.twitterPickerUser.deleteMany).toHaveBeenCalledWith({
-      where: { pickerId: 'picker-free', draws: { none: {} } }
+    expect(prismaMock.twitterPickerUser.findMany).toHaveBeenCalledWith({
+      where: { pickerId: 'picker-free', draws: { none: {} } },
+      select: { id: true },
+      take: 500
     });
-    expect(prismaMock.twitterPost.deleteMany).toHaveBeenCalledWith({
-      where: { pickerId: 'picker-free' }
+    expect(prismaMock.twitterPickerUser.deleteMany.mock.calls[0][0]).toEqual({
+      where: { id: { in: ['u1', 'u2'] } }
+    });
+    expect(prismaMock.twitterPickerUser.deleteMany.mock.calls[1][0]).toEqual({
+      where: { id: { in: ['u3'] } }
+    });
+    expect(prismaMock.twitterPost.findMany).toHaveBeenCalledWith({
+      where: { pickerId: 'picker-free' },
+      select: { id: true },
+      take: 500
+    });
+    expect(prismaMock.twitterPost.deleteMany.mock.calls[0][0]).toEqual({
+      where: { id: { in: ['p1'] } }
     });
     expect(prismaMock.twitterPicker.update).toHaveBeenCalledWith({
       where: { id: 'picker-free' },
       data: { dataDeletedAt: NOW }
     });
-    expect(prismaMock.$transaction).toHaveBeenCalledTimes(2);
   });
 
   it('stops at the limit and does not look at the next tier', async () => {
-    prismaMock.twitterPicker.findMany.mockResolvedValueOnce([
-      { id: 'a' },
-      { id: 'b' }
-    ]);
+    prismaMock.twitterPicker.findMany.mockResolvedValueOnce(ids('a', 'b'));
 
     const result = await runXPickerDataRetention(db, {
       mode: 'delete',
@@ -102,7 +126,7 @@ describe('runXPickerDataRetention', () => {
   });
 
   it('asks the next tier only for what is left under the limit', async () => {
-    prismaMock.twitterPicker.findMany.mockResolvedValueOnce([{ id: 'a' }]);
+    prismaMock.twitterPicker.findMany.mockResolvedValueOnce(ids('a'));
 
     await runXPickerDataRetention(db, { mode: 'delete', now: NOW, limit: 3 });
 
@@ -110,7 +134,7 @@ describe('runXPickerDataRetention', () => {
   });
 
   it('only counts the rows in report mode', async () => {
-    prismaMock.twitterPicker.findMany.mockResolvedValueOnce([{ id: 'a' }]);
+    prismaMock.twitterPicker.findMany.mockResolvedValueOnce(ids('a'));
 
     const result = await runXPickerDataRetention(db, {
       mode: 'report',
@@ -132,7 +156,7 @@ describe('runXPickerDataRetention', () => {
     expect(prismaMock.twitterPicker.update).not.toHaveBeenCalled();
   });
 
-  it('uses the current time and a limit of 50 by default', async () => {
+  it('uses the current time by default', async () => {
     const before = Date.now();
 
     await runXPickerDataRetention(db, { mode: 'report' });
@@ -141,6 +165,5 @@ describe('runXPickerDataRetention', () => {
     const cutoff = (call?.where?.updatedAt as { lt: Date }).lt.getTime();
     expect(cutoff).toBeGreaterThanOrEqual(before - 90 * DAY);
     expect(cutoff).toBeLessThanOrEqual(Date.now() - 90 * DAY);
-    expect(call?.take).toBe(50);
   });
 });

@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  RETENTION_BATCH_SIZE,
+  RETENTION_CHUNK_SIZE,
   dataRetentionMode,
+  deleteInChunks,
   deleteUploadedFiles,
   isUploadedFileUrl,
   toUploadedFiles
@@ -40,16 +43,16 @@ describe('retention', () => {
     it.each([
       ['delete', 'delete'],
       ['report', 'report'],
-      ['DELETE', 'report'],
-      ['', 'report']
+      ['REPORT', 'delete'],
+      ['', 'delete']
     ])('reads %j as %s', (value, mode) => {
       vi.stubEnv('DATA_RETENTION_MODE', value);
       expect(dataRetentionMode()).toBe(mode);
     });
 
-    it('reports when the variable is not set', () => {
+    it('deletes when the variable is not set', () => {
       vi.stubEnv('DATA_RETENTION_MODE', undefined);
-      expect(dataRetentionMode()).toBe('report');
+      expect(dataRetentionMode()).toBe('delete');
     });
   });
 
@@ -136,6 +139,31 @@ describe('retention', () => {
       await expect(deleteUploadedFiles([file('a')])).rejects.toThrow(
         'blob down'
       );
+    });
+  });
+
+  it('takes 5 items a run and deletes 500 rows at a time', () => {
+    expect(RETENTION_BATCH_SIZE).toBe(5);
+    expect(RETENTION_CHUNK_SIZE).toBe(500);
+  });
+
+  describe('deleteInChunks', () => {
+    it('deletes chunks until one deletes nothing, and adds up the rows', async () => {
+      const chunk = vi
+        .fn<() => Promise<number>>()
+        .mockResolvedValueOnce(500)
+        .mockResolvedValueOnce(20)
+        .mockResolvedValueOnce(0);
+
+      expect(await deleteInChunks(chunk)).toBe(520);
+      expect(chunk).toHaveBeenCalledTimes(3);
+    });
+
+    it('stops after one call when there is nothing to delete', async () => {
+      const chunk = vi.fn<() => Promise<number>>().mockResolvedValue(0);
+
+      expect(await deleteInChunks(chunk)).toBe(0);
+      expect(chunk).toHaveBeenCalledTimes(1);
     });
   });
 });

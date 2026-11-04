@@ -7,9 +7,12 @@ import {
   TeamTier
 } from '@giveaway/db-model';
 import { toRetentionCutoffs } from '@giveaway/team-model/team/limits';
-import { DataRetentionMode } from '@giveaway/jobs/retention';
-
-const DEFAULT_LIMIT = 50;
+import {
+  DataRetentionMode,
+  RETENTION_BATCH_SIZE,
+  RETENTION_CHUNK_SIZE,
+  deleteInChunks
+} from '@giveaway/jobs/retention';
 
 export type XPickerRetentionResult = {
   id: string;
@@ -79,16 +82,34 @@ const deleteXPickerData = async ({
     return { id: pickerId, tier, users, posts };
   }
 
-  const [users, posts] = await db.$transaction([
-    db.twitterPickerUser.deleteMany({ where: undrawnUsers(pickerId) }),
-    db.twitterPost.deleteMany({ where: { pickerId } }),
-    db.twitterPicker.update({
-      where: { id: pickerId },
-      data: { dataDeletedAt: now }
-    })
-  ]);
+  const users = await deleteInChunks(async () => {
+    const chunk = await db.twitterPickerUser.findMany({
+      where: undrawnUsers(pickerId),
+      select: { id: true },
+      take: RETENTION_CHUNK_SIZE
+    });
+    const { count } = await db.twitterPickerUser.deleteMany({
+      where: { id: { in: chunk.map(({ id }) => id) } }
+    });
+    return count;
+  });
+  const posts = await deleteInChunks(async () => {
+    const chunk = await db.twitterPost.findMany({
+      where: { pickerId },
+      select: { id: true },
+      take: RETENTION_CHUNK_SIZE
+    });
+    const { count } = await db.twitterPost.deleteMany({
+      where: { id: { in: chunk.map(({ id }) => id) } }
+    });
+    return count;
+  });
+  await db.twitterPicker.update({
+    where: { id: pickerId },
+    data: { dataDeletedAt: now }
+  });
 
-  return { id: pickerId, tier, users: users.count, posts: posts.count };
+  return { id: pickerId, tier, users, posts };
 };
 
 export const runXPickerDataRetention = async (
@@ -96,7 +117,7 @@ export const runXPickerDataRetention = async (
   {
     mode,
     now = new Date(),
-    limit = DEFAULT_LIMIT
+    limit = RETENTION_BATCH_SIZE
   }: { mode: DataRetentionMode; now?: Date; limit?: number }
 ) => {
   const expired = await findExpiredXPickers({ db, now, limit });
