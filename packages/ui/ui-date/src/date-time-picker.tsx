@@ -452,6 +452,7 @@ const TimePeriodSelect = React.forwardRef<
             ref={ref}
             className="focus:bg-accent focus:text-accent-foreground dark:focus:text-accent w-[65px]"
             onKeyDown={handleKeyDown}
+            aria-label="AM/PM"
           >
             <SelectValue />
           </SelectTrigger>
@@ -630,6 +631,7 @@ const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
           picker={hourCycle === 24 ? 'hours' : '12hours'}
           date={date}
           id="datetime-picker-hour-input"
+          aria-label="Hours"
           onDateChange={onChange}
           ref={hourRef}
           period={period}
@@ -640,6 +642,7 @@ const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
             :
             <TimePickerInput
               picker="minutes"
+              aria-label="Minutes"
               date={date}
               onDateChange={onChange}
               ref={minuteRef}
@@ -653,6 +656,7 @@ const TimePicker = React.forwardRef<TimePickerRef, TimePickerProps>(
             :
             <TimePickerInput
               picker="seconds"
+              aria-label="Seconds"
               date={date}
               onDateChange={onChange}
               ref={secondRef}

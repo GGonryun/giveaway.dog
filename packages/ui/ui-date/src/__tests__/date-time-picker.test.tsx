@@ -368,11 +368,14 @@ describe('TimePicker', () => {
     expect(screen.getByRole('combobox')).toHaveTextContent('PM');
   });
 
-  it('labels the hour input with a clock icon only', () => {
-    render(<TimePicker date={afternoon} />);
-    const [hours] = screen.getAllByRole('textbox');
+  it('names the hour, minute and second inputs and the period select', () => {
+    render(<TimePicker date={afternoon} hourCycle={12} granularity="second" />);
+    const [hours, minutes, seconds] = screen.getAllByRole('textbox');
     expect(hours).toHaveAttribute('id', 'datetime-picker-hour-input');
-    expect(hours).toHaveAccessibleName('');
+    expect(hours).toHaveAccessibleName('Hours');
+    expect(minutes).toHaveAccessibleName('Minutes');
+    expect(seconds).toHaveAccessibleName('Seconds');
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('AM/PM');
   });
 });
 
