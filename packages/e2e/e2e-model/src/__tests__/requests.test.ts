@@ -366,11 +366,11 @@ describe('e2eSweepstakesRequestSchema prizes', () => {
 
 describe('toE2eSweepstakesTiming', () => {
   it.each([
-    ['draft', DAY, 8 * DAY],
-    ['scheduled', DAY, 8 * DAY],
-    ['running', -HOUR, 7 * DAY],
-    ['ended', -8 * DAY, -HOUR],
-    ['completed', -8 * DAY, -HOUR]
+    ['draft', DAY, 6 * DAY],
+    ['scheduled', DAY, 6 * DAY],
+    ['running', -HOUR, 6 * DAY],
+    ['ended', -6 * DAY, -HOUR],
+    ['completed', -6 * DAY, -HOUR]
   ] as const)('gives %s its default dates', (preset, startsIn, endsIn) => {
     expect(toE2eSweepstakesTiming({ preset }, NOW)).toEqual({
       startDate: new Date(NOW.getTime() + startsIn * 1000),

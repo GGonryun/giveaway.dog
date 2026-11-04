@@ -195,7 +195,7 @@ test.describe('the dashboard list of giveaways', () => {
       ns,
       team: team.slug,
       preset: 'ended',
-      startsIn: -60 * DAY,
+      startsIn: -45 * DAY,
       endsIn: -40 * DAY,
       name: 'Range old'
     });

@@ -127,7 +127,7 @@ export const fillComplete = async (
   {
     name,
     startsIn = 0,
-    endsIn = 10
+    endsIn = 5
   }: { name: string; startsIn?: number; endsIn?: number }
 ) => {
   await page.getByRole('textbox', { name: 'Name' }).fill(name);

@@ -18,7 +18,8 @@
   "exports": {
     "./util": "./src/util.ts",
     "./retry": "./src/retry.ts",
-    "./schedule": "./src/schedule.ts"
+    "./schedule": "./src/schedule.ts",
+    "./retention": "./src/retention.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -30,6 +31,7 @@
     "@giveaway/cache": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
+    "@vercel/blob": "catalog:",
     "server-only": "catalog:"
   },
   "peerDependencies": {

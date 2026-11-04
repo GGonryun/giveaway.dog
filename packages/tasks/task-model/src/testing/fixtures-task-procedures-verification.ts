@@ -235,6 +235,7 @@ export const buildSweepstakes = (
   id: 'sweep-1',
   status: 'ACTIVE' as SweepstakesStatus,
   teamId: 'team-1',
+  dataDeletedAt: null,
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
   updatedAt: new Date('2026-01-01T00:00:00.000Z'),
   ...overrides

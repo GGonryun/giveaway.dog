@@ -1121,6 +1121,29 @@ describe('giveawayFormSchema', () => {
     expect(result.success).toBe(true);
   });
 
+  it('refuses an end date past the given duration limit when validation is on', () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+    const form = validForm();
+    const endDate = new Date(
+      new Date(form.timing.startDate).getTime() + 8 * 24 * 60 * 60 * 1000
+    );
+
+    const result = giveawayFormSchema({
+      validate: true,
+      maxLoyalty: 0,
+      maxDurationDays: 7
+    }).safeParse({ ...form, timing: { ...form.timing, endDate } });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues).toContainEqual(
+      expect.objectContaining({
+        message: 'Duration cannot exceed 7 days',
+        path: ['timing', 'endDate']
+      })
+    );
+  });
+
   it('rejects duplicate referral tasks when validation is on', () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);

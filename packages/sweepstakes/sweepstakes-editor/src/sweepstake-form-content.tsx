@@ -7,14 +7,17 @@ import { Selection } from '@giveaway/sweepstakes-editor-selection/selection';
 import { EntryMethods } from '@giveaway/task-editor/entry-methods/entry-methods';
 import { useFormContext } from 'react-hook-form';
 import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
+import { TeamTier } from '@giveaway/db-model';
 
-export const SweepstakeFormContent: React.FC = () => {
+export const SweepstakeFormContent: React.FC<{ tier?: TeamTier }> = ({
+  tier
+}) => {
   const { currentStep, action } = useUnifiedFormLayout();
   const form = useFormContext<GiveawayFormSchema>();
 
   return (
     <>
-      {currentStep === 'setup' && <Setup />}
+      {currentStep === 'setup' && <Setup tier={tier} />}
       {currentStep === 'audience' && <Audience />}
       {currentStep === 'tasks' && (
         <EntryMethods form={form} fieldPath="tasks" action={action} />

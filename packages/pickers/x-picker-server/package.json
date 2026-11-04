@@ -29,17 +29,21 @@
     "./procedures/get-twitter-v2-public-picker": "./src/procedures/get-twitter-v2-public-picker.ts",
     "./procedures/publish-twitter-v2-picker": "./src/procedures/publish-twitter-v2-picker.ts",
     "./procedures/update-twitter-v2-picker": "./src/procedures/update-twitter-v2-picker.ts",
+    "./run-data-retention": "./src/run-data-retention.ts",
     "./testing/fixtures-pickers": "./src/testing/fixtures-pickers.ts"
   },
   "scripts": {
     "test": "vitest run",
     "test:unit": "vitest run --project server",
-    "test:server": "vitest run --project server"
+    "test:server": "vitest run --project server",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
     "@giveaway/db-model": "workspace:*",
+    "@giveaway/jobs": "workspace:*",
     "@giveaway/picker-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
     "@giveaway/team-permissions": "workspace:*",
     "@giveaway/team-server": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
@@ -53,6 +57,8 @@
   },
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
+    "@giveaway/testing-integration": "workspace:*",
+    "@giveaway/testing-postgres": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",
     "@giveaway/vitest-config": "workspace:*",

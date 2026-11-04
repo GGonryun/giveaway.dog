@@ -25,7 +25,7 @@ vi.mock('@giveaway/automation-server/automated-post-workflow/start', () => ({
 type Input = Parameters<typeof updateSweepstakes>[0];
 
 const START = new Date('2025-06-20T00:00:00.000Z');
-const END = new Date('2025-06-30T00:00:00.000Z');
+const END = new Date('2025-06-26T00:00:00.000Z');
 
 describe('updateSweepstakes', () => {
   beforeEach(() => {

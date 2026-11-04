@@ -357,6 +357,8 @@ model Sweepstakes {
   prizes       Prize[]
   tasks        Task[]
 
+  dataDeletedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -993,6 +995,7 @@ model TwitterPicker {
   users               TwitterPickerUser[]
   winners             Int
   draws               TwitterPickerDraw[]
+  dataDeletedAt       DateTime?
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 }

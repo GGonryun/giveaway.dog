@@ -29,6 +29,7 @@
   "dependencies": {
     "@giveaway/db-model": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
     "@giveaway/ui-date": "workspace:*",
     "@giveaway/ui-file-upload": "workspace:*",
     "@giveaway/ui-layouts": "workspace:*",
@@ -40,6 +41,7 @@
     "react-hook-form": "catalog:"
   },
   "peerDependencies": {
+    "next": "catalog:",
     "react": "catalog:"
   },
   "devDependencies": {

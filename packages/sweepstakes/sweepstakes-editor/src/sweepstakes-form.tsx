@@ -45,6 +45,9 @@ import {
   SlugAvailability,
   slugAvailability
 } from '@giveaway/sweepstakes-editor-audience/slug-availability';
+import { useTeams } from '@giveaway/team-context/team-provider';
+import { TeamTier } from '@giveaway/db-model';
+import { maxSweepstakesDurationDays } from '@giveaway/team-model/team/limits';
 
 export const SweepstakesForm: React.FC<{
   sweepstakes: GiveawayFormSchema;
@@ -71,10 +74,17 @@ export const SweepstakesForm: React.FC<{
       : 'create';
 
   const [slugs] = useState(() => slugAvailability(id));
+  const { activeTeam } = useTeams();
 
   const form = useForm<GiveawayFormSchema>({
     resolver: slugs.resolver(
-      zodResolver(giveawayFormSchema({ validate: !isDemo, maxLoyalty }))
+      zodResolver(
+        giveawayFormSchema({
+          validate: !isDemo,
+          maxLoyalty,
+          maxDurationDays: maxSweepstakesDurationDays(activeTeam.tier)
+        })
+      )
     ),
     defaultValues,
     mode: 'onChange'
@@ -103,6 +113,7 @@ export const SweepstakesForm: React.FC<{
           action={action}
           integrations={integrations}
           slugs={slugs}
+          tier={activeTeam.tier}
         />
       </FormProvider>
     </PreviewStateContext.Provider>
@@ -115,7 +126,8 @@ const FormContent: React.FC<{
   integrations: IntegrationsSchema;
   action: UnifiedFormAction;
   slugs: SlugAvailability;
-}> = ({ id, integrations, action, step, slugs }) => {
+  tier: TeamTier;
+}> = ({ id, integrations, action, step, slugs, tier }) => {
   const detailsPage = useSweepstakesDetailsPage();
   const sweepstakesPage = useSweepstakesPage();
 
@@ -244,7 +256,7 @@ const FormContent: React.FC<{
         setShowIssues={setShowIssues}
         onCancel={handleCancel}
         onSave={handleSaveChanges}
-        form={<SweepstakeFormContent />}
+        form={<SweepstakeFormContent tier={tier} />}
         preview={<SweepstakesFormPreview />}
         integrations={integrations}
         previewFooter={<SweepstakesPreviewFooter />}

@@ -3922,6 +3922,9 @@ importers:
       '@giveaway/util-errors':
         specifier: workspace:*
         version: link:../../shared/util-errors
+      '@vercel/blob':
+        specifier: 'catalog:'
+        version: 1.1.1
       next:
         specifier: 'catalog:'
         version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -9165,12 +9168,18 @@ importers:
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
+      '@giveaway/jobs':
+        specifier: workspace:*
+        version: link:../../infra/jobs
       '@giveaway/picker-model':
         specifier: workspace:*
         version: link:../picker-model
       '@giveaway/rpc-server':
         specifier: workspace:*
         version: link:../../infra/rpc-server
+      '@giveaway/team-model':
+        specifier: workspace:*
+        version: link:../../team/team-model
       '@giveaway/team-permissions':
         specifier: workspace:*
         version: link:../../team/team-permissions
@@ -9205,6 +9214,12 @@ importers:
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
+      '@giveaway/testing-integration':
+        specifier: workspace:*
+        version: link:../../tooling/testing-integration
+      '@giveaway/testing-postgres':
+        specifier: workspace:*
+        version: link:../../tooling/testing-postgres
       '@giveaway/testing-server':
         specifier: workspace:*
         version: link:../../tooling/testing-server
@@ -10503,18 +10518,27 @@ importers:
 
   packages/sweepstakes/sweepstakes-details-shell:
     dependencies:
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../sweepstakes-model
       '@giveaway/sweepstakes-routes':
         specifier: workspace:*
         version: link:../sweepstakes-routes
+      '@giveaway/team-model':
+        specifier: workspace:*
+        version: link:../../team/team-model
       '@giveaway/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/ui-primitives
       '@giveaway/util-types':
         specifier: workspace:*
         version: link:../../shared/util-types
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
       next:
         specifier: 'catalog:'
         version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -10691,6 +10715,9 @@ importers:
 
   packages/sweepstakes/sweepstakes-editor:
     dependencies:
+      '@giveaway/db-model':
+        specifier: workspace:*
+        version: link:../../infra/db-model
       '@giveaway/integration-model':
         specifier: workspace:*
         version: link:../../integrations/core/integration-model
@@ -10739,6 +10766,12 @@ importers:
       '@giveaway/task-editor':
         specifier: workspace:*
         version: link:../../tasks/task-editor
+      '@giveaway/team-context':
+        specifier: workspace:*
+        version: link:../../team/team-context
+      '@giveaway/team-model':
+        specifier: workspace:*
+        version: link:../../team/team-model
       '@giveaway/ui-hooks':
         specifier: workspace:*
         version: link:../../ui/ui-hooks
@@ -10767,9 +10800,6 @@ importers:
       '@giveaway/sweepstakes-participation':
         specifier: workspace:*
         version: link:../sweepstakes-participation
-      '@giveaway/team-context':
-        specifier: workspace:*
-        version: link:../../team/team-context
       '@giveaway/testing-dom':
         specifier: workspace:*
         version: link:../../tooling/testing-dom
@@ -11304,6 +11334,9 @@ importers:
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../sweepstakes-model
+      '@giveaway/team-model':
+        specifier: workspace:*
+        version: link:../../team/team-model
       '@giveaway/team-permissions':
         specifier: workspace:*
         version: link:../../team/team-permissions
@@ -11374,6 +11407,9 @@ importers:
       '@giveaway/sweepstakes-model':
         specifier: workspace:*
         version: link:../sweepstakes-model
+      '@giveaway/team-model':
+        specifier: workspace:*
+        version: link:../../team/team-model
       '@giveaway/ui-date':
         specifier: workspace:*
         version: link:../../ui/ui-date
@@ -11398,6 +11434,9 @@ importers:
       lucide-react:
         specifier: 'catalog:'
         version: 0.559.0(react@19.2.4)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react:
         specifier: 'catalog:'
         version: 19.2.4
@@ -11584,6 +11623,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 20.17.6
+      '@vercel/blob':
+        specifier: 'catalog:'
+        version: 1.1.1
       typescript:
         specifier: 'catalog:'
         version: 6.0.3

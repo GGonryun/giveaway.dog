@@ -28,7 +28,6 @@ export const timingSchema = ({
         path: ['endDate']
       });
     }
-    // do not allow giveaways longer than 30 days
     const maxEndDate = new Date(startDate);
     maxEndDate.setDate(maxEndDate.getDate() + maxDurationDays);
     if (endDate > maxEndDate) {

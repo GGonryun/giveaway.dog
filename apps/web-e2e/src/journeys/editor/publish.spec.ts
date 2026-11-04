@@ -25,7 +25,7 @@ test.describe('create and publish a giveaway in the editor', () => {
       const name = giveawayName(testInfo, 'now');
 
       const id = await createDraft(page, team.slug);
-      await fillComplete(page, { name, startsIn: 0, endsIn: 10 });
+      await fillComplete(page, { name, startsIn: 0, endsIn: 5 });
       await publishNow(page, team.slug, /go live immediately/);
 
       await searchDashboard(page, name);
@@ -80,7 +80,7 @@ test.describe('create and publish a giveaway in the editor', () => {
       const name = giveawayName(testInfo, 'later');
 
       const id = await createDraft(page, team.slug);
-      await fillComplete(page, { name, startsIn: 3, endsIn: 10 });
+      await fillComplete(page, { name, startsIn: 3, endsIn: 6 });
       await publishNow(page, team.slug, /go live in 2 days|go live in 3 days/);
 
       await page.getByRole('tab', { name: 'Scheduled' }).click();

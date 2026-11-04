@@ -27,6 +27,7 @@
     "test:snapshot": "vitest run --project snapshot"
   },
   "dependencies": {
+    "@giveaway/db-model": "workspace:*",
     "@giveaway/integration-model": "workspace:*",
     "@giveaway/integration-server": "workspace:*",
     "@giveaway/rpc-client": "workspace:*",
@@ -43,6 +44,8 @@
     "@giveaway/sweepstakes-routes": "workspace:*",
     "@giveaway/sweepstakes-ui": "workspace:*",
     "@giveaway/task-editor": "workspace:*",
+    "@giveaway/team-context": "workspace:*",
+    "@giveaway/team-model": "workspace:*",
     "@giveaway/ui-hooks": "workspace:*",
     "@giveaway/ui-layouts": "workspace:*",
     "@hookform/resolvers": "catalog:",
@@ -56,7 +59,6 @@
   "devDependencies": {
     "@giveaway/eslint-config": "workspace:*",
     "@giveaway/sweepstakes-participation": "workspace:*",
-    "@giveaway/team-context": "workspace:*",
     "@giveaway/testing-dom": "workspace:*",
     "@giveaway/testing-server": "workspace:*",
     "@giveaway/tsconfig": "workspace:*",

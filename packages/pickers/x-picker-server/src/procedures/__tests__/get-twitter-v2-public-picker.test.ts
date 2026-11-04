@@ -160,7 +160,13 @@ describe('getTwitterV2PublicPicker', () => {
       const result = await getTwitterV2PublicPicker({ pickerId: 'picker-1' });
 
       expect(expectOk(result)).toEqual({
-        ...withoutKeys(row, 'lastPostWithin', 'runId', 'teamId'),
+        ...withoutKeys(
+          row,
+          'lastPostWithin',
+          'runId',
+          'teamId',
+          'dataDeletedAt'
+        ),
         isFree: false,
         hasRun: false,
         users: [

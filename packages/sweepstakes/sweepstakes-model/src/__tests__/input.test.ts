@@ -52,6 +52,7 @@ const formField = (overrides: Partial<FormField> = {}): FormField => ({
 
 const emptyPayload = (overrides: Partial<Payload> = {}): Payload => ({
   id: 'sweep-1',
+  dataDeletedAt: null,
   status: 'DRAFT',
   teamId: 'team-1',
   createdAt: new Date('2026-01-01T00:00:00.000Z'),

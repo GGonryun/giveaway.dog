@@ -24,7 +24,7 @@ const GIVEAWAYS = {
   endedLongAgo: { preset: 'ended', endsIn: OVER_A_DAY_AGO },
   unlisted: { preset: 'running', visibility: 'UNLISTED' },
   private: { preset: 'running', visibility: 'PRIVATE' },
-  draftRunning: { preset: 'draft', startsIn: -HOUR, endsIn: 7 * DAY },
+  draftRunning: { preset: 'draft', startsIn: -HOUR, endsIn: 6 * DAY },
   completedRecently: { preset: 'completed', endsIn: -2 * HOUR },
   completedLongAgo: { preset: 'completed', endsIn: OVER_A_DAY_AGO },
   draftEnded: {
