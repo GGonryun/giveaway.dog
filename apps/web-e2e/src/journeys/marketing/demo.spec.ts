@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
+import { headerButton, publishDialog } from '../../helpers/editor';
 import { knownBug } from '../../helpers/known-bug';
 import { isServerActionRequest } from '../../helpers/rsc';
 
@@ -18,11 +19,8 @@ const watchWrites = (page: Page) => {
 };
 
 const openPublishDialog = async (page: Page) => {
-  await page
-    .getByRole('banner')
-    .getByRole('button', { name: 'Publish', exact: true })
-    .click();
-  return page.getByRole('dialog', { name: 'Ready to Publish?' });
+  await headerButton(page, 'Publish').click();
+  return publishDialog(page);
 };
 
 test.describe('demo editor', () => {
