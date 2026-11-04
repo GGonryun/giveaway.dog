@@ -1,7 +1,16 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@giveaway/ui-primitives/form';
 import {
   DateTimePicker,
   TimePicker,
@@ -456,6 +465,58 @@ describe('DateTimePicker', () => {
       </>
     );
     expect(screen.getByLabelText('Start Date')).toBe(getTrigger());
+  });
+
+  it('passes aria-describedby and aria-invalid to the trigger', () => {
+    render(
+      <DateTimePicker
+        value={value}
+        aria-describedby="start-date-message"
+        aria-invalid
+      />
+    );
+    expect(getTrigger()).toHaveAttribute(
+      'aria-describedby',
+      'start-date-message'
+    );
+    expect(getTrigger()).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('is named by its form label and described by its form message', () => {
+    function StartDateField() {
+      const form = useForm<{ startDate: Date }>({
+        defaultValues: { startDate: value }
+      });
+      useEffect(() => {
+        form.setError('startDate', {
+          type: 'custom',
+          message: 'Start date is required'
+        });
+      }, [form]);
+      return (
+        <Form {...form}>
+          <FormField
+            control={form.control}
+            name="startDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Start Date</FormLabel>
+                <FormControl>
+                  <DateTimePicker {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </Form>
+      );
+    }
+
+    render(<StartDateField />);
+    const trigger = screen.getByLabelText('Start Date');
+    expect(trigger).toBe(getTrigger());
+    expect(trigger).toHaveAttribute('aria-invalid', 'true');
+    expect(trigger).toHaveAccessibleDescription('Start date is required');
   });
 
   it('cannot be opened when disabled', async () => {
