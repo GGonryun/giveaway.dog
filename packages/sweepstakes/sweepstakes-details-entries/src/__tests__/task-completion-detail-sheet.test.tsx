@@ -323,11 +323,39 @@ describe('TaskCompletionDetailSheetContent', () => {
       });
     });
 
-    it('goes back when the details are closed', async () => {
+    it('returns to the entries list when the details are closed', async () => {
       const user = userEvent.setup();
       renderContent('entry-2');
       await user.click(screen.getByRole('button', { name: 'Close Details' }));
-      expect(navigation.router.back).toHaveBeenCalledTimes(1);
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/app/acme/sweepstakes/sweep-1/entries'
+      );
+      expect(navigation.router.back).not.toHaveBeenCalled();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('returns to the winners list when the details of a winners sheet are closed', async () => {
+      const user = userEvent.setup();
+      navigation.pathname = '/app/acme/sweepstakes/sweep-1/winners/task/task-1';
+      navigation.searchParams = new URLSearchParams('active=entry-2');
+      render(
+        <TeamsProvider value={{ activeTeam: team, teams: [team] }}>
+          <TaskCompletionDetailSheet
+            sweepstakesId="sweep-1"
+            slug="acme"
+            root="winners"
+          >
+            <TaskCompletionDetailSheetContent
+              entries={entries}
+              sweepstakesId="sweep-1"
+            />
+          </TaskCompletionDetailSheet>
+        </TeamsProvider>
+      );
+      await user.click(screen.getByRole('button', { name: 'Close Details' }));
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/app/acme/sweepstakes/sweep-1/winners'
+      );
     });
   });
 });

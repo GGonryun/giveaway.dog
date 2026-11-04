@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Sheet,
@@ -42,12 +42,14 @@ import { size } from 'lodash';
 import { ObfuscatedEmail } from '@giveaway/ui-primitives/obfuscated-email';
 import { UNKNOWN_USER_NAME } from '@giveaway/app-config/settings';
 
+const CloseSheetContext = createContext<() => void>(() => undefined);
+
 export const TaskCompletionDetailSheetContent: React.FC<{
   entries: UserEntriesSchema[];
   sweepstakesId: string;
   readOnly?: boolean;
 }> = ({ entries, sweepstakesId, readOnly = false }) => {
-  const router = useRouter();
+  const closeSheet = useContext(CloseSheetContext);
   const searchParams = useSearchParams();
   const taskCompletionId = searchParams.get('active');
   const { activeTeam } = useTeams();
@@ -68,10 +70,6 @@ export const TaskCompletionDetailSheetContent: React.FC<{
       setSelectedTaskCompletion(null);
     }
   }, [taskCompletionId, entries]);
-
-  const handleClose = () => {
-    router.back();
-  };
 
   if (!selectedTaskCompletion)
     return (
@@ -308,7 +306,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
           size="sm"
           variant="outline"
           className="w-full"
-          onClick={handleClose}
+          onClick={closeSheet}
         >
           Close Details
         </Button>
@@ -412,20 +410,26 @@ export const TaskCompletionDetailSheet: React.FC<{
     setOpen(!!taskId);
   }, [taskId]);
 
-  const handleClose = (status: boolean) => {
+  const close = () => {
+    setOpen(false);
+    router.push(`/app/${slug}/sweepstakes/${sweepstakesId}/${root}`);
+  };
+
+  const handleOpenChange = (status: boolean) => {
     if (!status) {
-      setOpen(false);
-      router.push(`/app/${slug}/sweepstakes/${sweepstakesId}/${root}`);
+      close();
     }
   };
 
   return (
-    <Sheet open={open} onOpenChange={handleClose}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
         side="left"
         className="w-full sm:max-w-lg flex flex-col px-4 sm:px-6 pb-4"
       >
-        {children}
+        <CloseSheetContext.Provider value={close}>
+          {children}
+        </CloseSheetContext.Provider>
       </SheetContent>
     </Sheet>
   );
