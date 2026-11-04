@@ -11,7 +11,7 @@ vi.mock('@giveaway/marketing-server/subscribe-email', () => ({
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
-const emailInput = () => screen.getByPlaceholderText('Enter your email');
+const emailInput = () => screen.getByLabelText('Email address');
 const subscribeButton = () =>
   screen.getByRole('button', { name: /Subscribe|Subscribing/ });
 
@@ -49,6 +49,19 @@ describe('SubscriptionCTA', () => {
     expect(
       await screen.findByText('Please enter a valid email address')
     ).toBeInTheDocument();
+  });
+
+  it('marks the email input invalid and describes it with the message', async () => {
+    const user = userEvent.setup();
+    render(<SubscriptionCTA />);
+    expect(emailInput()).toHaveAttribute('aria-invalid', 'false');
+
+    await user.type(emailInput(), 'not-an-email');
+    const message = await screen.findByText(
+      'Please enter a valid email address'
+    );
+    expect(emailInput()).toHaveAttribute('aria-invalid', 'true');
+    expect(emailInput().getAttribute('aria-describedby')).toContain(message.id);
   });
 
   it('rejects disposable email domains', async () => {

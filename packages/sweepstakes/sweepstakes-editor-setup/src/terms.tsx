@@ -246,6 +246,7 @@ export const TermsAndConditions = () => {
                 />
               ) : (
                 <MinimalTiptap
+                  aria-label="Terms & Conditions"
                   content={field.value.text}
                   onChange={(e) => {
                     form.setValue('terms.text', e, { shouldDirty: true });
