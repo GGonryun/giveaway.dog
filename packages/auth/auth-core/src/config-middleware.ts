@@ -2,6 +2,7 @@ import 'server-only';
 
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@giveaway/db-client/prisma';
+import { withoutUnstoredTokens } from './account-tokens';
 import { NextAuthConfig } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import type {} from './next-auth';
@@ -64,6 +65,9 @@ export const authConfigMiddleware = {
         });
       }
       return prismaAdapter.createUser!(user);
+    },
+    linkAccount(account) {
+      return prismaAdapter.linkAccount!(withoutUnstoredTokens(account));
     }
   },
   callbacks: {

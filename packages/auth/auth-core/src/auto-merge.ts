@@ -4,6 +4,7 @@ import { Account, Profile, Session } from 'next-auth';
 import prisma from '@giveaway/db-client/prisma';
 import { getAccountLabel, getAccountLink } from './get-account-data';
 import { Prisma, UserSource } from '@giveaway/db-model';
+import { toStoredTokens } from './account-tokens';
 
 const SUPPORTS_AUTO_MERGE_PROVIDERS: Record<UserSource, boolean> = {
   TWITTER_IMPORT: true,
@@ -80,12 +81,9 @@ export const tryAutoMerge = async (args: {
           }
         },
         data: {
-          access_token: account.access_token,
-          refresh_token: account.refresh_token,
-          expires_at: account.expires_at,
+          ...toStoredTokens(account),
           token_type: account.token_type,
-          scope: account.scope,
-          id_token: account.id_token
+          scope: account.scope
         }
       });
 
@@ -119,12 +117,9 @@ export const tryAutoMerge = async (args: {
         },
         data: {
           userId: currentUserId,
-          access_token: account.access_token,
-          refresh_token: account.refresh_token,
-          expires_at: account.expires_at,
+          ...toStoredTokens(account),
           token_type: account.token_type,
           scope: account.scope,
-          id_token: account.id_token,
           label: getAccountLabel(account, profile.data ?? profile),
           link: getAccountLink(account, profile.data ?? profile)
         }

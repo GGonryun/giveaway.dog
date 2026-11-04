@@ -170,6 +170,26 @@ describe('tryAutoMerge', () => {
       });
     });
 
+    it('stores no tokens when the imported account is a tiktok account', async () => {
+      await run({
+        existing: existingAccount(source, { provider: 'tiktok' }),
+        account: oauthAccount({ provider: 'tiktok' })
+      });
+
+      expect(prismaMock.account.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: {
+            access_token: null,
+            refresh_token: null,
+            expires_at: null,
+            id_token: null,
+            token_type: 'bearer',
+            scope: 'users.read'
+          }
+        })
+      );
+    });
+
     it('upgrades the imported user to a signup user', async () => {
       await run({ existing: existingAccount(source) });
 

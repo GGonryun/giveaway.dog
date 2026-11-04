@@ -9,14 +9,24 @@ import { pickRandom } from '@giveaway/util-collections/arrays';
 import { DOG_BREEDS } from './dogs';
 import { VERIFIED_EMAIL_PROVIDERS } from '@giveaway/integration-model/scopes';
 import { parseAuthProvider } from '@giveaway/integration-model/providers';
+import { CLEARED_TOKENS, storesProviderTokens } from './account-tokens';
 
 export type GetSession = () => Promise<Session | null>;
 
+const toTokenRefresh = (account: Account) =>
+  storesProviderTokens(account.provider)
+    ? {
+        ...(account.access_token && { access_token: account.access_token }),
+        ...(account.refresh_token && {
+          refresh_token: account.refresh_token
+        }),
+        ...(account.expires_at && { expires_at: account.expires_at })
+      }
+    : CLEARED_TOKENS;
+
 const toAccountRefresh = (account: Account) => ({
   ...(account.scope && { scope: account.scope }),
-  ...(account.access_token && { access_token: account.access_token }),
-  ...(account.refresh_token && { refresh_token: account.refresh_token }),
-  ...(account.expires_at && { expires_at: account.expires_at }),
+  ...toTokenRefresh(account),
   status: 'ACTIVE' as const
 });
 
