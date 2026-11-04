@@ -77,6 +77,13 @@ describe('UnifiedFormFooter', () => {
       ).not.toBeInTheDocument();
     });
 
+    it('does not offer to save and exit in the demo', () => {
+      renderFooter({ formErrors, showIssues: true, action: 'demo' });
+      expect(
+        issuesDialog().queryByRole('button', { name: 'Save & Exit' })
+      ).not.toBeInTheDocument();
+    });
+
     it('disables its actions while the form is disabled', () => {
       renderFooter({ formErrors, showIssues: true, disabled: true });
       expect(
@@ -123,6 +130,17 @@ describe('UnifiedFormFooter', () => {
       );
       expect(
         screen.queryByRole('button', { name: 'Next' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('submits with Publish in the demo', () => {
+      renderFooter({ currentStep: 'tasks', action: 'demo' });
+      expect(screen.getByRole('button', { name: 'Publish' })).toHaveAttribute(
+        'type',
+        'submit'
+      );
+      expect(
+        screen.queryByRole('button', { name: 'Save' })
       ).not.toBeInTheDocument();
     });
 

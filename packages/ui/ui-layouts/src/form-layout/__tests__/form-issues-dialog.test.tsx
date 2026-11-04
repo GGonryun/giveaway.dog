@@ -71,6 +71,13 @@ describe('FormIssuesDialog', () => {
     ).toBeInTheDocument();
   });
 
+  it('explains how many issues block publishing in the demo', () => {
+    renderDialog({}, { action: 'demo' });
+    expect(
+      screen.getByText('2 issues need to be fixed before you can publish')
+    ).toBeInTheDocument();
+  });
+
   it('explains how many issues block saving an existing form', () => {
     renderDialog({}, { action: 'edit' });
     expect(
