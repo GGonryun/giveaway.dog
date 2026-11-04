@@ -16,8 +16,6 @@ export const KNOWN_VIOLATIONS: KnownViolation[] = [
     issue: 543
   },
   { rule: 'button-name', selector: 'button:has(> svg:only-child)', issue: 100 },
-  { rule: 'button-name', selector: 'button[role="combobox"]', issue: 542 },
-  { rule: 'label', selector: 'textarea', issue: 542 },
   {
     rule: 'color-contrast',
     selector: '[data-slot="tooltip-trigger"]',
