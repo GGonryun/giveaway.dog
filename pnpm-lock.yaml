@@ -3033,6 +3033,9 @@ importers:
       '@giveaway/bluesky-api':
         specifier: workspace:*
         version: link:../../integrations/bluesky/bluesky-api
+      '@giveaway/db-client':
+        specifier: workspace:*
+        version: link:../../infra/db-client
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model
@@ -3069,13 +3072,13 @@ importers:
       server-only:
         specifier: 'catalog:'
         version: 0.0.1
+      workflow:
+        specifier: 'catalog:'
+        version: 4.0.1-beta.50(@aws-sdk/client-sts@3.981.0)(@playwright/test@1.63.0)(magicast@0.5.5)(next@16.1.6(@playwright/test@1.63.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@6.0.3)
       zod:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
-      '@giveaway/db-client':
-        specifier: workspace:*
-        version: link:../../infra/db-client
       '@giveaway/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
@@ -11277,6 +11280,9 @@ importers:
 
   packages/sweepstakes/sweepstakes-editor-server:
     dependencies:
+      '@giveaway/automation-server':
+        specifier: workspace:*
+        version: link:../../automation/automation-server
       '@giveaway/db-model':
         specifier: workspace:*
         version: link:../../infra/db-model

@@ -10,6 +10,7 @@ import {
 export const JOB_REQUESTS_KEY = 'jobs:requests';
 export const JOB_SCHEDULE_KEY = 'jobs:schedule';
 export const MAX_IDLE_MS = 6 * 60 * 60 * 1000;
+export const WORKFLOW_JOB_GRACE_MS = 15 * 60 * 1000;
 
 export type JobSchedule = {
   nextRunAt: number;
@@ -66,7 +67,7 @@ export const findNextRunAt = async (
   db: PrismaClient,
   now: Date = new Date()
 ) => {
-  const [task, sweepstakes, post] = await Promise.all([
+  const [task, sweepstakes, post, workflowPost] = await Promise.all([
     db.taskJob.findFirst({
       where: { status: TaskJobStatus.PENDING, runAt: { not: null } },
       orderBy: { runAt: 'asc' },
@@ -78,7 +79,12 @@ export const findNextRunAt = async (
       select: { runAt: true }
     }),
     db.automatedPostJob.findFirst({
-      where: { status: AutomatedPostJobStatus.PENDING },
+      where: { status: AutomatedPostJobStatus.PENDING, runId: null },
+      orderBy: { runAt: 'asc' },
+      select: { runAt: true }
+    }),
+    db.automatedPostJob.findFirst({
+      where: { status: AutomatedPostJobStatus.PENDING, runId: { not: null } },
       orderBy: { runAt: 'asc' },
       select: { runAt: true }
     })
@@ -88,7 +94,10 @@ export const findNextRunAt = async (
     now.getTime() + MAX_IDLE_MS,
     ...[task?.runAt, sweepstakes?.runAt, post?.runAt]
       .filter((runAt): runAt is Date => runAt instanceof Date)
-      .map((runAt) => runAt.getTime())
+      .map((runAt) => runAt.getTime()),
+    ...(workflowPost?.runAt
+      ? [workflowPost.runAt.getTime() + WORKFLOW_JOB_GRACE_MS]
+      : [])
   );
 };
 

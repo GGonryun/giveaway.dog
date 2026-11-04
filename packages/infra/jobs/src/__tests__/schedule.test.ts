@@ -4,6 +4,7 @@ import {
   JOB_REQUESTS_KEY,
   JOB_SCHEDULE_KEY,
   MAX_IDLE_MS,
+  WORKFLOW_JOB_GRACE_MS,
   checkJobSchedule,
   findNextRunAt,
   requestJobRun,
@@ -220,13 +221,45 @@ describe('job schedule', () => {
         orderBy: { runAt: 'asc' },
         select: { runAt: true }
       });
-      expect(
-        prismaMock.automatedPostJob.findFirst
-      ).toHaveBeenCalledExactlyOnceWith({
-        where: { status: 'PENDING' },
+      expect(prismaMock.automatedPostJob.findFirst).toHaveBeenCalledTimes(2);
+      expect(prismaMock.automatedPostJob.findFirst).toHaveBeenCalledWith({
+        where: { status: 'PENDING', runId: null },
         orderBy: { runAt: 'asc' },
         select: { runAt: true }
       });
+      expect(prismaMock.automatedPostJob.findFirst).toHaveBeenCalledWith({
+        where: { status: 'PENDING', runId: { not: null } },
+        orderBy: { runAt: 'asc' },
+        select: { runAt: true }
+      });
+    });
+
+    it('waits 15 minutes past the run time of a post that a workflow runs', async () => {
+      prismaMock.automatedPostJob.findFirst.mockImplementation((async ({
+        where
+      }: {
+        where: { runId: unknown };
+      }) => (where.runId === null ? null : { runAt: LATER })) as never);
+
+      expect(await findNextRunAt(asPrismaClient(), NOW)).toBe(
+        LATER.getTime() + 15 * 60 * 1000
+      );
+      expect(WORKFLOW_JOB_GRACE_MS).toBe(15 * 60 * 1000);
+    });
+
+    it('returns the run time of a post that no workflow runs when it comes first', async () => {
+      prismaMock.automatedPostJob.findFirst.mockImplementation((async ({
+        where
+      }: {
+        where: { runId: unknown };
+      }) => ({
+        runAt:
+          where.runId === null
+            ? LATER
+            : new Date(LATER.getTime() - 10 * 60 * 1000)
+      })) as never);
+
+      expect(await findNextRunAt(asPrismaClient(), NOW)).toBe(LATER.getTime());
     });
 
     it('waits at most the maximum idle time when no job is pending', async () => {
