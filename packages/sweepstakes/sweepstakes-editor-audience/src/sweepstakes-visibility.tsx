@@ -145,16 +145,10 @@ export const UrlSlugField = <
     name: fieldPath
   });
 
-  const abortControllerRef = useRef<AbortController | null>(null);
   const pendingSlugRef = useRef<string>('');
 
   const checkSlugRef = useRef(async (slug: string, sweepstakesId: string) => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
     pendingSlugRef.current = slug;
-    abortControllerRef.current = new AbortController();
 
     try {
       const result = await verifySlug({
@@ -223,9 +217,6 @@ export const UrlSlugField = <
   useEffect(() => {
     return () => {
       debouncedVerifySlugRef.current.cancel();
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
     };
   }, []);
 

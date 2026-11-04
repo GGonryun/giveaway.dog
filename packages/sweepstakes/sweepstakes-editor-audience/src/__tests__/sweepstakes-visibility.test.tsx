@@ -271,6 +271,31 @@ describe('UrlSlugField', () => {
       });
     });
 
+    it('ignores the result of an earlier check that finishes last', async () => {
+      let resolveFirst: (result: VerifySlugResult) => void = () => {};
+      mockedVerifySlug
+        .mockReturnValueOnce(
+          new Promise((resolve) => {
+            resolveFirst = resolve;
+          })
+        )
+        .mockResolvedValueOnce(available(true));
+      const { form } = renderSlug('summer-fun');
+      await advance(500);
+      changeSlug('winter-fun');
+      await advance(500);
+
+      await act(async () => {
+        resolveFirst(available(false));
+      });
+
+      expect(mockedVerifySlug).toHaveBeenCalledTimes(2);
+      expect(
+        screen.getByText('The slug "winter-fun" is available')
+      ).toBeInTheDocument();
+      expect(form.getFieldState('visibility.slug').error).toBeUndefined();
+    });
+
     it('cancels a pending check when unmounted', async () => {
       const { unmount } = renderSlug('summer-fun');
       unmount();
