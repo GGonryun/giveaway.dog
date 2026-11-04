@@ -78,14 +78,15 @@ export const UserInfoSection: React.FC<{ className?: string }> = ({
             <Link href="/account" className="hover:underline">
               Edit
             </Link>
-            <span
+            <button
+              type="button"
               className="cursor-pointer hover:underline"
               onClick={() => {
                 logout.run(pathname);
               }}
             >
               Logout
-            </span>
+            </button>
           </div>
         </div>
       ) : (

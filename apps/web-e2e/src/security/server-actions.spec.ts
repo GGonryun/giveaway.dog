@@ -12,7 +12,7 @@ import {
 const captureSubscribe = async (page: Page): Promise<ServerAction> => {
   await page.goto('/browse');
   await page
-    .getByRole('textbox', { name: 'Enter your email' })
+    .getByRole('textbox', { name: 'Email address' })
     .fill('e2e-visitor@example.com');
 
   return captureServerAction(

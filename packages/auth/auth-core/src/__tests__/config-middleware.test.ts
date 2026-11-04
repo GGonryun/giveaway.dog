@@ -241,6 +241,59 @@ describe('authConfigMiddleware', () => {
       expect(await adapter.getUserByEmail('a@example.com')).toBeNull();
     });
 
+    it('links a tiktok account without its tokens', async () => {
+      prismaMock.account.create.mockResolvedValue({});
+
+      await adapter.linkAccount?.({
+        userId: 'u-1',
+        type: 'oauth',
+        provider: 'tiktok',
+        providerAccountId: 'open-1',
+        access_token: 'access',
+        refresh_token: 'refresh',
+        expires_at: 1700000000,
+        token_type: 'bearer',
+        scope: 'user.info.basic'
+      });
+
+      expect(prismaMock.account.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'u-1',
+          type: 'oauth',
+          provider: 'tiktok',
+          providerAccountId: 'open-1',
+          token_type: 'bearer',
+          scope: 'user.info.basic'
+        }
+      });
+    });
+
+    it('links the account of another provider with its tokens', async () => {
+      prismaMock.account.create.mockResolvedValue({});
+
+      await adapter.linkAccount?.({
+        userId: 'u-1',
+        type: 'oauth',
+        provider: 'discord',
+        providerAccountId: 'd-1',
+        access_token: 'access',
+        refresh_token: 'refresh',
+        expires_at: 1700000000
+      });
+
+      expect(prismaMock.account.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'u-1',
+          type: 'oauth',
+          provider: 'discord',
+          providerAccountId: 'd-1',
+          access_token: 'access',
+          refresh_token: 'refresh',
+          expires_at: 1700000000
+        }
+      });
+    });
+
     it('keeps the prisma adapter methods bound to the app prisma client', async () => {
       prismaMock.user.findUnique.mockResolvedValue({ id: 'u-1' });
 

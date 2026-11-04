@@ -14,6 +14,14 @@ import {
   stubSweepstakesRewrite
 } from '@giveaway/testing-server/fixtures-procedures-sweepstakes-b';
 
+const { rescheduleAutomatedPostWorkflows } = vi.hoisted(() => ({
+  rescheduleAutomatedPostWorkflows: vi.fn()
+}));
+
+vi.mock('@giveaway/automation-server/automated-post-workflow/start', () => ({
+  rescheduleAutomatedPostWorkflows
+}));
+
 type Input = Parameters<typeof updateSweepstakes>[0];
 
 const START = new Date('2025-06-20T00:00:00.000Z');
@@ -24,6 +32,7 @@ describe('updateSweepstakes', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     prismaMock.sweepstakes.findUnique.mockResolvedValue(buildTeamSweepstakes());
     stubSweepstakesRewrite(prismaMock);
+    rescheduleAutomatedPostWorkflows.mockReset();
   });
 
   afterEach(() => {
@@ -75,6 +84,18 @@ describe('updateSweepstakes', () => {
       const result = await updateSweepstakes({ id: SWEEPSTAKES_ID });
 
       expect(expectOk(result)).toEqual({ slug: TEAM_SLUG });
+    });
+
+    it('restarts the scheduled posts of the sweepstakes after the rewrite commits', async () => {
+      await updateSweepstakes({ id: SWEEPSTAKES_ID });
+
+      expect(rescheduleAutomatedPostWorkflows).toHaveBeenCalledExactlyOnceWith(
+        prismaMock,
+        SWEEPSTAKES_ID
+      );
+      expect(
+        rescheduleAutomatedPostWorkflows.mock.invocationCallOrder[0]
+      ).toBeGreaterThan(prismaMock.$transaction.mock.invocationCallOrder[0]);
     });
 
     it('keeps the stored status when the input has none', async () => {
@@ -211,6 +232,7 @@ describe('updateSweepstakes', () => {
 
       expectFailure(result, 'FORBIDDEN');
       expect(prismaMock.$transaction).not.toHaveBeenCalled();
+      expect(rescheduleAutomatedPostWorkflows).not.toHaveBeenCalled();
     });
 
     it('returns FORBIDDEN for a completed sweepstakes', async () => {

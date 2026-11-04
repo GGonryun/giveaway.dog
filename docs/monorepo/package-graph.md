@@ -709,11 +709,11 @@ The analysis follows static imports, dynamic imports and `require`, so it misses
 
 3 packages, 18 source files, 8 test files.
 
-| Package                       | Type    | Files  | Moves from                                                                                                          |
-| ----------------------------- | ------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| `@giveaway/automation-model`  | model   | 4 / 4  | `lib/automation/db.ts`<br>`lib/automation/schemas.ts`<br>`lib/automation/util.ts`<br>`lib/automation/validation.ts` |
-| `@giveaway/automation-server` | server  | 4 / 4  | `lib/automation/procedures/`                                                                                        |
-| `@giveaway/automation-ui`     | feature | 10 / 0 | `lib/automation/components/`                                                                                        |
+| Package                       | Type    | Files  | Moves from                                                                                                                |
+| ----------------------------- | ------- | ------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `@giveaway/automation-model`  | model   | 4 / 4  | `lib/automation/db.ts`<br>`lib/automation/schemas.ts`<br>`lib/automation/util.ts`<br>`lib/automation/validation.ts`       |
+| `@giveaway/automation-server` | server  | 7 / 7  | `lib/automation/procedures/`, and the new automated post workflow, which posts each scheduled post at its run time (#175) |
+| `@giveaway/automation-ui`     | feature | 10 / 0 | `lib/automation/components/`                                                                                              |
 
 ### Pickers
 

@@ -39,11 +39,12 @@ exports[`ActiveParticipation > snapshots > matches the snapshot for a participan
             >
               Edit
             </a>
-            <span
+            <button
               class="cursor-pointer hover:underline"
+              type="button"
             >
               Logout
-            </span>
+            </button>
           </div>
         </div>
       </div>
@@ -225,11 +226,12 @@ exports[`ActiveParticipation > snapshots > matches the snapshot when winners are
             >
               Edit
             </a>
-            <span
+            <button
               class="cursor-pointer hover:underline"
+              type="button"
             >
               Logout
-            </span>
+            </button>
           </div>
         </div>
       </div>
@@ -403,18 +405,16 @@ exports[`ActiveParticipation > snapshots > matches the snapshot when winners are
             class="rounded-sm border transition-colors bg-sidebar overflow-hidden relative shadow-sm opacity-70"
             data-state="closed"
           >
-            <div
-              aria-controls="generated-id"
-              aria-expanded="false"
-              class="group flex items-stretch w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-              data-state="closed"
-              type="button"
-            >
-              <div
-                class="flex items-center gap-3"
+            <h4>
+              <button
+                aria-controls="generated-id"
+                aria-expanded="false"
+                class="group flex items-stretch w-full cursor-pointer text-left hover:bg-gray-100 dark:hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                data-state="closed"
+                type="button"
               >
-                <div
-                  class="flex items-center justify-center min-w-8 w-11 h-full bg-amber-100 text-amber-600"
+                <span
+                  class="flex items-center justify-center min-w-8 w-11 bg-amber-100 text-amber-600"
                 >
                   <svg
                     aria-hidden="true"
@@ -448,49 +448,49 @@ exports[`ActiveParticipation > snapshots > matches the snapshot when winners are
                       d="M6 9H4.5a1 1 0 0 1 0-5H6"
                     />
                   </svg>
-                </div>
-              </div>
-              <div
-                class="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap"
-              >
-                <div
-                  class="text-left flex items-center gap-2"
-                >
-                  <h4
-                    class="font-medium text-sm sm:text-base"
-                  >
-                    Gaming Headset
-                  </h4>
-                </div>
-                <div
-                  class="flex items-center gap-2"
+                </span>
+                <span
+                  class="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap"
                 >
                   <span
-                    class="inline-flex items-center justify-center rounded-md px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 text-xs border font-bold"
-                    data-slot="badge"
+                    class="flex items-center gap-2"
                   >
-                    1 winner
+                    <span
+                      class="font-medium text-sm sm:text-base"
+                    >
+                      Gaming Headset
+                    </span>
                   </span>
-                  <svg
-                    aria-hidden="true"
-                    class="lucide lucide-chevron-down"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <span
+                    class="flex items-center gap-2"
                   >
-                    <path
-                      d="m6 9 6 6 6-6"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
+                    <span
+                      class="inline-flex items-center justify-center rounded-md px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 text-xs border font-bold"
+                      data-slot="badge"
+                    >
+                      1 winner
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-chevron-down"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </button>
+            </h4>
             <div
               class="border-t bg-muted/50"
               data-state="closed"
@@ -503,18 +503,16 @@ exports[`ActiveParticipation > snapshots > matches the snapshot when winners are
             class="rounded-sm border transition-colors bg-sidebar overflow-hidden relative shadow-sm border-amber-500 hover:border-amber-600"
             data-state="closed"
           >
-            <div
-              aria-controls="generated-id"
-              aria-expanded="false"
-              class="group flex items-stretch w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-              data-state="closed"
-              type="button"
-            >
-              <div
-                class="flex items-center gap-3"
+            <h4>
+              <button
+                aria-controls="generated-id"
+                aria-expanded="false"
+                class="group flex items-stretch w-full cursor-pointer text-left hover:bg-gray-100 dark:hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                data-state="closed"
+                type="button"
               >
-                <div
-                  class="flex items-center justify-center min-w-8 w-11 h-full bg-amber-100 text-amber-600"
+                <span
+                  class="flex items-center justify-center min-w-8 w-11 bg-amber-100 text-amber-600"
                 >
                   <svg
                     aria-hidden="true"
@@ -548,49 +546,49 @@ exports[`ActiveParticipation > snapshots > matches the snapshot when winners are
                       d="M6 9H4.5a1 1 0 0 1 0-5H6"
                     />
                   </svg>
-                </div>
-              </div>
-              <div
-                class="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap"
-              >
-                <div
-                  class="text-left flex items-center gap-2"
-                >
-                  <h4
-                    class="font-medium text-sm sm:text-base"
-                  >
-                    Gift Card
-                  </h4>
-                </div>
-                <div
-                  class="flex items-center gap-2"
+                </span>
+                <span
+                  class="px-2 py-2 gap-2 flex items-center justify-between w-full flex-wrap"
                 >
                   <span
-                    class="inline-flex items-center justify-center rounded-md px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 text-xs border font-bold"
-                    data-slot="badge"
+                    class="flex items-center gap-2"
                   >
-                    2 winners
+                    <span
+                      class="font-medium text-sm sm:text-base"
+                    >
+                      Gift Card
+                    </span>
                   </span>
-                  <svg
-                    aria-hidden="true"
-                    class="lucide lucide-chevron-down"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <span
+                    class="flex items-center gap-2"
                   >
-                    <path
-                      d="m6 9 6 6 6-6"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
+                    <span
+                      class="inline-flex items-center justify-center rounded-md px-2 py-0.5 w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 text-xs border font-bold"
+                      data-slot="badge"
+                    >
+                      2 winners
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-chevron-down"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </button>
+            </h4>
             <div
               class="border-t bg-muted/50"
               data-state="closed"

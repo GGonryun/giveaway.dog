@@ -203,17 +203,17 @@ export const TimingField = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Timezone</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value && timezone.resolve(field.value)}
-                  >
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value && timezone.resolve(field.value)}
+                >
+                  <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a timezone" />
                       <MemoTimezone />
                     </SelectTrigger>
-                  </Select>
-                </FormControl>
+                  </FormControl>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

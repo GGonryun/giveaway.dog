@@ -37,6 +37,7 @@
     "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
+    "@giveaway/automation-server": "workspace:*",
     "@giveaway/db-model": "workspace:*",
     "@giveaway/jobs": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",

@@ -81,11 +81,12 @@ exports[`UserInfoSection > when a participant is signed in > matches the snapsho
       >
         Edit
       </a>
-      <span
+      <button
         class="cursor-pointer hover:underline"
+        type="button"
       >
         Logout
-      </span>
+      </button>
     </div>
   </div>
 </div>

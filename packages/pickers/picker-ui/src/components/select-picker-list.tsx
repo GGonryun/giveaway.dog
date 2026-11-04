@@ -4,7 +4,7 @@ import { Card } from '@giveaway/ui-primitives/card';
 import { Badge } from '@giveaway/ui-primitives/badge';
 import { SocialXIcon } from '@giveaway/integration-icons/x-icon';
 import { ChevronRight, GemIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
 import { SocialTwitchIcon } from '@giveaway/integration-icons/twitch-icon';
 import { useTeams } from '@giveaway/team-context/team-provider';
@@ -23,7 +23,6 @@ interface PickerListOption {
 }
 
 export const SelectPickerList: React.FC<SelectPickerListProps> = ({ slug }) => {
-  const router = useRouter();
   const { activeTeam } = useTeams();
 
   const isFreeTier = activeTeam.tier === 'FREE';
@@ -55,10 +54,6 @@ export const SelectPickerList: React.FC<SelectPickerListProps> = ({ slug }) => {
     }
   ];
 
-  const handleNavigate = (path: string) => {
-    router.push(`/app/${slug}/pickers/${path}`);
-  };
-
   return (
     <div className="space-y-4">
       {PICKER_LIST_OPTIONS.map((option) => {
@@ -67,34 +62,40 @@ export const SelectPickerList: React.FC<SelectPickerListProps> = ({ slug }) => {
         return (
           <Card
             key={option.id}
-            className="p-6 hover:border-primary transition-colors cursor-pointer relative"
-            onClick={() => handleNavigate(option.path)}
+            className="p-0 hover:border-primary has-[:focus-visible]:border-primary transition-colors relative"
           >
-            {option.badge && (
-              <Badge
-                className="absolute top-4 right-4"
-                variant={option.badge === 'Pro only' ? 'default' : 'secondary'}
-              >
-                {option.badge === 'Pro only' && (
-                  <GemIcon className="w-3 h-3 mr-1" />
-                )}
-                {option.badge}
-              </Badge>
-            )}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center shrink-0">
-                <Icon className="w-6 h-6" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h2 className="text-lg font-semibold mb-1">{option.title}</h2>
-                <p className="text-sm text-muted-foreground">
-                  {option.description}
-                </p>
-              </div>
-              {!option.badge && (
-                <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0" />
+            <Link
+              href={`/app/${slug}/pickers/${option.path}`}
+              className="block p-6 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {option.badge && (
+                <Badge
+                  className="absolute top-4 right-4"
+                  variant={
+                    option.badge === 'Pro only' ? 'default' : 'secondary'
+                  }
+                >
+                  {option.badge === 'Pro only' && (
+                    <GemIcon className="w-3 h-3 mr-1" />
+                  )}
+                  {option.badge}
+                </Badge>
               )}
-            </div>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center shrink-0">
+                  <Icon className="w-6 h-6" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg font-semibold mb-1">{option.title}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {option.description}
+                  </p>
+                </div>
+                {!option.badge && (
+                  <ChevronRight className="w-5 h-5 text-muted-foreground shrink-0" />
+                )}
+              </div>
+            </Link>
           </Card>
         );
       })}

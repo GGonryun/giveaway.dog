@@ -39,11 +39,12 @@ exports[`WinnersAnnouncedParticipation > matches the snapshot 1`] = `
             >
               Edit
             </a>
-            <span
+            <button
               class="cursor-pointer hover:underline"
+              type="button"
             >
               Logout
-            </span>
+            </button>
           </div>
         </div>
       </div>

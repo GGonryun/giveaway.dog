@@ -51,7 +51,10 @@ export const SweepstakesFilterBar: React.FC<{
           })
         }
       >
-        <SelectTrigger className="hidden sm:w-48 sm:flex">
+        <SelectTrigger
+          aria-label="Date range"
+          className="hidden sm:w-48 sm:flex"
+        >
           <CalendarIcon className="h-4 w-4 mr-2" />
           <SelectValue placeholder="Date range" />
         </SelectTrigger>
