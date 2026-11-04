@@ -122,7 +122,10 @@ export const EntryMethod: React.FC<{
                   icon={CopyIcon}
                   label={`Copy ${TASK_LABEL[type]}`}
                 />
-                <IconButton icon={open ? ChevronUpIcon : ChevronDownIcon} />
+                <IconButton
+                  icon={open ? ChevronUpIcon : ChevronDownIcon}
+                  label={open ? 'Collapse' : 'Expand'}
+                />
               </div>
             </div>
           </CollapsibleTrigger>

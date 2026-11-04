@@ -93,7 +93,10 @@ export const ProfileInformationCard: React.FC<{
                 </div>
               </div>
               <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                <Link href={`/app/${slug}/users/${user.id}/entries`}>
+                <Link
+                  href={`/app/${slug}/users/${user.id}/entries`}
+                  aria-label="View entries"
+                >
                   <SquareArrowOutUpRight className="text-muted-foreground" />
                 </Link>
               </Button>

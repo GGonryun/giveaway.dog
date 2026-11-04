@@ -491,6 +491,7 @@ exports[`UserParticipantSheetContent > matches the snapshot 1`] = `
                   Completed
                 </span>
                 <button
+                  aria-label="Open task"
                   class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-9 [&_svg]:mr-0 h-6 w-6 p-0 m-0 hover:bg-transparent group-hover:opacity-100 opacity-0 transition-opacity cursor-pointer"
                   data-slot="button"
                 >
@@ -561,6 +562,7 @@ exports[`UserParticipantSheetContent > matches the snapshot 1`] = `
                   Completed
                 </span>
                 <button
+                  aria-label="Open task"
                   class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 size-9 [&_svg]:mr-0 h-6 w-6 p-0 m-0 hover:bg-transparent group-hover:opacity-100 opacity-0 transition-opacity cursor-pointer"
                   data-slot="button"
                 >

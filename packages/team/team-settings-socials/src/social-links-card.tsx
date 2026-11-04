@@ -177,6 +177,7 @@ export const SocialLinksCard: React.FC<SocialLinksCardProps> = ({
                 size="icon"
                 onClick={() => remove(index)}
                 className="mt-0"
+                aria-label="Remove social link"
               >
                 <X className="h-4 w-4" />
               </Button>

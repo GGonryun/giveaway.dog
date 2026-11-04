@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 export const IconButton: React.FC<{
   onClick?: (e: React.MouseEvent) => void;
   icon: LucideIcon;
-  label?: string;
+  label: string;
 }> = ({ onClick, icon: LucideIcon, label }) => {
   const handleClick = useCallback(
     (e: React.MouseEvent) => {

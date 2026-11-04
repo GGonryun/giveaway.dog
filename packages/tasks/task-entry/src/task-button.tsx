@@ -12,6 +12,12 @@ import {
 } from '@giveaway/task-actions/submission';
 import { CompletionStatus } from '@giveaway/db-model';
 
+const SUBMISSION_BUTTON_LABEL_MAP: Record<CompletionStatus, string> = {
+  COMPLETED: 'Completed',
+  PENDING: 'Pending review',
+  REJECTED: 'Rejected'
+};
+
 export const TaskButton: React.FC<{
   open: boolean;
   task: ParticipantTaskSchema;
@@ -22,6 +28,15 @@ export const TaskButton: React.FC<{
   const { theme } = useTaskTheme();
   const variant = status ? SUBMISSION_BUTTON_VARIANT_MAP[status] : 'outline';
   const Icon = status ? SUBMISSION_BUTTON_ICON_MAP[status] : undefined;
+  const label = isLoading
+    ? 'Loading'
+    : status
+      ? SUBMISSION_BUTTON_LABEL_MAP[status]
+      : lock
+        ? 'Locked'
+        : open
+          ? 'Close task'
+          : undefined;
   return (
     // Note: moving the tooltip trigger from here will break the tooltip's open state management
     <TooltipTrigger asChild>
@@ -29,6 +44,7 @@ export const TaskButton: React.FC<{
         size="icon"
         type="button"
         variant={variant}
+        aria-label={label}
         className={cn(
           'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-white hover:text-white group-hover:opacity-70 hover:opacity-70',
           status ? '' : theme.action

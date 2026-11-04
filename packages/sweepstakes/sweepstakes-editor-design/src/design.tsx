@@ -575,6 +575,7 @@ const GradientStopsField = <
               size="sm"
               onClick={() => removeStop(index)}
               disabled={gradient.stops.length <= 2}
+              aria-label={`Remove color stop ${index + 1}`}
             >
               <Trash2 className="h-4 w-4" />
             </Button>

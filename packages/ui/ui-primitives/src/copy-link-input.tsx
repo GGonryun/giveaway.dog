@@ -50,6 +50,7 @@ export const CopyLinkInput: React.FC<CopyLinkInputProps> = ({
         size="sm"
         className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted"
         disabled={!value}
+        aria-label="Copy link"
       >
         {copied ? (
           <Check className="h-4 w-4 text-green-600" />

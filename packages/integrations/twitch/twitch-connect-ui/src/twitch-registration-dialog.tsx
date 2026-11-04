@@ -91,6 +91,7 @@ export function TwitchRegistrationDialog({
                 size="sm"
                 onClick={handleCopyCommand}
                 className="shrink-0"
+                aria-label="Copy command"
               >
                 {copied ? (
                   <Check className="h-4 w-4" />

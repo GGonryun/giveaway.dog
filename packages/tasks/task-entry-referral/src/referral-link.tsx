@@ -122,6 +122,7 @@ export const ReferralLinkTaskActionForm: React.FC<
             size="icon"
             onClick={handleCopy}
             className="shrink-0"
+            aria-label="Copy referral link"
           >
             {copied ? (
               <Check className="h-4 w-4" />
@@ -135,6 +136,7 @@ export const ReferralLinkTaskActionForm: React.FC<
             size="icon"
             onClick={handleShare}
             className="shrink-0"
+            aria-label="Share referral link"
           >
             <Share2 className="h-4 w-4" />
           </Button>

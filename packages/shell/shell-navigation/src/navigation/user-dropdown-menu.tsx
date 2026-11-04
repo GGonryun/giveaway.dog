@@ -127,18 +127,21 @@ export const UserDropdownMenu: React.FC<{ user: UserSchema }> = ({ user }) => {
           >
             <ToggleGroupItem
               value="system"
+              aria-label="System"
               className="h-7 flex-1 data-[state=on]:bg-background data-[state=on]:border data-[state=on]:text-foreground"
             >
               <Monitor className="h-3.5 w-3.5" />
             </ToggleGroupItem>
             <ToggleGroupItem
               value="light"
+              aria-label="Light"
               className="h-7 flex-1 data-[state=on]:bg-background data-[state=on]:border data-[state=on]:text-foreground"
             >
               <Sun className="h-3.5 w-3.5" />
             </ToggleGroupItem>
             <ToggleGroupItem
               value="dark"
+              aria-label="Dark"
               className="h-7 flex-1 data-[state=on]:bg-background data-[state=on]:border data-[state=on]:text-foreground"
             >
               <Moon className="h-3.5 w-3.5" />
