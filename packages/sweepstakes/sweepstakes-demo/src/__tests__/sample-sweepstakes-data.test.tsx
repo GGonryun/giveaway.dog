@@ -15,12 +15,12 @@ vi.mock('nanoid', () => {
 });
 
 describe('SAMPLE_SWEEPSTAKES_DATA', () => {
-  it('starts one day after it is loaded and ends 128 days after', () => {
+  it('starts one day after it is loaded and ends 31 days after, a 30-day run', () => {
     expect(SAMPLE_SWEEPSTAKES_DATA.timing.startDate).toEqual(
       new Date('2026-06-16T12:00:00.000Z')
     );
     expect(SAMPLE_SWEEPSTAKES_DATA.timing.endDate).toEqual(
-      new Date('2026-10-21T12:00:00.000Z')
+      new Date('2026-07-16T12:00:00.000Z')
     );
   });
 
@@ -32,14 +32,12 @@ describe('SAMPLE_SWEEPSTAKES_DATA', () => {
     expect(result.error?.issues).toBeUndefined();
   });
 
-  it('runs longer than the 90 days allowed outside of the demo', async () => {
+  it('is valid outside of the demo, within the 90-day limit', async () => {
     const result = await giveawayFormSchema({
       validate: true,
       maxLoyalty: 0
     }).safeParseAsync(SAMPLE_SWEEPSTAKES_DATA);
-    expect(result.error?.issues.map((issue) => issue.message)).toEqual([
-      'Duration cannot exceed 90 days'
-    ]);
+    expect(result.error?.issues).toBeUndefined();
   });
 
   it('gives every task and prize a unique id', () => {
