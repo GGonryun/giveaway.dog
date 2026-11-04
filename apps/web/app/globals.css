@@ -65,16 +65,13 @@
     --quinary: oklch(0.7 0.12 250);
     --quinary-foreground: oklch(0.1 0 0);
 
-    --success: oklch(0.62 0.18 160);
+    --success: oklch(0.51 0.18 160);
     --success-foreground: oklch(1 0 0);
 
-    --info: oklch(0.58 0.15 240);
+    --info: oklch(0.535 0.15 240);
     --info-foreground: oklch(1 0 0);
 
-    --warning: oklch(0.7 0.11 85);
-    --warning-foreground: oklch(0.1 0 0);
-
-    --warning: oklch(0.72 0.15 55);
+    --warning: oklch(0.555 0.15 55);
     --warning-foreground: oklch(1 0 0);
 
     --muted: oklch(0.9702 0 0);
@@ -83,7 +80,7 @@
     --accent: oklch(0.86 0.08 288);
     --accent-foreground: oklch(0.35 0.14 288);
 
-    --destructive: oklch(0.629 0.1902 23.0704);
+    --destructive: oklch(0.57 0.1902 23.0704);
     --destructive-foreground: oklch(1 0 0);
 
     --border: oklch(0.93 0.0094 286.2156);
@@ -93,6 +90,7 @@
     /* Twitter palette */
     --twitter-1: oklch(0 0 0);
     --twitter-2: oklch(0.6671 0.1615 245.54);
+    --twitter-contrast: oklch(0.55 0.1615 245.54);
 
     /* Steam palette */
     --steam-1: oklch(0.2178 0.0145 266.91);
@@ -103,6 +101,7 @@
 
     /* Discord palette */
     --discord-1: oklch(0.6474 0.1243 270.62);
+    --discord-contrast: oklch(0.55 0.1243 270.62);
     --discord-2: oklch(0.7283 0.0249 236.13);
     --discord-3: oklch(0.3038 0.0084 255.56);
 
@@ -114,9 +113,11 @@
 
     /* Youtube Palette */
     --youtube-1: oklch(0.628 0.2577 29.23);
+    --youtube-contrast: oklch(0.555 0.2577 29.23);
 
     /* Instagram Palette */
     --instagram-1: oklch(0.6394 0.255767 9.5992);
+    --instagram-contrast: oklch(0.555 0.255767 9.5992);
 
     /* Facebook Palette */
     --facebook-1: oklch(0.5641 0.2402 261.15);
@@ -126,12 +127,15 @@
 
     /* Bluesky Palette */
     --bluesky-1: oklch(0.6262 0.2026 255.39);
+    --bluesky-contrast: oklch(0.55 0.2026 255.39);
 
     /* Reddit Palette */
     --reddit-1: oklch(0.6602 0.229356 35.4025);
+    --reddit-contrast: oklch(0.57 0.229356 35.4025);
 
     /* Velora Palette */
     --velora-1: oklch(0.7563 0.1431 82.65);
+    --velora-contrast: oklch(0.545 0.1431 82.65);
 
     /* LinkedIn Palette */
     --linkedin-1: oklch(0.5313 0.1301 243.65);
@@ -214,16 +218,16 @@
     --quinary-foreground: oklch(0.98 0.01 250);
 
     --success: oklch(0.52 0.18 160);
-    --success-foreground: oklch(0.95 0.01 160);
+    --success-foreground: oklch(1 0 0);
 
-    --info: oklch(0.58 0.15 240);
+    --info: oklch(0.545 0.15 240);
     --info-foreground: oklch(1 0 0);
 
     --error: oklch(0.55 0.22 25);
     --error-foreground: oklch(0.96 0.01 25);
 
     --warning: oklch(0.65 0.2 90);
-    --warning-foreground: oklch(0.96 0.01 90);
+    --warning-foreground: oklch(0.1 0 0);
 
     --muted: oklch(0.2469 0 0);
     --muted-foreground: oklch(0.7048 0.0156 264.542);
@@ -292,6 +296,31 @@
     --color-quinary: var(--quinary);
     --color-quinary-foreground: var(--quinary-foreground);
 
+    --color-primary-contrast: color-mix(
+      in oklab,
+      var(--primary) 75%,
+      var(--foreground)
+    );
+    --color-destructive-contrast: color-mix(
+      in oklab,
+      var(--destructive) 75%,
+      var(--foreground)
+    );
+    --color-info-contrast: color-mix(
+      in oklab,
+      var(--info) 75%,
+      var(--foreground)
+    );
+    --color-success-contrast: color-mix(
+      in oklab,
+      var(--success) 75%,
+      var(--foreground)
+    );
+    --color-warning-contrast: color-mix(
+      in oklab,
+      var(--warning) 75%,
+      var(--foreground)
+    );
     --color-success: var(--success);
     --color-success-foreground: var(--success-foreground);
     --color-info: var(--info);
@@ -320,6 +349,7 @@
 
     --color-twitter-1: var(--twitter-1);
     --color-twitter-2: var(--twitter-2);
+    --color-twitter-contrast: var(--twitter-contrast);
 
     --color-steam-1: var(--steam-1);
     --color-steam-2: var(--steam-2);
@@ -328,6 +358,7 @@
     --color-steam-5: var(--steam-5);
 
     --color-discord-1: var(--discord-1);
+    --color-discord-contrast: var(--discord-contrast);
     --color-discord-2: var(--discord-2);
     --color-discord-3: var(--discord-3);
 
@@ -336,18 +367,23 @@
     --color-kick-1: var(--kick-1);
 
     --color-youtube-1: var(--youtube-1);
+    --color-youtube-contrast: var(--youtube-contrast);
 
     --color-instagram-1: var(--instagram-1);
+    --color-instagram-contrast: var(--instagram-contrast);
 
     --color-facebook-1: var(--facebook-1);
 
     --color-google-1: var(--google-1);
 
     --color-bluesky-1: var(--bluesky-1);
+    --color-bluesky-contrast: var(--bluesky-contrast);
 
     --color-reddit-1: var(--reddit-1);
+    --color-reddit-contrast: var(--reddit-contrast);
 
     --color-velora-1: var(--velora-1);
+    --color-velora-contrast: var(--velora-contrast);
 
     --color-linkedin-1: var(--linkedin-1);
 

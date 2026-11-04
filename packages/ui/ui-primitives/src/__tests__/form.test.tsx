@@ -181,7 +181,7 @@ describe('FormAlertMessage', () => {
     render(<AlertForm />);
     await submit();
     const alert = await screen.findByRole('alert');
-    expect(alert).toHaveClass('text-destructive');
+    expect(alert).toHaveClass('text-destructive-contrast');
     expect(alert).toHaveTextContent('Email is required');
     expect(alert.querySelector('svg')).toBeInTheDocument();
   });

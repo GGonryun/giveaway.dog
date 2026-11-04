@@ -26,7 +26,7 @@ describe('Alert', () => {
     render(<Alert variant="destructive">Failed</Alert>);
     const alert = screen.getByRole('alert');
     expect(alert).toHaveClass(
-      'text-destructive',
+      'text-destructive-contrast',
       'bg-destructive/10',
       'border-destructive/50'
     );
