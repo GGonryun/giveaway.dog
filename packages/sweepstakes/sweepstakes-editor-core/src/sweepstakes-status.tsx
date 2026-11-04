@@ -323,7 +323,12 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                   className="flex-1"
                 />
                 {onGenerateQR && (
-                  <Button onClick={onGenerateQR} variant="outline" size="icon">
+                  <Button
+                    onClick={onGenerateQR}
+                    variant="outline"
+                    size="icon"
+                    aria-label="Show QR code"
+                  >
                     <QrCode />
                   </Button>
                 )}
@@ -337,6 +342,7 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                     href={sweepstakesUrl || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Open giveaway in a new tab"
                   >
                     <ExternalLink />
                   </Link>

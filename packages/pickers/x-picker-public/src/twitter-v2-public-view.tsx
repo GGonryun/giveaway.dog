@@ -122,7 +122,10 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
             <div className="p-4 rounded-lg bg-muted relative">
               <Dialog>
                 <DialogTrigger asChild>
-                  <button className="absolute top-2 right-2 text-muted-foreground hover:text-foreground">
+                  <button
+                    className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+                    aria-label="About participants"
+                  >
                     <HelpCircle className="h-4 w-4" />
                   </button>
                 </DialogTrigger>
@@ -151,7 +154,10 @@ export const TwitterV2PublicView: React.FC<TwitterV2PublicViewProps> = ({
             <div className="p-4 rounded-lg bg-muted relative">
               <Dialog>
                 <DialogTrigger asChild>
-                  <button className="absolute top-2 right-2 text-muted-foreground hover:text-foreground">
+                  <button
+                    className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+                    aria-label="About eligible participants"
+                  >
                     <HelpCircle className="h-4 w-4" />
                   </button>
                 </DialogTrigger>

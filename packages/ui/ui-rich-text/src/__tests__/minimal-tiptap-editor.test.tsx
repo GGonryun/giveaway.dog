@@ -12,26 +12,28 @@ import {
 } from 'vitest';
 import { MinimalTiptap } from '../minimal-tiptap-editor';
 
-const TOOLS = [
-  'bold',
-  'italic',
-  'strike',
-  'code',
-  'heading1',
-  'heading2',
-  'heading3',
-  'bulletList',
-  'orderedList',
-  'link',
-  'alignLeft',
-  'alignCenter',
-  'alignRight'
-] as const;
+const TOOL_NAMES = {
+  bold: 'Bold',
+  italic: 'Italic',
+  strike: 'Strikethrough',
+  code: 'Code',
+  heading1: 'Heading 1',
+  heading2: 'Heading 2',
+  heading3: 'Heading 3',
+  bulletList: 'Bullet list',
+  orderedList: 'Numbered list',
+  link: 'Link',
+  alignLeft: 'Align left',
+  alignCenter: 'Align center',
+  alignRight: 'Align right'
+} as const;
 
-type Tool = (typeof TOOLS)[number];
+const TOOLS = Object.keys(TOOL_NAMES) as (keyof typeof TOOL_NAMES)[];
+
+type Tool = keyof typeof TOOL_NAMES;
 
 function getTool(tool: Tool) {
-  return screen.getAllByRole('button')[TOOLS.indexOf(tool)];
+  return screen.getByRole('button', { name: TOOL_NAMES[tool] });
 }
 
 function getEditable(container: HTMLElement) {
@@ -154,11 +156,13 @@ describe('MinimalTiptap', () => {
     expect(editable).toHaveAttribute('aria-invalid', 'true');
   });
 
-  it('renders icon-only toolbar buttons without accessible names', async () => {
+  it('names each icon-only toolbar button', async () => {
     await renderEditor();
-    screen.getAllByRole('button').forEach((button) => {
-      expect(button).toHaveAccessibleName('');
-    });
+    expect(
+      screen
+        .getAllByRole('button')
+        .map((button) => button.getAttribute('aria-label'))
+    ).toEqual(Object.values(TOOL_NAMES));
   });
 
   it('reports typed content as HTML', async () => {

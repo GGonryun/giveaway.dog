@@ -6,17 +6,22 @@ import { IconButton } from '../icon-button';
 
 describe('IconButton', () => {
   it('renders a ghost icon button with the given icon', () => {
-    const { container } = render(<IconButton icon={CopyIcon} />);
+    const { container } = render(<IconButton icon={CopyIcon} label="Copy" />);
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('type', 'button');
     expect(button).toHaveClass('h-8', 'w-8');
     expect(container.querySelector('svg.lucide-copy')).toBeInTheDocument();
   });
 
+  it('names the button with its label', () => {
+    render(<IconButton icon={CopyIcon} label="Copy Prize 1" />);
+    expect(screen.getByRole('button')).toHaveAccessibleName('Copy Prize 1');
+  });
+
   describe('when an onClick handler is given', () => {
     it('calls the handler with the click event', async () => {
       const onClick = vi.fn();
-      render(<IconButton icon={Trash2Icon} onClick={onClick} />);
+      render(<IconButton icon={Trash2Icon} label="Remove" onClick={onClick} />);
       await userEvent.click(screen.getByRole('button'));
       expect(onClick).toHaveBeenCalledTimes(1);
       expect(onClick.mock.calls[0][0]).toHaveProperty('type', 'click');
@@ -26,7 +31,7 @@ describe('IconButton', () => {
       const onParentClick = vi.fn();
       render(
         <div onClick={onParentClick}>
-          <IconButton icon={Trash2Icon} onClick={vi.fn()} />
+          <IconButton icon={Trash2Icon} label="Remove" onClick={vi.fn()} />
         </div>
       );
       await userEvent.click(screen.getByRole('button'));
@@ -39,7 +44,7 @@ describe('IconButton', () => {
       const onParentClick = vi.fn();
       render(
         <div onClick={onParentClick}>
-          <IconButton icon={Trash2Icon} />
+          <IconButton icon={Trash2Icon} label="Remove" />
         </div>
       );
       await userEvent.click(screen.getByRole('button'));
@@ -51,7 +56,7 @@ describe('IconButton', () => {
     const onSubmit = vi.fn((event: React.FormEvent) => event.preventDefault());
     render(
       <form onSubmit={onSubmit}>
-        <IconButton icon={Trash2Icon} onClick={vi.fn()} />
+        <IconButton icon={Trash2Icon} label="Remove" onClick={vi.fn()} />
       </form>
     );
     await userEvent.click(screen.getByRole('button'));
