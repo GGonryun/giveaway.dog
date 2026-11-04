@@ -50,19 +50,19 @@ export const SubmitMediaFormFields: React.FC = () => {
                 }
               />
             </div>
-            <FormControl>
-              <Select
-                value={field.value?.[0] || 'IMAGE'}
-                onValueChange={(value) => field.onChange([value])}
-              >
+            <Select
+              value={field.value?.[0] || 'IMAGE'}
+              onValueChange={(value) => field.onChange([value])}
+            >
+              <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select media type" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="IMAGE">Image</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormControl>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="IMAGE">Image</SelectItem>
+              </SelectContent>
+            </Select>
             <FormDescription>
               Type of media participants can submit
             </FormDescription>

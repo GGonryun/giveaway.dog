@@ -96,26 +96,26 @@ export const BlueskyImportingAccountField: React.FC = () => {
               </AlertDescription>
             </Alert>
           ) : (
-            <FormControl>
-              <Select
-                onValueChange={field.onChange}
-                value={field.value ?? undefined}
-              >
+            <Select
+              onValueChange={field.onChange}
+              value={field.value ?? undefined}
+            >
+              <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select your account" />
                 </SelectTrigger>
-                <SelectContent>
-                  {blueskyIntegrations.map((integration) => (
-                    <SelectItem key={integration.id} value={integration.id}>
-                      <div className="flex items-center gap-2">
-                        <SocialBlueskyIcon className="h-4 w-4" />
-                        {integration.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormControl>
+              </FormControl>
+              <SelectContent>
+                {blueskyIntegrations.map((integration) => (
+                  <SelectItem key={integration.id} value={integration.id}>
+                    <div className="flex items-center gap-2">
+                      <SocialBlueskyIcon className="h-4 w-4" />
+                      {integration.label}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           )}
         </FormItem>
       )}
