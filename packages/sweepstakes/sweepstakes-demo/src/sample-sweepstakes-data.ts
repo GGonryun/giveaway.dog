@@ -35,7 +35,7 @@ export const SAMPLE_SWEEPSTAKES_DATA: GiveawayFormSchema = {
   },
   timing: {
     startDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    endDate: new Date(Date.now() + 128 * 24 * 60 * 60 * 1000),
+    endDate: new Date(Date.now() + 31 * 24 * 60 * 60 * 1000),
     timeZone: 'UTC'
   },
   prizes: [
