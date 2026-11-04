@@ -464,7 +464,12 @@ const ButtonTextarea: React.FC<ButtonTextareaProps> = ({
 }) => {
   return (
     <div className="relative w-full">
-      <Textarea rows={12} readOnly value={value} />
+      <Textarea
+        rows={12}
+        readOnly
+        value={value}
+        aria-label="Terms and conditions"
+      />
 
       <div
         className="absolute border inset-0 bg-white/70 dark:bg-input/30 backdrop-blur-[1px] opacity-100 lg:opacity-0 hover:opacity-100 transition-opacity rounded-md flex items-center justify-center cursor-pointer"

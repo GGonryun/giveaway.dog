@@ -51,7 +51,7 @@ const getTypeButton = (label: 'Default' | 'Custom') =>
   screen.getByRole('button', { name: label });
 
 const getPreviewText = () => {
-  const preview = screen.getAllByRole('textbox')[0];
+  const preview = screen.getByRole('textbox', { name: 'Terms and conditions' });
   if (!(preview instanceof HTMLTextAreaElement)) {
     throw new Error('Terms preview not found');
   }
