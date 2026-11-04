@@ -85,6 +85,23 @@ const seed = async () => {
 };
 
 describe('getWinnersLeaderboard', () => {
+  it('[RETAIN-013] leaves out the wins of giveaways that ended more than 30 days ago', async () => {
+    const { users, spring } = await seed();
+    await db.sweepstakesTiming.update({
+      where: { sweepstakesId: spring.id },
+      data: { endDate: new Date(Date.now() - 31 * 24 * 60 * 60 * 1000) }
+    });
+
+    const rows = await leaderboard();
+
+    const alice = rows.find(({ userId }) => userId === users.alice.id);
+    expect(alice?.winCount).toBe(1);
+    expect(alice?.wins.map(({ sweepstakesId }) => sweepstakesId)).not.toContain(
+      spring.id
+    );
+    expect(rows.map(({ userId }) => userId)).not.toContain(users.bob.id);
+  });
+
   it('ranks the winners of public giveaways by their number of wins', async () => {
     const { users } = await seed();
 

@@ -9,6 +9,7 @@ import {
   nextId
 } from '@giveaway/testing-integration/fixtures';
 import { runSweepstakesDataRetention } from '../run-data-retention';
+import { STATIC_TEMPLATES } from '@giveaway/templates-model/data/static-templates';
 
 const blob = vi.hoisted(() => ({ del: vi.fn() }));
 vi.mock('@vercel/blob', () => blob);
@@ -363,5 +364,116 @@ describe('the data retention of each team tier', () => {
       first.sweepstakes.id
     ]);
     expect(await participantsOf(second.sweepstakes.id)).toHaveLength(2);
+  });
+
+  describe('the banner', () => {
+    const BANNER = 'https://abc.public.blob.vercel-storage.com/banner.png';
+
+    const withBanner = async (banner: string) => {
+      const giveaway = await createEndedGiveaway({ endedDaysAgo: 100 });
+      await db.sweepstakesDetails.update({
+        where: { sweepstakesId: giveaway.sweepstakes.id },
+        data: { banner }
+      });
+      return giveaway;
+    };
+
+    const bannerOf = async (sweepstakesId: string) =>
+      (
+        await db.sweepstakesDetails.findUniqueOrThrow({
+          where: { sweepstakesId }
+        })
+      ).banner;
+
+    it('[RETAIN-014] the deletion also deletes the banner and the prize images of the giveaway', async () => {
+      const { sweepstakes } = await withBanner(BANNER);
+
+      const result = await run();
+
+      expect(blob.del).toHaveBeenCalledWith([BANNER]);
+      expect(result.sweepstakes[0].files).toBe(2);
+      expect(await bannerOf(sweepstakes.id)).toBeNull();
+      const details = await db.sweepstakesDetails.findUniqueOrThrow({
+        where: { sweepstakesId: sweepstakes.id }
+      });
+      expect(details.name).toBe('Test giveaway');
+    });
+
+    it('[RETAIN-014] the deletion keeps an image that another giveaway still uses', async () => {
+      const { sweepstakes } = await withBanner(BANNER);
+      const { team } = await createHost();
+      const other = await createSweepstakes({ teamId: team.id });
+      await db.sweepstakesDetails.update({
+        where: { sweepstakesId: other.id },
+        data: { banner: BANNER }
+      });
+
+      await run();
+
+      expect(blob.del).not.toHaveBeenCalledWith([BANNER]);
+      expect(await bannerOf(sweepstakes.id)).toBe(BANNER);
+    });
+
+    it('[RETAIN-014] the deletion keeps an image that a template still uses', async () => {
+      const { sweepstakes, team } = await withBanner(BANNER);
+      await db.template.create({
+        data: {
+          name: 'Saved',
+          description: 'Saved template',
+          image: 'https://abc.public.blob.vercel-storage.com/other.png',
+          teamId: team.id,
+          content: { setup: { banner: BANNER } }
+        }
+      });
+
+      await run();
+
+      expect(blob.del).not.toHaveBeenCalledWith([BANNER]);
+      expect(await bannerOf(sweepstakes.id)).toBe(BANNER);
+    });
+
+    it('keeps an image that is the image of a template or the logo of a team', async () => {
+      const first = await withBanner(BANNER);
+      await db.template.create({
+        data: {
+          name: 'Saved',
+          description: 'Saved template',
+          image: BANNER,
+          teamId: first.team.id,
+          content: {}
+        }
+      });
+      const logo = 'https://abc.public.blob.vercel-storage.com/logo.png';
+      const second = await withBanner(logo);
+      await db.team.update({
+        where: { id: second.team.id },
+        data: { logo }
+      });
+
+      await run();
+
+      expect(await bannerOf(first.sweepstakes.id)).toBe(BANNER);
+      expect(await bannerOf(second.sweepstakes.id)).toBe(logo);
+    });
+
+    it('keeps the banner of a built-in template', async () => {
+      const banner = STATIC_TEMPLATES[0].setup.banner;
+      const { sweepstakes } = await withBanner(banner);
+
+      await run();
+
+      expect(blob.del).not.toHaveBeenCalledWith([banner]);
+      expect(await bannerOf(sweepstakes.id)).toBe(banner);
+    });
+
+    it('keeps the banner and its URL when the Blob token is missing', async () => {
+      vi.stubEnv('BLOB_READ_WRITE_TOKEN', '');
+      vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const { sweepstakes } = await withBanner(BANNER);
+
+      await run();
+
+      expect(await bannerOf(sweepstakes.id)).toBe(BANNER);
+    });
   });
 });

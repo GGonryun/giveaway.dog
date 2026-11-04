@@ -43,8 +43,19 @@ describe('getHistoricalSweepstakesList', () => {
       expect(findManyArgs().where).toEqual({
         visibility: { visibility: 'PUBLIC' },
         status: { not: 'DRAFT' },
-        timing: { endDate: { lt: daysFromFixedNow(-1) } }
+        timing: {
+          endDate: { lt: daysFromFixedNow(-1), gte: daysFromFixedNow(-30) }
+        }
       });
+    });
+
+    it('[RETAIN-012] lists a giveaway only until 30 days after it ends, whatever the tier of its team', async () => {
+      await getHistoricalSweepstakesList(undefined);
+
+      expect(findManyArgs().where?.timing).toEqual({
+        endDate: { lt: daysFromFixedNow(-1), gte: daysFromFixedNow(-30) }
+      });
+      expect(findManyArgs().where).not.toHaveProperty('team');
     });
 
     it('includes the public payload plus a participant count', async () => {

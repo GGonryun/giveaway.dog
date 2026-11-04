@@ -4,6 +4,8 @@ import { procedure } from '@giveaway/rpc-server/procedures';
 import { z } from 'zod';
 import { WINNERS_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { winnerLeaderboardSchema } from '@giveaway/leaderboard-model/winners';
+import { PUBLIC_HISTORY_DAYS } from '@giveaway/app-config/settings';
+import { datetime } from '@giveaway/util-time/date';
 
 const getWinnersLeaderboard = procedure()
   .authorization({
@@ -34,6 +36,7 @@ const getWinnersLeaderboard = procedure()
     const limit = input?.limit ?? WINNERS_PAGE_SIZE;
     const skip = (page - 1) * limit;
     const search = input?.search?.trim();
+    const endedAfter = datetime.daysAgo(PUBLIC_HISTORY_DAYS);
 
     // Use raw SQL to efficiently aggregate wins and paginate at database level
     const winnersWithCounts = search
@@ -59,8 +62,10 @@ const getWinnersLeaderboard = procedure()
           INNER JOIN "Prize" pr ON pr.id = d."prizeId"
           INNER JOIN "Sweepstakes" s ON s.id = pr."sweepstakesId"
           INNER JOIN "SweepstakesVisibility" sv ON sv."sweepstakesId" = s.id
+          INNER JOIN "SweepstakesTiming" st ON st."sweepstakesId" = s.id
           WHERE d.result = 'WINNER'
             AND sv.visibility = 'PUBLIC'
+            AND st."endDate" >= ${endedAfter}
             AND LOWER(u.name) LIKE LOWER(${`%${search}%`})
           GROUP BY u.id, u.name, u.email, u.image
           ORDER BY "winCount" DESC, u.id ASC
@@ -89,8 +94,10 @@ const getWinnersLeaderboard = procedure()
           INNER JOIN "Prize" pr ON pr.id = d."prizeId"
           INNER JOIN "Sweepstakes" s ON s.id = pr."sweepstakesId"
           INNER JOIN "SweepstakesVisibility" sv ON sv."sweepstakesId" = s.id
+          INNER JOIN "SweepstakesTiming" st ON st."sweepstakesId" = s.id
           WHERE d.result = 'WINNER'
             AND sv.visibility = 'PUBLIC'
+            AND st."endDate" >= ${endedAfter}
           GROUP BY u.id, u.name, u.email, u.image
           ORDER BY "winCount" DESC, u.id ASC
           LIMIT ${limit}
@@ -123,6 +130,9 @@ const getWinnersLeaderboard = procedure()
                       sweepstakes: {
                         visibility: {
                           visibility: 'PUBLIC'
+                        },
+                        timing: {
+                          endDate: { gte: endedAfter }
                         }
                       }
                     }
@@ -137,6 +147,9 @@ const getWinnersLeaderboard = procedure()
                       sweepstakes: {
                         visibility: {
                           visibility: 'PUBLIC'
+                        },
+                        timing: {
+                          endDate: { gte: endedAfter }
                         }
                       }
                     }

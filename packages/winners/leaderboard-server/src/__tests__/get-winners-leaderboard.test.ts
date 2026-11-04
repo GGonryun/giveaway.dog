@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 import getWinnersLeaderboard from '../get-winners-leaderboard';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
@@ -13,6 +13,8 @@ const callWithPartialInput = (input: PartialInput) =>
   getWinnersLeaderboard(input as Input);
 
 const WON_AT = new Date('2026-05-01T12:00:00.000Z');
+const NOW = new Date('2026-06-01T12:00:00.000Z');
+const ENDED_AFTER = new Date(NOW.getTime() - 30 * 24 * 60 * 60 * 1000);
 
 const aggregateRow = (
   userId: string,
@@ -88,7 +90,9 @@ const SELECT_AND_JOINS = [
   'INNER JOIN "Prize" pr ON pr.id = d."prizeId"',
   'INNER JOIN "Sweepstakes" s ON s.id = pr."sweepstakesId"',
   'INNER JOIN "SweepstakesVisibility" sv ON sv."sweepstakesId" = s.id',
-  "WHERE d.result = 'WINNER' AND sv.visibility = 'PUBLIC'"
+  'INNER JOIN "SweepstakesTiming" st ON st."sweepstakesId" = s.id',
+  "WHERE d.result = 'WINNER' AND sv.visibility = 'PUBLIC'",
+  'AND st."endDate" >= ?'
 ].join(' ');
 
 const GROUP_ORDER_PAGE = [
@@ -98,13 +102,31 @@ const GROUP_ORDER_PAGE = [
 ].join(' ');
 
 describe('getWinnersLeaderboard', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('[RETAIN-013] counts only the wins of giveaways that ended in the last 30 days', async () => {
+    prismaMock.$queryRaw.mockResolvedValue([]);
+
+    await getWinnersLeaderboard(undefined);
+
+    expect(rawCall().sql).toContain('AND st."endDate" >= ?');
+    expect(rawCall().values[0]).toEqual(ENDED_AFTER);
+  });
+
   describe('aggregate query', () => {
     it('uses page 1 and a limit of 25 when no input is given', async () => {
       prismaMock.$queryRaw.mockResolvedValue([]);
 
       await getWinnersLeaderboard(undefined);
 
-      expect(rawCall().values).toEqual([25, 0]);
+      expect(rawCall().values).toEqual([ENDED_AFTER, 25, 0]);
     });
 
     it('applies the schema defaults when an empty object is given', async () => {
@@ -112,7 +134,7 @@ describe('getWinnersLeaderboard', () => {
 
       await callWithPartialInput({});
 
-      expect(rawCall().values).toEqual([25, 0]);
+      expect(rawCall().values).toEqual([ENDED_AFTER, 25, 0]);
     });
 
     it('offsets by the previous pages using the requested limit', async () => {
@@ -120,7 +142,7 @@ describe('getWinnersLeaderboard', () => {
 
       await getWinnersLeaderboard({ page: 3, limit: 10 });
 
-      expect(rawCall().values).toEqual([10, 20]);
+      expect(rawCall().values).toEqual([ENDED_AFTER, 10, 20]);
     });
 
     it('counts distinct public WINNER draws per user ordered by wins then id', async () => {
@@ -151,7 +173,7 @@ describe('getWinnersLeaderboard', () => {
 
       const { sql, values } = rawCall();
       expect(sql).toContain('AND LOWER(u.name) LIKE LOWER(?)');
-      expect(values).toEqual(['%Bob%', 25, 0]);
+      expect(values).toEqual([ENDED_AFTER, '%Bob%', 25, 0]);
     });
 
     it('runs the exact search aggregate SQL with the name filter after the public winner conditions', async () => {
@@ -169,7 +191,7 @@ describe('getWinnersLeaderboard', () => {
 
       await getWinnersLeaderboard({ page: 4, limit: 5, search: 'al' });
 
-      expect(rawCall().values).toEqual(['%al%', 5, 15]);
+      expect(rawCall().values).toEqual([ENDED_AFTER, '%al%', 5, 15]);
     });
 
     it('trims the search term before matching', async () => {
@@ -177,7 +199,7 @@ describe('getWinnersLeaderboard', () => {
 
       await callWithPartialInput({ search: '  Bob  ' });
 
-      expect(rawCall().values[0]).toBe('%Bob%');
+      expect(rawCall().values[1]).toBe('%Bob%');
     });
 
     it('does not escape LIKE wildcards in the search term', async () => {
@@ -185,7 +207,7 @@ describe('getWinnersLeaderboard', () => {
 
       await callWithPartialInput({ search: '50%_off' });
 
-      expect(rawCall().values[0]).toBe('%50%_off%');
+      expect(rawCall().values[1]).toBe('%50%_off%');
     });
 
     it('runs the unfiltered query when the search is only whitespace', async () => {
@@ -195,7 +217,7 @@ describe('getWinnersLeaderboard', () => {
 
       const { sql, values } = rawCall();
       expect(sql).not.toContain('LIKE');
-      expect(values).toEqual([25, 0]);
+      expect(values).toEqual([ENDED_AFTER, 25, 0]);
     });
 
     it('runs the unfiltered query when the search is empty', async () => {
@@ -258,7 +280,10 @@ describe('getWinnersLeaderboard', () => {
       const publicWinner = {
         result: 'WINNER',
         prize: {
-          sweepstakes: { visibility: { visibility: 'PUBLIC' } }
+          sweepstakes: {
+            visibility: { visibility: 'PUBLIC' },
+            timing: { endDate: { gte: ENDED_AFTER } }
+          }
         }
       };
       expect(prismaMock.user.findMany).toHaveBeenCalledWith({
@@ -479,7 +504,7 @@ describe('getWinnersLeaderboard', () => {
       const result = await callWithPartialInput({ limit: 100 });
 
       expect(expectOk(result)).toEqual([]);
-      expect(rawCall().values).toEqual([100, 0]);
+      expect(rawCall().values).toEqual([ENDED_AFTER, 100, 0]);
     });
   });
 

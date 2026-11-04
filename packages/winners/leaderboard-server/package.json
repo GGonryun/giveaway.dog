@@ -25,9 +25,11 @@
     "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/leaderboard-model": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/util-collections": "workspace:*",
+    "@giveaway/util-time": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {

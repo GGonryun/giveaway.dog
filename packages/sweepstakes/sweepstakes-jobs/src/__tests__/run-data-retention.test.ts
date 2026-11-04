@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PrismaClient } from '@giveaway/db-model';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { runSweepstakesDataRetention } from '../run-data-retention';
+import { STATIC_TEMPLATES } from '@giveaway/templates-model/data/static-templates';
 
 const blob = vi.hoisted(() => ({ del: vi.fn() }));
 vi.mock('@vercel/blob', () => blob);
@@ -222,5 +223,143 @@ describe('runSweepstakesDataRetention', () => {
     expect(timing.endDate.lt.getTime()).toBeLessThanOrEqual(
       Date.now() - 90 * DAY
     );
+  });
+
+  describe('the banner', () => {
+    const BANNER = 'https://abc.public.blob.vercel-storage.com/banner.png';
+
+    beforeEach(() => {
+      prismaMock.sweepstakes.findMany
+        .mockResolvedValueOnce(ids('sweep-1'))
+        .mockResolvedValueOnce([]);
+      prismaMock.sweepstakesDetails.findUnique.mockResolvedValue({
+        banner: BANNER
+      } as never);
+      prismaMock.sweepstakesDetails.count.mockResolvedValue(0);
+      prismaMock.template.count.mockResolvedValue(0);
+      prismaMock.team.count.mockResolvedValue(0);
+    });
+
+    it('deletes an unused banner and clears it', async () => {
+      const result = await runSweepstakesDataRetention(db, {
+        mode: 'delete',
+        now: NOW
+      });
+
+      expect(prismaMock.sweepstakesDetails.findUnique).toHaveBeenCalledWith({
+        where: { sweepstakesId: 'sweep-1' },
+        select: { banner: true }
+      });
+      expect(prismaMock.sweepstakesDetails.count).toHaveBeenCalledWith({
+        where: { banner: BANNER, sweepstakesId: { not: 'sweep-1' } }
+      });
+      expect(prismaMock.template.count).toHaveBeenCalledWith({
+        where: {
+          OR: [
+            { image: BANNER },
+            { content: { path: ['setup', 'banner'], equals: BANNER } }
+          ]
+        }
+      });
+      expect(prismaMock.team.count).toHaveBeenCalledWith({
+        where: { logo: BANNER }
+      });
+      expect(blob.del).toHaveBeenCalledWith([BANNER]);
+      expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith({
+        where: { id: 'sweep-1' },
+        data: { dataDeletedAt: NOW, details: { update: { banner: null } } }
+      });
+      expect(result.sweepstakes[0].files).toBe(1);
+    });
+
+    it.each([
+      ['another giveaway', 'sweepstakesDetails'],
+      ['a template', 'template'],
+      ['the logo of a team', 'team']
+    ] as const)('keeps a banner that %s uses', async (_, model) => {
+      prismaMock[model].count.mockResolvedValue(1);
+
+      const result = await runSweepstakesDataRetention(db, {
+        mode: 'delete',
+        now: NOW
+      });
+
+      expect(blob.del).not.toHaveBeenCalled();
+      expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith({
+        where: { id: 'sweep-1' },
+        data: { dataDeletedAt: NOW }
+      });
+      expect(result.sweepstakes[0].files).toBe(0);
+    });
+
+    it('keeps the banner of a built-in template', async () => {
+      prismaMock.sweepstakesDetails.findUnique.mockResolvedValue({
+        banner: STATIC_TEMPLATES[0].setup.banner
+      } as never);
+
+      await runSweepstakesDataRetention(db, { mode: 'delete', now: NOW });
+
+      expect(blob.del).not.toHaveBeenCalled();
+    });
+
+    it('keeps the image of a built-in template', async () => {
+      prismaMock.sweepstakesDetails.findUnique.mockResolvedValue({
+        banner: STATIC_TEMPLATES[1].template.image
+      } as never);
+
+      await runSweepstakesDataRetention(db, { mode: 'delete', now: NOW });
+
+      expect(blob.del).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['an image that is not an upload', 'https://example.com/banner.png'],
+      ['no banner', null]
+    ])('deletes nothing for %s', async (_, banner) => {
+      prismaMock.sweepstakesDetails.findUnique.mockResolvedValue({
+        banner
+      } as never);
+
+      await runSweepstakesDataRetention(db, { mode: 'delete', now: NOW });
+
+      expect(blob.del).not.toHaveBeenCalled();
+      expect(prismaMock.template.count).not.toHaveBeenCalled();
+    });
+
+    it('keeps the banner URL when the Blob token is missing', async () => {
+      vi.stubEnv('BLOB_READ_WRITE_TOKEN', '');
+      vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await runSweepstakesDataRetention(db, { mode: 'delete', now: NOW });
+
+      expect(prismaMock.sweepstakes.update).toHaveBeenCalledWith({
+        where: { id: 'sweep-1' },
+        data: { dataDeletedAt: NOW }
+      });
+    });
+
+    it('counts the banner in report mode', async () => {
+      prismaMock.taskCompletion.count.mockResolvedValue(2);
+
+      const result = await runSweepstakesDataRetention(db, {
+        mode: 'report',
+        now: NOW
+      });
+
+      expect(result.sweepstakes[0].files).toBe(3);
+      expect(blob.del).not.toHaveBeenCalled();
+    });
+
+    it('does not count a banner in use in report mode', async () => {
+      prismaMock.taskCompletion.count.mockResolvedValue(2);
+      prismaMock.team.count.mockResolvedValue(1);
+
+      const result = await runSweepstakesDataRetention(db, {
+        mode: 'report',
+        now: NOW
+      });
+
+      expect(result.sweepstakes[0].files).toBe(2);
+    });
   });
 });
