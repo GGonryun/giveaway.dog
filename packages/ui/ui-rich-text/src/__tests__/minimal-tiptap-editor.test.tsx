@@ -116,6 +116,44 @@ describe('MinimalTiptap', () => {
     expect(screen.getByText('world').tagName).toBe('STRONG');
   });
 
+  it('names the editable area and passes the form control attributes to it', async () => {
+    await renderEditor(
+      <MinimalTiptap
+        id="description-form-item"
+        aria-label="Description"
+        aria-describedby="description-form-item-description"
+        aria-invalid={false}
+      />
+    );
+    const editable = screen.getByRole('textbox', { name: 'Description' });
+    expect(editable).toHaveAttribute('contenteditable', 'true');
+    expect(editable).toHaveAttribute('id', 'description-form-item');
+    expect(editable).toHaveAttribute('aria-multiline', 'true');
+    expect(editable).toHaveAttribute(
+      'aria-describedby',
+      'description-form-item-description'
+    );
+    expect(editable).toHaveAttribute('aria-invalid', 'false');
+  });
+
+  it('updates the attributes of the editable area when they change', async () => {
+    const { rerender } = await renderEditor(
+      <MinimalTiptap aria-label="Description" aria-invalid={false} />
+    );
+    rerender(
+      <MinimalTiptap
+        aria-labelledby="description-label"
+        aria-describedby="description-message"
+        aria-invalid
+      />
+    );
+    const editable = screen.getByRole('textbox');
+    expect(editable).not.toHaveAttribute('aria-label');
+    expect(editable).toHaveAttribute('aria-labelledby', 'description-label');
+    expect(editable).toHaveAttribute('aria-describedby', 'description-message');
+    expect(editable).toHaveAttribute('aria-invalid', 'true');
+  });
+
   it('renders icon-only toolbar buttons without accessible names', async () => {
     await renderEditor();
     screen.getAllByRole('button').forEach((button) => {

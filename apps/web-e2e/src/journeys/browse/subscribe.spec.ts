@@ -9,7 +9,7 @@ const subscriptionCard = async (page: Page) => {
   ).toBeVisible();
 
   return {
-    email: page.getByRole('textbox', { name: 'Enter your email' }),
+    email: page.getByRole('textbox', { name: 'Email address' }),
     subscribe: page.getByRole('button', { name: 'Subscribe' })
   };
 };

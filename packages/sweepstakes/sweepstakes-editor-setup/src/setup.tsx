@@ -79,6 +79,7 @@ export const Setup = () => {
             <FormLabel>Description</FormLabel>
             <FormControl>
               <MinimalTiptap
+                aria-label="Description"
                 content={field.value}
                 onChange={field.onChange}
                 placeholder="Enter a description"

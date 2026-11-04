@@ -298,7 +298,7 @@ describe('LoginOptions', () => {
 
     it('opens the email form instead of starting a login', async () => {
       await openEmailForm();
-      expect(screen.getByPlaceholderText('player@giveaway.dog')).toHaveFocus();
+      expect(screen.getByLabelText('Email')).toHaveFocus();
       expect(
         screen.getByRole('button', { name: 'Send Login Link' })
       ).toBeInTheDocument();
@@ -324,10 +324,7 @@ describe('LoginOptions', () => {
 
     it('[AUTH-011] refuses an address that is not valid', async () => {
       await openEmailForm();
-      await userEvent.type(
-        screen.getByPlaceholderText('player@giveaway.dog'),
-        'not-an-email'
-      );
+      await userEvent.type(screen.getByLabelText('Email'), 'not-an-email');
       await userEvent.click(
         screen.getByRole('button', { name: 'Send Login Link' })
       );
@@ -339,10 +336,7 @@ describe('LoginOptions', () => {
 
     it('sends the trimmed address', async () => {
       await openEmailForm();
-      await userEvent.type(
-        screen.getByPlaceholderText('player@giveaway.dog'),
-        ' ada@example.com '
-      );
+      await userEvent.type(screen.getByLabelText('Email'), ' ada@example.com ');
       await userEvent.click(
         screen.getByRole('button', { name: 'Send Login Link' })
       );
@@ -356,10 +350,7 @@ describe('LoginOptions', () => {
 
     it('sends a login link to the entered address', async () => {
       await openEmailForm();
-      await userEvent.type(
-        screen.getByPlaceholderText('player@giveaway.dog'),
-        'ada@example.com'
-      );
+      await userEvent.type(screen.getByLabelText('Email'), 'ada@example.com');
       await userEvent.click(
         screen.getByRole('button', { name: 'Send Login Link' })
       );
@@ -377,36 +368,28 @@ describe('LoginOptions', () => {
         data: { code: 'BAD_REQUEST', message: 'Email provider is down.' }
       });
       await openEmailForm();
-      await userEvent.type(
-        screen.getByPlaceholderText('player@giveaway.dog'),
-        'ada@example.com'
-      );
+      await userEvent.type(screen.getByLabelText('Email'), 'ada@example.com');
       await userEvent.click(
         screen.getByRole('button', { name: 'Send Login Link' })
       );
       expect(
         await screen.findByText('Email provider is down.')
       ).toBeInTheDocument();
-      expect(
-        screen.getByPlaceholderText('player@giveaway.dog')
-      ).toHaveDisplayValue('ada@example.com');
+      expect(screen.getByLabelText('Email')).toHaveDisplayValue(
+        'ada@example.com'
+      );
     });
 
     it('returns to the provider list and clears the form when going back', async () => {
       await openEmailForm();
-      await userEvent.type(
-        screen.getByPlaceholderText('player@giveaway.dog'),
-        'ada@example.com'
-      );
+      await userEvent.type(screen.getByLabelText('Email'), 'ada@example.com');
       await userEvent.click(screen.getByRole('button', { name: 'Back' }));
 
       expect(providerButtonLabels()).toHaveLength(3);
       await userEvent.click(
         screen.getByRole('button', { name: 'Login with Email' })
       );
-      expect(screen.getByPlaceholderText('player@giveaway.dog')).toHaveValue(
-        ''
-      );
+      expect(screen.getByLabelText('Email')).toHaveValue('');
     });
   });
 

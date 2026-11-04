@@ -20,6 +20,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage
 } from '@giveaway/ui-primitives/form';
 
@@ -96,17 +97,22 @@ export function SubscriptionCTA() {
                 name="email"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormControl>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <FormLabel className="sr-only">Email address</FormLabel>
+                    <div className="relative">
+                      <Mail
+                        aria-hidden="true"
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"
+                      />
+                      <FormControl>
                         <Input
                           type="email"
+                          autoComplete="email"
                           placeholder="Enter your email"
                           className="pl-10"
                           {...field}
                         />
-                      </div>
-                    </FormControl>
+                      </FormControl>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

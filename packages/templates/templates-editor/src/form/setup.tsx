@@ -67,6 +67,7 @@ export const TemplateSetup = () => {
             <FormLabel>Default Description</FormLabel>
             <FormControl>
               <MinimalTiptap
+                aria-label="Default Description"
                 content={field.value}
                 onChange={field.onChange}
                 placeholder="Enter a default description"

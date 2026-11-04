@@ -79,6 +79,7 @@ export const SubmitMediaFormFields: React.FC = () => {
             <FormLabel>Task Description</FormLabel>
             <FormControl>
               <MinimalTiptap
+                aria-label="Task Description"
                 content={field.value}
                 onChange={field.onChange}
                 placeholder="Enter a description for this task"

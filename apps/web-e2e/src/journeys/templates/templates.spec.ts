@@ -44,7 +44,7 @@ const createTemplate = async (
     .getByRole('textbox', { name: 'Template Name' })
     .fill(template.name);
   await page
-    .getByRole('textbox', { name: 'Description' })
+    .getByRole('textbox', { name: 'Description', exact: true })
     .fill(`Made by the e2e run ${RUN_ID}`);
 
   await step(page, 'Setup');

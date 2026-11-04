@@ -195,6 +195,11 @@ describe('BackgroundFields', () => {
       });
     });
 
+    it('names the color input with its label', () => {
+      renderBackground({ type: 'color', color: '#123456' });
+      expect(screen.getByLabelText('Color')).toHaveAttribute('type', 'color');
+    });
+
     it('opens the native color picker from the modify overlay', async () => {
       const { container } = renderBackground({
         type: 'color',
@@ -221,6 +226,23 @@ describe('BackgroundFields', () => {
       expect(within(editor).getByText('Angle')).toBeInTheDocument();
       expect(within(editor).getByText('Color Stops')).toBeInTheDocument();
       expect(within(editor).getAllByRole('textbox')).toHaveLength(2);
+    });
+
+    it('names the angle input and the inputs of each stop', async () => {
+      renderBackground(gradient());
+      const editor = await openGradientEditor();
+
+      expect(within(editor).getByLabelText('Angle')).toHaveValue(90);
+      expect(within(editor).getByLabelText('Stop 1 color')).toHaveValue(
+        '#ff0000'
+      );
+      expect(within(editor).getByLabelText('Stop 2 hex color')).toHaveValue(
+        '#0000ff'
+      );
+      expect(within(editor).getByLabelText('Stop 2 position')).toHaveValue(50);
+      expect(
+        within(editor).getByRole('button', { name: 'Remove stop 1' })
+      ).toBeDisabled();
     });
 
     it('switches to a radial gradient and hides the angle', async () => {
