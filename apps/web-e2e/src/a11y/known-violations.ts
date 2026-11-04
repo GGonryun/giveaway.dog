@@ -10,7 +10,6 @@ export const KNOWN_VIOLATIONS: KnownViolation[] = [
     selector: 'div[data-slot="dialog-trigger"]',
     issue: 543
   },
-  { rule: 'button-name', selector: 'button:has(> svg:only-child)', issue: 100 },
   {
     rule: 'color-contrast',
     selector: '[data-slot="tooltip-trigger"]',

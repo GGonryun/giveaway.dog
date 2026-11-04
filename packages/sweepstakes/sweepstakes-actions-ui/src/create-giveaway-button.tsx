@@ -74,6 +74,7 @@ export const CreateGiveawayButton: React.FC<{
               size="sm"
               className="rounded-l-none border-l px-2"
               disabled={procedure.isLoading}
+              aria-label="More create options"
             >
               <ChevronDown className="h-4 w-4" />
             </Button>

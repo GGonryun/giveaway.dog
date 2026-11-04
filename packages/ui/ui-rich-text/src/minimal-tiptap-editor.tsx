@@ -159,6 +159,7 @@ function MinimalTiptap({
     <div className={cn('border rounded-lg overflow-hidden', className)}>
       <div className="border-b p-2 flex flex-wrap items-center gap-1">
         <Toggle
+          aria-label="Bold"
           size="sm"
           pressed={editor.isActive('bold')}
           onPressedChange={() => editor.chain().focus().toggleBold().run()}
@@ -168,6 +169,7 @@ function MinimalTiptap({
         </Toggle>
 
         <Toggle
+          aria-label="Italic"
           size="sm"
           pressed={editor.isActive('italic')}
           onPressedChange={() => editor.chain().focus().toggleItalic().run()}
@@ -177,6 +179,7 @@ function MinimalTiptap({
         </Toggle>
 
         <Toggle
+          aria-label="Strikethrough"
           size="sm"
           pressed={editor.isActive('strike')}
           onPressedChange={() => editor.chain().focus().toggleStrike().run()}
@@ -186,6 +189,7 @@ function MinimalTiptap({
         </Toggle>
 
         <Toggle
+          aria-label="Code"
           size="sm"
           pressed={editor.isActive('code')}
           onPressedChange={() => editor.chain().focus().toggleCode().run()}
@@ -197,6 +201,7 @@ function MinimalTiptap({
         <Separator orientation="vertical" className="h-6" />
 
         <Toggle
+          aria-label="Heading 1"
           size="sm"
           pressed={editor.isActive('heading', { level: 1 })}
           onPressedChange={() =>
@@ -207,6 +212,7 @@ function MinimalTiptap({
         </Toggle>
 
         <Toggle
+          aria-label="Heading 2"
           size="sm"
           pressed={editor.isActive('heading', { level: 2 })}
           onPressedChange={() =>
@@ -217,6 +223,7 @@ function MinimalTiptap({
         </Toggle>
 
         <Toggle
+          aria-label="Heading 3"
           size="sm"
           pressed={editor.isActive('heading', { level: 3 })}
           onPressedChange={() =>
@@ -229,6 +236,7 @@ function MinimalTiptap({
         <Separator orientation="vertical" className="h-6" />
 
         <Toggle
+          aria-label="Bullet list"
           size="sm"
           pressed={editor.isActive('bulletList')}
           onPressedChange={() =>
@@ -239,6 +247,7 @@ function MinimalTiptap({
         </Toggle>
 
         <Toggle
+          aria-label="Numbered list"
           size="sm"
           pressed={editor.isActive('orderedList')}
           onPressedChange={() =>
@@ -251,6 +260,7 @@ function MinimalTiptap({
         <Separator orientation="vertical" className="h-6" />
 
         <Button
+          aria-label="Link"
           type="button"
           variant="ghost"
           size="sm"
@@ -263,6 +273,7 @@ function MinimalTiptap({
         <Separator orientation="vertical" className="h-6" />
 
         <Toggle
+          aria-label="Align left"
           size="sm"
           pressed={editor.isActive({ textAlign: 'left' })}
           onPressedChange={() =>
@@ -273,6 +284,7 @@ function MinimalTiptap({
         </Toggle>
 
         <Toggle
+          aria-label="Align center"
           size="sm"
           pressed={editor.isActive({ textAlign: 'center' })}
           onPressedChange={() =>
@@ -283,6 +295,7 @@ function MinimalTiptap({
         </Toggle>
 
         <Toggle
+          aria-label="Align right"
           size="sm"
           pressed={editor.isActive({ textAlign: 'right' })}
           onPressedChange={() =>

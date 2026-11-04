@@ -184,6 +184,7 @@ export const InviteFormCard: React.FC<InviteFormCardProps> = ({
                     size="icon"
                     onClick={() => remove(index)}
                     className="mt-auto mb-1"
+                    aria-label="Remove invite"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

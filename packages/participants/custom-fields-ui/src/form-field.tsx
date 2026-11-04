@@ -140,7 +140,10 @@ export const FormFieldComponent = <
                   icon={CopyIcon}
                   label={`Copy ${label}`}
                 />
-                <IconButton icon={open ? ChevronUpIcon : ChevronDownIcon} />
+                <IconButton
+                  icon={open ? ChevronUpIcon : ChevronDownIcon}
+                  label={open ? 'Collapse' : 'Expand'}
+                />
               </div>
             </div>
           </CollapsibleTrigger>

@@ -279,6 +279,7 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
           onClick={() =>
             router.push(`/app/${slug}/sweepstakes/${sweepstakesId}/winners`)
           }
+          aria-label="Close"
         >
           <X className="h-5 w-5" />
         </Button>

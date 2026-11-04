@@ -111,7 +111,10 @@ export const Prize: React.FC<{
                   icon={CopyIcon}
                   label={`Copy Prize ${index + 1}`}
                 />
-                <IconButton icon={open ? ChevronUpIcon : ChevronDownIcon} />
+                <IconButton
+                  icon={open ? ChevronUpIcon : ChevronDownIcon}
+                  label={open ? 'Collapse' : 'Expand'}
+                />
               </div>
             </div>
           </CollapsibleTrigger>

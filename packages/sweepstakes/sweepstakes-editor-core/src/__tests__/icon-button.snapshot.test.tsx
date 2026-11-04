@@ -5,7 +5,9 @@ import { IconButton } from '../icon-button';
 
 describe('IconButton', () => {
   it('matches the snapshot', () => {
-    const { container } = render(<IconButton icon={Trash2Icon} />);
+    const { container } = render(
+      <IconButton icon={Trash2Icon} label="Remove" />
+    );
     expect(container.firstChild).toMatchSnapshot();
   });
 });

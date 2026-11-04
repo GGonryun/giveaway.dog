@@ -70,10 +70,17 @@ const MobileFormHeader: React.FC<{ hideTabs?: boolean }> = ({ hideTabs }) => {
               size="icon"
               disabled={disabled}
               onClick={onCancel}
+              aria-label="Cancel"
             >
               <XIcon />
             </Button>
-            <Button type="submit" form={formId} size="icon" disabled={disabled}>
+            <Button
+              type="submit"
+              form={formId}
+              size="icon"
+              disabled={disabled}
+              aria-label="Save"
+            >
               <SaveIcon />
             </Button>
           </div>

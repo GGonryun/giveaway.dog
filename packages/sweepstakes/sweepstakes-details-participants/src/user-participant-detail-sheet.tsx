@@ -240,6 +240,7 @@ export const UserParticipantSheetContent: React.FC<{
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6 p-0 m-0 hover:bg-transparent group-hover:opacity-100 opacity-0 transition-opacity cursor-pointer"
+                        aria-label="Open task"
                       >
                         <ExternalLinkIcon />
                       </Button>

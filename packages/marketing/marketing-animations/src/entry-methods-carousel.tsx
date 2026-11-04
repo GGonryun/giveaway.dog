@@ -168,6 +168,7 @@ function EntryMethodsGrid() {
             className="h-6 w-6"
             onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
             disabled={currentPage === 0}
+            aria-label="Previous entry methods"
           >
             <ChevronLeft className="h-3 w-3" />
           </Button>
@@ -179,6 +180,7 @@ function EntryMethodsGrid() {
               setCurrentPage((p) => Math.min(totalPages - 1, p + 1))
             }
             disabled={currentPage === totalPages - 1}
+            aria-label="Next entry methods"
           >
             <ChevronRight className="h-3 w-3" />
           </Button>
