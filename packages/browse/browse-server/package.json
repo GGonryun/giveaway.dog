@@ -26,6 +26,7 @@
     "test:server": "vitest run --project server"
   },
   "dependencies": {
+    "@giveaway/app-config": "workspace:*",
     "@giveaway/rpc-server": "workspace:*",
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/util-collections": "workspace:*",

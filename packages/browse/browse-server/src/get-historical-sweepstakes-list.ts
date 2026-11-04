@@ -11,6 +11,7 @@ import { datetime } from '@giveaway/util-time/date';
 import { giveawayFiltersSchema } from '@giveaway/sweepstakes-model/filters/giveaway-filters';
 import { HISTORY_PAGE_SIZE } from '@giveaway/util-collections/pagination';
 import { z } from 'zod';
+import { PUBLIC_HISTORY_DAYS } from '@giveaway/app-config/settings';
 
 const getHistoricalSweepstakesList = procedure()
   .authorization({
@@ -69,7 +70,8 @@ const getHistoricalSweepstakesList = procedure()
         status: { not: 'DRAFT' },
         timing: {
           endDate: {
-            lt: daysAgo
+            lt: daysAgo,
+            gte: datetime.daysAgo(PUBLIC_HISTORY_DAYS)
           }
         }
       },

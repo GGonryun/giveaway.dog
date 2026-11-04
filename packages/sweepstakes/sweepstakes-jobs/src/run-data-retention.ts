@@ -12,8 +12,10 @@ import {
   RETENTION_BATCH_SIZE,
   RETENTION_CHUNK_SIZE,
   deleteInChunks,
-  deleteUploadedFiles
+  deleteUploadedFiles,
+  isUploadedFileUrl
 } from '@giveaway/jobs/retention';
+import { STATIC_TEMPLATES } from '@giveaway/templates-model/data/static-templates';
 
 export type SweepstakesRetentionResult = {
   id: string;
@@ -58,11 +60,53 @@ const countJobs = async (db: PrismaClient, sweepstakesId: string) => {
   return sweepstakes + tasks + posts;
 };
 
+const STATIC_IMAGES = new Set(
+  STATIC_TEMPLATES.flatMap(({ template, setup }) => [
+    template.image,
+    setup.banner
+  ])
+);
+
+const isImageInUse = async (
+  db: PrismaClient,
+  sweepstakesId: string,
+  url: string
+) => {
+  const uses = await Promise.all([
+    db.sweepstakesDetails.count({
+      where: { banner: url, sweepstakesId: { not: sweepstakesId } }
+    }),
+    db.template.count({
+      where: {
+        OR: [
+          { image: url },
+          { content: { path: ['setup', 'banner'], equals: url } }
+        ]
+      }
+    }),
+    db.team.count({ where: { logo: url } })
+  ]);
+  return STATIC_IMAGES.has(url) || uses.some((count) => count > 0);
+};
+
+const findDeletableBanner = async (
+  db: PrismaClient,
+  sweepstakesId: string
+): Promise<string | null> => {
+  const details = await db.sweepstakesDetails.findUnique({
+    where: { sweepstakesId },
+    select: { banner: true }
+  });
+  const banner = details?.banner;
+  if (!isUploadedFileUrl(banner)) return null;
+  return (await isImageInUse(db, sweepstakesId, banner)) ? null : banner;
+};
+
 const reportSweepstakesData = async (
   db: PrismaClient,
   sweepstakesId: string
 ) => {
-  const [participants, files, jobs] = await Promise.all([
+  const [participants, files, banner, jobs] = await Promise.all([
     db.sweepstakesParticipant.count({
       where: deletableParticipants(sweepstakesId)
     }),
@@ -72,9 +116,10 @@ const reportSweepstakesData = async (
         task: MEDIA_TASK
       }
     }),
+    findDeletableBanner(db, sweepstakesId),
     countJobs(db, sweepstakesId)
   ]);
-  return { participants, files, jobs };
+  return { participants, files: files + (banner ? 1 : 0), jobs };
 };
 
 const deleteParticipantChunk = async (
@@ -127,6 +172,9 @@ const deleteSweepstakesData = async ({
     deleteParticipantChunk(db, sweepstakesId, counts)
   );
 
+  const banner = await findDeletableBanner(db, sweepstakesId);
+  const bannerFiles = banner ? await deleteUploadedFiles([banner]) : 0;
+
   const where = sweepstakesJobs(sweepstakesId);
   const [sweepstakesJobCount, taskJobs, posts] = await db.$transaction([
     db.sweepstakesJob.deleteMany({ where: where.sweepstakes }),
@@ -134,7 +182,10 @@ const deleteSweepstakesData = async ({
     db.automatedPostJob.deleteMany({ where: where.posts }),
     db.sweepstakes.update({
       where: { id: sweepstakesId },
-      data: { dataDeletedAt: now }
+      data: {
+        dataDeletedAt: now,
+        ...(bannerFiles > 0 && { details: { update: { banner: null } } })
+      }
     })
   ]);
 
@@ -142,7 +193,7 @@ const deleteSweepstakesData = async ({
     id: sweepstakesId,
     tier,
     participants,
-    files: counts.files,
+    files: counts.files + bannerFiles,
     jobs: sweepstakesJobCount.count + taskJobs.count + posts.count
   };
 };
