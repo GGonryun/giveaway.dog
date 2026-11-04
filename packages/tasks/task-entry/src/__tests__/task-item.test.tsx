@@ -79,4 +79,66 @@ describe('TaskItem', () => {
       expect(navigation.router.refresh).not.toHaveBeenCalled();
     });
   });
+
+  describe('header', () => {
+    it('is a button that announces whether the task is expanded', () => {
+      renderWithParticipation(
+        <TaskItem
+          task={buildTask()}
+          open={false}
+          submissions={[]}
+          onOpen={vi.fn()}
+        />
+      );
+
+      const header = screen.getByRole('button', { name: /^Say hello/ });
+      expect(header).toHaveAttribute('type', 'button');
+      expect(header).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('opens the task when the header is clicked', () => {
+      const onOpen = vi.fn();
+      renderWithParticipation(
+        <TaskItem
+          task={buildTask()}
+          open={false}
+          submissions={[]}
+          onOpen={onOpen}
+        />
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: /^Say hello/ }));
+
+      expect(onOpen).toHaveBeenCalledWith(true);
+    });
+
+    it('opens the task when the task button is clicked', () => {
+      const onOpen = vi.fn();
+      renderWithParticipation(
+        <TaskItem
+          task={buildTask()}
+          open={false}
+          submissions={[]}
+          onOpen={onOpen}
+        />
+      );
+
+      const buttons = screen.getAllByRole('button');
+      expect(buttons).toHaveLength(2);
+      expect(buttons[1]).toHaveAttribute('aria-expanded', 'false');
+      fireEvent.click(buttons[1]);
+
+      expect(onOpen).toHaveBeenCalledWith(true);
+    });
+
+    it('marks the header as expanded when the task is open', () => {
+      renderWithParticipation(
+        <TaskItem task={buildTask()} open submissions={[]} onOpen={vi.fn()} />
+      );
+
+      expect(
+        screen.getByRole('button', { name: /^Say hello/ })
+      ).toHaveAttribute('aria-expanded', 'true');
+    });
+  });
 });
