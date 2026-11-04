@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ComponentProps } from 'react';
 import {
@@ -69,8 +70,30 @@ describe('PrizeItem', () => {
     it('calls onToggleExpand when the header is clicked', () => {
       const onToggleExpand = vi.fn();
       renderPrizeItem({ onToggleExpand });
-      fireEvent.click(screen.getByRole('heading', { name: 'Gaming Headset' }));
+      fireEvent.click(screen.getByRole('button', { name: /Gaming Headset/ }));
       expect(onToggleExpand).toHaveBeenCalledTimes(1);
+    });
+
+    it('lets a keyboard user focus the header and expand the prize', async () => {
+      const user = userEvent.setup();
+      const onToggleExpand = vi.fn();
+      renderPrizeItem({ onToggleExpand });
+      const header = screen.getByRole('button', { name: /Gaming Headset/ });
+      expect(header).toHaveAttribute('aria-expanded', 'false');
+
+      await user.tab();
+      expect(header).toHaveFocus();
+      await user.keyboard('{Enter}');
+      await user.keyboard(' ');
+
+      expect(onToggleExpand).toHaveBeenCalledTimes(2);
+    });
+
+    it('announces the expanded state of the header', () => {
+      renderPrizeItem({ open: true });
+      expect(
+        screen.getByRole('button', { name: /Gaming Headset/ })
+      ).toHaveAttribute('aria-expanded', 'true');
     });
   });
 
@@ -145,7 +168,11 @@ describe('PrizeItem', () => {
 
     it('does not offer any action when prize selection is disabled', () => {
       renderPrizeItem({ open: true });
-      expect(screen.queryByRole('button')).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', {
+          name: /Select This Prize|Complete Tasks to Win/
+        })
+      ).not.toBeInTheDocument();
     });
   });
 

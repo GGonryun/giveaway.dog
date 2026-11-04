@@ -7,11 +7,6 @@ export type KnownViolation = {
 export const KNOWN_VIOLATIONS: KnownViolation[] = [
   {
     rule: 'aria-allowed-attr',
-    selector: 'div[type="button"][aria-controls]',
-    issue: 108
-  },
-  {
-    rule: 'aria-allowed-attr',
     selector: 'div[data-slot="dialog-trigger"]',
     issue: 543
   },

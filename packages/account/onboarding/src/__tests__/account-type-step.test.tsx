@@ -115,4 +115,43 @@ describe('AccountTypeStep', () => {
       expect(onNext).not.toHaveBeenCalled();
     });
   });
+
+  describe('with the keyboard', () => {
+    it('offers the account types as radio options with the selection checked', () => {
+      render(<AccountTypeStep onNext={vi.fn()} />);
+
+      expect(
+        screen.getByRole('radiogroup', { name: 'Account type' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('radio', { name: 'Participate in Giveaways' })
+      ).toBeChecked();
+      expect(
+        screen.getByRole('radio', { name: 'Host Giveaways' })
+      ).not.toBeChecked();
+    });
+
+    it('submits the host account type chosen with the arrow keys', async () => {
+      const user = userEvent.setup();
+      const onNext = vi.fn();
+      render(<AccountTypeStep onNext={onNext} />);
+
+      await user.tab();
+      expect(
+        screen.getByRole('radio', { name: 'Participate in Giveaways' })
+      ).toHaveFocus();
+      await user.keyboard('{ArrowDown}');
+      expect(
+        screen.getByRole('radio', { name: 'Host Giveaways' })
+      ).toHaveFocus();
+      await user.keyboard(' ');
+      expect(
+        screen.getByRole('radio', { name: 'Host Giveaways' })
+      ).toBeChecked();
+      await user.tab();
+      await user.keyboard('{Enter}');
+
+      expect(onNext).toHaveBeenCalledWith(UserAccountType.HOST);
+    });
+  });
 });
