@@ -28,6 +28,7 @@ const jobRow = (
   status: 'PENDING',
   runAt: RUN_AT,
   attempts: 0,
+  runId: null,
   createdAt: CREATED_AT,
   updatedAt: CREATED_AT,
   request: { integrationId: 'int-1', text: 'Hello' },

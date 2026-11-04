@@ -186,10 +186,10 @@ describe('ActiveParticipation', () => {
       renderActive({ sweepstakes: buildSweepstakes({ prizes }) });
       await user.click(screen.getByRole('tab', { name: 'Prizes' }));
       expect(
-        screen.getByRole('heading', { name: 'Gaming Headset' })
+        screen.getByRole('button', { name: /^Gaming Headset/ })
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('heading', { name: 'Gift Card' })
+        screen.getByRole('button', { name: /^Gift Card/ })
       ).toBeInTheDocument();
       expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     });
@@ -243,7 +243,7 @@ describe('ActiveParticipation', () => {
         onAllocate
       });
 
-      await user.click(screen.getByRole('heading', { name: 'Gift Card' }));
+      await user.click(screen.getByRole('button', { name: /^Gift Card/ }));
       await user.click(
         screen.getByRole('button', { name: 'Select This Prize' })
       );
@@ -268,7 +268,7 @@ describe('ActiveParticipation', () => {
         sweepstakes: selectionSweepstakes,
         participant: buildParticipant({ user: connectedUser })
       });
-      await user.click(screen.getByRole('heading', { name: 'Gift Card' }));
+      await user.click(screen.getByRole('button', { name: /^Gift Card/ }));
       expect(screen.getByText('Prize Details')).toBeInTheDocument();
       expect(
         screen.queryByRole('button', { name: 'Select This Prize' })
@@ -281,7 +281,7 @@ describe('ActiveParticipation', () => {
         sweepstakes: selectionSweepstakes,
         participant: buildParticipant()
       });
-      await user.click(screen.getByRole('heading', { name: 'Gift Card' }));
+      await user.click(screen.getByRole('button', { name: /^Gift Card/ }));
       expect(screen.getByTestId('login-options')).toBeInTheDocument();
     });
   });
@@ -313,11 +313,13 @@ describe('ActiveParticipation', () => {
         participant: buildParticipant({ user: connectedUser })
       });
       const trigger = screen
-        .getByRole('heading', { name: 'Gift Card' })
+        .getByRole('button', { name: /^Gift Card/ })
         .closest('[aria-expanded]') as HTMLElement;
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
       expect(
-        within(trigger.parentElement as HTMLElement).getByText('Prize Details')
+        within(trigger.parentElement?.parentElement as HTMLElement).getByText(
+          'Prize Details'
+        )
       ).toBeInTheDocument();
     });
   });

@@ -75,7 +75,8 @@ const renderCard = (user: Partial<UserSchema> = {}) =>
     </UserProvider>
   );
 
-const contactSelect = () => screen.getByRole('combobox');
+const contactSelect = () =>
+  screen.getByRole('combobox', { name: 'Preferred contact method' });
 const saveButton = () => screen.getByRole('button', { name: 'Save' });
 
 const chooseContact = async (

@@ -253,24 +253,24 @@ const ColorPicker = <
       render={({ field }) => (
         <FormItem>
           <FormLabel>Color</FormLabel>
-          <FormControl>
-            <div className="relative w-full">
-              <div
-                className="h-26 w-full rounded-md border cursor-pointer"
-                style={{
-                  backgroundColor:
-                    color ?? DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND.color
-                }}
-              />
-              <div
-                className="absolute border inset-0 bg-white/60 backdrop-blur-[1px] opacity-100 lg:opacity-0 hover:opacity-100 transition-opacity rounded-md flex items-center justify-center cursor-pointer"
-                onClick={() => colorInputRef.current?.click()}
-              >
-                <Button type="button">
-                  <Settings2 />
-                  Modify
-                </Button>
-              </div>
+          <div className="relative w-full">
+            <div
+              className="h-26 w-full rounded-md border cursor-pointer"
+              style={{
+                backgroundColor:
+                  color ?? DEFAULT_SOLID_COLOR_DESIGN_BACKGROUND.color
+              }}
+            />
+            <div
+              className="absolute border inset-0 bg-white/60 backdrop-blur-[1px] opacity-100 lg:opacity-0 hover:opacity-100 transition-opacity rounded-md flex items-center justify-center cursor-pointer"
+              onClick={() => colorInputRef.current?.click()}
+            >
+              <Button type="button">
+                <Settings2 />
+                Modify
+              </Button>
+            </div>
+            <FormControl>
               <Input
                 ref={colorInputRef}
                 type="color"
@@ -280,8 +280,8 @@ const ColorPicker = <
                 }
                 onChange={(e) => field.onChange(e.target.value)}
               />
-            </div>
-          </FormControl>
+            </FormControl>
+          </div>
         </FormItem>
       )}
     />
@@ -416,9 +416,9 @@ const GradientAngleField = <
       render={({ field }) => (
         <FormItem>
           <FormLabel>Angle</FormLabel>
-          <FormControl>
-            <div className="flex items-center gap-4">
-              <AngleSelector value={field.value} onChange={field.onChange} />
+          <div className="flex items-center gap-4">
+            <AngleSelector value={field.value} onChange={field.onChange} />
+            <FormControl>
               <Input
                 type="number"
                 min="0"
@@ -430,8 +430,8 @@ const GradientAngleField = <
                 }}
                 className="w-20"
               />
-            </div>
-          </FormControl>
+            </FormControl>
+          </div>
         </FormItem>
       )}
     />
@@ -540,12 +540,14 @@ const GradientStopsField = <
           <div key={index} className="flex items-center gap-2">
             <Input
               type="color"
+              aria-label={`Stop ${index + 1} color`}
               value={stop.color}
               onChange={(e) => updateStop(index, 'color', e.target.value)}
               className="appearance-none border-1 shadow-sm p-0 bg-transparent cursor-pointer h-10 w-10 rounded-md [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-0 [::-moz-color-swatch]:border-0"
             />
             <Input
               type="text"
+              aria-label={`Stop ${index + 1} hex color`}
               value={stop.color}
               onChange={(e) => updateStop(index, 'color', e.target.value)}
               placeholder="#000000"
@@ -556,6 +558,7 @@ const GradientStopsField = <
                 type="number"
                 min="0"
                 max="100"
+                aria-label={`Stop ${index + 1} position`}
                 value={stop.position}
                 onChange={(e) => {
                   const val = parseInt(e.target.value) || 0;
@@ -575,7 +578,7 @@ const GradientStopsField = <
               size="sm"
               onClick={() => removeStop(index)}
               disabled={gradient.stops.length <= 2}
-              aria-label={`Remove color stop ${index + 1}`}
+              aria-label={`Remove stop ${index + 1}`}
             >
               <Trash2 className="h-4 w-4" />
             </Button>

@@ -1,4 +1,5 @@
 import { act, fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import logout from '@giveaway/auth-actions/logout';
@@ -177,6 +178,22 @@ describe('UserInfoSection', () => {
 
       expect(logout).toHaveBeenCalledWith('/browse/winter-giveaway');
       expect(toast.success).toHaveBeenCalledWith('You have been logged out!');
+    });
+
+    it('lets a keyboard user log out with the Logout button', async () => {
+      vi.mocked(logout).mockResolvedValue({ ok: true, data: undefined });
+      navigation.pathname = '/browse/winter-giveaway';
+      const user = userEvent.setup();
+      renderWithParticipation(<UserInfoSection />, {
+        participant: buildParticipant()
+      });
+
+      const button = screen.getByRole('button', { name: 'Logout' });
+      expect(button).toHaveAttribute('type', 'button');
+      button.focus();
+      await user.keyboard('{Enter}');
+
+      expect(logout).toHaveBeenCalledWith('/browse/winter-giveaway');
     });
   });
 });

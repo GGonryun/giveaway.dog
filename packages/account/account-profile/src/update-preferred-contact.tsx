@@ -73,7 +73,10 @@ export const UpdatePreferredContact = () => {
         }}
         disabled={updateProfileProcedure.isLoading}
       >
-        <SelectTrigger className="max-w-xl">
+        <SelectTrigger
+          aria-label="Preferred contact method"
+          className="max-w-xl"
+        >
           <SelectValue placeholder="Select a contact method" />
         </SelectTrigger>
         <SelectContent>

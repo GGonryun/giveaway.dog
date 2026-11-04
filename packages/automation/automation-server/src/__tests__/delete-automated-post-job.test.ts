@@ -1,21 +1,32 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TeamRole, type AutomatedPostJobStatus } from '@giveaway/db-model';
 import { deleteAutomatedPostJob } from '../delete-automated-post-job';
 import { knownRequestError, prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn, TEST_USER } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
 
+const { cancelAutomatedPostRun } = vi.hoisted(() => ({
+  cancelAutomatedPostRun: vi.fn()
+}));
+
+vi.mock('../automated-post-workflow/start', () => ({
+  cancelAutomatedPostRun
+}));
+
 const jobWithTeam = ({
   status = 'PENDING',
   members = [{ id: 'm-1', userId: TEST_USER.id, role: TeamRole.MEMBER }],
-  team = true
+  team = true,
+  runId = null
 }: {
+  runId?: string | null;
   status?: AutomatedPostJobStatus;
   members?: { id: string; userId: string; role: TeamRole }[];
   team?: boolean;
 } = {}) => ({
   id: 'job-1',
   status,
+  runId,
   sweepstakes: {
     id: 'sweep-1',
     team: team ? { id: 'team-1', members } : null
@@ -37,6 +48,21 @@ describe('deleteAutomatedPostJob', () => {
   describe('when the caller is signed in', () => {
     beforeEach(() => {
       signIn();
+      cancelAutomatedPostRun.mockReset();
+    });
+
+    it('cancels the run of the job before it deletes the job', async () => {
+      prismaMock.automatedPostJob.findUnique.mockResolvedValue(
+        jobWithTeam({ runId: 'run-1' })
+      );
+
+      const result = await deleteAutomatedPostJob({ jobId: 'job-1' });
+
+      expect(expectOk(result)).toEqual({ success: true });
+      expect(cancelAutomatedPostRun).toHaveBeenCalledExactlyOnceWith('run-1');
+      expect(cancelAutomatedPostRun.mock.invocationCallOrder[0]).toBeLessThan(
+        prismaMock.automatedPostJob.delete.mock.invocationCallOrder[0]
+      );
     });
 
     it('rejects input without a job id', async () => {
@@ -80,6 +106,7 @@ describe('deleteAutomatedPostJob', () => {
       expect(prismaMock.automatedPostJob.delete).toHaveBeenCalledWith({
         where: { id: 'job-1' }
       });
+      expect(cancelAutomatedPostRun).not.toHaveBeenCalled();
     });
 
     it('deletes a failed job', async () => {

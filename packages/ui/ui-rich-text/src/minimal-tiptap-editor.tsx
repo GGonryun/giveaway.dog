@@ -31,14 +31,50 @@ interface MinimalTiptapProps {
   placeholder?: string;
   editable?: boolean;
   className?: string;
+  id?: string;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean | 'true' | 'false';
 }
+
+const toEditorAttributes = ({
+  id,
+  label,
+  labelledBy,
+  describedBy,
+  invalid
+}: {
+  id?: string;
+  label?: string;
+  labelledBy?: string;
+  describedBy?: string;
+  invalid?: boolean | 'true' | 'false';
+}): Record<string, string> => {
+  const attributes: Record<string, string> = {
+    class: richTextEditorStyles,
+    role: 'textbox',
+    'aria-multiline': 'true'
+  };
+  if (id) attributes.id = id;
+  if (label) attributes['aria-label'] = label;
+  if (labelledBy) attributes['aria-labelledby'] = labelledBy;
+  if (describedBy) attributes['aria-describedby'] = describedBy;
+  if (invalid !== undefined) attributes['aria-invalid'] = String(invalid);
+  return attributes;
+};
 
 function MinimalTiptap({
   content = '',
   onChange,
   placeholder = 'Start typing...',
   editable = true,
-  className
+  className,
+  id,
+  'aria-label': label,
+  'aria-labelledby': labelledBy,
+  'aria-describedby': describedBy,
+  'aria-invalid': invalid
 }: MinimalTiptapProps) {
   const editor = useEditor({
     extensions: [
@@ -74,11 +110,30 @@ function MinimalTiptap({
       onChange?.(editor.getHTML());
     },
     editorProps: {
-      attributes: {
-        class: richTextEditorStyles
-      }
+      attributes: toEditorAttributes({
+        id,
+        label,
+        labelledBy,
+        describedBy,
+        invalid
+      })
     }
   });
+
+  React.useEffect(() => {
+    if (!editor) return;
+    editor.setOptions({
+      editorProps: {
+        attributes: toEditorAttributes({
+          id,
+          label,
+          labelledBy,
+          describedBy,
+          invalid
+        })
+      }
+    });
+  }, [editor, id, label, labelledBy, describedBy, invalid]);
 
   const setLink = React.useCallback(() => {
     if (!editor) return;

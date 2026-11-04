@@ -5,6 +5,7 @@ import { Spinner } from '@giveaway/ui-primitives/spinner';
 import { ChevronDownIcon } from 'lucide-react';
 import { cn } from '@giveaway/ui-utils/utils';
 import { TooltipTrigger } from '@giveaway/ui-primitives/tooltip';
+import { CollapsibleTrigger } from '@giveaway/ui-primitives/collapsible';
 import { TaskLock } from './task-lock';
 import {
   SUBMISSION_BUTTON_ICON_MAP,
@@ -39,29 +40,31 @@ export const TaskButton: React.FC<{
           : undefined;
   return (
     // Note: moving the tooltip trigger from here will break the tooltip's open state management
-    <TooltipTrigger asChild>
-      <Button
-        size="icon"
-        type="button"
-        variant={variant}
-        aria-label={label}
-        className={cn(
-          'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-white hover:text-white group-hover:opacity-70 hover:opacity-70',
-          status ? '' : theme.action
-        )}
-      >
-        {isLoading ? (
-          <Spinner />
-        ) : Icon ? (
-          <Icon className="h-4 w-4" />
-        ) : lock ? (
-          <lock.icon className="h-4 w-4" />
-        ) : open ? (
-          <ChevronDownIcon />
-        ) : (
-          `+${task.value}`
-        )}
-      </Button>
-    </TooltipTrigger>
+    <CollapsibleTrigger asChild disabled={isLoading}>
+      <TooltipTrigger asChild>
+        <Button
+          size="icon"
+          type="button"
+          variant={variant}
+          aria-label={label}
+          className={cn(
+            'h-7 sm:px-6 cursor-pointer transition-colors group-hover:text-white hover:text-white group-hover:opacity-70 hover:opacity-70',
+            status ? '' : theme.action
+          )}
+        >
+          {isLoading ? (
+            <Spinner />
+          ) : Icon ? (
+            <Icon className="h-4 w-4" />
+          ) : lock ? (
+            <lock.icon className="h-4 w-4" />
+          ) : open ? (
+            <ChevronDownIcon />
+          ) : (
+            `+${task.value}`
+          )}
+        </Button>
+      </TooltipTrigger>
+    </CollapsibleTrigger>
   );
 };

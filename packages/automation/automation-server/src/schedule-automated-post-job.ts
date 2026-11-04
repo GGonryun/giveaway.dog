@@ -9,6 +9,7 @@ import {
 } from '@giveaway/automation-model/schemas';
 import { validateAutomatedPostRequest } from '@giveaway/automation-model/validation';
 import { requestJobRun } from '@giveaway/jobs/schedule';
+import { startAutomatedPostWorkflow } from './automated-post-workflow/start';
 
 export const scheduleAutomatedPostJob = procedure()
   .authorization({ required: true })
@@ -84,6 +85,7 @@ export const scheduleAutomatedPostJob = procedure()
       })
     });
 
+    await startAutomatedPostWorkflow(db, job.id);
     await requestJobRun();
 
     return job;

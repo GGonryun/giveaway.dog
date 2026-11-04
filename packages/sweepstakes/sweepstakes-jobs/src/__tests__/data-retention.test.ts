@@ -2,7 +2,7 @@ import { describe, it } from 'vitest';
 
 describe('the data retention of each team tier', () => {
   it.todo(
-    '[RETAIN-001] the participant data of a Free giveaway is deleted 30 days after it ends'
+    '[RETAIN-001] the participant data of a Free giveaway is deleted 90 days after it ends'
   );
   it.todo(
     '[RETAIN-002] the participant data of a Pro giveaway is deleted one year after it ends'
@@ -18,5 +18,8 @@ describe('the data retention of each team tier', () => {
   );
   it.todo(
     '[RETAIN-006] the deletion deletes no user account and no data of another giveaway'
+  );
+  it.todo(
+    '[RETAIN-011] no data of a giveaway is deleted before the retention period of its team tier ends'
   );
 });

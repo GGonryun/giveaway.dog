@@ -3,7 +3,6 @@ import { E2E_X_FIXTURES } from '@giveaway/e2e-model/fakes';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { signInAs } from '../../helpers/personas';
 import {
   createTeamPicker,
@@ -285,33 +284,32 @@ test.describe('team X pickers, as their host', () => {
       ).toBeVisible();
     });
 
-    test(
-      'a keyboard user opens the X picker from the picker list',
-      knownBug(108),
-      async ({ page, request }, testInfo) => {
-        const ns = freshNamespace(testInfo.workerIndex);
-        const { team } = await seedPickerTeam(request, ns, 'FREE');
-        await signInAs(page.request, 'host', ns);
+    test('a keyboard user opens the X picker from the picker list', async ({
+      page,
+      request
+    }, testInfo) => {
+      const ns = freshNamespace(testInfo.workerIndex);
+      const { team } = await seedPickerTeam(request, ns, 'FREE');
+      await signInAs(page.request, 'host', ns);
 
-        await page.goto(`/app/${team.slug}/pickers`);
-        const card = page
-          .getByRole('heading', { level: 2, name: 'X', exact: true })
-          .locator('xpath=ancestor::*[@data-slot="card"][1]');
-        await expect(card).toBeVisible();
-        await page.waitForLoadState('networkidle');
+      await page.goto(`/app/${team.slug}/pickers`);
+      const card = page
+        .getByRole('heading', { level: 2, name: 'X', exact: true })
+        .locator('xpath=ancestor::*[@data-slot="card"][1]');
+      await expect(card).toBeVisible();
+      await page.waitForLoadState('networkidle');
 
-        const focusesCard = () =>
-          card.evaluate((element) => element.matches(':focus-within'));
-        let reached = false;
-        for (let step = 0; step < 40 && !reached; step++) {
-          await page.keyboard.press('Tab');
-          reached = await focusesCard();
-        }
-        expect(reached, 'Tab reaches the X picker card').toBe(true);
-        await page.keyboard.press('Enter');
-        await page.waitForURL(`**/app/${team.slug}/pickers/x`);
+      const focusesCard = () =>
+        card.evaluate((element) => element.matches(':focus-within'));
+      let reached = false;
+      for (let step = 0; step < 40 && !reached; step++) {
+        await page.keyboard.press('Tab');
+        reached = await focusesCard();
       }
-    );
+      expect(reached, 'Tab reaches the X picker card').toBe(true);
+      await page.keyboard.press('Enter');
+      await page.waitForURL(`**/app/${team.slug}/pickers/x`);
+    });
   });
 
   test.describe('on the ScrapeBadger fixtures', () => {

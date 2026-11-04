@@ -140,49 +140,56 @@ const TaskItemContent: React.FC<TaskItemProps> = ({
         open ? 'z-50 shadow-xl' : ''
       )}
     >
-      <CollapsibleTrigger disabled={isLoading} asChild>
-        <div
-          className={cn(
-            'group flex items-stretch justify-between w-full ',
-            isLoading ? 'cursor-progress' : 'cursor-pointer',
-            'hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700'
-          )}
-        >
-          <div className="flex items-center gap-3 flex-1">
+      <div
+        className={cn(
+          'group flex items-stretch justify-between w-full',
+          'hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700'
+        )}
+      >
+        <h4 className="flex flex-1">
+          <CollapsibleTrigger
+            type="button"
+            disabled={isLoading}
+            className={cn(
+              'flex flex-1 items-stretch gap-3 text-left',
+              isLoading ? 'cursor-progress' : 'cursor-pointer',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset'
+            )}
+          >
             <TaskIcon status={status} />
-            <h4 className="text-left font-medium text-sm sm:text-base group-hover:underline">
+            <span className="self-center font-medium text-sm sm:text-base group-hover:underline">
               {task.title}
-            </h4>
-          </div>
+            </span>
+          </CollapsibleTrigger>
+        </h4>
 
-          <div className="flex items-center gap-2 p-1.5">
-            <TaskBadge
+        <div className="flex items-center gap-2 p-1.5">
+          <TaskBadge
+            open={open}
+            status={status}
+            task={task}
+            entrants={entrants}
+            loyalty={loyalty}
+            referral={referral}
+          />
+          <Tooltip open={open ? true : undefined}>
+            <TaskButton
               open={open}
-              status={status}
               task={task}
-              entrants={entrants}
-              loyalty={loyalty}
-              referral={referral}
+              isLoading={isLoading}
+              lock={lock}
+              status={status}
             />
-            <Tooltip open={open ? true : undefined}>
-              <TaskButton
-                open={open}
-                task={task}
-                isLoading={isLoading}
-                lock={lock}
-                status={status}
-              />
 
-              <TaskTooltipContent
-                task={task}
-                status={status}
-                lock={lock}
-                entries={entries}
-              />
-            </Tooltip>
-          </div>
+            <TaskTooltipContent
+              task={task}
+              status={status}
+              lock={lock}
+              entries={entries}
+            />
+          </Tooltip>
         </div>
-      </CollapsibleTrigger>
+      </div>
       <CollapsibleContent className="border-t bg-background">
         <TaskAction
           submission={submission}

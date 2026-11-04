@@ -424,6 +424,45 @@ describe('authConfig', () => {
         });
       });
 
+      it('[ACCOUNT-018] clears the stored tokens of a tiktok account on a reconnect', async () => {
+        prismaMock.account.findUnique.mockResolvedValue({
+          ...existing('SIGNUP'),
+          provider: 'tiktok',
+          providerAccountId: 'open-1'
+        });
+        getSession.mockResolvedValue(createSession({ id: 'owner' }));
+
+        const result = await signIn({
+          account: oauthAccount({
+            provider: 'tiktok',
+            providerAccountId: 'open-1',
+            scope: 'user.info.basic',
+            access_token: 'access',
+            refresh_token: 'refresh',
+            expires_at: 1700000000
+          }),
+          profile: { id: 'p' }
+        });
+
+        expect(result).toBe(true);
+        expect(prismaMock.account.update).toHaveBeenCalledWith({
+          where: {
+            provider_providerAccountId: {
+              provider: 'tiktok',
+              providerAccountId: 'open-1'
+            }
+          },
+          data: {
+            scope: 'user.info.basic',
+            access_token: null,
+            refresh_token: null,
+            expires_at: null,
+            id_token: null,
+            status: 'ACTIVE'
+          }
+        });
+      });
+
       it('[ACCOUNT-018] refreshes the account when the owner signs in again without a session', async () => {
         prismaMock.account.findUnique.mockResolvedValue(existing('SIGNUP'));
 

@@ -3,6 +3,7 @@
 import { procedure } from '@giveaway/rpc-server/procedures';
 import { BROWSE_LIST_TAGS } from './browse-tags';
 import { applySweepstakesChanges } from '@giveaway/sweepstakes-access/shared';
+import { rescheduleAutomatedPostWorkflows } from '@giveaway/automation-server/automated-post-workflow/start';
 import z from 'zod';
 import { sweepstakesInputSchema } from '@giveaway/sweepstakes-model/db';
 
@@ -24,6 +25,8 @@ const publishSweepstakes = procedure()
         status: 'ACTIVE'
       }
     });
+
+    await rescheduleAutomatedPostWorkflows(db, input.id);
 
     return { slug: team.slug };
   });

@@ -547,6 +547,7 @@ model AutomatedPostJob {
   status        AutomatedPostJobStatus
   runAt         DateTime
   attempts      Int                    @default(0)
+  runId         String?
   createdAt     DateTime               @default(now())
   updatedAt     DateTime               @updatedAt
 

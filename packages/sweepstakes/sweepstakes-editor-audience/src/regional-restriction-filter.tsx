@@ -36,25 +36,25 @@ export const RegionalRestrictionFilterField = <
       name={fieldPath}
       render={({ field }) => (
         <FormItem className="flex flex-row items-center justify-between">
-          <FormControl>
-            <Select
-              value={field.value}
-              onValueChange={(value) => {
-                field.onChange(value);
-              }}
-            >
+          <Select
+            value={field.value}
+            onValueChange={(value) => {
+              field.onChange(value);
+            }}
+          >
+            <FormControl>
               <SelectTrigger aria-label="Region filter">
                 <SelectValue placeholder="Select a filter" />
               </SelectTrigger>
-              <SelectContent>
-                {widetype.entries(OPTIONS).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormControl>
+            </FormControl>
+            <SelectContent>
+              {widetype.entries(OPTIONS).map(([key, label]) => (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <FormMessage />
         </FormItem>
       )}

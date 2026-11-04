@@ -5,84 +5,128 @@ exports[`AccountTypeStep > matches the snapshot 1`] = `
   class="grid gap-6"
 >
   <div
+    aria-label="Account type"
+    aria-required="false"
     class="grid gap-3"
+    dir="ltr"
+    role="radiogroup"
+    style="outline: none;"
+    tabindex="0"
   >
     <div
-      class="text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md cursor-pointer transition-all hover:border-primary border-primary bg-primary/5"
+      class="text-card-foreground flex flex-col gap-2 rounded-xl border shadow-md p-0 transition-all hover:border-primary has-[:focus-visible]:border-primary border-primary bg-primary/5"
       data-slot="card"
     >
-      <div
-        class="px-6 py-2"
-        data-slot="card-content"
+      <label
+        class="flex cursor-pointer items-start gap-4 px-6 py-6"
+        for="account-type-participant"
       >
-        <div
-          class="flex items-start gap-4"
+        <span
+          aria-hidden="true"
+          class="text-4xl"
         >
-          <div
-            class="text-4xl"
+          🎉
+        </span>
+        <span
+          class="flex-1 space-y-1"
+        >
+          <span
+            class="block font-semibold"
+            id="account-type-participant-title"
           >
-            🎉
-          </div>
-          <div
-            class="flex-1 space-y-1"
+            Participate in Giveaways
+          </span>
+          <span
+            class="block text-sm text-muted-foreground"
+            id="account-type-participant-description"
           >
-            <div
-              class="flex items-center gap-2"
+            Browse and enter giveaways from your favorite creators and brands.
+          </span>
+        </span>
+        <button
+          aria-checked="true"
+          aria-describedby="account-type-participant-description"
+          aria-labelledby="account-type-participant-title"
+          class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+          data-radix-collection-item=""
+          data-state="checked"
+          id="account-type-participant"
+          role="radio"
+          tabindex="-1"
+          type="button"
+          value="PARTICIPANT"
+        >
+          <span
+            class="flex items-center justify-center"
+            data-state="checked"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle h-2.5 w-2.5 fill-current text-current"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <h3
-                class="font-semibold"
-              >
-                Participate in Giveaways
-              </h3>
-              <div
-                class="h-2 w-2 rounded-full bg-primary"
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
               />
-            </div>
-            <p
-              class="text-sm text-muted-foreground"
-            >
-              Browse and enter giveaways from your favorite creators and brands.
-            </p>
-          </div>
-        </div>
-      </div>
+            </svg>
+          </span>
+        </button>
+      </label>
     </div>
     <div
-      class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border py-4 shadow-md cursor-pointer transition-all hover:border-primary"
+      class="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border shadow-md p-0 transition-all hover:border-primary has-[:focus-visible]:border-primary"
       data-slot="card"
     >
-      <div
-        class="px-6 py-2"
-        data-slot="card-content"
+      <label
+        class="flex cursor-pointer items-start gap-4 px-6 py-6"
+        for="account-type-host"
       >
-        <div
-          class="flex items-start gap-4"
+        <span
+          aria-hidden="true"
+          class="text-4xl"
         >
-          <div
-            class="text-4xl"
+          🎁
+        </span>
+        <span
+          class="flex-1 space-y-1"
+        >
+          <span
+            class="block font-semibold"
+            id="account-type-host-title"
           >
-            🎁
-          </div>
-          <div
-            class="flex-1 space-y-1"
+            Host Giveaways
+          </span>
+          <span
+            class="block text-sm text-muted-foreground"
+            id="account-type-host-description"
           >
-            <div
-              class="flex items-center gap-2"
-            >
-              <h3
-                class="font-semibold"
-              >
-                Host Giveaways
-              </h3>
-            </div>
-            <p
-              class="text-sm text-muted-foreground"
-            >
-              Create and manage giveaways for your community, brand, or organization.
-            </p>
-          </div>
-        </div>
-      </div>
+            Create and manage giveaways for your community, brand, or organization.
+          </span>
+        </span>
+        <button
+          aria-checked="false"
+          aria-describedby="account-type-host-description"
+          aria-labelledby="account-type-host-title"
+          class="aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+          data-radix-collection-item=""
+          data-state="unchecked"
+          id="account-type-host"
+          role="radio"
+          tabindex="-1"
+          type="button"
+          value="HOST"
+        />
+      </label>
     </div>
   </div>
   <button
