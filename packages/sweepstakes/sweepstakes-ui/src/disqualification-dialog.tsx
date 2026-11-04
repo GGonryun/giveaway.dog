@@ -24,6 +24,7 @@ export const DisqualificationDialog = ({
   open,
   onOpenChange,
   participantName,
+  participantEmail,
   disqualificationReason,
   drawDate
 }: DisqualificationDialogProps) => {
@@ -42,6 +43,11 @@ export const DisqualificationDialog = ({
             <Label>Participant</Label>
             <div className="text-sm">
               <div className="text-muted-foreground">{participantName}</div>
+              {participantEmail !== undefined && (
+                <div className="text-xs text-muted-foreground">
+                  {strings.obfuscate(participantEmail) ?? UNKNOWN_EMAIL}
+                </div>
+              )}
             </div>
           </div>
 
