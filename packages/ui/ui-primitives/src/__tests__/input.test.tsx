@@ -66,7 +66,7 @@ describe('SpecialInput', () => {
     expect(input).toHaveClass('px-3', 'py-1');
   });
 
-  it('ignores className and only applies inputClassName without decorations', () => {
+  it('applies className and inputClassName to the input without decorations', () => {
     render(
       <SpecialInput
         aria-label="Search"
@@ -75,8 +75,23 @@ describe('SpecialInput', () => {
       />
     );
     const input = screen.getByRole('textbox', { name: 'Search' });
+    expect(input).toHaveClass('w-64', 'tracking-wide');
+    expect(input).not.toHaveClass('w-full');
+  });
+
+  it('applies className to the wrapper, not the input, with decorations', () => {
+    render(
+      <SpecialInput
+        aria-label="Search"
+        startIcon={Search}
+        className="w-64"
+        inputClassName="tracking-wide"
+      />
+    );
+    const input = screen.getByRole('textbox', { name: 'Search' });
     expect(input).not.toHaveClass('w-64');
     expect(input).toHaveClass('tracking-wide');
+    expect(input.parentElement).toHaveClass('w-64');
   });
 
   it('wraps the input and pads it for a start icon', () => {
