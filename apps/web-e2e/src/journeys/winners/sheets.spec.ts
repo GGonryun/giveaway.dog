@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { freshNamespace } from '../../fixtures/personas';
 import { E2E_SECRET, personaState } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 import {
   drawRow,
@@ -88,24 +87,23 @@ test.describe('the entry, participant and winner sheets', () => {
     await closeWithX(page, participants);
   });
 
-  test(
-    '"Close Details" of an entry sheet opened by a direct link goes back to the list',
-    knownBug(578),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      const ns = freshNamespace(testInfo.workerIndex);
-      const giveaway = await seedWithWinner(request, ns, team.slug);
-      const entries = entriesPage(team.slug, giveaway.id);
+  test('"Close Details" of an entry sheet opened by a direct link goes back to the list', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    const ns = freshNamespace(testInfo.workerIndex);
+    const giveaway = await seedWithWinner(request, ns, team.slug);
+    const entries = entriesPage(team.slug, giveaway.id);
 
-      await page.goto(
-        `${entries}/task/${giveaway.tasks[0].id}?active=${giveaway.entries[0].completions[0].id}`
-      );
-      await expect(sheet(page)).toContainText(TASK);
-      await sheet(page).getByRole('button', { name: 'Close Details' }).click();
-      await expect(sheet(page)).toBeHidden();
-      await expect(page).toHaveURL(new RegExp(`${entries}$`));
-    }
-  );
+    await page.goto(
+      `${entries}/task/${giveaway.tasks[0].id}?active=${giveaway.entries[0].completions[0].id}`
+    );
+    await expect(sheet(page)).toContainText(TASK);
+    await sheet(page).getByRole('button', { name: 'Close Details' }).click();
+    await expect(sheet(page)).toBeHidden();
+    await expect(page).toHaveURL(new RegExp(`${entries}$`));
+  });
 
   test('the host opens the sheet of a winner from the Winners tab and reloads it', async ({
     page,
