@@ -276,6 +276,44 @@ describe('EmailVerification', () => {
       expect(mocks.updateEmail).not.toHaveBeenCalled();
     });
 
+    it('confirms the saved address when the field was edited before sending', async () => {
+      renderEmailVerification({ user: unverifiedUser });
+      await replaceEmail('new@example.com');
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Send Verification' })
+      );
+
+      await waitForConfirmation();
+      expect(mocks.sendEmailVerification).toHaveBeenCalledExactlyOnceWith({
+        email: 'ada@example.com',
+        redirectTo: '/giveaways/summer'
+      });
+      expect(screen.getByText('ada@example.com')).toBeInTheDocument();
+      expect(screen.queryByText('new@example.com')).not.toBeInTheDocument();
+    });
+
+    it('sends to the saved address after a failed update to a new one', async () => {
+      mocks.updateEmail.mockResolvedValue(failure('Email already in use'));
+      renderEmailVerification({ user: unverifiedUser });
+      await replaceEmail('new@example.com');
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Update Email' })
+      );
+      await waitFor(() =>
+        expect(mocks.toastError).toHaveBeenCalledWith('Email already in use')
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Send Verification' })
+      );
+
+      await waitForConfirmation();
+      expect(mocks.sendEmailVerification).toHaveBeenCalledExactlyOnceWith({
+        email: 'ada@example.com',
+        redirectTo: '/giveaways/summer'
+      });
+      expect(screen.getByText('ada@example.com')).toBeInTheDocument();
+    });
+
     it('sends a verification link without updating when the address is unchanged', async () => {
       renderEmailVerification({ user: unverifiedUser });
       await userEvent.click(
