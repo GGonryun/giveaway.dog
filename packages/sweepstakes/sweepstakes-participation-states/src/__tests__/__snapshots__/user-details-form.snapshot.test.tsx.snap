@@ -114,36 +114,42 @@ exports[`UserDetailsForm > matches the snapshot for a visitor with every field t
                *
             </span>
           </span>
-          <svg
+          <button
             aria-controls="generated-id"
             aria-expanded="false"
             aria-haspopup="dialog"
-            class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help"
+            aria-label="X profile format"
+            class="rounded-full cursor-help focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             data-slot="dialog-trigger"
             data-state="closed"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
             type="button"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
           >
-            <circle
-              cx="12"
-              cy="12"
-              r="10"
-            />
-            <path
-              d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
-            />
-            <path
-              d="M12 17h.01"
-            />
-          </svg>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+              />
+              <path
+                d="M12 17h.01"
+              />
+            </svg>
+          </button>
         </label>
         <input
           aria-describedby="generated-id-form-item-description"
