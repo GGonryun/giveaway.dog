@@ -176,6 +176,26 @@ describe('LoginOptions', () => {
     });
   });
 
+  describe('when a provider handler replaces the login', () => {
+    it.each(['GOOGLE', 'EMAIL'] as const)(
+      'passes %s to the handler without a cookie or a login',
+      async (provider) => {
+        const onSelectProvider = vi.fn();
+        renderLoginOptions({ onSelectProvider });
+        await userEvent.click(
+          screen.getByRole('button', {
+            name:
+              provider === 'EMAIL' ? 'Login with Email' : 'Login with Google'
+          })
+        );
+        expect(onSelectProvider).toHaveBeenCalledExactlyOnceWith(provider);
+        expect(mocks.setLastLoginProvider).not.toHaveBeenCalled();
+        expect(mocks.login).not.toHaveBeenCalled();
+        expect(screen.queryByLabelText('Email')).not.toBeInTheDocument();
+      }
+    );
+  });
+
   describe('when an OAuth provider is chosen', () => {
     it('remembers the provider and starts the login with the redirect targets', async () => {
       renderLoginOptions();

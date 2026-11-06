@@ -49,6 +49,7 @@ interface LoginOptionsProps {
   returnTo: string;
   userProviders?: ProviderSchema[];
   maxVisible?: number;
+  onSelectProvider?: (provider: IdentityProvider) => void;
 }
 
 export function LoginOptions({
@@ -61,6 +62,7 @@ export function LoginOptions({
   allowedIdentities,
   userProviders,
   maxVisible,
+  onSelectProvider,
   ...props
 }: LoginOptionsProps & React.ComponentProps<'div'>) {
   const searchParams = useSearchParams();
@@ -310,7 +312,7 @@ export function LoginOptions({
           </div>
         )}
         <Providers
-          onSubmit={handleProviderLogin}
+          onSubmit={onSelectProvider ?? handleProviderLogin}
           identities={
             maxVisible && !showAll
               ? orderedIdentities.slice(0, maxVisible)
