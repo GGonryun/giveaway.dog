@@ -133,15 +133,27 @@ describe('toSweepstakesState', () => {
       ).toBe('pending');
     });
 
-    it('returns active when the start date has passed', () => {
+    it('returns active for an eligible participant when the start date has passed', () => {
       expect(
-        toSweepstakesState(build({ status: 'SCHEDULED', startDate: PAST }))
+        toSweepstakesState(
+          build({
+            status: 'SCHEDULED',
+            startDate: PAST,
+            participant: participant()
+          })
+        )
       ).toBe('active');
     });
 
-    it('returns active when the start date is exactly now', () => {
+    it('returns active for an eligible participant when the start date is exactly now', () => {
       expect(
-        toSweepstakesState(build({ status: 'SCHEDULED', startDate: NOW }))
+        toSweepstakesState(
+          build({
+            status: 'SCHEDULED',
+            startDate: NOW,
+            participant: participant()
+          })
+        )
       ).toBe('active');
     });
 
@@ -153,14 +165,29 @@ describe('toSweepstakesState', () => {
       ).toBe('pending');
     });
 
-    it.fails(
-      'returns not-eligible for a participant outside the region once started (fails until #828 is fixed)',
-      () => {
+    describe('once the start date has passed (#828)', () => {
+      const started = (overrides: Parameters<typeof build>[0] = {}) =>
+        build({ status: 'SCHEDULED', startDate: PAST, ...overrides });
+
+      it('returns not-logged-in without a participant', () => {
+        expect(toSweepstakesState(started())).toBe('not-logged-in');
+      });
+
+      it('returns profile-incomplete when a required form field is empty', () => {
         expect(
           toSweepstakesState(
-            build({
-              status: 'SCHEDULED',
-              startDate: PAST,
+            started({
+              formFields: [usernameField],
+              participant: participant({ formValues: {} })
+            })
+          )
+        ).toBe('profile-incomplete');
+      });
+
+      it('returns not-eligible for a participant outside the region', () => {
+        expect(
+          toSweepstakesState(
+            started({
               regionalRestriction: {
                 regions: ['country:US'],
                 filter: 'INCLUDE'
@@ -169,21 +196,67 @@ describe('toSweepstakesState', () => {
             })
           )
         ).toBe('not-eligible');
-      }
-    );
+      });
 
-    it('returns active without a participant once started, even after the end date', () => {
-      expect(
-        toSweepstakesState(
-          build({ status: 'SCHEDULED', startDate: PAST, endDate: PAST })
-        )
-      ).toBe('active');
+      it('[ENTRY-005] returns not-eligible for a participant whose country is unknown', () => {
+        expect(
+          toSweepstakesState(
+            started({
+              regionalRestriction: {
+                regions: ['country:US'],
+                filter: 'INCLUDE'
+              },
+              participant: participant({ countryCode: null })
+            })
+          )
+        ).toBe('not-eligible');
+      });
+
+      it('returns active for an eligible participant before the end date', () => {
+        expect(
+          toSweepstakesState(started({ participant: participant() }))
+        ).toBe('active');
+      });
+
+      it('returns winners-pending for an eligible participant after the end date', () => {
+        expect(
+          toSweepstakesState(
+            started({ endDate: PAST, participant: participant() })
+          )
+        ).toBe('winners-pending');
+      });
+
+      it('returns the same state as a running giveaway', () => {
+        const cases = [
+          {},
+          { participant: participant() },
+          { participant: participant({ countryCode: 'FR' }) },
+          { endDate: PAST, participant: participant() }
+        ].map((overrides) => ({
+          regionalRestriction: { regions: ['country:US'], filter: 'INCLUDE' },
+          ...overrides
+        }));
+
+        for (const overrides of cases) {
+          expect(toSweepstakesState(started(overrides))).toBe(
+            toSweepstakesState(build({ status: 'RUNNING', ...overrides }))
+          );
+        }
+      });
     });
   });
 
   describe('when the sweepstakes is running', () => {
     it('returns not-logged-in without a participant', () => {
       expect(toSweepstakesState(build())).toBe('not-logged-in');
+    });
+
+    it('returns pending when the start date is in the future', () => {
+      expect(
+        toSweepstakesState(
+          build({ startDate: FUTURE, participant: participant() })
+        )
+      ).toBe('pending');
     });
 
     it('returns active for an eligible participant before the end date', () => {
