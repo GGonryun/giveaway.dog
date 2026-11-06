@@ -52,34 +52,8 @@ export type UnifiedFormLayoutContext<TSteps extends string> =
 
 export const FORM_STEP_PANEL_ID = 'form-step-panel';
 
-export const UnifiedFormLayoutContext = React.createContext<
-  UnifiedFormLayoutContext<string>
->({
-  title: '',
-  type: 'sweepstake',
-  id: '',
-  disabled: false,
-  integrations: [],
-  currentStep: '',
-  formId: '',
-  isLoadingLayout: false,
-  mobile: false,
-  setCurrentStep: () => {},
-  setShowIssues: () => {},
-  onCancel: () => {},
-  onJumpToField: () => {},
-  onSave: () => {},
-  showIssues: false,
-  action: 'create',
-  stepErrors: {},
-  formErrors: [],
-  stepLabels: {},
-  stepOrder: [],
-  stepsToFields: {},
-  fieldsToSteps: {},
-  hasErrors: false,
-  banner: null
-});
+export const UnifiedFormLayoutContext =
+  React.createContext<UnifiedFormLayoutContext<string> | null>(null);
 
 export const useUnifiedFormLayout = <TSteps extends string>() => {
   const context = React.useContext(UnifiedFormLayoutContext);

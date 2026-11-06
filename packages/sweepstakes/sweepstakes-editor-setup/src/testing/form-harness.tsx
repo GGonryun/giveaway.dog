@@ -32,7 +32,7 @@ export const FIXED_NOW = new Date('2026-06-15T12:00:00.000Z');
 
 export type GiveawayForm = UseFormReturn<GiveawayFormSchema>;
 
-export type LayoutValue = React.ContextType<typeof UnifiedFormLayoutContext>;
+export type LayoutValue = UnifiedFormLayoutContext<string>;
 
 export type TemplateTerms = Extract<GiveawayTerms, { type: 'TEMPLATE' }>;
 

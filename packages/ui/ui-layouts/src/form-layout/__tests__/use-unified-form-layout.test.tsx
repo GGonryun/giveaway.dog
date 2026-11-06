@@ -125,13 +125,18 @@ const openIssues = async (label: string) => {
 };
 
 describe('useUnifiedFormLayout', () => {
-  it('returns the default layout state outside a provider instead of throwing', () => {
-    const { result } = renderHook(() => useUnifiedFormLayout());
-    expect(result.current.title).toBe('');
-    expect(result.current.type).toBe('sweepstake');
-    expect(result.current.action).toBe('create');
-    expect(result.current.stepOrder).toEqual([]);
-    expect(result.current.mobile).toBe(false);
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('throws outside a provider', () => {
+    expect(() => renderHook(() => useUnifiedFormLayout())).toThrow(
+      'useUnifiedFormLayout must be used within a UnifiedFormLayoutContext.Provider'
+    );
   });
 });
 

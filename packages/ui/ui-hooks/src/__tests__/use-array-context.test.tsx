@@ -3,14 +3,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ArrayContext, useArrayContext } from '../use-array-context';
 
 describe('useArrayContext', () => {
-  describe('when rendered outside a provider', () => {
-    it('returns the default index of -1 instead of throwing', () => {
-      const { result } = renderHook(() => useArrayContext());
-
-      expect(result.current).toBe(-1);
-    });
-  });
-
   describe('when rendered inside a provider', () => {
     it('returns the provided index', () => {
       const { result } = renderHook(() => useArrayContext(), {
@@ -45,7 +37,7 @@ describe('useArrayContext', () => {
     });
   });
 
-  describe('when the provider value is null', () => {
+  describe('without a provider index', () => {
     beforeEach(() => {
       vi.spyOn(console, 'error').mockImplementation(() => {});
     });
@@ -54,7 +46,13 @@ describe('useArrayContext', () => {
       vi.restoreAllMocks();
     });
 
-    it('throws a descriptive error', () => {
+    it('throws a descriptive error outside a provider', () => {
+      expect(() => renderHook(() => useArrayContext())).toThrow(
+        'useArrayContext must be used within a ArrayContext.Provider'
+      );
+    });
+
+    it('throws a descriptive error when the provider value is null', () => {
       expect(() =>
         renderHook(() => useArrayContext(), {
           wrapper: ({ children }) => (

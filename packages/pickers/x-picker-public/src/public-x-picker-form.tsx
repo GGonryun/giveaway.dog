@@ -25,7 +25,7 @@ import { Plus } from 'lucide-react';
 import { UpgradeModal } from './upgrade-modal';
 import {
   SwitchBox,
-  SwitchFormHeader
+  SwitchHeader
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { LoadTweetModal } from './load-tweet-modal';
 import { ProgressModal } from './progress-modal';
@@ -368,7 +368,7 @@ export const PublicXPickerForm: React.FC = () => {
 
             <SwitchBox>
               <div className="flex items-center justify-between">
-                <SwitchFormHeader
+                <SwitchHeader
                   label="Schedule for Later"
                   description="Set a specific date and time for your drawing"
                 />

@@ -3,7 +3,7 @@ import { GiveawayFormSchema } from '@giveaway/sweepstakes-model/schemas';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
-  SwitchFormHeader
+  SwitchHeader
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { toDefaultValues } from '@giveaway/task-model/defaults';
 import { nanoid } from 'nanoid';
@@ -35,7 +35,7 @@ export const EnableAutomaticProfileEntry = () => {
   return (
     <SwitchBox>
       <div className="flex flex-row items-start justify-between">
-        <SwitchFormHeader
+        <SwitchHeader
           label="Reward Profile Completion"
           description="Give participants bonus entries for completing their profile"
           help={{

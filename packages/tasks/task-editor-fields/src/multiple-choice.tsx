@@ -9,6 +9,7 @@ import {
   FormMessage,
   FormDescription
 } from '@giveaway/ui-primitives/form';
+import { Label } from '@giveaway/ui-primitives/label';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Textarea } from '@giveaway/ui-primitives/textarea';
 import { Button } from '@giveaway/ui-primitives/button';
@@ -42,10 +43,10 @@ export const MultipleChoiceFormFields: React.FC = () => {
         )}
       />
       <div>
-        <FormLabel>Options</FormLabel>
-        <FormDescription className="mb-2">
+        <Label>Options</Label>
+        <p className="mb-2 text-sm text-muted-foreground">
           Add options for participants to choose from (minimum 2)
-        </FormDescription>
+        </p>
         <div className="space-y-2">
           {fields.map((field, optionIndex) => (
             <div key={field.id} className="flex gap-2">

@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage
 } from '@giveaway/ui-primitives/form';
+import { Label } from '@giveaway/ui-primitives/label';
 
 import {
   SwitchBox,
@@ -307,7 +308,7 @@ const GradientPicker = <
 
   return (
     <div className="flex flex-col gap-2">
-      <FormLabel>Gradient</FormLabel>
+      <Label>Gradient</Label>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <div className="relative w-full">
@@ -529,7 +530,7 @@ const GradientStopsField = <
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <FormLabel>Color Stops</FormLabel>
+        <Label>Color Stops</Label>
         <Button type="button" variant="outline" size="sm" onClick={addStop}>
           <Plus className="h-4 w-4 mr-1" />
           Add Stop

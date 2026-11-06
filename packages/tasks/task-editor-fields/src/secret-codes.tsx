@@ -8,6 +8,7 @@ import {
   FormControl,
   FormMessage
 } from '@giveaway/ui-primitives/form';
+import { Label } from '@giveaway/ui-primitives/label';
 import { Input } from '@giveaway/ui-primitives/input';
 import { Button } from '@giveaway/ui-primitives/button';
 import { PlusIcon, TrashIcon } from 'lucide-react';
@@ -48,7 +49,7 @@ export const SecretCodesFormField: React.FC = () => {
   return (
     <div>
       <div className="flex items-center gap-1">
-        <FormLabel>Codes</FormLabel>
+        <Label>Codes</Label>
         <HelpDialog
           title="Multiple Secret Codes"
           content="Add multiple secret codes that participants can use. Any of these codes will be accepted as a valid answer."
