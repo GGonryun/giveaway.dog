@@ -325,7 +325,7 @@ describe('PublicWinnerDraw', () => {
       expect(burstCalls()).toHaveLength(1);
     });
 
-    it('never reveals winners that arrive while another reveal is running', async () => {
+    it('reveals winners that arrive while another reveal is running', async () => {
       const { rerender } = render(drawElement());
       await advance(100);
 
@@ -337,11 +337,36 @@ describe('PublicWinnerDraw', () => {
           ]
         })
       );
+      await advance(850);
       await advance(10_000);
 
       expect(screen.getByText('Wendy Winner')).toBeInTheDocument();
+      expect(screen.getByText('Omar Owens')).toBeInTheDocument();
+      expect(screen.queryByText('Winner #2')).not.toBeInTheDocument();
+      expect(burstCalls()).toHaveLength(2);
+    });
+
+    it('celebrates once, after the winner that arrived during the reveal', async () => {
+      const { rerender } = render(
+        drawElement({ prizes: [headset([winnerDraw('draw-1')])] })
+      );
+      await advance(100);
+
+      rerender(
+        drawElement({
+          prizes: [headset([winnerDraw('draw-1'), winnerDraw('draw-9', omar)])]
+        })
+      );
+      await advance(850);
+      expect(celebrationCalls()).toHaveLength(0);
       expect(screen.queryByText('Omar Owens')).not.toBeInTheDocument();
-      expect(screen.getByText('Winner #2')).toBeInTheDocument();
+
+      await advance(700);
+      expect(screen.getByText('Omar Owens')).toBeInTheDocument();
+      expect(celebrationCalls()).toHaveLength(0);
+
+      await advance(250);
+      expect(celebrationCalls().length).toBeGreaterThan(0);
     });
   });
 
