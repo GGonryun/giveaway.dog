@@ -110,25 +110,24 @@ test.describe('the entry form', () => {
     expect(user).toMatchObject({ name: 'E2E participant', username });
   });
 
-  test(
-    'the entry form explains why an unchecked age box blocks it',
-    knownBug(6),
-    async ({ page, request }, testInfo) => {
-      const giveaway = await seedFormGiveaway(request, testInfo);
+  test('the entry form explains why an unchecked age box blocks it', async ({
+    page,
+    request
+  }, testInfo) => {
+    const giveaway = await seedFormGiveaway(request, testInfo);
 
-      await page.goto(`/browse/${giveaway.id}`);
-      await page.getByLabel(X_PROFILE).fill(`https://x.com/e2e${ns}`);
-      await submitForm(page);
+    await page.goto(`/browse/${giveaway.id}`);
+    await page.getByLabel(X_PROFILE).fill(`https://x.com/e2e${ns}`);
+    await submitForm(page);
 
-      await expect(page.getByRole('checkbox', { name: AGE })).toHaveAttribute(
-        'aria-invalid',
-        'true'
-      );
-      await expect(
-        page.getByText('You must confirm you meet the age requirement')
-      ).toBeVisible();
-    }
-  );
+    await expect(page.getByRole('checkbox', { name: AGE })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
+    await expect(
+      page.getByText('You must confirm you meet the age requirement')
+    ).toBeVisible();
+  });
 
   test('the entry form accepts the X profile URL that its placeholder suggests', async ({
     page,

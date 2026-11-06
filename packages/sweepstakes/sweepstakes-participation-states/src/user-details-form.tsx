@@ -34,6 +34,8 @@ import { isFailureData } from '@giveaway/rpc-model/types';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@giveaway/ui-primitives/spinner';
 
+const AGE_REQUIREMENT_MESSAGE = 'You must confirm you meet the age requirement';
+
 const createFormSchema = (formFields: SweepstakesFormFieldSchema[]) => {
   const schemaFields: Record<string, z.ZodTypeAny> = {};
 
@@ -57,9 +59,14 @@ const createFormSchema = (formFields: SweepstakesFormFieldSchema[]) => {
 
       case SweepstakesFormFieldType.AGE:
         if (field.required) {
-          fieldSchema = z.boolean().refine((val) => val === true, {
-            message: 'You must confirm you meet the age requirement'
-          });
+          fieldSchema = z
+            .boolean({
+              required_error: AGE_REQUIREMENT_MESSAGE,
+              invalid_type_error: AGE_REQUIREMENT_MESSAGE
+            })
+            .refine((val) => val === true, {
+              message: AGE_REQUIREMENT_MESSAGE
+            });
         } else {
           fieldSchema = z.union([z.boolean(), z.literal('')]).optional();
         }
@@ -148,6 +155,7 @@ function SweepstakesFormField<T extends z.ZodSchema<any>>({
               </FormControl>
               <div className="space-y-1 leading-none">
                 <FormLabel>{field.label}</FormLabel>
+                <FormMessage />
               </div>
             </FormItem>
           )}
