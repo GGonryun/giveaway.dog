@@ -1,5 +1,3 @@
-'use server';
-
 import { ArrowRight } from 'lucide-react';
 import { ScrollingTemplatesAnimation } from '@giveaway/marketing-animations/scrolling-templates-animation';
 import { MarketingHeader } from '@giveaway/marketing-ui/shared';

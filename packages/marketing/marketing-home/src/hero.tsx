@@ -1,5 +1,3 @@
-'use server';
-
 import { HeroSweepstakesPreview } from './hero-sweepstakes-preview';
 import { Suspense } from 'react';
 import { ArrowRight } from 'lucide-react';

@@ -1,5 +1,3 @@
-'use server';
-
 import { OrbitingPlatformsSection } from '@giveaway/marketing-animations/orbiting-platforms';
 import { UnifiedPlatformSection } from '@giveaway/marketing-animations/unified-platform-visual';
 import { getServerTheme } from '@giveaway/theme-server/get-server-theme';
