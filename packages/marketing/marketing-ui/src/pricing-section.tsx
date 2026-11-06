@@ -161,6 +161,8 @@ export const PricingSection = () => {
           <div className="relative">
             <div className="inline-flex items-center rounded-lg border bg-muted p-1">
               <button
+                type="button"
+                aria-pressed={billingCycle === 'monthly'}
                 onClick={() => setBillingCycle('monthly')}
                 className={`px-8 py-2 rounded-md text-sm font-medium transition-colors ${
                   billingCycle === 'monthly'
@@ -175,6 +177,8 @@ export const PricingSection = () => {
                   Save {(YEARLY_DISCOUNT_RATE * 100).toFixed(0)}%
                 </Badge>
                 <button
+                  type="button"
+                  aria-pressed={billingCycle === 'yearly'}
                   onClick={() => setBillingCycle('yearly')}
                   className={`px-8 py-2 rounded-md text-sm font-medium transition-colors ${
                     billingCycle === 'yearly'
