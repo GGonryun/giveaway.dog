@@ -17,6 +17,7 @@ import { Input } from '@giveaway/ui-primitives/input';
 import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import { UserSource } from '@giveaway/db-model';
 import { ScrollArea } from '@giveaway/ui-primitives/scroll-area';
+import { normalizeQualityScoreRange } from './lib/quality-score-range';
 
 interface UsersFilters {
   sources?: UserSource[];
@@ -71,15 +72,15 @@ export function UsersFiltersSheet() {
       params.set('sources', filters.sources.join(','));
     }
 
-    if (filters.minQualityScore !== undefined && filters.minQualityScore > 0) {
-      params.set('minQualityScore', filters.minQualityScore.toString());
+    const { minQualityScore, maxQualityScore } =
+      normalizeQualityScoreRange(filters);
+
+    if (minQualityScore !== undefined && minQualityScore > 0) {
+      params.set('minQualityScore', minQualityScore.toString());
     }
 
-    if (
-      filters.maxQualityScore !== undefined &&
-      filters.maxQualityScore < 100
-    ) {
-      params.set('maxQualityScore', filters.maxQualityScore.toString());
+    if (maxQualityScore !== undefined && maxQualityScore < 100) {
+      params.set('maxQualityScore', maxQualityScore.toString());
     }
 
     const queryString = params.toString();
