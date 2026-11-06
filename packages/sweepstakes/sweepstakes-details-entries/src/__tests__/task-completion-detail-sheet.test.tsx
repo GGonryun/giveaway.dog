@@ -13,6 +13,7 @@ import {
 import {
   TaskCompletionDetailSheet,
   TaskCompletionDetailSheetContent,
+  TaskCompletionDetailSheetError,
   TaskCompletionDetailSheetLoading
 } from '../task-completion-detail-sheet';
 import { VerificationInstructionsDialog } from '../verification-instructions-dialog';
@@ -164,6 +165,21 @@ describe('TaskCompletionDetailSheetContent', () => {
     expect(
       screen.getByRole('dialog', { name: 'Loading...' })
     ).toBeInTheDocument();
+  });
+
+  it('names the sheet when its entries fail to load', () => {
+    navigation.pathname = '/app/acme/sweepstakes/sweep-1/entries/task/task-1';
+    render(
+      <Providers>
+        <TaskCompletionDetailSheetError message="Failed to load sweepstakes entry: boom" />
+      </Providers>
+    );
+    const dialog = screen.getByRole('dialog', {
+      name: 'Task completion details'
+    });
+    expect(within(dialog).getByRole('alert')).toHaveTextContent(
+      'Failed to load sweepstakes entry: boom'
+    );
   });
 
   it('asks for a selection when the active completion is unknown', () => {

@@ -395,6 +395,15 @@ export const TaskCompletionDetailSheetLoading: React.FC = () => (
   </SheetHeader>
 );
 
+export const TaskCompletionDetailSheetError: React.FC<{
+  message: string;
+}> = ({ message }) => (
+  <SheetHeader className="px-0">
+    <SheetTitle className="text-lg">Task completion details</SheetTitle>
+    <SheetDescription role="alert">{message}</SheetDescription>
+  </SheetHeader>
+);
+
 export const TaskCompletionDetailSheet: React.FC<{
   sweepstakesId: string;
   slug: string;
