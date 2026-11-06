@@ -46,9 +46,13 @@ describe('MobileFormLayout', () => {
     ).toBeInTheDocument();
   });
 
-  it('leaves the heading empty when the form has no title', () => {
-    renderMobile({ title: '' });
-    expect(screen.getByRole('heading', { level: 1 })).toBeEmptyDOMElement();
+  it.each([
+    ['sweepstake', 'Untitled Sweepstake'],
+    ['picker', 'Untitled Picker'],
+    ['template', 'Untitled Template']
+  ] as const)('falls back to an untitled %s name', (type, name) => {
+    renderMobile({ title: '', type });
+    expect(screen.getByRole('heading', { level: 1, name })).toBeInTheDocument();
   });
 
   describe('header actions', () => {
