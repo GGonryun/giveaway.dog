@@ -119,8 +119,23 @@ describe('ParticipationHistoryTable', () => {
       render(<ParticipationHistoryTable history={history} />);
 
       expect(
-        screen.getByRole('switch', { name: 'Show wins only(1)' })
+        screen.getByRole('switch', { name: 'Show wins only, 1 win' })
       ).not.toBeChecked();
+    });
+
+    it('names the win count in the plural for more than one win', () => {
+      render(
+        <ParticipationHistoryTable
+          history={[
+            createItem(1, { hasWon: true }),
+            createItem(2, { hasWon: true })
+          ]}
+        />
+      );
+
+      expect(
+        screen.getByRole('switch', { name: 'Show wins only, 2 wins' })
+      ).toBeInTheDocument();
     });
 
     it('omits the win count when there are no wins', () => {

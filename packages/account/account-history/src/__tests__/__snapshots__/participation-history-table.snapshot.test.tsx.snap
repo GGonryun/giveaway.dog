@@ -32,11 +32,20 @@ exports[`ParticipationHistoryTable > when the user has participated > matches th
       >
         Show wins only
         <span
+          aria-hidden="true"
           class="ml-1.5 text-xs text-muted-foreground"
         >
           (
           1
           )
+        </span>
+        <span
+          class="sr-only"
+        >
+          , 
+          1
+           
+          win
         </span>
       </label>
     </div>

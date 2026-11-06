@@ -109,9 +109,17 @@ export const ParticipationHistoryTable: React.FC<{
           <Label htmlFor="wins-only" className="cursor-pointer">
             Show wins only
             {winsCount > 0 && (
-              <span className="ml-1.5 text-xs text-muted-foreground">
-                ({winsCount})
-              </span>
+              <>
+                <span
+                  aria-hidden="true"
+                  className="ml-1.5 text-xs text-muted-foreground"
+                >
+                  ({winsCount})
+                </span>
+                <span className="sr-only">
+                  , {winsCount} {winsCount === 1 ? 'win' : 'wins'}
+                </span>
+              </>
             )}
           </Label>
         </div>
