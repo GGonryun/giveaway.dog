@@ -46,6 +46,7 @@
     "@giveaway/user-quality-ui": "workspace:*",
     "@giveaway/user-source-model": "workspace:*",
     "@giveaway/util-strings": "workspace:*",
+    "@giveaway/winners-model": "workspace:*",
     "@giveaway/winners-server": "workspace:*",
     "canvas-confetti": "catalog:",
     "framer-motion": "catalog:",

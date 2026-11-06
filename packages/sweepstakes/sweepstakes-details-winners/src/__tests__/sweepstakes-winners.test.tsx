@@ -187,23 +187,51 @@ describe('SweepstakesWinners', () => {
       expect(criterion('Min Quality:')).toBe('50%');
       expect(criterion('Multiple Wins:')).toBe('No');
       expect(criterion('Prize Selection:')).toBe('No');
-      expect(criterion('Eligible:')).toBe('2 / 4');
+      expect(criterion('Eligible:')).toBe('1 / 4');
     });
 
-    it('still counts a participant whose user already won as eligible', () => {
+    it('[DRAW-003] does not count a participant whose user was already drawn', () => {
       renderWinners({
         participants: [participants[0]],
         criteria: buildCriteria({ allowMultipleWins: false })
       });
+
+      expect(criterion('Eligible:')).toBe('0 / 1');
+    });
+
+    it('counts a participant whose user already won when multiple wins are on', () => {
+      renderWinners({
+        participants: [participants[0]],
+        criteria: buildCriteria({ allowMultipleWins: true })
+      });
+
       expect(criterion('Eligible:')).toBe('1 / 1');
     });
 
-    it('excludes a past winner only when the participant id matches the user id', () => {
+    it('[ELIG-002] does not count rejected completions toward the minimum', () => {
       renderWinners({
-        participants: [{ ...participants[0], id: 'user-1' }],
-        criteria: buildCriteria({ allowMultipleWins: false })
+        participants: [
+          {
+            ...participants[3],
+            completions: [buildCompletion({ status: 'REJECTED' })]
+          }
+        ],
+        criteria: buildCriteria({ minTasksCompleted: 1, minQualityScore: 0 })
       });
+
       expect(criterion('Eligible:')).toBe('0 / 1');
+    });
+
+    it('[ELIG-003] does not count a participant from a source that is not allowed', () => {
+      renderWinners({
+        criteria: buildCriteria({
+          minTasksCompleted: 1,
+          minQualityScore: 50,
+          externalPlatforms: ['TWITTER_IMPORT']
+        })
+      });
+
+      expect(criterion('Eligible:')).toBe('0 / 4');
     });
 
     it('lists the allowed external sources', () => {
@@ -235,7 +263,7 @@ describe('SweepstakesWinners', () => {
       const { user, dialog } = await openEditor();
 
       expect(dialog).toHaveTextContent(
-        '2 of 4 participants meet these criteria'
+        '1 of 4 participants meet these criteria'
       );
       fireEvent.change(
         within(dialog).getByLabelText('Minimum Tasks Completed'),
@@ -245,7 +273,7 @@ describe('SweepstakesWinners', () => {
       );
 
       expect(dialog).toHaveTextContent(
-        '1 of 4 participants meet these criteria'
+        '0 of 4 participants meet these criteria'
       );
       await user.click(
         within(dialog).getByRole('switch', {

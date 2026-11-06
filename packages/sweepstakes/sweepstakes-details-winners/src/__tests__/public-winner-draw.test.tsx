@@ -130,7 +130,15 @@ describe('PublicWinnerDraw', () => {
   });
 
   it('shows the sweepstakes name and the number of eligible participants', () => {
-    render(drawElement());
+    render(
+      drawElement({
+        criteria: buildCriteria({
+          minQualityScore: 50,
+          minTasksCompleted: 1,
+          allowMultipleWins: true
+        })
+      })
+    );
     expect(
       screen.getByRole('heading', { level: 1, name: 'Summer Giveaway' })
     ).toBeInTheDocument();
@@ -162,8 +170,41 @@ describe('PublicWinnerDraw', () => {
   });
 
   it('uses the singular for one eligible participant', () => {
-    render(drawElement({ participants: participants.slice(0, 1) }));
+    render(drawElement({ participants: participants.slice(1) }));
     expect(screen.getByText('1 eligible participant')).toBeInTheDocument();
+  });
+
+  it('[DRAW-003] does not count a participant whose user was already drawn', () => {
+    render(drawElement());
+    expect(screen.getByText('1 eligible participant')).toBeInTheDocument();
+  });
+
+  it('[ELIG-002] does not count rejected completions toward the minimum', () => {
+    render(
+      drawElement({
+        participants: [
+          {
+            ...participants[2],
+            completions: [buildCompletion({ status: 'REJECTED' })]
+          }
+        ]
+      })
+    );
+    expect(screen.getByText('0 eligible participants')).toBeInTheDocument();
+  });
+
+  it('[ELIG-003] does not count a participant from a source that is not allowed', () => {
+    render(
+      drawElement({
+        participants: participants.slice(2),
+        criteria: buildCriteria({
+          minQualityScore: 50,
+          minTasksCompleted: 1,
+          externalPlatforms: ['TWITTER_IMPORT']
+        })
+      })
+    );
+    expect(screen.getByText('0 eligible participants')).toBeInTheDocument();
   });
 
   it('links back to the winners page', () => {

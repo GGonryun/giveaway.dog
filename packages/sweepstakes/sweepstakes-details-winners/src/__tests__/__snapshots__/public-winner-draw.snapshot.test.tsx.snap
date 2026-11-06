@@ -69,10 +69,10 @@ exports[`PublicWinnerDraw > matches the snapshot once the existing winners are r
         <p
           class="text-sm sm:text-base text-muted-foreground"
         >
-          2
+          1
            eligible
            
-          participants
+          participant
         </p>
       </div>
       <div
