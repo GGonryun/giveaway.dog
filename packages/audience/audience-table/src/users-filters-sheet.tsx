@@ -122,11 +122,18 @@ export function UsersFiltersSheet() {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" className="relative">
+        <Button
+          variant="outline"
+          className="relative"
+          aria-label={hasActiveFilters ? 'Filters (active)' : undefined}
+        >
           <SlidersHorizontal className="h-4 w-4 mr-2" />
           Filters
           {hasActiveFilters && (
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full" />
+            <span
+              aria-hidden="true"
+              className="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full"
+            />
           )}
         </Button>
       </SheetTrigger>
