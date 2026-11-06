@@ -66,8 +66,18 @@ describe('NavGroups', () => {
     expect(link('Sweepstakes')).toHaveAttribute('data-active', 'false');
   });
 
-  it('does not mark Users as active on a nested users page', () => {
-    navigation.pathname = '/app/acme/users/user-42';
+  it.each([
+    ['Users', '/app/acme/users/user-42'],
+    ['Settings', '/app/acme/settings/team']
+  ])('marks %s as active on the nested page %s', (name, pathname) => {
+    navigation.pathname = pathname;
+    renderInSidebar(<NavGroups />);
+    expect(link(name)).toHaveAttribute('data-active', 'true');
+    expect(link('Sweepstakes')).toHaveAttribute('data-active', 'false');
+  });
+
+  it('does not mark Users as active on a page that only shares its prefix', () => {
+    navigation.pathname = '/app/acme/users-export';
     renderInSidebar(<NavGroups />);
     expect(link('Users')).toHaveAttribute('data-active', 'false');
   });
@@ -114,18 +124,25 @@ describe('NavGroups', () => {
       expect(pickerLinks()).toHaveLength(3);
     });
 
-    it('starts collapsed on a picker sub-page', () => {
+    it('starts expanded on a picker sub-page', () => {
       navigation.pathname = '/app/acme/pickers/discord';
       renderInSidebar(<NavGroups />);
-      expect(pickersButton()).toHaveAttribute('aria-expanded', 'false');
+      expect(pickersButton()).toHaveAttribute('aria-expanded', 'true');
     });
 
-    it('marks the current picker sub-page once expanded', async () => {
+    it('marks the current picker sub-page', () => {
       navigation.pathname = '/app/acme/pickers/discord';
       renderInSidebar(<NavGroups />);
-      await userEvent.click(pickersButton());
       expect(link('Discord')).toHaveAttribute('data-active', 'true');
       expect(link('X')).toHaveAttribute('data-active', 'false');
+    });
+
+    it('marks the picker of a nested picker page', () => {
+      navigation.pathname = '/app/acme/pickers/x/picker-7';
+      renderInSidebar(<NavGroups />);
+      expect(pickersButton()).toHaveAttribute('aria-expanded', 'true');
+      expect(link('X')).toHaveAttribute('data-active', 'true');
+      expect(link('Discord')).toHaveAttribute('data-active', 'false');
     });
 
     it('navigates to the pickers page instead of expanding when the sidebar is collapsed', async () => {
