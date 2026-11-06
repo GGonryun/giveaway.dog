@@ -4,10 +4,4 @@ export type KnownViolation = {
   issue: number;
 };
 
-export const KNOWN_VIOLATIONS: KnownViolation[] = [
-  {
-    rule: 'aria-allowed-attr',
-    selector: 'div[data-slot="dialog-trigger"]',
-    issue: 543
-  }
-];
+export const KNOWN_VIOLATIONS: KnownViolation[] = [];

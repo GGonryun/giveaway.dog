@@ -28,6 +28,13 @@ describe('UnifiedFormFooter', () => {
       ).not.toBeInTheDocument();
     });
 
+    it('renders no dialog trigger while the form is valid', () => {
+      const { container } = renderFooter();
+      expect(
+        container.querySelector('[data-slot="dialog-trigger"]')
+      ).not.toBeInTheDocument();
+    });
+
     it.each([
       [1, '1 Issue'],
       [2, '2 Issues']
