@@ -130,25 +130,24 @@ test.describe('the entry form', () => {
     }
   );
 
-  test(
-    'the entry form accepts the X profile URL that its placeholder suggests',
-    knownBug(8),
-    async ({ page, request }, testInfo) => {
-      const giveaway = await seedFormGiveaway(request, testInfo);
+  test('the entry form accepts the X profile URL that its placeholder suggests', async ({
+    page,
+    request
+  }, testInfo) => {
+    const giveaway = await seedFormGiveaway(request, testInfo);
 
-      await page.goto(`/browse/${giveaway.id}`);
-      const profile = page.getByLabel(X_PROFILE);
-      await expect(profile).toHaveAttribute(
-        'placeholder',
-        'https://twitter.com/username'
-      );
-      await page.getByRole('checkbox', { name: AGE }).check();
-      await profile.fill(`https://twitter.com/e2e${ns}`);
-      await submitForm(page);
+    await page.goto(`/browse/${giveaway.id}`);
+    const profile = page.getByLabel(X_PROFILE);
+    await expect(profile).toHaveAttribute(
+      'placeholder',
+      'https://x.com/username'
+    );
+    await page.getByRole('checkbox', { name: AGE }).check();
+    await profile.fill(`https://x.com/e2e${ns}`);
+    await submitForm(page);
 
-      await expectTasks(page);
-    }
-  );
+    await expectTasks(page);
+  });
 
   test('a participant can leave the optional X profile blank', async ({
     page,

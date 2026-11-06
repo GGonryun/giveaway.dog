@@ -105,11 +105,11 @@ describe('UserDetailsForm', () => {
       expect(emailInput()).toHaveAttribute('type', 'email');
     });
 
-    it('suggests a twitter.com profile url by default', () => {
+    it('suggests an x.com profile url by default', () => {
       renderForm([buildTwitterField({ placeholder: null })]);
       expect(twitterInput()).toHaveAttribute(
         'placeholder',
-        'https://twitter.com/username'
+        'https://x.com/username'
       );
     });
 
@@ -183,7 +183,7 @@ describe('UserDetailsForm', () => {
       expect(props.onFormSubmit).not.toHaveBeenCalled();
     });
 
-    it('rejects a twitter.com profile url even though the placeholder suggests one', async () => {
+    it('rejects a twitter.com profile url', async () => {
       const user = userEvent.setup();
       renderForm([buildTwitterField()]);
 

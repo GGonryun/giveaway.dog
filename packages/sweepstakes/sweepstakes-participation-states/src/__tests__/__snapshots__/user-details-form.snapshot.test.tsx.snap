@@ -152,7 +152,7 @@ exports[`UserDetailsForm > matches the snapshot for a visitor with every field t
           data-slot="input"
           id="generated-id-form-item"
           name="field-twitter"
-          placeholder="https://twitter.com/username"
+          placeholder="https://x.com/username"
           value=""
         />
       </div>
