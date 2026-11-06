@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   richTextEditorStyles,
+  richTextPlaceholderStyles,
   richTextPreviewStyles,
   richTextStyles
 } from '../rich-text-styles';
@@ -64,10 +65,24 @@ describe('rich text styles', () => {
     });
   });
 
+  describe('richTextPlaceholderStyles', () => {
+    it('shows the placeholder text before the empty first paragraph', () => {
+      expect(richTextPlaceholderStyles).toBe(
+        [
+          '[&_p.is-editor-empty:first-child]:before:content-[attr(data-placeholder)]',
+          '[&_p.is-editor-empty:first-child]:before:text-muted-foreground',
+          '[&_p.is-editor-empty:first-child]:before:float-left',
+          '[&_p.is-editor-empty:first-child]:before:h-0',
+          '[&_p.is-editor-empty:first-child]:before:pointer-events-none'
+        ].join(' ')
+      );
+    });
+  });
+
   describe('richTextEditorStyles', () => {
-    it('extends the base styles with editor sizing and focus classes', () => {
+    it('extends the base styles with editor sizing, focus and placeholder classes', () => {
       expect(richTextEditorStyles).toBe(
-        `${richTextStyles} min-h-[200px] p-4 border-0 focus:outline-none`
+        `${richTextStyles} min-h-[200px] p-4 border-0 focus:outline-none ${richTextPlaceholderStyles}`
       );
     });
   });

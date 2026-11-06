@@ -1,9 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { EditorContent, useEditor } from '@tiptap/react';
+import { type Editor, EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
+import { Placeholder } from '@tiptap/extensions';
 import { Separator } from '@giveaway/ui-primitives/separator';
 import { Toggle } from '@giveaway/ui-primitives/toggle';
 import { Button } from '@giveaway/ui-primitives/button';
@@ -40,12 +41,14 @@ interface MinimalTiptapProps {
 
 const toEditorAttributes = ({
   id,
+  placeholder,
   label,
   labelledBy,
   describedBy,
   invalid
 }: {
   id?: string;
+  placeholder?: string;
   label?: string;
   labelledBy?: string;
   describedBy?: string;
@@ -57,11 +60,18 @@ const toEditorAttributes = ({
     'aria-multiline': 'true'
   };
   if (id) attributes.id = id;
+  if (placeholder) attributes['aria-placeholder'] = placeholder;
   if (label) attributes['aria-label'] = label;
   if (labelledBy) attributes['aria-labelledby'] = labelledBy;
   if (describedBy) attributes['aria-describedby'] = describedBy;
   if (invalid !== undefined) attributes['aria-invalid'] = String(invalid);
   return attributes;
+};
+
+const readPlaceholder = ({ editor }: { editor: Editor }) => {
+  const attributes = editor.options.editorProps.attributes;
+  if (!attributes || typeof attributes === 'function') return '';
+  return attributes['aria-placeholder'] ?? '';
 };
 
 function MinimalTiptap({
@@ -101,6 +111,9 @@ function MinimalTiptap({
       }),
       TextAlign.configure({
         types: ['heading', 'paragraph']
+      }),
+      Placeholder.configure({
+        placeholder: readPlaceholder
       })
     ],
     content,
@@ -112,6 +125,7 @@ function MinimalTiptap({
     editorProps: {
       attributes: toEditorAttributes({
         id,
+        placeholder,
         label,
         labelledBy,
         describedBy,
@@ -126,6 +140,7 @@ function MinimalTiptap({
       editorProps: {
         attributes: toEditorAttributes({
           id,
+          placeholder,
           label,
           labelledBy,
           describedBy,
@@ -133,7 +148,7 @@ function MinimalTiptap({
         })
       }
     });
-  }, [editor, id, label, labelledBy, describedBy, invalid]);
+  }, [editor, id, placeholder, label, labelledBy, describedBy, invalid]);
 
   React.useEffect(() => {
     if (!editor || editor.isEditable === editable) return;
@@ -313,7 +328,7 @@ function MinimalTiptap({
         </div>
       )}
 
-      <EditorContent editor={editor} placeholder={placeholder} />
+      <EditorContent editor={editor} />
     </div>
   );
 }

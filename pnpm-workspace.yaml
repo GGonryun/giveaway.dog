@@ -75,6 +75,7 @@ catalog:
   '@tiptap/extension-text': ^3.6.6
   '@tiptap/extension-text-align': ^3.6.6
   '@tiptap/extension-underline': ^3.6.6
+  '@tiptap/extensions': ^3.6.6
   '@tiptap/pm': ^3.6.6
   '@tiptap/react': ^3.6.6
   '@tiptap/starter-kit': ^3.6.6

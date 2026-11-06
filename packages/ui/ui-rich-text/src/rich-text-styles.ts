@@ -14,9 +14,18 @@ export const richTextStyles = [
   '[&_a]:text-primary [&_a]:underline [&_a]:hover:text-primary/80'
 ].join(' ');
 
+export const richTextPlaceholderStyles = [
+  '[&_p.is-editor-empty:first-child]:before:content-[attr(data-placeholder)]',
+  '[&_p.is-editor-empty:first-child]:before:text-muted-foreground',
+  '[&_p.is-editor-empty:first-child]:before:float-left',
+  '[&_p.is-editor-empty:first-child]:before:h-0',
+  '[&_p.is-editor-empty:first-child]:before:pointer-events-none'
+].join(' ');
+
 export const richTextEditorStyles = [
   richTextStyles,
-  'min-h-[200px] p-4 border-0 focus:outline-none'
+  'min-h-[200px] p-4 border-0 focus:outline-none',
+  richTextPlaceholderStyles
 ].join(' ');
 
 export const richTextPreviewStyles = [
