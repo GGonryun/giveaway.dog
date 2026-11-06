@@ -119,6 +119,19 @@ describe('mock data', () => {
     });
   });
 
+  it('runs the sample sweepstakes from a day ago until its sample end date', () => {
+    const DAY = 24 * 60 * 60 * 1000;
+    const sinceStart = Date.now() - mockSweepstakes.timing.startDate.getTime();
+    expect(sinceStart).toBeGreaterThanOrEqual(DAY);
+    expect(sinceStart).toBeLessThan(DAY + 60 * 1000);
+    expect(mockSweepstakes.timing.endDate).toBe(
+      SAMPLE_SWEEPSTAKES_DATA.timing.endDate
+    );
+    expect(mockSweepstakes.timing.timeZone).toBe(
+      SAMPLE_SWEEPSTAKES_DATA.timing.timeZone
+    );
+  });
+
   it('uses the preview user as the participant', () => {
     expect(mockParticipant).toMatchObject({
       id: 'preview-participant',

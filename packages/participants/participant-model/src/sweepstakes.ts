@@ -34,14 +34,11 @@ export const toSweepstakesState = (
       return 'winners-pending';
     case 'ERROR':
       return 'error';
-    case 'SCHEDULED': {
-      // double check the sweepstakes start date:
+    case 'SCHEDULED':
+    case 'RUNNING': {
       if (new Date(sweepstakes.timing.startDate) > new Date()) {
         return 'pending';
       }
-      return 'active';
-    }
-    case 'RUNNING': {
       if (!participant) return 'not-logged-in';
       if (
         !isProfileComplete(
@@ -52,7 +49,6 @@ export const toSweepstakesState = (
       )
         return 'profile-incomplete';
       if (!isEligible({ ...args, participant })) return 'not-eligible';
-      // double check the sweepstakes end date:
       if (new Date(sweepstakes.timing.endDate) < new Date()) {
         return 'winners-pending';
       }

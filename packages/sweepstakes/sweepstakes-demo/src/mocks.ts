@@ -206,7 +206,11 @@ export const mockWinners: GiveawayPrizeSchema[] = [];
 export const mockSweepstakes = {
   id: 'preview-sweepstake',
   status: 'RUNNING' as const,
-  ...SAMPLE_SWEEPSTAKES_DATA
+  ...SAMPLE_SWEEPSTAKES_DATA,
+  timing: {
+    ...SAMPLE_SWEEPSTAKES_DATA.timing,
+    startDate: new Date(Date.now() - 24 * 60 * 60 * 1000)
+  }
 };
 
 export const mockPrizes: GiveawayPrizeSchema[] =

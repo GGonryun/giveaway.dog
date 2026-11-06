@@ -147,4 +147,37 @@ test.describe('the dates of a giveaway', () => {
       await expect(page.getByRole('heading', { name: BONUS })).toBeHidden();
     }
   );
+
+  test(
+    '[ENTRY-005] a page opened before the start shows the region message after the start, without a refresh',
+    { tag: '@slow' },
+    async ({ page, request }, testInfo) => {
+      test.setTimeout(testInfo.timeout + MIN_TIME_MARGIN_SECONDS * 1000);
+      const { team } = await seedWorkerTeam(request, testInfo);
+      const giveaway = await seedSweepstakes(request, {
+        ns: RUN_ID,
+        team: team.slug,
+        preset: 'scheduled',
+        startsIn: MIN_TIME_MARGIN_SECONDS,
+        audience: {
+          ...AUDIENCE,
+          regionalRestriction: { regions: ['country:US'], filter: 'INCLUDE' }
+        },
+        tasks: [{ type: 'BONUS_TASK', title: BONUS }]
+      });
+
+      await page.goto(`/browse/${giveaway.id}`);
+      await expect(
+        page.getByRole('heading', { name: 'Giveaway Starting Soon' })
+      ).toBeVisible();
+
+      await waitForServerTime(request, new Date(giveaway.startDate));
+      await page.reload();
+
+      await expect(
+        page.getByText('You are not eligible to participate in this giveaway.')
+      ).toBeVisible();
+      await expect(page.getByRole('heading', { name: BONUS })).toBeHidden();
+    }
+  );
 });
