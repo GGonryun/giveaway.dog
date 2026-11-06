@@ -34,7 +34,10 @@ const REQUIRED_TASK_FIELDS: Record<string, object> = {
 const ENTRIES_REQUEST = {
   tasks: [{ type: 'BONUS_TASK' }, { type: 'REFERRAL_LINK' }],
   prizes: [{ name: 'A mug' }],
-  terms: { type: 'CUSTOM', text: '<img src=x onerror=alert(1)>' },
+  terms: {
+    type: 'CUSTOM',
+    text: '<p>Official rules</p><img src=x onerror=alert(1)>'
+  },
   criteria: { minQualityScore: 0, allowUserSelection: true },
   audience: {
     allowedIdentities: ['ANONYMOUS'],
@@ -404,7 +407,7 @@ describe('the e2e seed API against a real database', () => {
     const page = await loadGiveawayPage(seeded.id);
     expect(page.sweepstakes).toMatchObject({
       status: 'COMPLETED',
-      terms: { type: 'CUSTOM', text: '<img src=x onerror=alert(1)>' },
+      terms: { type: 'CUSTOM', text: '<p>Official rules</p>' },
       criteria: { minQualityScore: 0, allowUserSelection: true },
       audience: {
         allowedIdentities: ['ANONYMOUS'],
