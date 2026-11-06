@@ -29,27 +29,29 @@ export const FeatureInDevelopmentDialog = ({
             <Rocket className="h-5 w-5 text-primary" />
             <DialogTitle>Feature In Active Development</DialogTitle>
           </div>
-          <DialogDescription className="pt-4 space-y-4">
-            <p>
-              {featureName} is currently being actively developed and will be
-              available soon.
-            </p>
-            <div className="space-y-3 pt-2">
-              <div className="flex items-start gap-3 text-sm">
-                <Settings className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
-                <p>
-                  You can request early access from your{' '}
-                  <span className="font-medium">
-                    Account &gt; Feature Flags
-                  </span>{' '}
-                  section
-                </p>
-              </div>
-              <div className="flex items-start gap-3 text-sm">
-                <MessageCircle className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
-                <p>
-                  Or contact our support team to learn more about this feature
-                </p>
+          <DialogDescription asChild>
+            <div className="pt-4 space-y-4">
+              <p>
+                {featureName} is currently being actively developed and will be
+                available soon.
+              </p>
+              <div className="space-y-3 pt-2">
+                <div className="flex items-start gap-3 text-sm">
+                  <Settings className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                  <p>
+                    You can request early access from your{' '}
+                    <span className="font-medium">
+                      Account &gt; Feature Flags
+                    </span>{' '}
+                    section
+                  </p>
+                </div>
+                <div className="flex items-start gap-3 text-sm">
+                  <MessageCircle className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                  <p>
+                    Or contact our support team to learn more about this feature
+                  </p>
+                </div>
               </div>
             </div>
           </DialogDescription>

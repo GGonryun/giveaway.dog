@@ -59,7 +59,7 @@ exports[`StatusExplanationDialog > for a blocked user > matches the snapshot 1`]
         Blocked User Status
       </span>
     </h2>
-    <p
+    <div
       class="text-muted-foreground text-sm space-y-3 pt-2"
       data-slot="alert-dialog-description"
       id="radix-_r_id_"
@@ -78,7 +78,7 @@ exports[`StatusExplanationDialog > for a blocked user > matches the snapshot 1`]
       >
         Blocked users can only win if manually selected by giveaway administrators.
       </p>
-    </p>
+    </div>
   </div>
   <div
     class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"
@@ -139,7 +139,7 @@ exports[`StatusExplanationDialog > for an active user > matches the snapshot 1`]
         Active User Status
       </span>
     </h2>
-    <p
+    <div
       class="text-muted-foreground text-sm space-y-3 pt-2"
       data-slot="alert-dialog-description"
       id="radix-_r_id_"
@@ -153,7 +153,7 @@ exports[`StatusExplanationDialog > for an active user > matches the snapshot 1`]
       <p>
         They have full access to all giveaway features and can be automatically selected as winners during prize drawings.
       </p>
-    </p>
+    </div>
   </div>
   <div
     class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"
