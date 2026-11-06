@@ -33,6 +33,7 @@
     "@giveaway/sweepstakes-model": "workspace:*",
     "@giveaway/ui-charts": "workspace:*",
     "@giveaway/ui-primitives": "workspace:*",
+    "date-fns": "catalog:",
     "recharts": "catalog:"
   },
   "peerDependencies": {

@@ -19,6 +19,8 @@ import {
   ChartTooltipContent
 } from '@giveaway/ui-charts/chart';
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { format } from 'date-fns/format';
+import { parseISO } from 'date-fns/parseISO';
 
 const entriesAxisFormat = new Intl.NumberFormat('en-US', {
   notation: 'compact',
@@ -71,13 +73,9 @@ export const DailyEntriesTimeline: React.FC<
             <XAxis
               dataKey="date"
               tick={{ fontSize: 10 }}
-              tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric'
-                });
-              }}
+              tickFormatter={(value: string) =>
+                format(parseISO(value), 'MMM d')
+              }
             />
             <YAxis
               tick={{ fontSize: 10 }}
@@ -88,15 +86,9 @@ export const DailyEntriesTimeline: React.FC<
             />
             <ChartTooltip
               content={ChartTooltipContent}
-              labelFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                });
-              }}
+              labelFormatter={(value) =>
+                format(parseISO(String(value)), 'EEEE, MMMM d, yyyy')
+              }
             />
             <Area
               type="monotone"
