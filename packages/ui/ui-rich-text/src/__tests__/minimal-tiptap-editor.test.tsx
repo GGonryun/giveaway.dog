@@ -156,6 +156,73 @@ describe('MinimalTiptap', () => {
     expect(editable).toHaveAttribute('aria-invalid', 'true');
   });
 
+  it("shows the caller's placeholder on an empty editor", async () => {
+    const { container } = await renderEditor(
+      <MinimalTiptap placeholder="Enter a description" />
+    );
+    const paragraph = getEditable(container).querySelector('p');
+    expect(paragraph).toHaveClass('is-editor-empty');
+    expect(paragraph).toHaveAttribute(
+      'data-placeholder',
+      'Enter a description'
+    );
+    expect(screen.getByRole('textbox')).toHaveAttribute(
+      'aria-placeholder',
+      'Enter a description'
+    );
+  });
+
+  it('shows the default placeholder when the caller passes none', async () => {
+    const { container } = await renderEditor(<MinimalTiptap />);
+    expect(getEditable(container).querySelector('p')).toHaveAttribute(
+      'data-placeholder',
+      'Start typing...'
+    );
+    expect(screen.getByRole('textbox')).toHaveAttribute(
+      'aria-placeholder',
+      'Start typing...'
+    );
+  });
+
+  it('does not put the placeholder on the wrapper of the editable area', async () => {
+    const { container } = await renderEditor(
+      <MinimalTiptap placeholder="Enter a description" />
+    );
+    expect(container.querySelector('div[placeholder]')).toBeNull();
+  });
+
+  it('hides the placeholder once the editor has content', async () => {
+    const { container } = await renderEditor(
+      <MinimalTiptap content="<p>Hello</p>" placeholder="Enter a description" />
+    );
+    const paragraph = getEditable(container).querySelector('p');
+    expect(paragraph).not.toHaveClass('is-editor-empty');
+    expect(paragraph).not.toHaveAttribute('data-placeholder');
+  });
+
+  it('shows the placeholder again when the content is cleared', async () => {
+    const { container } = await renderWithSelection();
+    await userEvent.keyboard('{Backspace}');
+    const paragraph = getEditable(container).querySelector('p');
+    expect(paragraph).toHaveClass('is-editor-empty');
+    expect(paragraph).toHaveAttribute('data-placeholder', 'Start typing...');
+  });
+
+  it('updates the placeholder when it changes', async () => {
+    const { container, rerender } = await renderEditor(
+      <MinimalTiptap placeholder="Enter a description" />
+    );
+    rerender(<MinimalTiptap placeholder="Enter the terms" />);
+    expect(getEditable(container).querySelector('p')).toHaveAttribute(
+      'data-placeholder',
+      'Enter the terms'
+    );
+    expect(screen.getByRole('textbox')).toHaveAttribute(
+      'aria-placeholder',
+      'Enter the terms'
+    );
+  });
+
   it('names each icon-only toolbar button', async () => {
     await renderEditor();
     expect(

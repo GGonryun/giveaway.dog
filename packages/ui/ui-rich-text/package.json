@@ -32,6 +32,7 @@
     "@giveaway/ui-utils": "workspace:*",
     "@giveaway/util-html": "workspace:*",
     "@tiptap/extension-text-align": "catalog:",
+    "@tiptap/extensions": "catalog:",
     "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
     "lucide-react": "catalog:"
