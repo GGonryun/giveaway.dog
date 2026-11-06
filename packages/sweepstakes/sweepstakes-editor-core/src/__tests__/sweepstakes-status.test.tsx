@@ -161,8 +161,18 @@ describe('SweepstakesStatusComponent', () => {
     ] as const)('explains the %s visibility', (visibility, title, label) => {
       renderStatus({ visibility });
       expect(screen.getByRole('alert')).toHaveTextContent(title);
-      expect(screen.getByRole('combobox')).toHaveTextContent(label);
+      expect(
+        screen.getByRole('combobox', { name: 'Visibility' })
+      ).toHaveTextContent(label);
     });
+
+    it.each(['PRIVATE', 'UNLISTED', 'PUBLIC'] as const)(
+      'names the visibility select of the %s alert',
+      (visibility) => {
+        renderStatus({ visibility });
+        expect(screen.getByRole('combobox')).toHaveAccessibleName('Visibility');
+      }
+    );
 
     it('treats a missing visibility as private', () => {
       renderStatus();
@@ -177,7 +187,9 @@ describe('SweepstakesStatusComponent', () => {
         data: { visibility: 'PUBLIC' }
       });
       renderStatus({ visibility: 'PRIVATE' });
-      await userEvent.click(screen.getByRole('combobox'));
+      await userEvent.click(
+        screen.getByRole('combobox', { name: 'Visibility' })
+      );
       await userEvent.click(screen.getByRole('option', { name: 'Public' }));
 
       expect(mockedToggleVisibility).toHaveBeenCalledWith({
@@ -193,7 +205,9 @@ describe('SweepstakesStatusComponent', () => {
         data: { code: 'PAYMENT_REQUIRED', message: 'Upgrade to change this' }
       });
       renderStatus({ visibility: 'UNLISTED' });
-      await userEvent.click(screen.getByRole('combobox'));
+      await userEvent.click(
+        screen.getByRole('combobox', { name: 'Visibility' })
+      );
       await userEvent.click(screen.getByRole('option', { name: 'Public' }));
 
       await waitFor(() =>
@@ -211,10 +225,16 @@ describe('SweepstakesStatusComponent', () => {
         })
       );
       renderStatus({ visibility: 'PUBLIC' });
-      await userEvent.click(screen.getByRole('combobox'));
+      await userEvent.click(
+        screen.getByRole('combobox', { name: 'Visibility' })
+      );
       await userEvent.click(screen.getByRole('option', { name: 'Unlisted' }));
 
-      await waitFor(() => expect(screen.getByRole('combobox')).toBeDisabled());
+      await waitFor(() =>
+        expect(
+          screen.getByRole('combobox', { name: 'Visibility' })
+        ).toBeDisabled()
+      );
 
       await act(async () => finishChanging());
     });

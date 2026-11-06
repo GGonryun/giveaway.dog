@@ -189,7 +189,10 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                 onValueChange={handleVisibilityChange}
                 disabled={isTogglingVisibility}
               >
-                <SelectTrigger className="w-full sm:w-34">
+                <SelectTrigger
+                  aria-label="Visibility"
+                  className="w-full sm:w-34"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -224,7 +227,10 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                 onValueChange={handleVisibilityChange}
                 disabled={isTogglingVisibility}
               >
-                <SelectTrigger className="w-full sm:w-34 shrink-0 bg-white">
+                <SelectTrigger
+                  aria-label="Visibility"
+                  className="w-full sm:w-34 shrink-0 bg-white"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -259,7 +265,10 @@ export const SweepstakesStatusComponent: React.FC<SweepstakesStatusProps> = ({
                 onValueChange={handleVisibilityChange}
                 disabled={isTogglingVisibility}
               >
-                <SelectTrigger className="w-full sm:w-34 shrink-0 bg-white">
+                <SelectTrigger
+                  aria-label="Visibility"
+                  className="w-full sm:w-34 shrink-0 bg-white"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
