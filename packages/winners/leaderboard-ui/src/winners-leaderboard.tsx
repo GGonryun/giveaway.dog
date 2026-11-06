@@ -76,7 +76,8 @@ export function WinnersLeaderboard({
       params.delete('search');
     }
     params.delete('page');
-    router.push(`${pathname}?${params.toString()}`);
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname);
   };
 
   const handleClearSearch = () => {

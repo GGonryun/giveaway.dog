@@ -10,7 +10,8 @@ export const useUpdateParams = () => {
     (updater: (params: URLSearchParams) => void) => {
       const newSearchParams = new URLSearchParams(searchParams.toString());
       updater(newSearchParams);
-      return `${pathname}?${newSearchParams.toString()}`;
+      const query = newSearchParams.toString();
+      return query ? `${pathname}?${query}` : pathname;
     },
     [pathname, searchParams]
   );
