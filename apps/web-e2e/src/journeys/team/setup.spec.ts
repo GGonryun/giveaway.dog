@@ -2,7 +2,6 @@ import type { Page } from '@playwright/test';
 import { toE2ePersonaEmail } from '@giveaway/e2e-model/personas';
 import { expect, test } from '../../fixtures/test';
 import { BASE_URL, E2E_SECRET } from '../../env';
-import { knownBug } from '../../helpers/known-bug';
 import { seedApi } from '../../helpers/seed';
 import { memberRow } from '../../helpers/teams';
 
@@ -253,21 +252,21 @@ test.describe('team setup', () => {
     await expect(teamChoice(page, first.name)).toBeVisible();
   });
 
-  test(
-    'the team picker shows the team list for an unknown step',
-    knownBug(98),
-    async ({ page, request, freshPersona }) => {
-      const host = await freshPersona('host');
-      const { team } = await seedApi(request).team({
-        ns: host.ns,
-        suffix: 'a',
-        name: 'Team Alpha'
-      });
+  test('the team picker shows the team list for an unknown step', async ({
+    page,
+    request,
+    freshPersona
+  }) => {
+    const host = await freshPersona('host');
+    const { team } = await seedApi(request).team({
+      ns: host.ns,
+      suffix: 'a',
+      name: 'Team Alpha'
+    });
 
-      for (const step of ['0', 'create']) {
-        await page.goto(`/app?step=${step}`);
-        await expect(teamChoice(page, team.name)).toBeVisible();
-      }
+    for (const step of ['0', 'create']) {
+      await page.goto(`/app?step=${step}`);
+      await expect(teamChoice(page, team.name)).toBeVisible();
     }
-  );
+  });
 });
