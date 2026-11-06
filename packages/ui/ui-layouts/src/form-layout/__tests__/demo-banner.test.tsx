@@ -33,6 +33,11 @@ describe('DemoBanner', () => {
       );
     });
 
+    it('renders the action as a single link without a nested button', () => {
+      renderWithLayout(<DemoBanner />, { banner });
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    });
+
     it.each([
       ['showAction is off', { showAction: false }],
       ['there is no action link', { actionHref: undefined }],
@@ -65,6 +70,11 @@ describe('DemoBanner', () => {
       expect(
         screen.getByRole('link', { name: /Create Free Account/ })
       ).toHaveAttribute('href', '/login');
+    });
+
+    it('renders the sign up action as a single link without a nested button', () => {
+      renderWithLayout(<DemoBanner />, { action: 'demo' });
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
   });
 

@@ -208,6 +208,13 @@ describe('PublishConfirmationModal', () => {
       );
     });
 
+    it('renders the demo actions as links without nested buttons', () => {
+      renderModal({ action: 'demo' });
+      expect(
+        screen.queryByRole('button', { name: /Exit Demo|Sign Up/ })
+      ).not.toBeInTheDocument();
+    });
+
     it('cancels from the continue editing button', async () => {
       const { onCancel } = renderModal({ action: 'demo' });
       await userEvent.click(
