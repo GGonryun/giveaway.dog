@@ -24,15 +24,19 @@ import {
   DEFAULT_SWEEPSTAKES_NAME
 } from '@giveaway/app-config/settings';
 import { TaskSchema } from '@giveaway/task-model/schemas';
+import { html } from '@giveaway/util-html/html';
 
 const toStorableName = (name: string | undefined) =>
   name?.trim() === '' ? DEFAULT_SWEEPSTAKES_NAME : name;
+
+const toStorableHtml = (content: string | undefined) =>
+  content === undefined ? undefined : html.sanitize(content);
 
 const toStorableDetails = (setup: SweepstakesInputSchema['setup']) => {
   return {
     create: {
       name: toStorableName(setup?.name),
-      description: setup?.description,
+      description: toStorableHtml(setup?.description),
       banner: setup?.banner
     }
   };
@@ -77,7 +81,7 @@ const toStorableTerms = (
     return {
       create: {
         type: terms.type,
-        text: terms.text
+        text: toStorableHtml(terms.text)
       }
     };
   }

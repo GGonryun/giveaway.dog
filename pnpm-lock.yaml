@@ -11671,6 +11671,9 @@ importers:
       '@giveaway/util-geo':
         specifier: workspace:*
         version: link:../../shared/util-geo
+      '@giveaway/util-html':
+        specifier: workspace:*
+        version: link:../../shared/util-html
       '@giveaway/util-media':
         specifier: workspace:*
         version: link:../../shared/util-media
