@@ -156,12 +156,12 @@ export const UrlSlugField = <
         currentSweepstakesId: sweepstakesId
       });
 
-      if (!result.ok) {
-        setSlugStatus('idle');
+      if (pendingSlugRef.current !== slug) {
         return;
       }
 
-      if (pendingSlugRef.current !== slug) {
+      if (!result.ok) {
+        setSlugStatus('idle');
         return;
       }
 

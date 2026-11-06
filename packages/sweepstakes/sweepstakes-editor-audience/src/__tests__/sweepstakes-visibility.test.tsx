@@ -296,6 +296,33 @@ describe('UrlSlugField', () => {
       expect(form.getFieldState('visibility.slug').error).toBeUndefined();
     });
 
+    it('ignores the failure of an earlier check that finishes last', async () => {
+      let resolveFirst: (result: VerifySlugResult) => void = () => {};
+      mockedVerifySlug
+        .mockReturnValueOnce(
+          new Promise((resolve) => {
+            resolveFirst = resolve;
+          })
+        )
+        .mockResolvedValueOnce(available(true));
+      renderSlug('summer-fun');
+      await advance(500);
+      changeSlug('winter-fun');
+      await advance(500);
+
+      await act(async () => {
+        resolveFirst({
+          ok: false,
+          data: { code: 'INTERNAL_SERVER_ERROR', message: 'Database offline' }
+        });
+      });
+
+      expect(mockedVerifySlug).toHaveBeenCalledTimes(2);
+      expect(
+        screen.getByText('The slug "winter-fun" is available')
+      ).toBeInTheDocument();
+    });
+
     it('cancels a pending check when unmounted', async () => {
       const { unmount } = renderSlug('summer-fun');
       unmount();
