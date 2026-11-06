@@ -622,14 +622,72 @@ describe('DateTimePicker', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it('only blocks pointer events on the previous button at the start of the year range', async () => {
-    renderPicker({ yearRange: 0, value: new Date(2024, 0, 15, 14, 30, 45) });
+  it('disables the previous button at the start of the year range for every input', async () => {
+    const onMonthChange = vi.fn();
+    renderPicker({
+      yearRange: 0,
+      value: new Date(2024, 0, 15, 14, 30, 45),
+      onMonthChange
+    });
     await openPicker();
     const previous = screen.getByLabelText('Go to the Previous Month');
-    expect(previous).toHaveClass('pointer-events-none');
-    expect(previous).toBeEnabled();
-    expect(screen.getByLabelText('Go to the Next Month')).not.toHaveClass(
-      'pointer-events-none'
+    expect(previous).toHaveAttribute('aria-disabled', 'true');
+    expect(previous).toHaveAttribute('tabindex', '-1');
+    expect(previous).not.toHaveClass('pointer-events-none');
+    expect(screen.getByLabelText('Go to the Next Month')).not.toHaveAttribute(
+      'aria-disabled'
+    );
+
+    await userEvent.click(previous);
+    previous.focus();
+    await userEvent.keyboard('{Enter}');
+    await userEvent.keyboard(' ');
+
+    expect(onMonthChange).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole('grid', { name: 'January 2024' })
+    ).toBeInTheDocument();
+  });
+
+  it('disables the next button at the end of the year range for every input', async () => {
+    const onMonthChange = vi.fn();
+    renderPicker({
+      yearRange: 0,
+      value: new Date(2024, 11, 15, 14, 30, 45),
+      onMonthChange
+    });
+    await openPicker();
+    const next = screen.getByLabelText('Go to the Next Month');
+    expect(next).toHaveAttribute('aria-disabled', 'true');
+    expect(next).toHaveAttribute('tabindex', '-1');
+    expect(
+      screen.getByLabelText('Go to the Previous Month')
+    ).not.toHaveAttribute('aria-disabled');
+
+    await userEvent.click(next);
+    next.focus();
+    await userEvent.keyboard('{Enter}');
+
+    expect(onMonthChange).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole('grid', { name: 'December 2024' })
+    ).toBeInTheDocument();
+  });
+
+  it('keeps month navigation enabled inside the year range', async () => {
+    const onMonthChange = vi.fn();
+    renderPicker({
+      yearRange: 0,
+      value: new Date(2024, 5, 15, 14, 30, 45),
+      onMonthChange
+    });
+    await openPicker();
+    const next = screen.getByLabelText('Go to the Next Month');
+    next.focus();
+    await userEvent.keyboard('{Enter}');
+
+    expect(onMonthChange).toHaveBeenCalledWith(
+      new Date(2024, 6, 1, 14, 30, 45)
     );
   });
 });

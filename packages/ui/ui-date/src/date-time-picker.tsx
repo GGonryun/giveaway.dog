@@ -270,32 +270,14 @@ function Calendar({
   }, []);
 
   const YEARS = React.useMemo(() => genYears(yearRange), []);
-  const disableLeftNavigation = () => {
-    const today = new Date();
-    const startDate = new Date(today.getFullYear() - yearRange, 0, 1);
-    if (props.month) {
-      return (
-        props.month.getMonth() === startDate.getMonth() &&
-        props.month.getFullYear() === startDate.getFullYear()
-      );
-    }
-    return false;
-  };
-  const disableRightNavigation = () => {
-    const today = new Date();
-    const endDate = new Date(today.getFullYear() + yearRange, 11, 31);
-    if (props.month) {
-      return (
-        props.month.getMonth() === endDate.getMonth() &&
-        props.month.getFullYear() === endDate.getFullYear()
-      );
-    }
-    return false;
-  };
+  const startMonth = new Date(YEARS[0].value, 0);
+  const endMonth = new Date(YEARS[YEARS.length - 1].value, 11);
 
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
+      startMonth={startMonth}
+      endMonth={endMonth}
       className={cn('p-3', className)}
       classNames={
         {
@@ -307,13 +289,11 @@ function Calendar({
           nav: 'space-x-1 flex items-center ',
           button_previous: cn(
             buttonVariants({ variant: 'outline' }),
-            'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-5 top-5',
-            disableLeftNavigation() && 'pointer-events-none'
+            'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-5 top-5 aria-disabled:opacity-25 aria-disabled:hover:opacity-25'
           ),
           button_next: cn(
             buttonVariants({ variant: 'outline' }),
-            'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute right-5 top-5',
-            disableRightNavigation() && 'pointer-events-none'
+            'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 absolute right-5 top-5 aria-disabled:opacity-25 aria-disabled:hover:opacity-25'
           ),
           month_grid: 'w-full border-collapse space-y-1',
           weekdays: cn('flex', props.showWeekNumber && 'justify-end'),
