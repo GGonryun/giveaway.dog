@@ -3,6 +3,7 @@
 import {
   TaskCompletionDetailSheet,
   TaskCompletionDetailSheetContent,
+  TaskCompletionDetailSheetError,
   TaskCompletionDetailSheetLoading
 } from '@giveaway/sweepstakes-details-entries/task-completion-detail-sheet';
 import getSweepstakeEntry from '@giveaway/sweepstakes-insights-server/get-sweepstake-task-entries';
@@ -41,11 +42,19 @@ const Wrapper: React.FC<{
   const status = await getSweepstakesStatus({ id: sweepstakesId });
 
   if (!details.ok) {
-    return <div>Failed to load sweepstakes entry: {details.data.message}</div>;
+    return (
+      <TaskCompletionDetailSheetError
+        message={`Failed to load sweepstakes entry: ${details.data.message}`}
+      />
+    );
   }
 
   if (!status.ok) {
-    return <div>Failed to load sweepstakes status: {status.data.message}</div>;
+    return (
+      <TaskCompletionDetailSheetError
+        message={`Failed to load sweepstakes status: ${status.data.message}`}
+      />
+    );
   }
 
   return (
