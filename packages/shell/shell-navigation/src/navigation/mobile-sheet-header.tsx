@@ -7,7 +7,7 @@ export const MobileSheetHeader: React.FC<{ onLogoClick: () => void }> = ({
 }) => {
   return (
     <SheetHeader>
-      <SheetTitle hidden>
+      <SheetTitle>
         <Link
           href="/"
           className="flex items-center gap-2"
