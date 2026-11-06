@@ -253,7 +253,7 @@ describe('MinimalTiptap', () => {
     expect(getEditable(container)).toHaveAttribute('contenteditable', 'false');
   });
 
-  it('still lets the toolbar change the content when not editable', async () => {
+  it('shows no toolbar and calls no onChange when not editable', async () => {
     const onChange = vi.fn();
     await renderEditor(
       <MinimalTiptap
@@ -262,11 +262,29 @@ describe('MinimalTiptap', () => {
         onChange={onChange}
       />
     );
+    for (const tool of TOOLS) {
+      expect(
+        screen.queryByRole('button', { name: TOOL_NAMES[tool] })
+      ).not.toBeInTheDocument();
+    }
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('hides the toolbar and stops editing when editable turns false', async () => {
+    const { container, rerender } = await renderEditor(
+      <MinimalTiptap content="<p>Hello world</p>" />
+    );
     expect(getTool('heading2')).toBeEnabled();
 
-    await userEvent.click(getTool('heading2'));
+    rerender(<MinimalTiptap content="<p>Hello world</p>" editable={false} />);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
 
-    expect(onChange).toHaveBeenLastCalledWith('<h2>Hello world</h2><p></p>');
+    expect(
+      screen.queryByRole('button', { name: TOOL_NAMES.heading2 })
+    ).not.toBeInTheDocument();
+    expect(getEditable(container)).toHaveAttribute('contenteditable', 'false');
   });
 
   it('registers the link extension once', async () => {
