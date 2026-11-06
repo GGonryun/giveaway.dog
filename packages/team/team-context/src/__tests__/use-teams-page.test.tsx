@@ -49,12 +49,25 @@ describe('useTeamsPage', () => {
       expect(result.current.step).toBe(2);
     });
 
-    it('turns a non-numeric step param into NaN', () => {
-      navigation.searchParams = new URLSearchParams('step=create');
+    it.each(['create', '0', '3', '', '2.0', ' 2'])(
+      'falls back to the select step for the unknown step param %j',
+      (value) => {
+        navigation.searchParams = new URLSearchParams({ step: value });
 
-      const { result } = renderHook(() => useTeamsPage());
+        const { result } = renderHook(() => useTeamsPage());
 
-      expect(result.current.step).toBeNaN();
+        expect(result.current.step).toBe(1);
+      }
+    );
+
+    it('goes back to the select step when the step param is removed', () => {
+      navigation.searchParams = new URLSearchParams('step=2');
+      const { result, rerender } = renderHook(() => useTeamsPage());
+
+      navigation.searchParams = new URLSearchParams();
+      rerender();
+
+      expect(result.current.step).toBe(1);
     });
 
     it('follows the step param when the search params change', () => {

@@ -25,16 +25,15 @@ export function TeamPickerForm({
         <CardHeader className="text-center mb-4">
           <CardTitle className="text-xl">Choose Your Team</CardTitle>
           <CardDescription>
-            {step === 1
-              ? 'Select from your teams or create a new one'
-              : 'Create your new team'}
+            {step === 2
+              ? 'Create your new team'
+              : 'Select from your teams or create a new one'}
           </CardDescription>
         </CardHeader>
 
         <CardContent>
           <div className="grid gap-6">
-            {!step || (step === 1 && <SelectTeamForm />)}
-            {step === 2 && <CreateTeamForm />}
+            {step === 2 ? <CreateTeamForm /> : <SelectTeamForm />}
           </div>
         </CardContent>
       </Card>
