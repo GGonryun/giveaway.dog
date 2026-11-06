@@ -52,7 +52,7 @@ describe('useUpdateParams', () => {
       );
     });
 
-    it('leaves a trailing question mark when every param is removed', () => {
+    it('navigates to the bare pathname when every param is removed', () => {
       const { result } = renderHook(() => useUpdateParams());
 
       const url = result.current((params) => {
@@ -60,7 +60,8 @@ describe('useUpdateParams', () => {
         params.delete('q');
       });
 
-      expect(url).toBe('/app/team/users?');
+      expect(url).toBe('/app/team/users');
+      expect(navigation.router.push).toHaveBeenCalledWith('/app/team/users');
     });
   });
 

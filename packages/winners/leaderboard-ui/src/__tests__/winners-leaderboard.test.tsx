@@ -292,6 +292,17 @@ describe('WinnersLeaderboard', () => {
       );
     });
 
+    it('navigates to the bare path when an empty search removes the last param', async () => {
+      const user = userEvent.setup();
+      navigation.searchParams = new URLSearchParams('search=ada&page=2');
+      renderLeaderboard({ currentSearch: 'ada' });
+
+      await user.clear(screen.getByRole('searchbox'));
+      await user.click(screen.getByRole('button', { name: 'Search' }));
+
+      expect(navigation.router.push).toHaveBeenCalledWith('/winners');
+    });
+
     it('navigates to the bare path when the search is cleared', async () => {
       const user = userEvent.setup();
       navigation.searchParams = new URLSearchParams('search=ada&page=2');
