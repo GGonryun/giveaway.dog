@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Card, CardContent } from '@giveaway/ui-primitives/card';
 import { Button } from '@giveaway/ui-primitives/button';
 import { Input } from '@giveaway/ui-primitives/input';
@@ -55,13 +55,14 @@ export function EmailVerification({
   const [emailSent, setEmailSent] = useState(false);
   const [sentToEmail, setSentToEmail] = useState('');
   const [isChangingEmail, setIsChangingEmail] = useState(false);
+  const pendingEmail = useRef('');
 
   const sendVerificationProcedure = useProcedure({
     action: sendEmailVerification,
     onSuccess() {
       toast.success('Verification email sent successfully');
       setEmailSent(true);
-      setSentToEmail(emailInput || user.email || '');
+      setSentToEmail(pendingEmail.current);
       router.refresh();
     },
     onFailure(error: any) {
@@ -74,7 +75,7 @@ export function EmailVerification({
     onSuccess() {
       toast.success('Verification email sent successfully');
       setEmailSent(true);
-      setSentToEmail(emailInput);
+      setSentToEmail(pendingEmail.current);
       router.refresh();
     },
     onFailure(error: any) {
@@ -90,7 +91,7 @@ export function EmailVerification({
   const handleSendVerification = async () => {
     const email = sentToEmail || user.email;
     if (email) {
-      setSentToEmail(email);
+      pendingEmail.current = email;
       sendVerificationProcedure.run({ email, redirectTo });
     }
   };
@@ -106,11 +107,10 @@ export function EmailVerification({
       return;
     }
 
-    // If email is different from current, update it first
+    pendingEmail.current = emailInput;
     if (emailInput !== user.email) {
       updateEmailProcedure.run({ email: emailInput, redirectTo });
     } else {
-      // Same email, just send verification
       sendVerificationProcedure.run({ email: emailInput, redirectTo });
     }
   };
