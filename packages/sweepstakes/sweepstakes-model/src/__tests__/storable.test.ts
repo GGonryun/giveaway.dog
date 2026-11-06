@@ -112,6 +112,28 @@ describe('toStorableSweepstakesUpdate', () => {
     });
   });
 
+  describe('when the description has HTML', () => {
+    it('[HTML-005] removes scripts, event handlers and javascript: links', () => {
+      expect(
+        toStorableSweepstakesUpdate({
+          setup: {
+            description:
+              '<p style="text-align: center" onmouseover="alert(1)">Win a <strong>bike</strong></p><img src="x" onerror="alert(document.domain)"><a href="javascript:alert(1)">Claim</a><a href="https://giveaway.dog">Rules</a><script>alert(1)</script>'
+          }
+        }).details.create.description
+      ).toBe(
+        '<p style="text-align:center">Win a <strong>bike</strong></p><a>Claim</a><a href="https://giveaway.dog">Rules</a>'
+      );
+    });
+
+    it('keeps a missing description missing', () => {
+      expect(
+        toStorableSweepstakesUpdate({ setup: { name: 'Giveaway' } }).details
+          .create.description
+      ).toBeUndefined();
+    });
+  });
+
   describe('when the input is complete', () => {
     it('maps every section into nested create inputs', () => {
       const startDate = new Date('2026-11-01T00:00:00.000Z');
@@ -270,6 +292,20 @@ describe('toStorableSweepstakesUpdate', () => {
           } as Input['terms']
         }).terms
       ).toEqual({ create: { type: 'CUSTOM', text: 'Custom' } });
+    });
+
+    it('[HTML-005] removes scripts, event handlers and javascript: links from CUSTOM terms', () => {
+      const text = toStorableSweepstakesUpdate({
+        terms: {
+          type: 'CUSTOM',
+          text: '<p onclick="alert(1)">Rules</p><img src="x" onerror="alert(1)"><a href="javascript:alert(1)">Claim</a><script>alert(1)</script><iframe src="https://evil.test"></iframe><style>p{}</style>'
+        }
+      }).terms?.create;
+
+      expect(text).toEqual({
+        type: 'CUSTOM',
+        text: '<p>Rules</p><a>Claim</a>'
+      });
     });
 
     it('throws for an unknown terms type', () => {

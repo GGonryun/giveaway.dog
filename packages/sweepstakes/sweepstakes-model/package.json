@@ -54,6 +54,7 @@
     "@giveaway/util-collections": "workspace:*",
     "@giveaway/util-errors": "workspace:*",
     "@giveaway/util-geo": "workspace:*",
+    "@giveaway/util-html": "workspace:*",
     "@giveaway/util-media": "workspace:*",
     "@giveaway/util-time": "workspace:*",
     "@giveaway/util-types": "workspace:*",
