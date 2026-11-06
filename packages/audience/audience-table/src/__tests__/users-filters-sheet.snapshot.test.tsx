@@ -20,7 +20,8 @@ expect.addSnapshotSerializer({
   serialize: (value: string) => `"${value.replace(/_r_[0-9a-z]+_/g, '_r_id_')}"`
 });
 
-const triggerButton = () => screen.getByRole('button', { name: 'Filters' });
+const triggerButton = () =>
+  screen.getByRole('button', { name: 'Filters (active)' });
 
 const openSheet = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(triggerButton());

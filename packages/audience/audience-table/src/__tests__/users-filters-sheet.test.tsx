@@ -30,7 +30,8 @@ const SOURCE_LABELS = [
   'Twitch Import'
 ];
 
-const triggerButton = () => screen.getByRole('button', { name: 'Filters' });
+const triggerButton = () =>
+  screen.getByRole('button', { name: /^Filters( \(active\))?$/ });
 const minimumInput = () =>
   screen.getByRole('spinbutton', { name: 'Minimum Quality Score' });
 const maximumInput = () =>
@@ -51,6 +52,7 @@ describe('UsersFiltersSheet', () => {
     it('does not mark the trigger without active filters', () => {
       render(<UsersFiltersSheet />);
 
+      expect(triggerButton()).toHaveAccessibleName('Filters');
       expect(triggerButton().querySelector('span')).not.toBeInTheDocument();
     });
 
@@ -63,9 +65,11 @@ describe('UsersFiltersSheet', () => {
 
       render(<UsersFiltersSheet />);
 
-      expect(triggerButton().querySelector('span')).toHaveClass(
-        'rounded-full',
-        'bg-primary'
+      expect(triggerButton()).toHaveAccessibleName('Filters (active)');
+      expect(triggerButton().querySelector('span')).toHaveClass('bg-primary');
+      expect(triggerButton().querySelector('span')).toHaveAttribute(
+        'aria-hidden',
+        'true'
       );
     });
 
@@ -74,6 +78,7 @@ describe('UsersFiltersSheet', () => {
 
       render(<UsersFiltersSheet />);
 
+      expect(triggerButton()).toHaveAccessibleName('Filters');
       expect(triggerButton().querySelector('span')).not.toBeInTheDocument();
     });
   });
