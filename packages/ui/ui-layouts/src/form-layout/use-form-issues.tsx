@@ -49,6 +49,10 @@ export const useFormErrors = <
 ): ErrorMessage[] => {
   const formState = useFormState();
   return flattenErrors(formState.errors).filter((err) =>
-    fields?.length ? fields.some((field) => err.path.startsWith(field)) : true
+    fields?.length
+      ? fields.some(
+          (field) => err.path === field || err.path.startsWith(`${field}.`)
+        )
+      : true
   );
 };
