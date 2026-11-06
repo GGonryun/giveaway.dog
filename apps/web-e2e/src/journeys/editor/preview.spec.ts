@@ -8,7 +8,6 @@ import {
   openStep,
   publishDialog
 } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import { seedWorkerTeam } from '../../helpers/seed';
 
 const NAME = 'Unsaved preview name';
@@ -65,42 +64,43 @@ test.describe('the live preview of the editor', () => {
     await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(NAME);
   });
 
-  test(
-    'a provider button in the preview does not start a real sign-in',
-    knownBug(113),
-    async ({ page, request }, testInfo) => {
-      const { team } = await seedWorkerTeam(request, testInfo);
-      for (const url of SIGN_IN_URLS) {
-        await page.route(url, (route) => route.abort());
-      }
-      await createDraft(page, team.slug);
-      await page.getByRole('textbox', { name: 'Name' }).fill(NAME);
-      await openStep(page, 'Tasks');
-      await addTask(page, 'Bonus');
-      const submits = await countSubmits(page);
-
-      await page.getByRole('button', { name: 'Active State' }).click();
-      await page.getByRole('menuitem', { name: 'Not Logged In' }).click();
-      await openPreviewTask(page);
-      const signIn = page
-        .waitForRequest((request) => isSignIn(request.url()), {
-          timeout: SIGN_IN_WAIT
-        })
-        .then(
-          (request) => request.url(),
-          () => null
-        );
-      await page.getByRole('button', { name: 'Google', exact: true }).click();
-
-      expect(await signIn).toBeNull();
-      expect(await submits()).toBe('0');
-      await expect(issuesDialog(page)).toBeHidden();
-      await expect(publishDialog(page)).toBeHidden();
-      await expect(page).toHaveURL(/\/create(\?|$)/);
-      await openStep(page, 'Setup');
-      await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(
-        NAME
-      );
+  test('a provider button in the preview does not start a real sign-in', async ({
+    page,
+    request
+  }, testInfo) => {
+    const { team } = await seedWorkerTeam(request, testInfo);
+    for (const url of SIGN_IN_URLS) {
+      await page.route(url, (route) => route.abort());
     }
-  );
+    await createDraft(page, team.slug);
+    await page.getByRole('textbox', { name: 'Name' }).fill(NAME);
+    await openStep(page, 'Tasks');
+    await addTask(page, 'Bonus');
+    const submits = await countSubmits(page);
+
+    await page.getByRole('button', { name: 'Active State' }).click();
+    await page.getByRole('menuitem', { name: 'Not Logged In' }).click();
+    await openPreviewTask(page);
+    const signIn = page
+      .waitForRequest((request) => isSignIn(request.url()), {
+        timeout: SIGN_IN_WAIT
+      })
+      .then(
+        (request) => request.url(),
+        () => null
+      );
+    await page.getByRole('button', { name: 'Google', exact: true }).click();
+
+    await expect(
+      page.getByText('Login action triggered (not implemented in preview)')
+    ).toBeVisible();
+    expect(await signIn).toBeNull();
+    expect(await submits()).toBe('0');
+    await expect(issuesDialog(page)).toBeHidden();
+    await expect(publishDialog(page)).toBeHidden();
+    await expect(page).toHaveURL(/\/create(\?|$)/);
+    await openPreviewTask(page);
+    await openStep(page, 'Setup');
+    await expect(page.getByRole('textbox', { name: 'Name' })).toHaveValue(NAME);
+  });
 });

@@ -71,4 +71,19 @@ describe('SweepstakesLoginOptions', () => {
       'TWITCH'
     ]);
   });
+
+  it('starts the real login outside a preview', () => {
+    renderWithParticipation(<SweepstakesLoginOptions />);
+    expect(lastLoginOptionsProps()?.onSelectProvider).toBeUndefined();
+  });
+
+  it('calls the preview login instead of signing in inside a preview', () => {
+    const onLogin = vi.fn();
+    renderWithParticipation(<SweepstakesLoginOptions />, {
+      isPreview: true,
+      onLogin
+    });
+    lastLoginOptionsProps()?.onSelectProvider?.('GOOGLE');
+    expect(onLogin).toHaveBeenCalledExactlyOnceWith();
+  });
 });

@@ -4,7 +4,7 @@ import { LoginOptions } from '@giveaway/auth-login-ui/login-options';
 import { useMemo } from 'react';
 
 export const SweepstakesLoginOptions: React.FC = () => {
-  const { sweepstakes } = useGiveawayParticipation();
+  const { sweepstakes, isPreview, onLogin } = useGiveawayParticipation();
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -22,6 +22,7 @@ export const SweepstakesLoginOptions: React.FC = () => {
         returnTo={fullPath}
         allowedIdentities={sweepstakes.audience.allowedIdentities}
         type="dots"
+        onSelectProvider={isPreview ? () => onLogin() : undefined}
       />
     </div>
   );
