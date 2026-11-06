@@ -82,14 +82,28 @@ describe('platform icons', () => {
 
     it('uses white tooltip text everywhere except velora', () => {
       const darkText = PLATFORM_IDS.filter(
-        (id) => PLATFORM_TOOLTIP_THEMES[id].text !== 'white'
+        (id) => PLATFORM_TOOLTIP_THEMES[id].text !== 'text-white'
       );
 
       expect(darkText).toEqual(['velora']);
       expect(PLATFORM_TOOLTIP_THEMES.velora).toEqual({
-        bg: 'velora-1',
-        text: 'black'
+        bg: 'bg-velora-1',
+        text: 'text-black',
+        fill: 'fill-velora-1',
+        hover: 'hover:bg-velora-1 hover:text-black'
       });
+    });
+
+    it('writes every tooltip class name out in full', () => {
+      for (const id of PLATFORM_IDS) {
+        const { bg, text, fill, hover } = PLATFORM_TOOLTIP_THEMES[id];
+        const color = bg.replace(/^bg-/, '');
+
+        expect(bg).toMatch(/^bg-[\w-]+$/);
+        expect(text).toMatch(/^text-[\w-]+$/);
+        expect(fill).toBe(`fill-${color}`);
+        expect(hover).toBe(`hover:${bg} hover:${text}`);
+      }
     });
 
     it('shows every platform on the carousel', () => {
@@ -183,15 +197,19 @@ describe('platform icons', () => {
   describe('getPlatformTooltipTheme', () => {
     it('returns the tooltip theme of the platform', () => {
       expect(getPlatformTooltipTheme('discord')).toEqual({
-        bg: 'discord-1',
-        text: 'white'
+        bg: 'bg-discord-1',
+        text: 'text-white',
+        fill: 'fill-discord-1',
+        hover: 'hover:bg-discord-1 hover:text-white'
       });
     });
 
     it('falls back to black and white for unknown platforms', () => {
       expect(getPlatformTooltipTheme(UNKNOWN)).toEqual({
-        bg: 'black',
-        text: 'white'
+        bg: 'bg-black',
+        text: 'text-white',
+        fill: 'fill-black',
+        hover: 'hover:bg-black hover:text-white'
       });
     });
   });

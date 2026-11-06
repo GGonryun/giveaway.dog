@@ -91,15 +91,14 @@ export const SocialPlatformsCarousel = ({
                     <TooltipContent
                       className={cn(
                         'font-semibold',
-                        'bg-reddit-1 fill-reddit-1',
-                        `bg-${tooltipTheme.bg}`,
-                        `text-${tooltipTheme.text}`,
-                        `fill-${tooltipTheme.bg}`
+                        tooltipTheme.bg,
+                        tooltipTheme.text,
+                        tooltipTheme.fill
                       )}
                       arrowClassName={cn(
-                        `bg-${tooltipTheme.bg}`,
-                        `text-${tooltipTheme.text}`,
-                        `fill-${tooltipTheme.bg}`
+                        tooltipTheme.bg,
+                        tooltipTheme.text,
+                        tooltipTheme.fill
                       )}
                     >
                       {platformLabel}

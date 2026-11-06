@@ -210,6 +210,22 @@ describe('ProviderPills', () => {
     ).toHaveClass('bg-google-1', 'fill-google-1', 'text-white');
   });
 
+  it('dims the provider colour of a pill on hover and focus in both themes', () => {
+    render(<ProviderPills identities={['DISCORD']} onSubmit={onSubmit} />);
+    const pill = screen.getByRole('button', { name: 'Login with Discord' });
+    expect(pill).toHaveClass(
+      'hover:bg-discord-1/80',
+      'hover:text-white/80',
+      'focus:bg-discord-1/80',
+      'focus:text-white/80',
+      'dark:hover:bg-discord-1/80',
+      'dark:hover:text-white/80',
+      'dark:focus:bg-discord-1/80',
+      'dark:focus:text-white/80'
+    );
+    expect(pill).not.toHaveClass('hover:bg-accent', 'dark:hover:bg-input/50');
+  });
+
   it('calls onSubmit with the provider that was clicked', async () => {
     render(<ProviderPills identities={identities} onSubmit={onSubmit} />);
     await userEvent.click(
