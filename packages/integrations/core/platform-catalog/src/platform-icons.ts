@@ -120,33 +120,157 @@ export const PLATFORM_THEMES: Record<PlatformId, string | undefined> = {
 interface PlatformTooltipTheme {
   bg: string;
   text: string;
+  fill: string;
+  hover: string;
 }
+
+const DEFAULT_TOOLTIP_THEME: PlatformTooltipTheme = {
+  bg: 'bg-black',
+  text: 'text-white',
+  fill: 'fill-black',
+  hover: 'hover:bg-black hover:text-white'
+};
 
 export const PLATFORM_TOOLTIP_THEMES: Record<PlatformId, PlatformTooltipTheme> =
   {
-    x: { bg: 'black', text: 'white' },
-    bluesky: { bg: 'bluesky-1', text: 'white' },
-    twitch: { bg: 'twitch-1', text: 'white' },
-    tiktok: { bg: 'black', text: 'white' },
-    kick: { bg: 'black', text: 'white' },
-    facebook: { bg: 'facebook-1', text: 'white' },
-    snapchat: { bg: 'black', text: 'white' },
-    threads: { bg: 'black', text: 'white' },
-    linkedin: { bg: 'linkedin-1', text: 'white' },
-    pinterest: { bg: 'black', text: 'white' },
-    reddit: { bg: 'reddit-1', text: 'white' },
-    instagram: { bg: 'instagram-1', text: 'white' },
-    youtube: { bg: 'youtube-1', text: 'white' },
-    discord: { bg: 'discord-1', text: 'white' },
-    tumblr: { bg: 'black', text: 'white' },
-    github: { bg: 'black', text: 'white' },
-    google: { bg: 'black', text: 'white' },
-    patreon: { bg: 'black', text: 'white' },
-    producthunt: { bg: 'black', text: 'white' },
-    coinbase: { bg: 'black', text: 'white' },
-    spotify: { bg: 'black', text: 'white' },
-    steam: { bg: 'black', text: 'white' },
-    velora: { bg: 'velora-1', text: 'black' }
+    x: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    bluesky: {
+      bg: 'bg-bluesky-1',
+      text: 'text-white',
+      fill: 'fill-bluesky-1',
+      hover: 'hover:bg-bluesky-1 hover:text-white'
+    },
+    twitch: {
+      bg: 'bg-twitch-1',
+      text: 'text-white',
+      fill: 'fill-twitch-1',
+      hover: 'hover:bg-twitch-1 hover:text-white'
+    },
+    tiktok: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    kick: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    facebook: {
+      bg: 'bg-facebook-1',
+      text: 'text-white',
+      fill: 'fill-facebook-1',
+      hover: 'hover:bg-facebook-1 hover:text-white'
+    },
+    snapchat: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    threads: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    linkedin: {
+      bg: 'bg-linkedin-1',
+      text: 'text-white',
+      fill: 'fill-linkedin-1',
+      hover: 'hover:bg-linkedin-1 hover:text-white'
+    },
+    pinterest: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    reddit: {
+      bg: 'bg-reddit-1',
+      text: 'text-white',
+      fill: 'fill-reddit-1',
+      hover: 'hover:bg-reddit-1 hover:text-white'
+    },
+    instagram: {
+      bg: 'bg-instagram-1',
+      text: 'text-white',
+      fill: 'fill-instagram-1',
+      hover: 'hover:bg-instagram-1 hover:text-white'
+    },
+    youtube: {
+      bg: 'bg-youtube-1',
+      text: 'text-white',
+      fill: 'fill-youtube-1',
+      hover: 'hover:bg-youtube-1 hover:text-white'
+    },
+    discord: {
+      bg: 'bg-discord-1',
+      text: 'text-white',
+      fill: 'fill-discord-1',
+      hover: 'hover:bg-discord-1 hover:text-white'
+    },
+    tumblr: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    github: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    google: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    patreon: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    producthunt: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    coinbase: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    spotify: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    steam: {
+      bg: 'bg-black',
+      text: 'text-white',
+      fill: 'fill-black',
+      hover: 'hover:bg-black hover:text-white'
+    },
+    velora: {
+      bg: 'bg-velora-1',
+      text: 'text-black',
+      fill: 'fill-velora-1',
+      hover: 'hover:bg-velora-1 hover:text-black'
+    }
   };
 
 export function getPlatformIcon(
@@ -176,7 +300,7 @@ export function getPlatformTheme(platformId: PlatformId): string | undefined {
 export function getPlatformTooltipTheme(
   platformId: PlatformId
 ): PlatformTooltipTheme {
-  return PLATFORM_TOOLTIP_THEMES[platformId] || { bg: 'black', text: 'white' };
+  return PLATFORM_TOOLTIP_THEMES[platformId] || DEFAULT_TOOLTIP_THEME;
 }
 
 export const SHOW_ON_CAROUSEL: Record<PlatformId, boolean> = {

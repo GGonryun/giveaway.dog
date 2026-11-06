@@ -143,18 +143,7 @@ export const ProviderPills: React.FC<ProviderButtonsProps> = ({
                 !isError && theme.bgColor,
                 !isError && theme.fillColor,
                 !isError && theme.textColor,
-                !isError && `hover:${theme.bgColor}/80`,
-                !isError && `hover:${theme.textColor}/80`,
-                !isError && `group-hover:${theme.bgColor}/80`,
-                !isError && `group-hover:${theme.textColor}/80`,
-                !isError && `focus:${theme.bgColor}/80`,
-                !isError && `focus:${theme.textColor}/80`,
-                !isError && `dark:hover:${theme.bgColor}/80`,
-                !isError && `dark:hover:${theme.textColor}/80`,
-                !isError && `dark:focus:${theme.bgColor}/80`,
-                !isError && `dark:focus:${theme.textColor}/80`,
-                !isError && `dark:group-hover:${theme.bgColor}/80`,
-                !isError && `dark:group-hover:${theme.textColor}/80`
+                !isError && theme.interactiveColor
               )}
               onClick={() => onSubmit(provider)}
             >

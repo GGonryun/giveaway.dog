@@ -55,7 +55,9 @@ export function IntegrationLandingPage({
                 Create giveaways with{' '}
                 <span
                   className={cn(
-                    `bg-${PLATFORM_TOOLTIP_THEMES[platform].bg} text-${PLATFORM_TOOLTIP_THEMES[platform].text} px-2 rounded-md`
+                    PLATFORM_TOOLTIP_THEMES[platform].bg,
+                    PLATFORM_TOOLTIP_THEMES[platform].text,
+                    'px-2 rounded-md'
                   )}
                 >
                   {platformName}
@@ -71,7 +73,9 @@ export function IntegrationLandingPage({
               size="lg"
               className={cn(
                 'gap-2 text-lg px-8',
-                `bg-${PLATFORM_TOOLTIP_THEMES[platform].bg} text-${PLATFORM_TOOLTIP_THEMES[platform].text} hover:bg-${PLATFORM_TOOLTIP_THEMES[platform].bg} hover:text-${PLATFORM_TOOLTIP_THEMES[platform].text}`
+                PLATFORM_TOOLTIP_THEMES[platform].bg,
+                PLATFORM_TOOLTIP_THEMES[platform].text,
+                PLATFORM_TOOLTIP_THEMES[platform].hover
               )}
             >
               <Link href="/login">
