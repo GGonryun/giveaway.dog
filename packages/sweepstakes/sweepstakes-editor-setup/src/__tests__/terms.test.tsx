@@ -93,7 +93,7 @@ describe('TermsAndConditions', () => {
       );
       expect(preview).toContain("1 winner will receive 'Gift Card'");
       expect(preview).toContain(
-        'The Promotion is open Global to all individuals'
+        'The Promotion is open globally to all individuals'
       );
     });
 

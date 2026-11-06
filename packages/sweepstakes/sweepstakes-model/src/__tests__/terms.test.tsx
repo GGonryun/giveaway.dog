@@ -131,7 +131,7 @@ describe('giveawayTerms', () => {
   describe('privacy', () => {
     it('mentions the sponsor privacy policy when a URL is given', () => {
       expect(giveawayTerms(buildOptions()).privacy).toBe(
-        'Your information is governed by our privacy policy (https://giveaway.dog/privacy), and the Sponsor privacy policy (https://acme.test/privacy) '
+        'Your information is governed by our privacy policy (https://giveaway.dog/privacy), and the Sponsor privacy policy (https://acme.test/privacy). '
       );
     });
 
@@ -229,9 +229,9 @@ describe('defaultTermInputOptions', () => {
 });
 
 describe('toEligibilityRegions', () => {
-  it('is Global without a regional restriction', () => {
-    expect(toEligibilityRegions(null)).toBe('Global');
-    expect(toEligibilityRegions(undefined)).toBe('Global');
+  it('says globally without a regional restriction', () => {
+    expect(toEligibilityRegions(null)).toBe('globally');
+    expect(toEligibilityRegions(undefined)).toBe('globally');
   });
 
   it('names the included regions', () => {

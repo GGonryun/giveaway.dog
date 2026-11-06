@@ -76,7 +76,7 @@ describe('TermsModal', () => {
       renderTerms();
       const { dialog } = await openTerms();
       expect(dialog).toHaveTextContent(
-        'The Promotion is open Global to all individuals'
+        'The Promotion is open globally to all individuals'
       );
     });
 
