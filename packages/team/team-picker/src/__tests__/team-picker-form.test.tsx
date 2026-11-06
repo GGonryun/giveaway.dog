@@ -53,14 +53,23 @@ describe('TeamPickerForm', () => {
   });
 
   describe('on an unknown step', () => {
-    it('renders neither form for step 0', () => {
-      navigation.searchParams = new URLSearchParams('step=0');
+    it.each(['0', 'create', '3'])(
+      'falls back to the select team form for step %j',
+      (value) => {
+        navigation.searchParams = new URLSearchParams({ step: value });
 
-      render(<TeamPickerForm />);
+        render(<TeamPickerForm />);
 
-      expect(screen.queryByText('Select team form')).not.toBeInTheDocument();
-      expect(screen.queryByText('Create team form')).not.toBeInTheDocument();
-    });
+        expect(
+          screen.getByText('Select from your teams or create a new one')
+        ).toBeInTheDocument();
+        expect(screen.getByText('Select team form')).toBeInTheDocument();
+        expect(screen.queryByText('Create team form')).not.toBeInTheDocument();
+        expect(
+          screen.queryByText('Create your new team')
+        ).not.toBeInTheDocument();
+      }
+    );
   });
 
   it('links to the terms of service and privacy policy', () => {
