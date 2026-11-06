@@ -30,6 +30,9 @@ import { useMemo } from 'react';
 import { useTeams } from '@giveaway/team-context/team-provider';
 import Link from 'next/link';
 
+const isWithin = (path: string, url: string) =>
+  path === url || path.startsWith(`${url}/`);
+
 const groups = ({ slug }: { slug: string }) => {
   return [
     {
@@ -95,9 +98,9 @@ export const NavGroups = () => {
               {g.items.map((item) => {
                 const isActive =
                   item.url === path ||
-                  (item.alias
-                    ? item.alias.some((alias) => path.startsWith(alias))
-                    : path.startsWith(item.url));
+                  (item.alias.length > 0
+                    ? item.alias.some((alias) => isWithin(path, alias))
+                    : isWithin(path, item.url));
 
                 if (item.items && item.items.length > 0) {
                   return (
@@ -129,7 +132,7 @@ export const NavGroups = () => {
                               <SidebarMenuSubItem key={subItem.name}>
                                 <SidebarMenuSubButton
                                   asChild
-                                  isActive={path === subItem.url}
+                                  isActive={isWithin(path, subItem.url)}
                                 >
                                   <Link href={subItem.url}>
                                     <span>{subItem.name}</span>
