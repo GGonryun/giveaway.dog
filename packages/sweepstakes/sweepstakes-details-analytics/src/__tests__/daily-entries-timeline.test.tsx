@@ -85,14 +85,17 @@ describe('DailyEntriesTimeline', () => {
     expect(tickLabels(container).slice(0, 2)).toEqual(['Sep 30', 'Oct 1']);
   });
 
-  it('shows the previous day for time zones west of UTC', () => {
-    vi.stubEnv('TZ', 'America/New_York');
-    const { container } = renderTimeline([
-      { date: '2026-09-30', entries: 4 },
-      { date: '2026-10-01', entries: 9 }
-    ]);
-    expect(tickLabels(container).slice(0, 2)).toEqual(['Sep 29', 'Sep 30']);
-  });
+  it.each(['America/New_York', 'America/Los_Angeles', 'Asia/Tokyo'])(
+    'labels the days the server grouped them under in %s',
+    (timeZone) => {
+      vi.stubEnv('TZ', timeZone);
+      const { container } = renderTimeline([
+        { date: '2026-09-30', entries: 4 },
+        { date: '2026-10-01', entries: 9 }
+      ]);
+      expect(tickLabels(container).slice(0, 2)).toEqual(['Sep 30', 'Oct 1']);
+    }
+  );
 
   it('abbreviates thousands on the entries axis', () => {
     const { container } = renderTimeline([
