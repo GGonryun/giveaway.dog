@@ -69,6 +69,28 @@ export const waitUntil = (at: Date) =>
     setTimeout(resolve, Math.max(0, at.getTime() - Date.now()))
   );
 
+const SERVER_CLOCK_MARGIN_MS = 1_000;
+
+const serverTime = async (request: APIRequestContext) => {
+  const response = await request.get('/api/auth/session');
+  return Date.parse(response.headers()['date'] ?? '');
+};
+
+export const waitForServerTime = async (
+  request: APIRequestContext,
+  at: Date,
+  { timeout = 30_000 }: { timeout?: number } = {}
+) => {
+  await waitUntil(at);
+  await expect
+    .poll(() => serverTime(request), {
+      message: `The clock of the deployment did not pass ${at.toISOString()}`,
+      intervals: [1_000],
+      timeout
+    })
+    .toBeGreaterThan(at.getTime() + SERVER_CLOCK_MARGIN_MS);
+};
+
 export const runJobs = async (
   request: APIRequestContext,
   sweepstakesId: string
