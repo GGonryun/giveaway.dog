@@ -231,6 +231,31 @@ describe('UserDetailsForm', () => {
       );
     });
 
+    it('explains why a required age checkbox blocks submission', async () => {
+      const user = userEvent.setup();
+      const { props } = renderForm([
+        buildEmailField(),
+        buildAgeField({ required: true, label: AGE_LABEL })
+      ]);
+
+      await user.type(emailInput(), 'jane@example.com');
+      await user.click(continueButton());
+
+      expect(
+        await screen.findByText('You must confirm you meet the age requirement')
+      ).toBeInTheDocument();
+      expect(ageCheckbox()).toHaveAttribute('aria-invalid', 'true');
+      expect(props.onFormSubmit).not.toHaveBeenCalled();
+
+      await user.click(ageCheckbox());
+
+      await waitFor(() =>
+        expect(
+          screen.queryByText('You must confirm you meet the age requirement')
+        ).not.toBeInTheDocument()
+      );
+    });
+
     it('allows an optional age checkbox to stay unchecked', async () => {
       const user = userEvent.setup();
       const { props } = renderForm([
