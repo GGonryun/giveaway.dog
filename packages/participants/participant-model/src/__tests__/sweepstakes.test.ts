@@ -153,6 +153,25 @@ describe('toSweepstakesState', () => {
       ).toBe('pending');
     });
 
+    it.fails(
+      'returns not-eligible for a participant outside the region once started (fails until #828 is fixed)',
+      () => {
+        expect(
+          toSweepstakesState(
+            build({
+              status: 'SCHEDULED',
+              startDate: PAST,
+              regionalRestriction: {
+                regions: ['country:US'],
+                filter: 'INCLUDE'
+              },
+              participant: participant({ countryCode: 'FR' })
+            })
+          )
+        ).toBe('not-eligible');
+      }
+    );
+
     it('returns active without a participant once started, even after the end date', () => {
       expect(
         toSweepstakesState(

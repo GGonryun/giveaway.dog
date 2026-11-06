@@ -1,5 +1,11 @@
 import { expect, test } from '../../fixtures/test';
 import { E2E_SECRET, RUN_ID } from '../../env';
+import {
+  MIN_TIME_MARGIN_SECONDS,
+  seedSweepstakes,
+  waitForServerTime
+} from '../../helpers/jobs';
+import { expectAfterReloads } from '../../helpers/poll';
 import { seedApi, seedWorkerTeam } from '../../helpers/seed';
 
 type Participants = { participants: { userId: string }[] };
@@ -101,13 +107,13 @@ test.describe('the dates of a giveaway', () => {
     '[ENTRY-004] a participant outside the region cannot enter when the giveaway goes live',
     { tag: '@slow' },
     async ({ page, request }, testInfo) => {
-      const startsIn = 15;
+      test.setTimeout(testInfo.timeout + MIN_TIME_MARGIN_SECONDS * 1000);
       const { team } = await seedWorkerTeam(request, testInfo);
-      const giveaway = await seedApi(request).sweepstakes({
+      const giveaway = await seedSweepstakes(request, {
         ns: RUN_ID,
         team: team.slug,
         preset: 'scheduled',
-        startsIn,
+        startsIn: MIN_TIME_MARGIN_SECONDS,
         audience: {
           ...AUDIENCE,
           regionalRestriction: { regions: ['country:US'], filter: 'INCLUDE' }
@@ -120,14 +126,25 @@ test.describe('the dates of a giveaway', () => {
 
       await page.goto(`/browse/${giveaway.id}`);
       await expect(pending).toHaveText('Giveaway Starting Soon');
-      await expect(pending).toHaveText('Giveaway Has Started!', {
-        timeout: (startsIn + 5) * 1000
-      });
-      await page.getByRole('button', { name: 'Refresh Page' }).click();
 
-      await expect(
-        page.getByText('You are not eligible to participate in this giveaway.')
-      ).toBeVisible();
+      await waitForServerTime(request, new Date(giveaway.startDate));
+      await expect(pending).toHaveText('Giveaway Has Started!');
+      const refreshed = page.waitForResponse(
+        (response) =>
+          response.request().method() === 'POST' &&
+          !!response.request().headers()['next-action']
+      );
+      await page.getByRole('button', { name: 'Refresh Page' }).click();
+      await refreshed;
+
+      await expectAfterReloads(page, () =>
+        expect(
+          page.getByText(
+            'You are not eligible to participate in this giveaway.'
+          )
+        ).toBeVisible()
+      );
+      await expect(page.getByRole('heading', { name: BONUS })).toBeHidden();
     }
   );
 });
