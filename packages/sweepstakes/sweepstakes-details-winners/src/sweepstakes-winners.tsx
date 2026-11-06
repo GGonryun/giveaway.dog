@@ -83,6 +83,7 @@ import { rerollDraw } from '@giveaway/winners-server/procedures/reroll-draw';
 import { disqualifyDraw } from '@giveaway/winners-server/procedures/disqualify-draw';
 import { UNKNOWN_EMAIL } from '@giveaway/app-config/settings';
 import { strings } from '@giveaway/util-strings/strings';
+import { toEligibleParticipants } from '@giveaway/winners-model/eligibility';
 
 interface GroupedPrize {
   id: string;
@@ -517,30 +518,12 @@ export const SweepstakesWinners = ({
 
   const hasEnded = new Date() > new Date(endDate);
 
-  const getEligibleParticipants = (
-    criteria: SweepstakesWinnerCriteriaSchema
-  ) => {
-    const confirmedWinnerIds = !criteria.allowMultipleWins
-      ? prizes
-          .flatMap((p) => p.draws)
-          .filter((d) => d.result === PrizeDrawResult.WINNER)
-          .map((d) => d.participant.id)
-      : [];
-
-    return participants.filter((p) => {
-      // Check quality score
-      if (p.user.qualityScore < criteria.minQualityScore) return false;
-
-      // Check minimum tasks completed
-      if (p.completions.length < criteria.minTasksCompleted) return false;
-
-      // Check duplicate winners
-      if (!criteria.allowMultipleWins && confirmedWinnerIds.includes(p.id))
-        return false;
-
-      return true;
+  const getEligibleParticipants = (criteria: SweepstakesWinnerCriteriaSchema) =>
+    toEligibleParticipants({
+      participants,
+      criteria,
+      draws: prizes.flatMap((p) => p.draws)
     });
-  };
 
   const handleDisqualify = (drawId: string) => {
     setActionType('disqualify');

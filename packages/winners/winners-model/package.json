@@ -17,6 +17,7 @@
   },
   "exports": {
     "./criteria": "./src/criteria.ts",
+    "./eligibility": "./src/eligibility.ts",
     "./slots": "./src/slots.ts",
     "./testing/fixtures-winners-model": "./src/testing/fixtures-winners-model.ts",
     "./weighted-rolls": "./src/weighted-rolls.ts"

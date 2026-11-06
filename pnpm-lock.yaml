@@ -10651,6 +10651,9 @@ importers:
       '@giveaway/util-strings':
         specifier: workspace:*
         version: link:../../shared/util-strings
+      '@giveaway/winners-model':
+        specifier: workspace:*
+        version: link:../../winners/winners-model
       '@giveaway/winners-server':
         specifier: workspace:*
         version: link:../../winners/winners-server

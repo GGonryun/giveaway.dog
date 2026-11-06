@@ -18,6 +18,7 @@ import { PrizeDrawResult } from '@giveaway/db-model';
 import { NavigationHeader } from '@giveaway/shell-navigation/navigation-header';
 import Link from 'next/link';
 import { rollPrizes } from '@giveaway/winners-server/procedures/roll-prizes';
+import { toEligibleParticipants } from '@giveaway/winners-model/eligibility';
 
 interface PublicWinnerDrawProps {
   sweepstakesName: string;
@@ -66,25 +67,11 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
     }
   });
 
-  // Calculate eligible participants
-  const getEligibleParticipants = () => {
-    const confirmedWinnerIds = !criteria.allowMultipleWins
-      ? prizes
-          .flatMap((p) => p.draws)
-          .filter((d) => d.result === PrizeDrawResult.WINNER)
-          .map((d) => d.participant.id)
-      : [];
-
-    return participants.filter((p) => {
-      if (p.user.qualityScore < criteria.minQualityScore) return false;
-      if (p.completions.length < criteria.minTasksCompleted) return false;
-      if (!criteria.allowMultipleWins && confirmedWinnerIds.includes(p.id))
-        return false;
-      return true;
-    });
-  };
-
-  const eligibleParticipants = getEligibleParticipants();
+  const eligibleParticipants = toEligibleParticipants({
+    participants,
+    criteria,
+    draws: prizes.flatMap((p) => p.draws)
+  });
 
   // Initialize prize cards from existing draws
   useEffect(() => {
