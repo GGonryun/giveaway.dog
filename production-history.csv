@@ -459,3 +459,4 @@ date,commit,url,target,trigger,result,run
 2026-11-06T04:56:57Z,f4db0d3d18e8a4bdb7418284e45968ceedb33f55,https://www.giveaway.dog,domain,promotion,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/42165313025
 2026-11-06T04:59:52Z,3de5fe8c2a7de5f7008481a927c6e5d8d0c8d0fd,https://giveaway-onkegg7kl-charity-games.vercel.app,deployment,deployment,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/42165632971
 2026-11-06T05:00:57Z,3de5fe8c2a7de5f7008481a927c6e5d8d0c8d0fd,https://www.giveaway.dog,domain,promotion,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/42165705492
+2026-11-06T05:01:22Z,cbbba8c7204d0a5064a8e4bba73aacdc751e88a2,https://giveaway-7rfm2ji7l-charity-games.vercel.app,deployment,deployment,passed,https://github.com/GGonryun/giveaway.dog/actions/runs/42165772049
