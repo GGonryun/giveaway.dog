@@ -83,7 +83,7 @@ test.describe('copying a giveaway', () => {
       page.getByRole('switch', { name: 'Require Pre-Entry Login' })
     ).toBeChecked();
     await expect(
-      page.getByRole('button', { name: 'Allowed Identities' })
+      page.getByRole('button', { name: 'Allowed Identities', exact: true })
     ).toHaveText(/^\s*Google\s*Discord\s*$/);
   });
 
