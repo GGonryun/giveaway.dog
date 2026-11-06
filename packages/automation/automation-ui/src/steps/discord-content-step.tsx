@@ -11,7 +11,7 @@ import { Switch } from '@giveaway/ui-primitives/switch';
 import { Checkbox } from '@giveaway/ui-primitives/checkbox';
 import {
   SwitchBox,
-  SwitchFormHeader
+  SwitchHeader
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { SocialDiscordIcon } from '@giveaway/integration-icons/discord-icon';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
@@ -25,6 +25,7 @@ import {
   FormMessage,
   FormDescription
 } from '@giveaway/ui-primitives/form';
+import { Label } from '@giveaway/ui-primitives/label';
 import { DiscordPostPermissionBanner } from '../discord-post-permission-banner';
 import { useState, useEffect } from 'react';
 import { getDiscordRoles } from '@giveaway/discord-connect/get-discord-roles';
@@ -223,14 +224,14 @@ export function DiscordContentStep({
       />
 
       <div>
-        <FormLabel className="text-sm font-medium mb-1 block">
+        <Label className="text-sm font-medium mb-1 block">
           Automatically add tasks
-        </FormLabel>
+        </Label>
         <div className="space-y-2">
           <SwitchBox>
             <div className="flex flex-col gap-3">
               <div className="flex flex-row items-start justify-between">
-                <SwitchFormHeader
+                <SwitchHeader
                   label='Add "Interaction" task'
                   description="Automatically create a Discord interaction task"
                 />
@@ -243,9 +244,9 @@ export function DiscordContentStep({
 
               {hasInteractionTask && (
                 <div className="space-y-2 pt-2 border-t">
-                  <FormLabel className="text-sm font-medium">
+                  <Label className="text-sm font-medium">
                     Required Roles (Optional)
-                  </FormLabel>
+                  </Label>
                   {loadingRoles ? (
                     <div className="text-sm text-muted-foreground">
                       Loading roles...
@@ -268,7 +269,7 @@ export function DiscordContentStep({
                               handleRoleToggle(role.id, checked === true)
                             }
                           />
-                          <FormLabel
+                          <Label
                             htmlFor={`role-${role.id}`}
                             className="text-sm font-normal cursor-pointer flex items-center gap-2"
                           >
@@ -281,7 +282,7 @@ export function DiscordContentStep({
                               />
                             )}
                             {role.name}
-                          </FormLabel>
+                          </Label>
                         </div>
                       ))}
                     </div>

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useForm } from 'react-hook-form';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   Form,
   FormAlertMessage,
@@ -130,20 +130,46 @@ describe('Form', () => {
     );
   });
 
-  it('does not throw when a label is rendered outside a form field', () => {
-    function Orphan() {
-      const form = useForm();
-      return (
-        <Form {...form}>
-          <FormLabel>Orphan</FormLabel>
-        </Form>
+  describe('outside its providers', () => {
+    beforeEach(() => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('throws when a label is rendered outside a form field', () => {
+      function Orphan() {
+        const form = useForm();
+        return (
+          <Form {...form}>
+            <FormLabel>Orphan</FormLabel>
+          </Form>
+        );
+      }
+      expect(() => render(<Orphan />)).toThrow(
+        'useFormField should be used within <FormField>'
       );
-    }
-    render(<Orphan />);
-    expect(screen.getByText('Orphan')).toHaveAttribute(
-      'for',
-      'undefined-form-item'
-    );
+    });
+
+    it('throws when a label is rendered in a form field outside a form item', () => {
+      function Orphan() {
+        const form = useForm<Values>({ defaultValues: { email: '' } });
+        return (
+          <Form {...form}>
+            <FormField
+              control={form.control}
+              name="email"
+              render={() => <FormLabel>Orphan</FormLabel>}
+            />
+          </Form>
+        );
+      }
+      expect(() => render(<Orphan />)).toThrow(
+        'useFormField should be used within <FormItem>'
+      );
+    });
   });
 });
 

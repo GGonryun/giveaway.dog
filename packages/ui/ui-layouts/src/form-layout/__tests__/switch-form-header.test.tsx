@@ -2,9 +2,13 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Form, FormField, FormItem } from '@giveaway/ui-primitives/form';
-import { SwitchBox, SwitchFormHeader } from '../switch-form-header';
+import {
+  SwitchBox,
+  SwitchFormHeader,
+  SwitchHeader
+} from '../switch-form-header';
 
 type FieldHarnessProps = {
   children: React.ReactNode;
@@ -132,5 +136,79 @@ describe('SwitchFormHeader', () => {
     expect(
       screen.getByRole('dialog', { name: 'Why require email?' })
     ).toHaveTextContent('We use it to contact winners.');
+  });
+});
+
+describe('SwitchFormHeader outside a form item', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('throws instead of linking the label to a missing control', () => {
+    const Orphan = () => {
+      const form = useForm();
+      return (
+        <Form {...form}>
+          <SwitchFormHeader label="Require email" />
+        </Form>
+      );
+    };
+    expect(() => render(<Orphan />)).toThrow(
+      'useFormField should be used within <FormField>'
+    );
+  });
+});
+
+describe('SwitchHeader', () => {
+  it('shows the label without a form field', () => {
+    render(<SwitchHeader label="Reward profile completion" />);
+    const label = screen.getByText('Reward profile completion');
+    expect(label.tagName).toBe('LABEL');
+    expect(label).not.toHaveAttribute('for');
+  });
+
+  it('shows the description without a form item id', () => {
+    render(
+      <SwitchHeader
+        label="Reward profile completion"
+        description="Give bonus entries"
+      />
+    );
+    const description = screen.getByText('Give bonus entries');
+    expect(description).toHaveClass('text-sm', 'text-muted-foreground');
+    expect(description).not.toHaveAttribute('id');
+  });
+
+  it('omits the description when none is given', () => {
+    const { container } = render(
+      <SwitchHeader label="Reward profile completion" />
+    );
+    expect(container.querySelector('p')).toBeNull();
+  });
+
+  it('adds a custom class to the wrapper', () => {
+    render(<SwitchHeader label="Reward profile completion" className="mb-1" />);
+    expect(
+      screen.getByText('Reward profile completion').parentElement?.parentElement
+    ).toHaveClass('mb-1', 'space-y-0.5');
+  });
+
+  it('opens the help dialog from the help icon', async () => {
+    const { container } = render(
+      <SwitchHeader
+        label="Reward profile completion"
+        help={{ title: 'Why reward it?', content: 'Better data.' }}
+      />
+    );
+    await userEvent.click(
+      container.querySelector('[aria-haspopup="dialog"]') as Element
+    );
+    expect(
+      screen.getByRole('dialog', { name: 'Why reward it?' })
+    ).toHaveTextContent('Better data.');
   });
 });

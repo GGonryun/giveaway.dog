@@ -787,7 +787,6 @@ exports[`Audience > matches the snapshot 1`] = `
             >
               <label
                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                for="undefined-form-item"
               >
                 Reward Profile Completion
               </label>
@@ -824,7 +823,6 @@ exports[`Audience > matches the snapshot 1`] = `
             </div>
             <p
               class="text-sm text-muted-foreground"
-              id="undefined-form-item-description"
             >
               Give participants bonus entries for completing their profile
             </p>

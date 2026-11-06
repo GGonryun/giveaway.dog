@@ -12,7 +12,7 @@ import { FileUpload } from '@giveaway/ui-file-upload/file-upload';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import {
   SwitchBox,
-  SwitchFormHeader
+  SwitchHeader
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { SocialBlueskyIcon } from '@giveaway/integration-icons/bluesky-icon';
 import { IntegrationsSchema } from '@giveaway/integration-model/schemas';
@@ -25,6 +25,7 @@ import {
   FormControl,
   FormMessage
 } from '@giveaway/ui-primitives/form';
+import { Label } from '@giveaway/ui-primitives/label';
 import { cn } from '@giveaway/ui-utils/utils';
 import { useState } from 'react';
 import { BlueskyPostPermissionBanner } from '../bluesky-post-permission-banner';
@@ -145,7 +146,7 @@ export function BlueskyContentStep({
       <SwitchBox>
         <div className="space-y-3">
           <div className="flex flex-row items-start justify-between">
-            <SwitchFormHeader
+            <SwitchHeader
               label="Add an image"
               description="Include an image with your post"
             />
@@ -184,13 +185,13 @@ export function BlueskyContentStep({
       </SwitchBox>
 
       <div>
-        <FormLabel className="text-sm font-medium mb-1 block">
+        <Label className="text-sm font-medium mb-1 block">
           Automatically add tasks
-        </FormLabel>
+        </Label>
         <div className="space-y-2">
           <SwitchBox>
             <div className="flex flex-row items-start justify-between">
-              <SwitchFormHeader
+              <SwitchHeader
                 label='Add "Repost" task'
                 description="Automatically create a repost task for this post"
               />
@@ -204,7 +205,7 @@ export function BlueskyContentStep({
 
           <SwitchBox>
             <div className="flex flex-row items-start justify-between">
-              <SwitchFormHeader
+              <SwitchHeader
                 label='Add "Like" task'
                 description="Automatically create a like task for this post"
               />

@@ -7,7 +7,6 @@ exports[`BackgroundFields > with a gradient background > matches the snapshot 1`
   >
     <label
       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-      for="undefined-form-item"
     >
       Gradient
     </label>
@@ -158,7 +157,6 @@ exports[`BackgroundFields > with a gradient background > matches the snapshot of
       >
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="undefined-form-item"
         >
           Color Stops
         </label>

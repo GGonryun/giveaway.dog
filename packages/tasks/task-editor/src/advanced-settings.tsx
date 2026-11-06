@@ -15,7 +15,8 @@ import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import {
   SwitchBox,
-  SwitchFormHeader
+  SwitchFormHeader,
+  SwitchHeader
 } from '@giveaway/ui-layouts/form-layout/switch-form-header';
 import { Switch } from '@giveaway/ui-primitives/switch';
 import { Input } from '@giveaway/ui-primitives/input';
@@ -267,7 +268,7 @@ const AfterVisitField: React.FC = () => {
         name={`tasks.${index}.afterVisit`}
         render={() => (
           <div className="space-y-4">
-            <SwitchFormHeader
+            <SwitchHeader
               label="After Visiting"
               description="Customize what happens after the user visits the URL"
               help={{

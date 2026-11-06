@@ -2,9 +2,7 @@ import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 import { UnifiedFormLayoutContext } from '../form-layout/use-unified-form-layout';
 
-export type LayoutContextValue = React.ContextType<
-  typeof UnifiedFormLayoutContext
->;
+export type LayoutContextValue = UnifiedFormLayoutContext<string>;
 
 export const createLayoutContext = (
   overrides: Partial<LayoutContextValue> = {}
