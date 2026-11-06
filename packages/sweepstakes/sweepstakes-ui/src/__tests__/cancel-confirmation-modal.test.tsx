@@ -147,6 +147,13 @@ describe('CancelConfirmationModal', () => {
       expect(links[0]).toHaveTextContent('Exit Demo');
       expect(links[1]).toHaveTextContent('Sign Up');
     });
+
+    it('renders the demo actions as links without nested buttons', () => {
+      renderModal({ action: 'demo' });
+      expect(
+        screen.queryByRole('button', { name: /Exit Demo|Sign Up/ })
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('disables every action while loading', () => {

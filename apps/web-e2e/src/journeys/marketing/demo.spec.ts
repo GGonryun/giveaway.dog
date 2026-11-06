@@ -1,7 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '../../fixtures/test';
 import { headerButton, publishDialog } from '../../helpers/editor';
-import { knownBug } from '../../helpers/known-bug';
 import { isServerActionRequest } from '../../helpers/rsc';
 
 const watchWrites = (page: Page) => {
@@ -50,7 +49,7 @@ test.describe('demo editor', () => {
     await expect(dialog).not.toContainText('will go live');
   });
 
-  test('the demo nests no button in a link', knownBug(62), async ({ page }) => {
+  test('the demo nests no button in a link', async ({ page }) => {
     await openPublishDialog(page);
 
     await expect(page.locator('a button')).toHaveCount(0);

@@ -18,11 +18,9 @@ export const DemoBanner: React.FC = () => {
             <span className="sm:hidden">{banner.shortMessage}</span>
           </div>
           {banner.showAction && banner.actionHref && banner.actionText && (
-            <Link href={banner.actionHref} className="shrink-0">
-              <Button size="sm" className="h-8 text-xs px-3">
-                {banner.actionText}
-              </Button>
-            </Link>
+            <Button size="sm" className="h-8 text-xs px-3" asChild>
+              <Link href={banner.actionHref}>{banner.actionText}</Link>
+            </Button>
           )}
         </AlertDescription>
       </Alert>
@@ -43,12 +41,12 @@ export const DemoBanner: React.FC = () => {
           </span>
           <span className="sm:hidden"> - Sign up to save!</span>
         </div>
-        <Link href="/login" className="shrink-0">
-          <Button size="sm" className="h-8 text-xs px-3">
+        <Button size="sm" className="h-8 text-xs px-3" asChild>
+          <Link href="/login">
             <span className="hidden sm:inline">Create Free Account</span>
             <span className="sm:hidden">Sign Up</span>
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </AlertDescription>
     </Alert>
   );

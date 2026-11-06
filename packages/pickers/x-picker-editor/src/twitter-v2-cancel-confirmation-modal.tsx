@@ -78,12 +78,12 @@ export const TwitterV2CancelConfirmationModal: React.FC<
 
           {action === 'demo' && (
             <div className="flex gap-2 sm:ml-auto">
-              <Link href="/#pricing">
-                <Button variant="outline">Exit Demo</Button>
-              </Link>
-              <Link href="/login">
-                <Button>Sign Up</Button>
-              </Link>
+              <Button variant="outline" asChild>
+                <Link href="/#pricing">Exit Demo</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/login">Sign Up</Link>
+              </Button>
             </div>
           )}
         </DialogFooter>
