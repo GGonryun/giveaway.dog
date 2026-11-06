@@ -160,15 +160,17 @@ describe('useFormErrors', () => {
     ]);
   });
 
-  it('matches fields by path prefix, including longer field names', () => {
-    const { result, setErrors } = renderFormErrors(['title']);
+  it('matches a field and its nested paths, not fields that share a prefix', () => {
+    const { result, setErrors } = renderFormErrors(['title', 'prizes']);
     setErrors({
       title: 'Title is required',
-      titleImage: 'Image is too large'
+      titleImage: 'Image is too large',
+      'prizes.0.name': 'Name is required',
+      prizesTotal: 'Total is too high'
     });
     expect(result.current.map((error) => error.path)).toEqual([
       'title',
-      'titleImage'
+      'prizes.0.name'
     ]);
   });
 
