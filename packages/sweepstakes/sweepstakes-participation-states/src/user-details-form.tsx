@@ -195,17 +195,12 @@ function SweepstakesFormField<T extends z.ZodSchema<any>>({
                   )}
                 </span>
                 <HelpDialog
-                  title="Twitter profile Format"
+                  title="X profile format"
                   content={
                     <div className="space-y-2">
                       <p>
-                        Please enter your Twitter/X profile URL in the following
-                        format:
+                        Please enter your X profile URL in the following format:
                       </p>
-                      <code className="block bg-muted p-2 rounded">
-                        https://twitter.com/username
-                      </code>
-                      <p className="text-sm">or</p>
                       <code className="block bg-muted p-2 rounded">
                         https://x.com/username
                       </code>
@@ -215,9 +210,7 @@ function SweepstakesFormField<T extends z.ZodSchema<any>>({
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder={
-                    field.placeholder || 'https://twitter.com/username'
-                  }
+                  placeholder={field.placeholder || 'https://x.com/username'}
                   {...formField}
                 />
               </FormControl>
