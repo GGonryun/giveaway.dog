@@ -12,7 +12,7 @@ import {
 } from '@giveaway/ui-primitives/select';
 import { ListSweepstakesFilters } from '@giveaway/sweepstakes-model/sweepstakes';
 import { CalendarIcon, SearchIcon, XIcon } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Search and Filter Components
 export const SweepstakesFilterBar: React.FC<{
@@ -79,22 +79,33 @@ const SweepstakesSearchBar = ({
   onChange: (value?: string) => void;
   placeholder?: string;
 }) => {
-  const [localValue, setLocalValue] = useState(value);
+  const [localValue, setLocalValue] = useState(value ?? '');
+  const sentValue = useRef(value ?? '');
+
+  const send = useCallback(
+    (next: string) => {
+      sentValue.current = next;
+      onChange(next);
+    },
+    [onChange]
+  );
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onChange(localValue);
-    }, 300);
+    if (localValue === (value ?? '')) return;
+    const timer = setTimeout(() => send(localValue), 300);
     return () => clearTimeout(timer);
-  }, [localValue]);
+  }, [localValue, value, send]);
 
   useEffect(() => {
-    setLocalValue(value);
+    const next = value ?? '';
+    if (next === sentValue.current) return;
+    sentValue.current = next;
+    setLocalValue(next);
   }, [value]);
 
   const handleClear = () => {
     setLocalValue('');
-    onChange('');
+    send('');
   };
 
   return (
