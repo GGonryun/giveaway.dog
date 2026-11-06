@@ -110,7 +110,7 @@ By entering, participants release and hold harmless the Sponsor and its affiliat
 
   platformDisclaimer: `This Promotion is not sponsored, endorsed, or administered by any social media platform, including but not limited to Facebook, Instagram, Twitter (X), YouTube, or Reddit. You are providing your information to the Sponsor.`,
 
-  privacy: `Your information is governed by our privacy policy (https://giveaway.dog/privacy)${configuration.privacyPolicyUrl ? `, and the Sponsor privacy policy (${configuration.privacyPolicyUrl})` : '.'} `,
+  privacy: `Your information is governed by our privacy policy (https://giveaway.dog/privacy)${configuration.privacyPolicyUrl ? `, and the Sponsor privacy policy (${configuration.privacyPolicyUrl}).` : '.'} `,
 
   winnersList: `To obtain a list of winners, contact the Sponsor within four (4) weeks of the sweepstakes' end date.`,
 
@@ -124,7 +124,7 @@ By entering, participants release and hold harmless the Sponsor and its affiliat
 export const toEligibilityRegions = (
   restriction: RegionalRestrictionSchema
 ): string => {
-  if (!restriction) return 'Global';
+  if (!restriction) return 'globally';
 
   const regions = restriction.regions.map(toRegionName).join(', ');
 
