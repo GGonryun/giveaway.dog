@@ -126,11 +126,14 @@ export const UnifiedFormLayoutContextProvider = <T extends string>({
   const { isTablet: mobile, isLoading: isLoadingLayout } = useIsTablet();
   const [currentStep, setCurrentStepDispatch] = useState(defaultStep);
 
-  const setCurrentStep = useCallback((step: T) => {
-    trigger(stepsToFields[currentStep]);
-    browser.changeParams({ step });
-    setCurrentStepDispatch(step);
-  }, []);
+  const setCurrentStep = useCallback(
+    (step: T) => {
+      trigger(stepsToFields[currentStep]);
+      browser.changeParams({ step });
+      setCurrentStepDispatch(step);
+    },
+    [currentStep, stepsToFields, trigger]
+  );
 
   const stepErrors = useMemo(() => {
     const errorMap: Record<string, number> = {};
