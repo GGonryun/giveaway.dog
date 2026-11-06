@@ -1,5 +1,3 @@
-'use server';
-
 import { Hero } from '../hero';
 import { CallToAction } from '@giveaway/marketing-ui/pricing-cta';
 import { PricingSection } from '@giveaway/marketing-ui/pricing-section';
@@ -8,7 +6,7 @@ import { FeaturesSection } from './features-section';
 import { UsageSection } from './usage-section';
 import { FaqSection } from '@giveaway/marketing-ui/faq-section';
 
-export const HomePage = async () => {
+export const HomePage = () => {
   return (
     <div
       className="relative flex flex-col w-full bg-background min-h-screen"
