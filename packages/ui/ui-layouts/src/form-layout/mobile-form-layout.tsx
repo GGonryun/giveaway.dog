@@ -15,6 +15,7 @@ import {
 import { DemoBanner } from './demo-banner';
 import { NonNavigationalLink } from '../links';
 import { cn } from '@giveaway/ui-utils/utils';
+import { capitalize } from 'lodash';
 
 const MobileTabTrigger: React.FC<{
   step: string;
@@ -47,6 +48,7 @@ const MobileTabTrigger: React.FC<{
 const MobileFormHeader: React.FC<{ hideTabs?: boolean }> = ({ hideTabs }) => {
   const {
     title,
+    type,
     disabled,
     formId,
     currentStep,
@@ -61,7 +63,9 @@ const MobileFormHeader: React.FC<{ hideTabs?: boolean }> = ({ hideTabs }) => {
       <div className="flex flex-col w-full gap-1.5">
         <div className="flex items-center">
           <div className="flex-1 min-w-0">
-            <h1 className="text-lg sm:text-xl font-medium truncate">{title}</h1>
+            <h1 className="text-lg sm:text-xl font-medium truncate">
+              {title || `Untitled ${capitalize(type)}`}
+            </h1>
           </div>
           <div className="flex gap-2">
             <Button
