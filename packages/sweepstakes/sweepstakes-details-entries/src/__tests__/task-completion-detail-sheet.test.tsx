@@ -211,8 +211,29 @@ describe('TaskCompletionDetailSheetContent', () => {
       expect(breakdown('Rejected')).toBe('1');
     });
 
-    it('never counts pending completions as pending review', () => {
-      renderContent('entry-2');
+    it('counts the pending completions of the task as pending review', () => {
+      renderContent('entry-2', [
+        ...entries,
+        buildUserEntry({
+          id: 'entry-6',
+          task: hello,
+          user: kim,
+          status: 'PENDING'
+        })
+      ]);
+      expect(breakdown('Pending Review')).toBe('2');
+    });
+
+    it('does not count the pending completions of another task', () => {
+      renderContent('entry-4', [
+        ...entries,
+        buildUserEntry({
+          id: 'entry-6',
+          task: hello,
+          user: kim,
+          status: 'PENDING'
+        })
+      ]);
       expect(breakdown('Pending Review')).toBe('0');
     });
 

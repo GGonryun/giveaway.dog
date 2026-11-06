@@ -34,6 +34,7 @@ import { VerificationInstructionsDialog } from './verification-instructions-dial
 import { formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict';
 import Link from 'next/link';
 import { UserEntriesSchema } from '@giveaway/task-model/schemas';
+import { countCompletionsByStatus } from '@giveaway/task-model/completions';
 import { TaskCategoryBadge } from '@giveaway/task-ui/task-category-badge';
 import { TaskPlatformIcon } from '@giveaway/task-ui/task-platform-icon';
 import { TaskStatusBadge } from '@giveaway/task-ui/task-status-badge';
@@ -91,13 +92,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
     (taskCompletionCount / totalParticipants) * 100
   );
 
-  const statusCounts = sameTaskCompletions.reduce(
-    (acc, tc) => {
-      acc[tc.status] = (acc[tc.status] || 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+  const statusCounts = countCompletionsByStatus(sameTaskCompletions);
 
   // Get recent completions for this task (last 10)
   const recentCompletions = sameTaskCompletions
@@ -154,7 +149,7 @@ export const TaskCompletionDetailSheetContent: React.FC<{
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <div className="text-xl font-bold text-purple-600">
-                {statusCounts.COMPLETED || 0}
+                {statusCounts.COMPLETED}
               </div>
               <div className="text-xs text-muted-foreground">Verified</div>
             </div>
@@ -167,23 +162,21 @@ export const TaskCompletionDetailSheetContent: React.FC<{
                 <CheckCircle className="h-4 w-4 text-green-500" />
                 <span>Completed</span>
               </div>
-              <span className="font-medium">{statusCounts.COMPLETED || 0}</span>
+              <span className="font-medium">{statusCounts.COMPLETED}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4 text-yellow-500" />
                 <span>Pending Review</span>
               </div>
-              <span className="font-medium">
-                {statusCounts.PENDING_REVIEW || 0}
-              </span>
+              <span className="font-medium">{statusCounts.PENDING}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center space-x-2">
                 <XCircle className="h-4 w-4 text-red-500" />
                 <span>Rejected</span>
               </div>
-              <span className="font-medium">{statusCounts.REJECTED || 0}</span>
+              <span className="font-medium">{statusCounts.REJECTED}</span>
             </div>
           </div>
         </div>

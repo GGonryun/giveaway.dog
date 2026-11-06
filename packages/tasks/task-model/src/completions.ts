@@ -62,3 +62,19 @@ export const toMostRecentCompletion = (
 
   return sorted.length > 0 ? sorted[0].completedAt : null;
 };
+
+export type CompletionStatusCounts = Record<CompletionStatus, number>;
+
+export const countCompletionsByStatus = (
+  completions: { status: CompletionStatus }[]
+): CompletionStatusCounts => {
+  const counts: CompletionStatusCounts = {
+    PENDING: 0,
+    COMPLETED: 0,
+    REJECTED: 0
+  };
+  for (const completion of completions) {
+    counts[completion.status] += 1;
+  }
+  return counts;
+};

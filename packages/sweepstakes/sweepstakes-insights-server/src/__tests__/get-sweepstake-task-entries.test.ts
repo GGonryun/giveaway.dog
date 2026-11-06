@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import getSweepstakeTaskEntries from '../get-sweepstake-task-entries';
+import { countCompletionsByStatus } from '@giveaway/task-model/completions';
 import { prismaMock } from '@giveaway/testing-server/prisma';
 import { signIn } from '@giveaway/testing-server/session';
 import { expectFailure, expectOk } from '@giveaway/testing-server/result';
@@ -141,6 +142,23 @@ describe('getSweepstakeTaskEntries', () => {
           task: expectedBonusTask('task-1')
         }
       ]);
+    });
+
+    it('keeps the status of each completion, so the pending ones can be counted', async () => {
+      prismaMock.taskCompletion.findMany.mockResolvedValue([
+        completion('c-1', '2026-09-01T00:00:00.000Z', { status: 'PENDING' }),
+        completion('c-2', '2026-09-02T00:00:00.000Z', { status: 'COMPLETED' }),
+        completion('c-3', '2026-09-03T00:00:00.000Z', { status: 'PENDING' }),
+        completion('c-4', '2026-09-04T00:00:00.000Z', { status: 'REJECTED' })
+      ]);
+
+      const result = await getSweepstakeTaskEntries(input);
+
+      expect(countCompletionsByStatus(expectOk(result))).toEqual({
+        PENDING: 2,
+        COMPLETED: 1,
+        REJECTED: 1
+      });
     });
 
     it('keeps the database order instead of sorting by completion time', async () => {

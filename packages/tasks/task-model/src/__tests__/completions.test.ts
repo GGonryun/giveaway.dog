@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { Prisma } from '@giveaway/db-model';
 import {
+  countCompletionsByStatus,
   TASK_COMPLETIONS_SELECT_QUERY,
   taskCompletionSchema,
   toMostRecentCompletion,
@@ -266,5 +267,28 @@ describe('toMostRecentCompletion', () => {
     toMostRecentCompletion(completions);
 
     expect(completions.map((c) => c.id)).toEqual(['old', 'new']);
+  });
+});
+
+describe('countCompletionsByStatus', () => {
+  it('counts zero for every status when there are no completions', () => {
+    expect(countCompletionsByStatus([])).toEqual({
+      PENDING: 0,
+      COMPLETED: 0,
+      REJECTED: 0
+    });
+  });
+
+  it('counts the completions of each status under its CompletionStatus key', () => {
+    expect(
+      countCompletionsByStatus([
+        { status: 'PENDING' },
+        { status: 'COMPLETED' },
+        { status: 'PENDING' },
+        { status: 'REJECTED' },
+        { status: 'COMPLETED' },
+        { status: 'COMPLETED' }
+      ])
+    ).toEqual({ PENDING: 2, COMPLETED: 3, REJECTED: 1 });
   });
 });
