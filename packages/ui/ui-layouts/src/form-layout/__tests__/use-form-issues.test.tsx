@@ -98,6 +98,18 @@ describe('flattenErrors', () => {
     ).toEqual([{ path: 'title', message: 'Title is required' }]);
   });
 
+  it('ignores the DOM element ref attached by register', () => {
+    expect(
+      flattenErrors({
+        title: {
+          type: 'required',
+          message: 'Title is required',
+          ref: document.createElement('input')
+        }
+      })
+    ).toEqual([{ path: 'title', message: 'Title is required' }]);
+  });
+
   it('prefixes every path when a prefix is given', () => {
     expect(
       flattenErrors(
@@ -129,7 +141,7 @@ describe('useFormErrors', () => {
           methods.setError(name, { type: 'custom', message })
         )
       );
-    return { ...view, setErrors, update };
+    return { ...view, form, setErrors, update };
   };
 
   it('returns no errors for a valid form', () => {
@@ -172,6 +184,22 @@ describe('useFormErrors', () => {
       'title',
       'prizes.0.name'
     ]);
+  });
+
+  it('reports the error of a field bound with register', async () => {
+    const { result, form } = renderFormErrors();
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    await act(async () => {
+      form.current
+        ?.register('title', { required: 'Title is required' })
+        .ref(input);
+      await form.current?.trigger('title');
+    });
+    expect(result.current).toEqual([
+      { path: 'title', message: 'Title is required' }
+    ]);
+    input.remove();
   });
 
   it('updates when the errors are cleared', () => {

@@ -14,6 +14,8 @@ export function flattenErrors<
   const result: ErrorMessage[] = [];
 
   for (const key in errors) {
+    if (key === 'ref') continue;
+
     const error = errors[key];
     const path = prefix ? `${prefix}.${key}` : key;
 
@@ -23,7 +25,6 @@ export function flattenErrors<
       result.push({ path, message: String(error.message) });
     }
 
-    // For nested fields (objects or arrays)
     if (typeof error === 'object') {
       if (Array.isArray(error)) {
         error.forEach((item, index) => {
