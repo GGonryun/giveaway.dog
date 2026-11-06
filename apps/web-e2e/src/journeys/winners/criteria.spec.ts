@@ -120,7 +120,10 @@ test.describe('the winner criteria of a giveaway', () => {
 
     dialog = await openCriteria(page);
     await minTasks.fill('');
-    await expect(minTasks).toHaveValue('1');
+    await expect(minTasks).toHaveValue('');
+    await expect(
+      dialog.getByRole('button', { name: 'Save Changes' })
+    ).toBeDisabled();
     await minTasks.fill('2');
     await dialog
       .getByRole('switch', { name: 'Allow users to win multiple prizes' })

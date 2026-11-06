@@ -333,14 +333,43 @@ describe('SweepstakesWinners', () => {
       expect(navigation.router.refresh).toHaveBeenCalledTimes(1);
     });
 
-    it('snaps an emptied minimum back to one task so typing appends to it', async () => {
+    it('lets the minimum be emptied while typing a new number', async () => {
       renderWinners();
       const { user, dialog } = await openEditor();
       const minTasks = within(dialog).getByLabelText('Minimum Tasks Completed');
       await user.clear(minTasks);
-      expect(minTasks).toHaveValue(1);
+      expect(minTasks).toHaveValue(null);
+      expect(
+        within(dialog).getByRole('button', { name: 'Save Changes' })
+      ).toBeDisabled();
       await user.type(minTasks, '2');
-      expect(minTasks).toHaveValue(12);
+      expect(minTasks).toHaveValue(2);
+      expect(
+        within(dialog).getByRole('button', { name: 'Save Changes' })
+      ).toBeEnabled();
+    });
+
+    it('falls back to one task when the emptied minimum loses focus', async () => {
+      renderWinners();
+      const { user, dialog } = await openEditor();
+      const minTasks = within(dialog).getByLabelText('Minimum Tasks Completed');
+      await user.clear(minTasks);
+      await user.tab();
+      expect(minTasks).toHaveValue(1);
+    });
+
+    it('clamps a minimum below one to one task when saving', async () => {
+      renderWinners();
+      const { user, dialog } = await openEditor();
+      const minTasks = within(dialog).getByLabelText('Minimum Tasks Completed');
+      await user.clear(minTasks);
+      await user.type(minTasks, '0');
+      await user.click(
+        within(dialog).getByRole('button', { name: 'Save Changes' })
+      );
+      expect(updateWinnerCriteria).toHaveBeenCalledWith(
+        expect.objectContaining({ minTasksCompleted: 1 })
+      );
     });
 
     it('keeps a quality score between enforcement levels unless a level is picked', async () => {

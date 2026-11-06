@@ -396,6 +396,9 @@ type SweepstakesWinnersProps = {
   criteria: SweepstakesWinnerCriteriaSchema;
 };
 
+const toMinTasksCompleted = (value: string) =>
+  Math.max(1, parseInt(value, 10) || 1);
+
 export const SweepstakesWinners = ({
   prizes,
   participants,
@@ -412,6 +415,9 @@ export const SweepstakesWinners = ({
   const [isEditingCriteria, setIsEditingCriteria] = useState(false);
   const [editedCriteria, setEditedCriteria] =
     useState<SweepstakesWinnerCriteriaSchema>(criteria);
+  const [minTasksInput, setMinTasksInput] = useState(
+    String(criteria.minTasksCompleted)
+  );
   const [rerollDialogOpen, setRerollDialogOpen] = useState(false);
   const [actionType, setActionType] = useState<'disqualify' | 'reroll'>(
     'reroll'
@@ -474,6 +480,7 @@ export const SweepstakesWinners = ({
       onSuccess: (data) => {
         setCurrentCriteria(data);
         setEditedCriteria(data);
+        setMinTasksInput(String(data.minTasksCompleted));
         setIsEditingCriteria(false);
         router.refresh();
       }
@@ -586,7 +593,7 @@ export const SweepstakesWinners = ({
     runUpdateCriteria({
       sweepstakesId,
       slug,
-      minTasksCompleted: editedCriteria.minTasksCompleted,
+      minTasksCompleted: toMinTasksCompleted(minTasksInput),
       minQualityScore: editedCriteria.minQualityScore,
       allowMultipleWins: editedCriteria.allowMultipleWins,
       allowUserSelection: editedCriteria.allowUserSelection,
@@ -596,6 +603,7 @@ export const SweepstakesWinners = ({
 
   const handleCancelEdit = () => {
     setEditedCriteria(currentCriteria);
+    setMinTasksInput(String(currentCriteria.minTasksCompleted));
     setIsEditingCriteria(false);
   };
 
@@ -783,12 +791,10 @@ export const SweepstakesWinners = ({
                 id="minTasksCompleted"
                 type="number"
                 min={1}
-                value={editedCriteria.minTasksCompleted}
-                onChange={(e) =>
-                  setEditedCriteria((prev) => ({
-                    ...prev,
-                    minTasksCompleted: parseInt(e.target.value) || 1
-                  }))
+                value={minTasksInput}
+                onChange={(e) => setMinTasksInput(e.target.value)}
+                onBlur={() =>
+                  setMinTasksInput(String(toMinTasksCompleted(minTasksInput)))
                 }
               />
             </div>
@@ -842,7 +848,12 @@ export const SweepstakesWinners = ({
             <div className="pt-4 border-t">
               <div className="text-sm text-muted-foreground">
                 <strong>
-                  {getEligibleParticipants(editedCriteria).length}
+                  {
+                    getEligibleParticipants({
+                      ...editedCriteria,
+                      minTasksCompleted: toMinTasksCompleted(minTasksInput)
+                    }).length
+                  }
                 </strong>{' '}
                 of {participants.length} participants meet these criteria
               </div>
@@ -857,7 +868,10 @@ export const SweepstakesWinners = ({
             >
               Cancel
             </Button>
-            <Button onClick={handleSaveCriteria} disabled={isUpdatingCriteria}>
+            <Button
+              onClick={handleSaveCriteria}
+              disabled={isUpdatingCriteria || minTasksInput.trim() === ''}
+            >
               {isUpdatingCriteria ? 'Saving...' : 'Save Changes'}
             </Button>
           </DialogFooter>
