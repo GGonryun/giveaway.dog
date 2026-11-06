@@ -200,13 +200,25 @@ describe('TaskCompletionDetailSheetContent', () => {
       expect(breakdown('Pending Review')).toBe('0');
     });
 
-    it('groups completions of different tasks that share a title', () => {
+    it('does not count completions of a different task that shares the title', () => {
       const twin = buildTask({ id: 'task-9', title: 'Say hello' });
       renderContent('entry-1', [
         ...entries,
         buildUserEntry({ id: 'entry-9', task: twin, user: kim })
       ]);
-      expect(statistic('Total Completions')).toBe('4');
+      expect(statistic('Total Completions')).toBe('3');
+    });
+
+    it('counts each participant without an email once', () => {
+      const imported = ['user-7', 'user-8', 'user-9'].map((id) =>
+        buildUser({ id, name: id, email: null })
+      );
+      const list = imported.map((user, index) =>
+        buildUserEntry({ id: `entry-x${index}`, task: hello, user })
+      );
+      renderContent('entry-x0', list);
+      expect(statistic('Total Completions')).toBe('3');
+      expect(statistic('Completion Rate')).toBe('100%');
     });
   });
 

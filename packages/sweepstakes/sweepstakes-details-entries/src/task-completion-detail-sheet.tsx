@@ -82,10 +82,10 @@ export const TaskCompletionDetailSheetContent: React.FC<{
 
   // Calculate statistics for the selected task
   const sameTaskCompletions = entries.filter(
-    (tc) => tc.task.title === selectedTaskCompletion.task.title
+    (tc) => tc.task.id === selectedTaskCompletion.task.id
   );
 
-  const totalParticipants = new Set(entries.map((tc) => tc.user.email)).size;
+  const totalParticipants = new Set(entries.map((tc) => tc.user.id)).size;
   const taskCompletionCount = sameTaskCompletions.length;
   const completionRate = Math.round(
     (taskCompletionCount / totalParticipants) * 100
