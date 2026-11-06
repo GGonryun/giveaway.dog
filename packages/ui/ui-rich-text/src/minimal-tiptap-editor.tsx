@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { EditorContent, useEditor } from '@tiptap/react';
+import { type Editor, EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
 import { Placeholder } from '@tiptap/extensions';
@@ -68,6 +68,12 @@ const toEditorAttributes = ({
   return attributes;
 };
 
+const readPlaceholder = ({ editor }: { editor: Editor }) => {
+  const attributes = editor.options.editorProps.attributes;
+  if (!attributes || typeof attributes === 'function') return '';
+  return attributes['aria-placeholder'] ?? '';
+};
+
 function MinimalTiptap({
   content = '',
   onChange,
@@ -80,8 +86,6 @@ function MinimalTiptap({
   'aria-describedby': describedBy,
   'aria-invalid': invalid
 }: MinimalTiptapProps) {
-  const placeholderRef = React.useRef(placeholder);
-
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -109,7 +113,7 @@ function MinimalTiptap({
         types: ['heading', 'paragraph']
       }),
       Placeholder.configure({
-        placeholder: () => placeholderRef.current
+        placeholder: readPlaceholder
       })
     ],
     content,
@@ -132,7 +136,6 @@ function MinimalTiptap({
 
   React.useEffect(() => {
     if (!editor) return;
-    placeholderRef.current = placeholder;
     editor.setOptions({
       editorProps: {
         attributes: toEditorAttributes({
