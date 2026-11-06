@@ -19,9 +19,14 @@ export const test = base.extend<{
   freshPersona: (persona: E2ePersona) => Promise<SignedInPersona>;
 }>({
   freshPersona: async ({ page }, provide, testInfo) => {
-    await provide((persona) =>
-      signInAs(page.request, persona, freshNamespace(testInfo.workerIndex))
-    );
+    await provide(async (persona) => {
+      if (page.url() !== 'about:blank') await page.goto('about:blank');
+      return signInAs(
+        page.request,
+        persona,
+        freshNamespace(testInfo.workerIndex)
+      );
+    });
   }
 });
 
