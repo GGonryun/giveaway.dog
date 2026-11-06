@@ -35,6 +35,9 @@ export const MobileNavLinks: React.FC<MobileNavLinks> = ({ onLinkClick }) => {
 
       <div className="flex flex-col">
         <button
+          type="button"
+          aria-expanded={learnExpanded}
+          aria-controls="mobile-nav-learn-links"
           onClick={() => setLearnExpanded(!learnExpanded)}
           className={cn(
             'flex items-center justify-between font-medium py-2 text-left',
@@ -49,40 +52,45 @@ export const MobileNavLinks: React.FC<MobileNavLinks> = ({ onLinkClick }) => {
             )}
           />
         </button>
-        {learnExpanded && (
-          <div className="flex flex-col gap-3 pl-6 mt-2">
-            <Link
-              href="/learn/integrations"
-              className={cn(
-                'flex items-center justify-between py-2 text-sm',
-                isActiveRoute('/learn/integrations')
-                  ? 'text-primary font-medium'
-                  : 'text-muted-foreground'
-              )}
-              onClick={onLinkClick}
-            >
-              <span>Integrations</span>
-              <ChevronRight className="h-3.5 w-3.5" />
-            </Link>
-            <Link
-              href="/learn/templates"
-              className={cn(
-                'flex items-center justify-between py-2 text-sm',
-                isActiveRoute('/learn/templates')
-                  ? 'text-primary font-medium'
-                  : 'text-muted-foreground'
-              )}
-              onClick={onLinkClick}
-            >
-              <span>Templates</span>
-              <ChevronRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        )}
+        <div
+          id="mobile-nav-learn-links"
+          hidden={!learnExpanded}
+          className="flex flex-col gap-3 pl-6 mt-2"
+        >
+          <Link
+            href="/learn/integrations"
+            className={cn(
+              'flex items-center justify-between py-2 text-sm',
+              isActiveRoute('/learn/integrations')
+                ? 'text-primary font-medium'
+                : 'text-muted-foreground'
+            )}
+            onClick={onLinkClick}
+          >
+            <span>Integrations</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+          <Link
+            href="/learn/templates"
+            className={cn(
+              'flex items-center justify-between py-2 text-sm',
+              isActiveRoute('/learn/templates')
+                ? 'text-primary font-medium'
+                : 'text-muted-foreground'
+            )}
+            onClick={onLinkClick}
+          >
+            <span>Templates</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
 
       <div className="flex flex-col">
         <button
+          type="button"
+          aria-expanded={toolsExpanded}
+          aria-controls="mobile-nav-tools-links"
           onClick={() => setToolsExpanded(!toolsExpanded)}
           className={cn(
             'flex items-center justify-between font-medium py-2 text-left',
@@ -97,23 +105,25 @@ export const MobileNavLinks: React.FC<MobileNavLinks> = ({ onLinkClick }) => {
             )}
           />
         </button>
-        {toolsExpanded && (
-          <div className="flex flex-col gap-3 pl-6 mt-2">
-            <Link
-              href="/pickers/x"
-              className={cn(
-                'flex items-center justify-between py-2 text-sm',
-                isActiveRoute('/pickers/x')
-                  ? 'text-primary font-medium'
-                  : 'text-muted-foreground'
-              )}
-              onClick={onLinkClick}
-            >
-              <span>X Picker</span>
-              <ChevronRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        )}
+        <div
+          id="mobile-nav-tools-links"
+          hidden={!toolsExpanded}
+          className="flex flex-col gap-3 pl-6 mt-2"
+        >
+          <Link
+            href="/pickers/x"
+            className={cn(
+              'flex items-center justify-between py-2 text-sm',
+              isActiveRoute('/pickers/x')
+                ? 'text-primary font-medium'
+                : 'text-muted-foreground'
+            )}
+            onClick={onLinkClick}
+          >
+            <span>X Picker</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
 
       <Link

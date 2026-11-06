@@ -82,6 +82,33 @@ describe('MobileNavLinks', () => {
     ).not.toBeInTheDocument();
   });
 
+  it.each(['Learn', 'Tools'] as const)(
+    'reports the expanded state of %s',
+    async (name) => {
+      render(<MobileNavLinks onLinkClick={onLinkClick} />);
+      expect(section(name)).toHaveAttribute('aria-expanded', 'false');
+      await userEvent.click(section(name));
+      expect(section(name)).toHaveAttribute('aria-expanded', 'true');
+      await userEvent.click(section(name));
+      expect(section(name)).toHaveAttribute('aria-expanded', 'false');
+    }
+  );
+
+  it.each([
+    ['Learn', 'Integrations'],
+    ['Tools', 'X Picker']
+  ] as const)('points %s at the list it controls', async (name, link) => {
+    render(<MobileNavLinks onLinkClick={onLinkClick} />);
+    const controls = section(name).getAttribute('aria-controls');
+    expect(controls).toBeTruthy();
+    const list = document.getElementById(controls ?? '');
+    expect(list).toBeInTheDocument();
+    expect(list).not.toBeVisible();
+    await userEvent.click(section(name));
+    expect(list).toBeVisible();
+    expect(list).toContainElement(screen.getByRole('link', { name: link }));
+  });
+
   it('rotates the chevron of an expanded section', async () => {
     render(<MobileNavLinks onLinkClick={onLinkClick} />);
     await userEvent.click(section('Tools'));
