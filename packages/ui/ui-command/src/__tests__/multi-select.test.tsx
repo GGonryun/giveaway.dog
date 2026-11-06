@@ -209,11 +209,30 @@ describe('MultiSelect', () => {
     expect(onValueChange).toHaveBeenCalledWith(['instagram']);
   });
 
-  it('filters the options and the footer actions by the search', async () => {
-    renderMultiSelect();
+  it('filters the options but keeps the footer actions while searching', async () => {
+    renderMultiSelect({ defaultValue: ['blog'] });
     await openList();
     await userEvent.type(screen.getByPlaceholderText('Search...'), 'news');
-    expect(getOptionLabels()).toEqual(['Newsletter']);
+    expect(getOptionLabels()).toEqual(['Newsletter', 'Clear', 'Close']);
+  });
+
+  it('keeps the footer actions when no option matches the search', async () => {
+    const { onValueChange } = renderMultiSelect({ defaultValue: ['blog'] });
+    await openList();
+    await userEvent.type(screen.getByPlaceholderText('Search...'), 'zzz');
+    expect(getOptionLabels()).toEqual(['Clear', 'Close']);
+    expect(screen.getByText('No results found.')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('option', { name: 'Clear' }));
+    expect(onValueChange).toHaveBeenLastCalledWith([]);
+  });
+
+  it('closes the list from Close while searching', async () => {
+    renderMultiSelect();
+    await openList();
+    await userEvent.type(screen.getByPlaceholderText('Search...'), 'zzz');
+    await userEvent.click(screen.getByRole('option', { name: 'Close' }));
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
 
   it('applies the variant to the badges', () => {

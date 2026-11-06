@@ -375,11 +375,12 @@ export const MultiSelect = React.forwardRef<
                 </React.Fragment>
               ))}
 
-              <CommandGroup>
+              <CommandGroup forceMount>
                 <div className="flex items-center justify-between">
                   {selectedValues.length > 0 && (
                     <>
                       <CommandItem
+                        forceMount
                         onSelect={handleClear}
                         className="flex-1 justify-center cursor-pointer"
                       >
@@ -392,6 +393,7 @@ export const MultiSelect = React.forwardRef<
                     </>
                   )}
                   <CommandItem
+                    forceMount
                     onSelect={() => setIsPopoverOpen(false)}
                     className="flex-1 justify-center cursor-pointer max-w-full"
                   >
