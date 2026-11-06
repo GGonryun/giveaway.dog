@@ -107,7 +107,7 @@ jobs:
           fi
           (
             status=0
-            bash .e2e-workflow/.github/scripts/same-app-preview.sh "$SHA" 1200 > "$dir/url" 2> "$dir/log" || status=$?
+            bash .e2e-workflow/.github/scripts/same-app-preview.sh "$SHA" 1200 300 > "$dir/url" 2> "$dir/log" || status=$?
             echo "$status" > "$dir/status.tmp"
             mv "$dir/status.tmp" "$dir/status"
           ) > /dev/null 2>&1 &
@@ -135,6 +135,7 @@ jobs:
           kill "$tail_pid"
           status=$(cat "$PREVIEW_DIR/status")
           if [ "$status" != 0 ]; then
+            grep '^::error::' "$PREVIEW_DIR/log" | sed 's/^::error:://' >> "$GITHUB_STEP_SUMMARY" || true
             exit "$status"
           fi
           echo "url=$(cat "$PREVIEW_DIR/url")" >> "$GITHUB_OUTPUT"

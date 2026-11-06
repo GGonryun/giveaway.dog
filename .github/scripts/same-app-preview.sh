@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-sha="${1:?Usage: same-app-preview.sh <commit> [seconds to wait]}"
+sha="${1:?Usage: same-app-preview.sh <commit> [seconds to wait] [seconds to wait for a deployment to start]}"
 wait="${2:-1200}"
+grace="${3:-300}"
+interval="${SAME_APP_PREVIEW_INTERVAL:-15}"
 candidates=50
 
 preview_url() {
@@ -44,7 +46,12 @@ find_preview() {
   return 1
 }
 
+has_deployment() {
+  [ "$(gh api "repos/$GITHUB_REPOSITORY/deployments?sha=$1" --jq 'length')" != 0 ]
+}
+
 deadline=$((SECONDS + wait))
+grace_deadline=$((SECONDS + grace))
 found_deadline=
 while :; do
   state=$(gh api "repos/$GITHUB_REPOSITORY/commits/$sha/status" --jq '.statuses[] | select(.context == "Vercel") | .state')
@@ -64,13 +71,20 @@ while :; do
       fi
       echo "Vercel is done with $sha. Waiting for its preview to be listed" >&2
       ;;
+    "")
+      if [ "$SECONDS" -ge "$grace_deadline" ] && ! has_deployment "$sha"; then
+        echo "::error::Vercel started no deployment of $sha: after $grace seconds the commit has no Vercel status and no GitHub deployment, so Vercel missed the push. Start one: in Vercel, Deployments, Create Deployment, with the commit $sha, or push a new commit to the branch. Then run this job again." >&2
+        exit 1
+      fi
+      echo "Waiting for the Vercel deployment of $sha (no status yet)" >&2
+      ;;
     *)
-      echo "Waiting for the Vercel deployment of $sha (${state:-no status yet})" >&2
+      echo "Waiting for the Vercel deployment of $sha ($state)" >&2
       ;;
   esac
   if [ "$SECONDS" -ge "$deadline" ]; then
     echo "::error::Vercel did not finish the deployment of $sha in $wait seconds. Redeploy it in Vercel, then run this job again." >&2
     exit 1
   fi
-  sleep 15
+  sleep "$interval"
 done
