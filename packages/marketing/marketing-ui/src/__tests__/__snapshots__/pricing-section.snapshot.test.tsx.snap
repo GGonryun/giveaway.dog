@@ -42,7 +42,9 @@ exports[`PricingSection > matches the snapshot when billed monthly 1`] = `
           class="inline-flex items-center rounded-lg border bg-muted p-1"
         >
           <button
+            aria-pressed="true"
             class="px-8 py-2 rounded-md text-sm font-medium transition-colors bg-background shadow-sm"
+            type="button"
           >
             Monthly
           </button>
@@ -58,7 +60,9 @@ exports[`PricingSection > matches the snapshot when billed monthly 1`] = `
               %
             </span>
             <button
+              aria-pressed="false"
               class="px-8 py-2 rounded-md text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
+              type="button"
             >
               Yearly
             </button>
@@ -763,7 +767,9 @@ exports[`PricingSection > matches the snapshot when billed yearly 1`] = `
           class="inline-flex items-center rounded-lg border bg-muted p-1"
         >
           <button
+            aria-pressed="false"
             class="px-8 py-2 rounded-md text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
+            type="button"
           >
             Monthly
           </button>
@@ -779,7 +785,9 @@ exports[`PricingSection > matches the snapshot when billed yearly 1`] = `
               %
             </span>
             <button
+              aria-pressed="true"
               class="px-8 py-2 rounded-md text-sm font-medium transition-colors bg-background shadow-sm"
+              type="button"
             >
               Yearly
             </button>

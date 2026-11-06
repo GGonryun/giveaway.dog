@@ -133,4 +133,17 @@ describe('PricingSection', () => {
       'bg-background'
     );
   });
+
+  it('exposes the selected billing cycle to assistive technology', async () => {
+    render(<PricingSection />);
+    const monthly = screen.getByRole('button', { name: 'Monthly' });
+    const yearly = screen.getByRole('button', { name: 'Yearly' });
+    expect(monthly).toHaveAttribute('type', 'button');
+    expect(yearly).toHaveAttribute('type', 'button');
+    expect(monthly).toHaveAttribute('aria-pressed', 'true');
+    expect(yearly).toHaveAttribute('aria-pressed', 'false');
+    await chooseBilling('Yearly');
+    expect(monthly).toHaveAttribute('aria-pressed', 'false');
+    expect(yearly).toHaveAttribute('aria-pressed', 'true');
+  });
 });
