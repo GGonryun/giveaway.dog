@@ -135,6 +135,11 @@ function MinimalTiptap({
     });
   }, [editor, id, label, labelledBy, describedBy, invalid]);
 
+  React.useEffect(() => {
+    if (!editor || editor.isEditable === editable) return;
+    editor.setEditable(editable, false);
+  }, [editor, editable]);
+
   const setLink = React.useCallback(() => {
     if (!editor) return;
 
@@ -157,154 +162,156 @@ function MinimalTiptap({
 
   return (
     <div className={cn('border rounded-lg overflow-hidden', className)}>
-      <div className="border-b p-2 flex flex-wrap items-center gap-1">
-        <Toggle
-          aria-label="Bold"
-          size="sm"
-          pressed={editor.isActive('bold')}
-          onPressedChange={() => editor.chain().focus().toggleBold().run()}
-          disabled={!editor.can().chain().focus().toggleBold().run()}
-        >
-          <Bold className="h-4 w-4" />
-        </Toggle>
+      {editable && (
+        <div className="border-b p-2 flex flex-wrap items-center gap-1">
+          <Toggle
+            aria-label="Bold"
+            size="sm"
+            pressed={editor.isActive('bold')}
+            onPressedChange={() => editor.chain().focus().toggleBold().run()}
+            disabled={!editor.can().chain().focus().toggleBold().run()}
+          >
+            <Bold className="h-4 w-4" />
+          </Toggle>
 
-        <Toggle
-          aria-label="Italic"
-          size="sm"
-          pressed={editor.isActive('italic')}
-          onPressedChange={() => editor.chain().focus().toggleItalic().run()}
-          disabled={!editor.can().chain().focus().toggleItalic().run()}
-        >
-          <Italic className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Italic"
+            size="sm"
+            pressed={editor.isActive('italic')}
+            onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+            disabled={!editor.can().chain().focus().toggleItalic().run()}
+          >
+            <Italic className="h-4 w-4" />
+          </Toggle>
 
-        <Toggle
-          aria-label="Strikethrough"
-          size="sm"
-          pressed={editor.isActive('strike')}
-          onPressedChange={() => editor.chain().focus().toggleStrike().run()}
-          disabled={!editor.can().chain().focus().toggleStrike().run()}
-        >
-          <Strikethrough className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Strikethrough"
+            size="sm"
+            pressed={editor.isActive('strike')}
+            onPressedChange={() => editor.chain().focus().toggleStrike().run()}
+            disabled={!editor.can().chain().focus().toggleStrike().run()}
+          >
+            <Strikethrough className="h-4 w-4" />
+          </Toggle>
 
-        <Toggle
-          aria-label="Code"
-          size="sm"
-          pressed={editor.isActive('code')}
-          onPressedChange={() => editor.chain().focus().toggleCode().run()}
-          disabled={!editor.can().chain().focus().toggleCode().run()}
-        >
-          <Code className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Code"
+            size="sm"
+            pressed={editor.isActive('code')}
+            onPressedChange={() => editor.chain().focus().toggleCode().run()}
+            disabled={!editor.can().chain().focus().toggleCode().run()}
+          >
+            <Code className="h-4 w-4" />
+          </Toggle>
 
-        <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="h-6" />
 
-        <Toggle
-          aria-label="Heading 1"
-          size="sm"
-          pressed={editor.isActive('heading', { level: 1 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-        >
-          <Heading1 className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Heading 1"
+            size="sm"
+            pressed={editor.isActive('heading', { level: 1 })}
+            onPressedChange={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+          >
+            <Heading1 className="h-4 w-4" />
+          </Toggle>
 
-        <Toggle
-          aria-label="Heading 2"
-          size="sm"
-          pressed={editor.isActive('heading', { level: 2 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          }
-        >
-          <Heading2 className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Heading 2"
+            size="sm"
+            pressed={editor.isActive('heading', { level: 2 })}
+            onPressedChange={() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+          >
+            <Heading2 className="h-4 w-4" />
+          </Toggle>
 
-        <Toggle
-          aria-label="Heading 3"
-          size="sm"
-          pressed={editor.isActive('heading', { level: 3 })}
-          onPressedChange={() =>
-            editor.chain().focus().toggleHeading({ level: 3 }).run()
-          }
-        >
-          <Heading3 className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Heading 3"
+            size="sm"
+            pressed={editor.isActive('heading', { level: 3 })}
+            onPressedChange={() =>
+              editor.chain().focus().toggleHeading({ level: 3 }).run()
+            }
+          >
+            <Heading3 className="h-4 w-4" />
+          </Toggle>
 
-        <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="h-6" />
 
-        <Toggle
-          aria-label="Bullet list"
-          size="sm"
-          pressed={editor.isActive('bulletList')}
-          onPressedChange={() =>
-            editor.chain().focus().toggleBulletList().run()
-          }
-        >
-          <List className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Bullet list"
+            size="sm"
+            pressed={editor.isActive('bulletList')}
+            onPressedChange={() =>
+              editor.chain().focus().toggleBulletList().run()
+            }
+          >
+            <List className="h-4 w-4" />
+          </Toggle>
 
-        <Toggle
-          aria-label="Numbered list"
-          size="sm"
-          pressed={editor.isActive('orderedList')}
-          onPressedChange={() =>
-            editor.chain().focus().toggleOrderedList().run()
-          }
-        >
-          <ListOrdered className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Numbered list"
+            size="sm"
+            pressed={editor.isActive('orderedList')}
+            onPressedChange={() =>
+              editor.chain().focus().toggleOrderedList().run()
+            }
+          >
+            <ListOrdered className="h-4 w-4" />
+          </Toggle>
 
-        <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="h-6" />
 
-        <Button
-          aria-label="Link"
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={setLink}
-          className={cn(editor.isActive('link') && 'bg-muted')}
-        >
-          <LinkIcon className="h-4 w-4" />
-        </Button>
+          <Button
+            aria-label="Link"
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={setLink}
+            className={cn(editor.isActive('link') && 'bg-muted')}
+          >
+            <LinkIcon className="h-4 w-4" />
+          </Button>
 
-        <Separator orientation="vertical" className="h-6" />
+          <Separator orientation="vertical" className="h-6" />
 
-        <Toggle
-          aria-label="Align left"
-          size="sm"
-          pressed={editor.isActive({ textAlign: 'left' })}
-          onPressedChange={() =>
-            editor.chain().focus().setTextAlign('left').run()
-          }
-        >
-          <AlignLeft className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Align left"
+            size="sm"
+            pressed={editor.isActive({ textAlign: 'left' })}
+            onPressedChange={() =>
+              editor.chain().focus().setTextAlign('left').run()
+            }
+          >
+            <AlignLeft className="h-4 w-4" />
+          </Toggle>
 
-        <Toggle
-          aria-label="Align center"
-          size="sm"
-          pressed={editor.isActive({ textAlign: 'center' })}
-          onPressedChange={() =>
-            editor.chain().focus().setTextAlign('center').run()
-          }
-        >
-          <AlignCenter className="h-4 w-4" />
-        </Toggle>
+          <Toggle
+            aria-label="Align center"
+            size="sm"
+            pressed={editor.isActive({ textAlign: 'center' })}
+            onPressedChange={() =>
+              editor.chain().focus().setTextAlign('center').run()
+            }
+          >
+            <AlignCenter className="h-4 w-4" />
+          </Toggle>
 
-        <Toggle
-          aria-label="Align right"
-          size="sm"
-          pressed={editor.isActive({ textAlign: 'right' })}
-          onPressedChange={() =>
-            editor.chain().focus().setTextAlign('right').run()
-          }
-        >
-          <AlignRight className="h-4 w-4" />
-        </Toggle>
-      </div>
+          <Toggle
+            aria-label="Align right"
+            size="sm"
+            pressed={editor.isActive({ textAlign: 'right' })}
+            onPressedChange={() =>
+              editor.chain().focus().setTextAlign('right').run()
+            }
+          >
+            <AlignRight className="h-4 w-4" />
+          </Toggle>
+        </div>
+      )}
 
       <EditorContent editor={editor} placeholder={placeholder} />
     </div>
