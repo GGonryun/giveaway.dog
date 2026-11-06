@@ -41,38 +41,40 @@ export const StatusExplanationDialog = ({
               </>
             )}
           </AlertDialogTitle>
-          <AlertDialogDescription className="space-y-3 pt-2">
-            {isActive ? (
-              <>
-                <p>
-                  <strong>Active users</strong> are allowed to participate in
-                  any giveaway and are eligible to win prizes.
-                </p>
-                <p>
-                  They have full access to all giveaway features and can be
-                  automatically selected as winners during prize drawings.
-                </p>
-              </>
-            ) : (
-              <>
-                <p>
-                  <strong>Blocked users</strong> are "shadow banned" - they can
-                  continue to participate in giveaways but will never be
-                  eligible for winning prizes unless explicitly selected by an
-                  administrator.
-                </p>
-                <p>
-                  This approach prevents users from discovering they've been
-                  blocked and creating new accounts to circumvent the
-                  restriction. From their perspective, they can still enter
-                  giveaways normally.
-                </p>
-                <p className="text-amber-600 font-medium">
-                  Blocked users can only win if manually selected by giveaway
-                  administrators.
-                </p>
-              </>
-            )}
+          <AlertDialogDescription asChild>
+            <div className="space-y-3 pt-2">
+              {isActive ? (
+                <>
+                  <p>
+                    <strong>Active users</strong> are allowed to participate in
+                    any giveaway and are eligible to win prizes.
+                  </p>
+                  <p>
+                    They have full access to all giveaway features and can be
+                    automatically selected as winners during prize drawings.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p>
+                    <strong>Blocked users</strong> are "shadow banned" - they
+                    can continue to participate in giveaways but will never be
+                    eligible for winning prizes unless explicitly selected by an
+                    administrator.
+                  </p>
+                  <p>
+                    This approach prevents users from discovering they've been
+                    blocked and creating new accounts to circumvent the
+                    restriction. From their perspective, they can still enter
+                    giveaways normally.
+                  </p>
+                  <p className="text-amber-600 font-medium">
+                    Blocked users can only win if manually selected by giveaway
+                    administrators.
+                  </p>
+                </>
+              )}
+            </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

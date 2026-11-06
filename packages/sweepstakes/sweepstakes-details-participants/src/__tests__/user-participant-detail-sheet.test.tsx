@@ -109,6 +109,13 @@ describe('UserParticipantSheetContent', () => {
     ).toHaveAttribute('href', 'https://x.com/janedoe');
   });
 
+  it('describes the sheet with the email without nesting it in a paragraph', () => {
+    renderContent();
+    const dialog = screen.getByRole('dialog', { name: 'Jane Doe' });
+    expect(dialog).toHaveAccessibleDescription(/j\*\*\*e@example\.com/);
+    expect(dialog.querySelector('p p, p div')).toBeNull();
+  });
+
   it('falls back to the unknown user name', () => {
     renderContent(
       buildParticipant({ user: buildUser({ name: null }), completions: [] })

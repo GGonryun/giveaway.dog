@@ -41,6 +41,18 @@ describe('StatusExplanationDialog', () => {
     });
   });
 
+  describe.each(['active', 'blocked'] as const)('for a %s user', (status) => {
+    it('describes the dialog without nesting block content in a paragraph', () => {
+      render(
+        <StatusExplanationDialog open onClose={vi.fn()} status={status} />
+      );
+
+      const dialog = screen.getByRole('alertdialog');
+      expect(dialog).toHaveAccessibleDescription(/users are/);
+      expect(dialog.querySelector('p p, p div')).toBeNull();
+    });
+  });
+
   describe('when dismissed', () => {
     it('calls onClose when Got it is clicked', async () => {
       const user = userEvent.setup();

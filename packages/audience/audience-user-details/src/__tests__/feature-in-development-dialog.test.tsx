@@ -51,6 +51,16 @@ describe('FeatureInDevelopmentDialog', () => {
         'You can request early access from your Account > Feature Flags section'
       );
     });
+
+    it('describes the dialog without nesting block content in a paragraph', () => {
+      render(<FeatureInDevelopmentDialog open onClose={vi.fn()} />);
+
+      const dialog = screen.getByRole('dialog');
+      expect(dialog).toHaveAccessibleDescription(
+        /This feature is currently being actively developed/
+      );
+      expect(dialog.querySelector('p p, p div')).toBeNull();
+    });
   });
 
   describe('when dismissed', () => {
