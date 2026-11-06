@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Button } from '@giveaway/ui-primitives/button';
@@ -42,6 +42,9 @@ interface PrizeCard {
   isLoading: boolean;
 }
 
+const toCardKey = (card: Pick<PrizeCard, 'prizeId' | 'slotIndex'>) =>
+  `${card.prizeId}-${card.slotIndex}`;
+
 export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
   sweepstakesName,
   prizes,
@@ -54,9 +57,8 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
   const router = useRouter();
   const [prizeCards, setPrizeCards] = useState<PrizeCard[]>([]);
   const [isRevealing, setIsRevealing] = useState(false);
-  const [revealingIndices, setRevealingIndices] = useState<Set<number>>(
-    new Set()
-  );
+  const revealingRef = useRef(false);
+  const [revealingKeys, setRevealingKeys] = useState<Set<string>>(new Set());
   const [drawingPrizes, setDrawingPrizes] = useState<Set<string>>(new Set());
   const [shakeButton, setShakeButton] = useState(false);
 
@@ -76,10 +78,6 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
   // Initialize prize cards from existing draws
   useEffect(() => {
     const cards: PrizeCard[] = [];
-    const newWinners: Array<{
-      card: PrizeCard;
-      index: number;
-    }> = [];
 
     prizes.forEach((prize) => {
       const winnerDraws = prize.draws.filter(
@@ -98,7 +96,7 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
       winnerDraws.forEach((draw, index) => {
         const isNewlyRevealed = index >= previousWinnerCount;
 
-        const card: PrizeCard = {
+        cards.push({
           prizeId: prize.id,
           prizeName: prize.name,
           slotIndex: index,
@@ -108,13 +106,7 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
           revealed: !isNewlyRevealed, // Don't reveal new winners yet
           needsRoll: false,
           isLoading: isNewlyRevealed && previousCard?.isLoading ? true : false
-        };
-
-        cards.push(card);
-
-        if (isNewlyRevealed) {
-          newWinners.push({ card, index: cards.length - 1 });
-        }
+        });
       });
 
       // Add cards for slots that need winners
@@ -143,29 +135,37 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
     });
 
     setPrizeCards(cards);
-
-    // If we have new winners, trigger sequential reveal
-    if (newWinners.length > 0 && !isRevealing) {
-      revealNewCardsSequentially(newWinners);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prizes]);
 
-  const revealNewCardsSequentially = async (
-    newWinners: Array<{ card: PrizeCard; index: number }>
-  ) => {
+  useEffect(() => {
+    if (revealingRef.current) return;
+    const hiddenWinners = prizeCards.filter(
+      (c) => c.drawId !== null && !c.revealed
+    );
+    if (hiddenWinners.length > 0) {
+      revealCardsSequentially(hiddenWinners);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prizeCards, isRevealing]);
+
+  const revealCardsSequentially = async (newWinners: PrizeCard[]) => {
+    revealingRef.current = true;
     setIsRevealing(true);
 
     // Start all card flips with 100ms offset between each
-    newWinners.forEach(({ card, index }, i) => {
+    newWinners.forEach((card, i) => {
+      const key = toCardKey(card);
       setTimeout(() => {
-        setRevealingIndices((prev) => new Set(prev).add(index));
+        setRevealingKeys((prev) => new Set(prev).add(key));
 
         // After the flip animation completes (700ms), reveal the card
         setTimeout(() => {
           setPrizeCards((prev) =>
-            prev.map((c, idx) =>
-              idx === index ? { ...c, revealed: true, isLoading: false } : c
+            prev.map((c) =>
+              toCardKey(c) === key
+                ? { ...c, revealed: true, isLoading: false }
+                : c
             )
           );
 
@@ -176,10 +176,10 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
             return next;
           });
 
-          // Remove from revealing indices
-          setRevealingIndices((prev) => {
+          // Remove from revealing keys
+          setRevealingKeys((prev) => {
             const next = new Set(prev);
-            next.delete(index);
+            next.delete(key);
             return next;
           });
 
@@ -197,11 +197,12 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
     const totalDuration = newWinners.length * 100 + 700 + 150;
     await new Promise((resolve) => setTimeout(resolve, totalDuration));
 
+    revealingRef.current = false;
     setIsRevealing(false);
 
     // Check if all prizes are revealed and show final confetti
     setPrizeCards((prev) => {
-      const allRevealed = prev.every((c) => c.revealed || !c.needsRoll);
+      const allRevealed = prev.every((c) => c.revealed);
       if (allRevealed) {
         // Final confetti celebration for 4 seconds
         const duration = 4000;
@@ -300,91 +301,93 @@ export const PublicWinnerDraw: React.FC<PublicWinnerDrawProps> = ({
             </div>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              {prizeCards.map((prizeCard, index) => (
-                <motion.div
-                  key={`${prizeCard.prizeId}-${prizeCard.slotIndex}`}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{
-                    opacity: 1,
-                    scale: revealingIndices.has(index) ? 1.1 : 1,
-                    rotateY: revealingIndices.has(index) ? [0, 180, 360] : 0
-                  }}
-                  transition={{
-                    duration: revealingIndices.has(index) ? 0.7 : 0.3,
-                    delay: revealingIndices.has(index) ? 0 : index * 0.05,
-                    scale: {
-                      duration: 0.3
-                    },
-                    rotateY: {
-                      duration: 0.7,
-                      ease: 'easeInOut'
-                    }
-                  }}
-                >
-                  <Card
-                    className={cn(
-                      'h-full transition-all duration-300 border-2',
-                      prizeCard.revealed
-                        ? 'bg-warning text-warning-foreground border-warning shadow-xl'
-                        : prizeCard.isLoading ||
-                            drawingPrizes.has(prizeCard.prizeId)
-                          ? 'bg-info text-info-foreground border-info opacity-75'
-                          : 'bg-info text-info-foreground border-info cursor-pointer',
-                      revealingIndices.has(index) &&
-                        'ring-4 ring-primary ring-offset-2'
-                    )}
-                    onClick={() => handleCardClick(prizeCard)}
+              {prizeCards.map((prizeCard, index) => {
+                const isFlipping = revealingKeys.has(toCardKey(prizeCard));
+                return (
+                  <motion.div
+                    key={toCardKey(prizeCard)}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{
+                      opacity: 1,
+                      scale: isFlipping ? 1.1 : 1,
+                      rotateY: isFlipping ? [0, 180, 360] : 0
+                    }}
+                    transition={{
+                      duration: isFlipping ? 0.7 : 0.3,
+                      delay: isFlipping ? 0 : index * 0.05,
+                      scale: {
+                        duration: 0.3
+                      },
+                      rotateY: {
+                        duration: 0.7,
+                        ease: 'easeInOut'
+                      }
+                    }}
                   >
-                    <CardContent className="p-3 sm:p-4 lg:p-6 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] space-y-2 sm:space-y-3 relative">
-                      {prizeCard.revealed ? (
-                        <>
-                          <motion.div
-                            initial={{ scale: 0, rotate: -180 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{
-                              type: 'spring',
-                              stiffness: 260,
-                              damping: 20
-                            }}
-                          >
-                            <Trophy className="h-12 w-12 sm:h-16 sm:w-16 drop-shadow-lg" />
-                          </motion.div>
+                    <Card
+                      className={cn(
+                        'h-full transition-all duration-300 border-2',
+                        prizeCard.revealed
+                          ? 'bg-warning text-warning-foreground border-warning shadow-xl'
+                          : prizeCard.isLoading ||
+                              drawingPrizes.has(prizeCard.prizeId)
+                            ? 'bg-info text-info-foreground border-info opacity-75'
+                            : 'bg-info text-info-foreground border-info cursor-pointer',
+                        isFlipping && 'ring-4 ring-primary ring-offset-2'
+                      )}
+                      onClick={() => handleCardClick(prizeCard)}
+                    >
+                      <CardContent className="p-3 sm:p-4 lg:p-6 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] space-y-2 sm:space-y-3 relative">
+                        {prizeCard.revealed ? (
+                          <>
+                            <motion.div
+                              initial={{ scale: 0, rotate: -180 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{
+                                type: 'spring',
+                                stiffness: 260,
+                                damping: 20
+                              }}
+                            >
+                              <Trophy className="h-12 w-12 sm:h-16 sm:w-16 drop-shadow-lg" />
+                            </motion.div>
 
-                          <div className="text-center space-y-0.5 sm:space-y-1">
-                            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold line-clamp-1">
-                              {prizeCard.winnerName}
-                            </h3>
-                            <p className="text-xs sm:text-sm opacity-90 font-medium">
-                              wins
-                            </p>
-                            <p className="text-sm sm:text-base lg:text-lg font-semibold line-clamp-2">
+                            <div className="text-center space-y-0.5 sm:space-y-1">
+                              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold line-clamp-1">
+                                {prizeCard.winnerName}
+                              </h3>
+                              <p className="text-xs sm:text-sm opacity-90 font-medium">
+                                wins
+                              </p>
+                              <p className="text-sm sm:text-base lg:text-lg font-semibold line-clamp-2">
+                                {prizeCard.prizeName}
+                              </p>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="text-4xl sm:text-5xl lg:text-6xl font-bold opacity-50">
+                              ?
+                            </div>
+                            <p className="text-sm sm:text-base lg:text-lg font-medium opacity-80 text-center line-clamp-2">
                               {prizeCard.prizeName}
                             </p>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="text-4xl sm:text-5xl lg:text-6xl font-bold opacity-50">
-                            ?
-                          </div>
-                          <p className="text-sm sm:text-base lg:text-lg font-medium opacity-80 text-center line-clamp-2">
-                            {prizeCard.prizeName}
-                          </p>
-                          <p className="text-xs sm:text-sm opacity-60">
-                            Winner #{prizeCard.slotIndex + 1}
-                          </p>
-                          {(prizeCard.isLoading ||
-                            drawingPrizes.has(prizeCard.prizeId)) && (
-                            <p className="text-xs opacity-50 mt-2 min-h-[16px]">
-                              Drawing...
+                            <p className="text-xs sm:text-sm opacity-60">
+                              Winner #{prizeCard.slotIndex + 1}
                             </p>
-                          )}
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                            {(prizeCard.isLoading ||
+                              drawingPrizes.has(prizeCard.prizeId)) && (
+                              <p className="text-xs opacity-50 mt-2 min-h-[16px]">
+                                Drawing...
+                              </p>
+                            )}
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </div>
