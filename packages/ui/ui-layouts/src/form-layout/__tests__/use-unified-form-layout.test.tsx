@@ -274,18 +274,16 @@ describe('UnifiedFormLayoutContextProvider', () => {
       await waitFor(() => expect(errorBadge('Prizes')).toHaveTextContent('1'));
     });
 
-    it('validates the default step rather than the step being left after the first move', async () => {
+    it('validates the step being left after the first move', async () => {
       render(<Harness values={{ prizes: [{ name: '' }] }} />);
       await userEvent.click(tab('Prizes'));
       await userEvent.click(tab('Tasks'));
 
       expectSelectedStep('Tasks');
-      await waitFor(() =>
-        expect(
-          screen.queryByRole('button', { name: /Issue/ })
-        ).not.toBeInTheDocument()
-      );
-      expect(errorBadge('Prizes')).not.toBeInTheDocument();
+      await waitFor(() => expect(errorBadge('Prizes')).toHaveTextContent('1'));
+      expect(
+        screen.getByRole('button', { name: '1 Issue' })
+      ).toBeInTheDocument();
     });
   });
 
