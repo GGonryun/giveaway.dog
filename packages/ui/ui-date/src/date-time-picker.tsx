@@ -6,7 +6,6 @@ import {
   PopoverTrigger
 } from '@giveaway/ui-primitives/popover';
 import { cn } from '@giveaway/ui-utils/utils';
-import { add } from 'date-fns/add';
 import { format } from 'date-fns/format';
 import type { Locale } from 'date-fns/locale';
 import { enUS } from 'date-fns/locale/en-US';
@@ -750,7 +749,6 @@ const DateTimePicker = React.forwardRef<
     const [displayDate, setDisplayDate] = React.useState<Date | undefined>(
       value ?? undefined
     );
-    onMonthChange ||= onChange;
 
     /**
      * Makes sure display date updates when value change on
@@ -768,28 +766,15 @@ const DateTimePicker = React.forwardRef<
       if (!newDay) {
         return;
       }
-      if (!defaultPopupValue) {
-        newDay.setHours(
-          month?.getHours() ?? 0,
-          month?.getMinutes() ?? 0,
-          month?.getSeconds() ?? 0
-        );
-        onMonthChange?.(newDay);
-        setMonth(newDay);
-        return;
-      }
-      const diff = newDay.getTime() - defaultPopupValue.getTime();
-      const diffInDays = diff / (1000 * 60 * 60 * 24);
-      const newDateFull = add(defaultPopupValue, {
-        days: Math.ceil(diffInDays)
-      });
-      newDateFull.setHours(
-        month?.getHours() ?? 0,
-        month?.getMinutes() ?? 0,
-        month?.getSeconds() ?? 0
+      const newMonth = new Date(newDay);
+      newMonth.setHours(
+        month.getHours(),
+        month.getMinutes(),
+        month.getSeconds(),
+        0
       );
-      onMonthChange?.(newDateFull);
-      setMonth(newDateFull);
+      onMonthChange?.(newMonth);
+      setMonth(newMonth);
     };
 
     const onSelect = (newDay?: Date) => {
@@ -891,7 +876,7 @@ const DateTimePicker = React.forwardRef<
                     setMonth(value);
                   }
                 }}
-                date={month}
+                date={displayDate ?? month}
                 hourCycle={hourCycle}
                 granularity={granularity}
               />
