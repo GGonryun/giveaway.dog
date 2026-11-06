@@ -22,18 +22,16 @@ describe('MobileSheetHeader', () => {
     ).toBeInTheDocument();
   });
 
-  it('keeps the logo link out of view', () => {
+  it('shows a logo link to the home page', () => {
     renderInOpenSheet();
-    expect(screen.queryByRole('link')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { hidden: true })).toHaveAttribute(
-      'href',
-      '/'
-    );
+    const link = screen.getByRole('link', { name: /Giveaway\.dog/ });
+    expect(link).toBeVisible();
+    expect(link).toHaveAttribute('href', '/');
   });
 
   it('calls onLogoClick when the logo link is activated', () => {
     const { onLogoClick } = renderInOpenSheet();
-    const link = screen.getByRole('link', { hidden: true });
+    const link = screen.getByRole('link', { name: /Giveaway\.dog/ });
     link.addEventListener('click', (event) => event.preventDefault());
     fireEvent.click(link);
     expect(onLogoClick).toHaveBeenCalledTimes(1);
