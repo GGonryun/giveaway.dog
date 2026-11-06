@@ -6,7 +6,7 @@ import {
 } from '@giveaway/db-model';
 import { add } from 'date-fns/add';
 import { startOfDay } from 'date-fns/startOfDay';
-import {
+import type {
   GiveawayDesignSchema,
   GradientBackgroundSchema,
   SolidColorBackgroundSchema

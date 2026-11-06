@@ -530,7 +530,7 @@ describe('sweepstakesWinnerCriteriaSchema', () => {
   it('fills in the defaults for an empty object', () => {
     expect(sweepstakesWinnerCriteriaSchema.parse({})).toEqual({
       minTasksCompleted: 1,
-      minQualityScore: 70,
+      minQualityScore: 50,
       allowMultipleWins: false,
       allowUserSelection: false
     });
@@ -934,7 +934,7 @@ describe('baseGiveawayFormSchema', () => {
       visibility: { visibility: 'PUBLIC', slug: 'my-giveaway' },
       criteria: {
         minTasksCompleted: 1,
-        minQualityScore: 70,
+        minQualityScore: 50,
         allowMultipleWins: false,
         allowUserSelection: false
       }
