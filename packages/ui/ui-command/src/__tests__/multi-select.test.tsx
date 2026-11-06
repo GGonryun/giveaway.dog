@@ -259,6 +259,55 @@ describe('MultiSelect', () => {
     expect(container.querySelector('.lucide-wand-sparkles')).toBeNull();
   });
 
+  it('shows the controlled value and follows its changes', () => {
+    const { rerender } = renderMultiSelect({ value: ['instagram'] });
+    expect(getBadge('Instagram')).toBeInTheDocument();
+
+    rerender(
+      <MultiSelect
+        options={options}
+        onValueChange={vi.fn()}
+        aria-label="Channels"
+        value={['tiktok']}
+      />
+    );
+
+    expect(getBadge('TikTok')).toBeInTheDocument();
+    expect(within(getTrigger()).queryByText('Instagram')).toBeNull();
+  });
+
+  it('prefers the controlled value over the default value', () => {
+    renderMultiSelect({ defaultValue: ['blog'], value: ['tiktok'] });
+    expect(getBadge('TikTok')).toBeInTheDocument();
+    expect(within(getTrigger()).queryByText('Blog')).toBeNull();
+  });
+
+  it('does not forward the controlled value to the trigger button', () => {
+    renderMultiSelect({ value: ['instagram'] });
+    expect(getTrigger()).not.toHaveAttribute('value');
+  });
+
+  it('reports changes without changing a controlled value itself', async () => {
+    const { onValueChange } = renderMultiSelect({ value: ['instagram'] });
+    await openList();
+
+    await userEvent.click(screen.getByRole('option', { name: 'TikTok' }));
+
+    expect(onValueChange).toHaveBeenCalledWith(['instagram', 'tiktok']);
+    expect(within(getTrigger()).queryByText('TikTok')).toBeNull();
+  });
+
+  it('clears a controlled value only through onValueChange', async () => {
+    const { onValueChange } = renderMultiSelect({
+      value: ['instagram', 'tiktok']
+    });
+
+    await userEvent.click(getTrigger().querySelector('.lucide-x') as Element);
+
+    expect(onValueChange).toHaveBeenCalledWith([]);
+    expect(getBadge('Instagram')).toBeInTheDocument();
+  });
+
   it('forwards the ref and extra props to the trigger button', () => {
     const ref = createRef<HTMLButtonElement>();
     render(

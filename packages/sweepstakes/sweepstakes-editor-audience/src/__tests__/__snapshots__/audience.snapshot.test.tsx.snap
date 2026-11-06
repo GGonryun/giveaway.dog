@@ -90,7 +90,6 @@ exports[`Audience > matches the snapshot 1`] = `
           data-state="closed"
           id=":id1:-form-item"
           type="button"
-          value="TWITTER,GOOGLE,DISCORD,EMAIL,TWITCH,KICK,TIKTOK,STEAM"
         >
           <div
             class="flex justify-between items-center w-full "

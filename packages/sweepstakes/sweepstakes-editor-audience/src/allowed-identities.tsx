@@ -72,7 +72,6 @@ export const AllowedIdentities = <
             <MultiSelect
               options={options}
               maxCount={100}
-              defaultValue={field.value}
               value={field.value}
               onValueChange={(value) => {
                 field.onChange(value);

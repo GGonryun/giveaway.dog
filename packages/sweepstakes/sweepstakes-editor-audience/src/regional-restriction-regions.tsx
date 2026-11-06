@@ -27,7 +27,6 @@ export const RegionalRestrictionRegions = <
             <MultiSelect
               aria-label="Regions"
               options={[...continents, ...countries]}
-              defaultValue={field.value}
               value={field.value}
               onValueChange={(value) => {
                 field.onChange(value);
