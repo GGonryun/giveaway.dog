@@ -568,18 +568,45 @@ describe('DateTimePicker', () => {
     expect(getTrigger()).toHaveTextContent('January 15th, 2024 15:30:45');
   });
 
-  it('reports month navigation through onChange when no onMonthChange is given', async () => {
+  it('keeps the value when the month buttons only browse the months', async () => {
     const { onChange } = renderPicker({
       defaultPopupValue: new Date(2024, 0, 1)
     });
     await openPicker();
 
     await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+    await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+    await userEvent.click(screen.getByLabelText('Go to the Previous Month'));
 
-    expect(onChange).toHaveBeenCalledWith(new Date(2024, 1, 1, 14, 30, 45));
+    expect(onChange).not.toHaveBeenCalled();
     expect(
       screen.getByRole('grid', { name: 'February 2024' })
     ).toBeInTheDocument();
+    expect(getTrigger()).toHaveTextContent('January 15th, 2024 14:30:45');
+  });
+
+  it('keeps the selected day when the time is changed after browsing', async () => {
+    const { onChange } = renderPicker();
+    await openPicker();
+
+    await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+    const [hours] = screen.getAllByRole('textbox');
+    fireEvent.keyDown(hours, { key: 'ArrowUp' });
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith(new Date(2024, 0, 15, 15, 30, 45));
+    expect(getTrigger()).toHaveTextContent('January 15th, 2024 15:30:45');
+  });
+
+  it('keeps the time of the value when a day is picked after browsing', async () => {
+    const { onChange } = renderPicker();
+    await openPicker();
+
+    await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+    await userEvent.click(screen.getByLabelText(/February 20th, 2024/));
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith(new Date(2024, 1, 20, 14, 30, 45));
   });
 
   it('keeps the month selector in sync after navigating', async () => {
@@ -591,7 +618,7 @@ describe('DateTimePicker', () => {
     expect(screen.getAllByRole('combobox')[0]).toHaveTextContent('February');
   });
 
-  it('jumps to the month picked in the month selector', async () => {
+  it('jumps to the month picked in the month selector without changing the value', async () => {
     const { onChange } = renderPicker({
       defaultPopupValue: new Date(2024, 0, 1)
     });
@@ -600,9 +627,27 @@ describe('DateTimePicker', () => {
     await userEvent.click(screen.getAllByRole('combobox')[0]);
     await userEvent.click(await screen.findByRole('option', { name: 'March' }));
 
-    expect(onChange).toHaveBeenCalledWith(new Date(2024, 2, 1, 14, 30, 45));
+    expect(onChange).not.toHaveBeenCalled();
     expect(
       screen.getByRole('grid', { name: 'March 2024' })
+    ).toBeInTheDocument();
+    expect(getTrigger()).toHaveTextContent('January 15th, 2024 14:30:45');
+  });
+
+  it('jumps to the year picked in the year selector without changing the value', async () => {
+    const onMonthChange = vi.fn();
+    const { onChange } = renderPicker({ onMonthChange });
+    await openPicker();
+
+    await userEvent.click(screen.getAllByRole('combobox')[1]);
+    await userEvent.click(await screen.findByRole('option', { name: '2025' }));
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onMonthChange).toHaveBeenCalledWith(
+      new Date(2025, 0, 1, 14, 30, 45)
+    );
+    expect(
+      screen.getByRole('grid', { name: 'January 2025' })
     ).toBeInTheDocument();
   });
 
@@ -688,6 +733,112 @@ describe('DateTimePicker', () => {
 
     expect(onMonthChange).toHaveBeenCalledWith(
       new Date(2024, 6, 1, 14, 30, 45)
+    );
+  });
+});
+
+describe('DateTimePicker across a daylight saving change', () => {
+  beforeEach(() => {
+    vi.stubEnv('TZ', 'America/Los_Angeles');
+    vi.useFakeTimers({ toFake: ['Date'] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllEnvs();
+  });
+
+  function renderPicker(value: Date) {
+    const onChange = vi.fn();
+    const onMonthChange = vi.fn();
+    render(
+      <DateTimePicker
+        value={value}
+        onChange={onChange}
+        onMonthChange={onMonthChange}
+        yearRange={1}
+      />
+    );
+    return { onChange, onMonthChange };
+  }
+
+  async function openPicker() {
+    await userEvent.click(
+      document.querySelector('button[aria-haspopup="dialog"]') as HTMLElement
+    );
+    return screen.findByRole('dialog');
+  }
+
+  it('runs in a time zone with daylight saving time', () => {
+    expect(new Date(2026, 9, 1).getTimezoneOffset()).toBe(420);
+    expect(new Date(2026, 11, 1).getTimezoneOffset()).toBe(480);
+  });
+
+  it('lands on the 1st of December when browsing forward across the November change', async () => {
+    vi.setSystemTime(new Date(2026, 9, 1, 9, 0, 0));
+    const { onChange, onMonthChange } = renderPicker(
+      new Date(2026, 9, 1, 10, 15, 0)
+    );
+    await openPicker();
+
+    await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+    await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+
+    expect(onMonthChange).toHaveBeenLastCalledWith(
+      new Date(2026, 11, 1, 10, 15, 0)
+    );
+    expect(onChange).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole('grid', { name: 'December 2026' })
+    ).toBeInTheDocument();
+  });
+
+  it('keeps the calendar day and the time of a day picked after the November change', async () => {
+    vi.setSystemTime(new Date(2026, 9, 1, 9, 0, 0));
+    const { onChange } = renderPicker(new Date(2026, 9, 1, 10, 15, 0));
+    await openPicker();
+
+    await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+    await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+    await userEvent.click(screen.getByLabelText(/December 1st, 2026/));
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    const picked = onChange.mock.calls[0][0] as Date;
+    expect(picked).toEqual(new Date(2026, 11, 1, 10, 15, 0));
+    expect(picked.getDate()).toBe(1);
+    expect(picked.getHours()).toBe(10);
+    expect(picked.getMinutes()).toBe(15);
+  });
+
+  it('lands on the 1st of March when browsing back across the March change', async () => {
+    vi.setSystemTime(new Date(2026, 3, 15, 9, 0, 0));
+    const { onChange, onMonthChange } = renderPicker(
+      new Date(2026, 3, 15, 23, 30, 0)
+    );
+    await openPicker();
+
+    await userEvent.click(screen.getByLabelText('Go to the Previous Month'));
+
+    expect(onMonthChange).toHaveBeenLastCalledWith(
+      new Date(2026, 2, 1, 23, 30, 0)
+    );
+    expect(onChange).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole('grid', { name: 'March 2026' })
+    ).toBeInTheDocument();
+  });
+
+  it('lands on the 1st of each month when browsing through a whole year', async () => {
+    vi.setSystemTime(new Date(2026, 0, 10, 9, 0, 0));
+    const { onMonthChange } = renderPicker(new Date(2026, 0, 31, 0, 0, 0));
+    await openPicker();
+
+    for (let step = 0; step < 11; step++) {
+      await userEvent.click(screen.getByLabelText('Go to the Next Month'));
+    }
+
+    expect(onMonthChange.mock.calls.map(([date]) => date)).toEqual(
+      Array.from({ length: 11 }, (_, index) => new Date(2026, index + 1, 1))
     );
   });
 });
