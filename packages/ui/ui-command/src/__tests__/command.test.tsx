@@ -141,16 +141,31 @@ describe('CommandDialog', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('keeps its screen reader title in the page while closed', () => {
+  it('renders nothing while closed', () => {
     render(
       <CommandDialog>
         <CommandInput />
       </CommandDialog>
     );
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    expect(screen.getByText('Command Palette')).toBeInTheDocument();
-    expect(screen.getByText('Command Palette').parentElement).toHaveClass(
-      'sr-only'
+    expect(screen.queryByText('Command Palette')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Search for a command to run...')
+    ).not.toBeInTheDocument();
+  });
+
+  it('puts its screen reader title and description inside the dialog', () => {
+    render(
+      <CommandDialog open>
+        <CommandInput />
+      </CommandDialog>
     );
+    const dialog = screen.getByRole('dialog', { name: 'Command Palette' });
+    const title = screen.getByText('Command Palette');
+    expect(dialog).toContainElement(title);
+    expect(dialog).toContainElement(
+      screen.getByText('Search for a command to run...')
+    );
+    expect(title.parentElement).toHaveClass('sr-only');
   });
 });
