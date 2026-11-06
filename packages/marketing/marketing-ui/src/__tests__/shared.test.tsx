@@ -29,18 +29,45 @@ describe('MarketingTitle', () => {
     expect(screen.getByText('audience')).toHaveClass('text-primary');
   });
 
-  it('appends the highlight when it does not appear in the text', () => {
-    render(<MarketingTitle text="Hello world" highlight="!" />);
+  it('renders the text unchanged when the highlight does not appear in it', () => {
+    const { container } = render(
+      <MarketingTitle text="Hello world" highlight="!" />
+    );
     expect(
-      screen.getByRole('heading', { name: 'Hello world!' })
+      screen.getByRole('heading', { name: 'Hello world' })
     ).toBeInTheDocument();
+    expect(container.querySelector('.text-primary')).toBeNull();
   });
 
-  it('drops the text after a second occurrence of the highlight', () => {
-    render(<MarketingTitle text="win big, win often" highlight="win" />);
+  it('renders the text unchanged when the highlight is empty', () => {
+    const { container } = render(
+      <MarketingTitle text="Hello world" highlight="" />
+    );
     expect(
-      screen.getByRole('heading', { name: 'win big,' })
+      screen.getByRole('heading', { name: 'Hello world' })
     ).toBeInTheDocument();
+    expect(container.querySelector('.text-primary')).toBeNull();
+  });
+
+  it('highlights only the first occurrence and keeps the rest of the text', () => {
+    const { container } = render(
+      <MarketingTitle text="win big, win often" highlight="win" />
+    );
+    expect(
+      screen.getByRole('heading', { name: 'win big, win often' })
+    ).toBeInTheDocument();
+    const highlights = container.querySelectorAll('.text-primary');
+    expect(highlights).toHaveLength(1);
+    expect(highlights[0]).toHaveTextContent('win');
+    expect(highlights[0].previousSibling).toBeNull();
+  });
+
+  it('highlights a phrase at the end of the title', () => {
+    render(<MarketingTitle text="Pick winners fairly" highlight="fairly" />);
+    expect(
+      screen.getByRole('heading', { name: 'Pick winners fairly' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('fairly')).toHaveClass('text-primary');
   });
 });
 

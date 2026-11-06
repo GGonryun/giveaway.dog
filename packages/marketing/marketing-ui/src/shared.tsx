@@ -29,11 +29,18 @@ export const MarketingTitle: React.FC<MarketingTitleProps> = ({
   text = 'How creators build bigger communities',
   highlight = 'bigger communities'
 }) => {
+  const index = highlight ? text.indexOf(highlight) : -1;
   return (
     <h1 className="max-w-2xl font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter text-foreground text-balance">
-      {text.split(highlight)[0]}
-      <span className="text-primary">{highlight}</span>
-      {text.split(highlight)[1]}
+      {index === -1 ? (
+        text
+      ) : (
+        <>
+          {text.slice(0, index)}
+          <span className="text-primary">{highlight}</span>
+          {text.slice(index + highlight.length)}
+        </>
+      )}
     </h1>
   );
 };
