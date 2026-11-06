@@ -144,12 +144,15 @@ describe('Carousel', () => {
     );
   });
 
-  it('removes only its select listener when unmounted', () => {
+  it('removes every listener it added when unmounted', () => {
     const { unmount } = renderCarousel();
-    expect(emblaApi.on).toHaveBeenCalledWith('reInit', expect.any(Function));
+    const added = vi.mocked(emblaApi.on).mock.calls;
+    expect(added).toEqual([
+      ['reInit', expect.any(Function)],
+      ['select', expect.any(Function)]
+    ]);
     unmount();
-    expect(emblaApi.off).toHaveBeenCalledTimes(1);
-    expect(emblaApi.off).toHaveBeenCalledWith('select', expect.any(Function));
+    expect(vi.mocked(emblaApi.off).mock.calls).toEqual(added);
   });
 
   it('attaches the Embla ref to the viewport', () => {
