@@ -93,8 +93,10 @@ describe('scalar defaults', () => {
     ).toBe(true);
   });
 
-  it('uses a different minimum quality score than the winner criteria schema default', () => {
-    expect(sweepstakesWinnerCriteriaSchema.parse({}).minQualityScore).toBe(70);
+  it('uses the same minimum quality score as the winner criteria schema default', () => {
+    expect(sweepstakesWinnerCriteriaSchema.parse({}).minQualityScore).toBe(
+      DEFAULT_MIN_QUALITY_SCORE
+    );
     expect(DEFAULT_MIN_QUALITY_SCORE).toBe(50);
   });
 });

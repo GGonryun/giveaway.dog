@@ -105,7 +105,7 @@ describe('baseContentSchema', () => {
     });
     expect(parsed.criteria).toEqual({
       minTasksCompleted: 1,
-      minQualityScore: 70,
+      minQualityScore: 50,
       allowMultipleWins: false,
       allowUserSelection: false
     });

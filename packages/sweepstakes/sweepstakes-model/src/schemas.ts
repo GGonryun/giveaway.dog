@@ -10,6 +10,7 @@ import { userProfileSchema, userSchema } from '@giveaway/user-model/user';
 import { derivedSweepstakesStatusSchema } from './sweepstakes';
 import { MAX_SWEEPSTAKE_DURATION_DAYS } from '@giveaway/app-config/settings';
 import { timingSchema } from './timing';
+import { DEFAULT_MIN_QUALITY_SCORE } from './defaults';
 import {
   taskSchema,
   baseTaskSchema,
@@ -201,7 +202,7 @@ export const sweepstakesWinnerCriteriaSchema = z.object({
     .int()
     .min(0, 'Quality score must be between 0-100')
     .max(100, 'Quality score must be between 0-100')
-    .default(70),
+    .default(DEFAULT_MIN_QUALITY_SCORE),
   allowMultipleWins: z.boolean().default(false),
   allowUserSelection: z.boolean().default(false),
   externalPlatforms: allowedUserSourcesSchema.nullable().nullish()

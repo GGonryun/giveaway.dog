@@ -11,7 +11,8 @@ import { Prisma, TeamTier } from '@giveaway/db-model';
 import { sweepstakesWinnerCriteriaSchema } from '@giveaway/sweepstakes-model/schemas';
 import {
   DEFAULT_ALLOW_MULTIPLE_WINS,
-  DEFAULT_ALLOW_USER_SELECTION
+  DEFAULT_ALLOW_USER_SELECTION,
+  DEFAULT_MIN_QUALITY_SCORE
 } from '@giveaway/sweepstakes-model/defaults';
 import { assertNotCompleted } from '@giveaway/sweepstakes-access/completed';
 import { findUserSweepstakes } from '@giveaway/sweepstakes-access/shared';
@@ -58,7 +59,7 @@ const updateWinnerCriteria = procedure()
 
     return {
       minTasksCompleted: updated.minTasksCompleted ?? 1,
-      minQualityScore: updated.minQualityScore ?? 50,
+      minQualityScore: updated.minQualityScore ?? DEFAULT_MIN_QUALITY_SCORE,
       allowMultipleWins:
         updated.allowMultipleWins ?? DEFAULT_ALLOW_MULTIPLE_WINS,
       allowUserSelection:
