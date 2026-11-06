@@ -62,9 +62,7 @@ export const UnifiedFormFooter: React.FC = () => {
                 <AlertCircleIcon className="h-4 w-4" />
                 {totalErrors} {pluralize('Issue', totalErrors)}
               </Button>
-            ) : (
-              <div />
-            )
+            ) : null
           }
           footer={
             <DialogFooter className="flex-col sm:flex-row gap-2 sm:justify-between w-full">
@@ -88,6 +86,7 @@ export const UnifiedFormFooter: React.FC = () => {
             </DialogFooter>
           }
         />
+        {!totalErrors && <div />}
 
         <div className="flex gap-2">
           <Button
