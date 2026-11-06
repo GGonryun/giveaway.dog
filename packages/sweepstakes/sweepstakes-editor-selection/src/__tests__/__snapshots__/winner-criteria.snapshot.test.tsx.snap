@@ -34,36 +34,42 @@ exports[`WinnerCriteria > matches the snapshot 1`] = `
       >
         Bot Enforcement
       </label>
-      <svg
+      <button
         aria-controls="radix-:id3:"
         aria-expanded="false"
         aria-haspopup="dialog"
-        class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help"
+        aria-label="Bot Enforcement"
+        class="rounded-full cursor-help focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         data-slot="dialog-trigger"
         data-state="closed"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
         type="button"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
       >
-        <circle
-          cx="12"
-          cy="12"
-          r="10"
-        />
-        <path
-          d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
-        />
-        <path
-          d="M12 17h.01"
-        />
-      </svg>
+        <svg
+          aria-hidden="true"
+          class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+          />
+          <path
+            d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+          />
+          <path
+            d="M12 17h.01"
+          />
+        </svg>
+      </button>
     </div>
     <div
       class="space-y-4"
@@ -152,36 +158,42 @@ exports[`WinnerCriteria > matches the snapshot 1`] = `
           >
             Allow Multiple Wins
           </label>
-          <svg
+          <button
             aria-controls="radix-:id5:"
             aria-expanded="false"
             aria-haspopup="dialog"
-            class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help"
+            aria-label="Help: Allow Multiple Wins"
+            class="rounded-full cursor-help focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             data-slot="dialog-trigger"
             data-state="closed"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
             type="button"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
           >
-            <circle
-              cx="12"
-              cy="12"
-              r="10"
-            />
-            <path
-              d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
-            />
-            <path
-              d="M12 17h.01"
-            />
-          </svg>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+              />
+              <path
+                d="M12 17h.01"
+              />
+            </svg>
+          </button>
         </div>
         <p
           class="text-sm text-muted-foreground"
@@ -228,36 +240,42 @@ exports[`WinnerCriteria > matches the snapshot 1`] = `
           >
             Allow Prize Selection
           </label>
-          <svg
+          <button
             aria-controls="radix-:id7:"
             aria-expanded="false"
             aria-haspopup="dialog"
-            class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full cursor-help"
+            aria-label="Help: Prize Selection"
+            class="rounded-full cursor-help focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             data-slot="dialog-trigger"
             data-state="closed"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
             type="button"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
           >
-            <circle
-              cx="12"
-              cy="12"
-              r="10"
-            />
-            <path
-              d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
-            />
-            <path
-              d="M12 17h.01"
-            />
-          </svg>
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-question-mark h-4 w-4 text-primary-foreground bg-primary rounded-full"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+              />
+              <path
+                d="M12 17h.01"
+              />
+            </svg>
+          </button>
         </div>
         <p
           class="text-sm text-muted-foreground"
