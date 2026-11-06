@@ -60,7 +60,6 @@ exports[`AllowedIdentities > matches the snapshot 1`] = `
       data-state="closed"
       id=":id1:-form-item"
       type="button"
-      value="TWITTER,GOOGLE"
     >
       <div
         class="flex justify-between items-center w-full "

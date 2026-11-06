@@ -145,7 +145,6 @@ exports[`RegionalRestriction > when there is a restriction > matches the snapsho
               data-state="closed"
               id=":id6:-form-item"
               type="button"
-              value="country:CA,continent:EU"
             >
               <div
                 class="flex justify-between items-center w-full "

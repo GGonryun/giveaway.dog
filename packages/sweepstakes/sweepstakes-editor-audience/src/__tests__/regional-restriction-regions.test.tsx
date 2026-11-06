@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import { act, fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import {
@@ -134,5 +134,18 @@ describe('RegionalRestrictionRegions', () => {
     expect(form.getValues('audience.regionalRestriction.regions')).toEqual([
       'country:CA'
     ]);
+  });
+
+  it('shows the regions that the form sets after it renders', () => {
+    const { form } = renderRegions(['continent:EU']);
+
+    act(() => {
+      form.setValue('audience.regionalRestriction.regions', ['country:JP']);
+    });
+
+    const select = screen.getByRole('button', { name: /Regions/ });
+    expect(within(select).getByText('Japan')).toBeInTheDocument();
+    expect(within(select).queryByText('Europe')).toBeNull();
+    expect(select).not.toHaveAttribute('value');
   });
 });

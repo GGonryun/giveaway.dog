@@ -17,7 +17,6 @@ exports[`RegionalRestrictionRegions > matches the snapshot 1`] = `
       data-state="closed"
       id=":id1:-form-item"
       type="button"
-      value="continent:EU,country:CA"
     >
       <div
         class="flex justify-between items-center w-full "
