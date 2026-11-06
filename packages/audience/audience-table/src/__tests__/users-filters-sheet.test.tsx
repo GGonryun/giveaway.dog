@@ -180,6 +180,46 @@ describe('UsersFiltersSheet', () => {
       );
     });
 
+    it('swaps a minimum score above the maximum', async () => {
+      const user = userEvent.setup();
+      render(<UsersFiltersSheet />);
+
+      await openSheet(user);
+      await user.type(minimumInput(), '80');
+      await user.type(maximumInput(), '20');
+      await user.click(screen.getByRole('button', { name: 'Apply Filters' }));
+
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/app/doggo-club/users?minQualityScore=20&maxQualityScore=80'
+      );
+    });
+
+    it('clamps a minimum above 100', async () => {
+      const user = userEvent.setup();
+      render(<UsersFiltersSheet />);
+
+      await openSheet(user);
+      await user.type(minimumInput(), '150');
+      await user.click(screen.getByRole('button', { name: 'Apply Filters' }));
+
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/app/doggo-club/users?minQualityScore=100'
+      );
+    });
+
+    it('clamps a maximum below 0', async () => {
+      const user = userEvent.setup();
+      render(<UsersFiltersSheet />);
+
+      await openSheet(user);
+      await user.type(maximumInput(), '-5');
+      await user.click(screen.getByRole('button', { name: 'Apply Filters' }));
+
+      expect(navigation.router.push).toHaveBeenCalledWith(
+        '/app/doggo-club/users?maxQualityScore=0'
+      );
+    });
+
     it('closes the sheet', async () => {
       const user = userEvent.setup();
       render(<UsersFiltersSheet />);
