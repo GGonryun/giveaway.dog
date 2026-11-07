@@ -169,11 +169,11 @@ describe('toSweepstakesState', () => {
       const started = (overrides: Parameters<typeof build>[0] = {}) =>
         build({ status: 'SCHEDULED', startDate: PAST, ...overrides });
 
-      it('returns not-logged-in without a participant', () => {
+      it('[ENTRY-006] returns not-logged-in without a participant', () => {
         expect(toSweepstakesState(started())).toBe('not-logged-in');
       });
 
-      it('returns profile-incomplete when a required form field is empty', () => {
+      it('[ENTRY-006] returns profile-incomplete when a required form field is empty', () => {
         expect(
           toSweepstakesState(
             started({
@@ -184,7 +184,7 @@ describe('toSweepstakesState', () => {
         ).toBe('profile-incomplete');
       });
 
-      it('returns not-eligible for a participant outside the region', () => {
+      it('[ENTRY-006] returns not-eligible for a participant outside the region', () => {
         expect(
           toSweepstakesState(
             started({
@@ -198,7 +198,7 @@ describe('toSweepstakesState', () => {
         ).toBe('not-eligible');
       });
 
-      it('[ENTRY-005] returns not-eligible for a participant whose country is unknown', () => {
+      it('[ENTRY-005] [ENTRY-006] returns not-eligible for a participant whose country is unknown', () => {
         expect(
           toSweepstakesState(
             started({
@@ -212,13 +212,13 @@ describe('toSweepstakesState', () => {
         ).toBe('not-eligible');
       });
 
-      it('returns active for an eligible participant before the end date', () => {
+      it('[ENTRY-006] returns active for an eligible participant before the end date', () => {
         expect(
           toSweepstakesState(started({ participant: participant() }))
         ).toBe('active');
       });
 
-      it('returns winners-pending for an eligible participant after the end date', () => {
+      it('[ENTRY-006] returns winners-pending for an eligible participant after the end date', () => {
         expect(
           toSweepstakesState(
             started({ endDate: PAST, participant: participant() })
@@ -226,7 +226,7 @@ describe('toSweepstakesState', () => {
         ).toBe('winners-pending');
       });
 
-      it('returns the same state as a running giveaway', () => {
+      it('[ENTRY-006] returns the same state as a running giveaway', () => {
         const cases = [
           {},
           { participant: participant() },
