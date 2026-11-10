@@ -149,7 +149,7 @@ test.describe('the dates of a giveaway', () => {
   );
 
   test(
-    '[ENTRY-005] a page opened before the start shows the region message after the start, without a refresh',
+    '[ENTRY-006] a page opened before the start shows the region message after the start, without a refresh',
     { tag: '@slow' },
     async ({ page, request }, testInfo) => {
       test.setTimeout(testInfo.timeout + MIN_TIME_MARGIN_SECONDS * 1000);
